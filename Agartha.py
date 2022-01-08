@@ -721,15 +721,17 @@ class UserEnabledRenderer(TableCellRenderer):
 
     def getTableCellRendererComponent(self, table, value, isSelected, hasFocus, row, column):
         cell = self._defaultCellRender.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
-
+        toolTipMessage = ""
         cell.setBackground(self.colorsAlert[0])
         try:
             if column == 0:
                 #URL section - default whitee
                 cell.setBackground(self.colorsAlert[0])
+                toolTipMessage = "Requested URLs"
             elif table.getValueAt(row, column) and not table.getValueAt(row, column).startswith("HTTP 2") and not table.getValueAt(row, column).startswith("HTTP 3"):
                 #error or http 4XX/5XX
                 cell.setBackground(self.colorsAlert[4])
+                toolTipMessage = "The request returns HTTP 4XX/5xx response!"
             elif column == 1:
                 #no auth
                 cell.setBackground(self.colorsAlert[0])
@@ -738,14 +740,18 @@ class UserEnabledRenderer(TableCellRenderer):
                         if table.getValueAt(row, y) == table.getValueAt(row, column):
                             if table.getValueAt(row, y).startswith("HTTP 2"):
                                 cell.setBackground(self.colorsAlert[1])
+                                toolTipMessage = "The URL returns HTTP 2XX without authentication. Code Red!"
                             elif table.getValueAt(row, y).startswith("HTTP 3"):
                                 if not cell.getBackground() == self.colorsAlert[1]:
                                     cell.setBackground(self.colorsAlert[3])
+                                    toolTipMessage = "The URL returns HTTP 3XX without authentication. Code Orange!"
                         elif table.getValueAt(row, y)[:8] == table.getValueAt(row, column)[:8]:
                                 if not cell.getBackground() == self.colorsAlert[1]:
                                     cell.setBackground(self.colorsAlert[2])
+                                    toolTipMessage = "The response does not look suspicious!"
             elif table.getValueAt(row, 0) in self.urlList[column- 1]:
                 cell.setBackground(self.colorsUser[column-2])
+                toolTipMessage = "Http response of the user's own URL!"
             else:    
                 #other users
                 cell.setBackground(self.colorsAlert[0])
@@ -754,12 +760,15 @@ class UserEnabledRenderer(TableCellRenderer):
                         if table.getValueAt(row, y) == table.getValueAt(row, column):
                             if table.getValueAt(row, y).startswith("HTTP 2"):
                                 cell.setBackground(self.colorsAlert[1])
+                                toolTipMessage = "The URL is not in the user's list but returns HTTP 2XX. Code Red!"
                             elif table.getValueAt(row, y).startswith("HTTP 3"):
                                 if not cell.getBackground() == self.colorsAlert[1]:
                                     cell.setBackground(self.colorsAlert[3])
+                                    toolTipMessage = "The URL is not in the user's list but returns HTTP 3XX. Code Orange!"
                         elif table.getValueAt(row, y)[:8] == table.getValueAt(row, column)[:8]:
                             if not cell.getBackground() == self.colorsAlert[1]:    
                                 cell.setBackground(self.colorsAlert[2])
+                                toolTipMessage = "The response does not look suspicious!"
         except:
             cell.setBackground(self.colorsAlert[0])
 
@@ -769,6 +778,7 @@ class UserEnabledRenderer(TableCellRenderer):
         if hasFocus:
             cell.setBackground(Color(238,232,220))
             cell.setFont(cell.getFont().deriveFont(Font.BOLD | Font.ITALIC));
+            cell.setToolTipText(toolTipMessage)
         
         return cell
 
