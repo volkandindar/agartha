@@ -129,8 +129,8 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
             self.userNamesHttpReq= []
             self.userNamesHttpReq.append("")
             self.userNamesHttpReq = self.userNamesHttpReqD
-        self._requestViewer.setMessage("", True)
-        self._responseViewer.setMessage("", True)
+        self._requestViewer.setMessage("", False)
+        self._responseViewer.setMessage("", False)
         self._lblAuthNotification.text = ""
         self._tbAuthNewUser.setForeground (Color.black)
         self._btnAuthNewUserAdd.setEnabled(False)
@@ -350,8 +350,8 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self.userNamesHttpUrls = [[]]
         self.httpReqRes = [[],[],[],[],[]]
         self.httpReqRes.append([])
-        self._requestViewer.setMessage("", True)
-        self._responseViewer.setMessage("", True)
+        self._requestViewer.setMessage("", False)
+        self._responseViewer.setMessage("", False)
         self._lblAuthNotification.text = "Please add users to create an auth matrix"
         self._tbAuthNewUser.setForeground (Color.black)        
         self._txtHeaderDefault = "GET / HTTP/1.1\nHost: localhost\nAccept-Encoding: gzip, deflate\nConnection: close\nCookie: SessionID=......."
@@ -691,14 +691,14 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
             row = self.tableMatrix.getSelectedRow()
             userID = self.tableMatrix.getSelectedColumn()
             if userID==0:
-                self._requestViewer.setMessage("", True)
-                self._responseViewer.setMessage("", True)
+                self._requestViewer.setMessage("", False)
+                self._responseViewer.setMessage("", False)
             else:
-                self._requestViewer.setMessage(self.httpReqRes[userID-1][row].getRequest(), True)
-                self._responseViewer.setMessage(self.httpReqRes[userID-1][row].getResponse(), True)
+                self._requestViewer.setMessage(self.httpReqRes[userID-1][row].getRequest(), False)
+                self._responseViewer.setMessage(self.httpReqRes[userID-1][row].getResponse(), False)
         except:
-            self._requestViewer.setMessage("", True)
-            self._responseViewer.setMessage("", True)
+            self._requestViewer.setMessage("", False)
+            self._responseViewer.setMessage("", False)
     def isURLValid(self, urlAdd):
         if urlAdd.startswith("http"):
             return True
@@ -764,9 +764,10 @@ class UserEnabledRenderer(TableCellRenderer):
 
         if isSelected:
             cell.setBackground(Color(240,230,140))
-            cell.setFont(cell.getFont().deriveFont(Font.BOLD));
+            
         if hasFocus:
-            cell.setBackground(Color(238,232,170))
+            cell.setBackground(Color(238,232,220))
+            cell.setFont(cell.getFont().deriveFont(Font.BOLD | Font.ITALIC));
         
         return cell
 
