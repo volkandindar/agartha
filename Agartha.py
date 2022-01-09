@@ -16,7 +16,7 @@ try:
 except ImportError:
     print "Failed to load dependencies."
 
-VERSION = "0.08"
+VERSION = "0.09"
 _colorful = True
 
 
@@ -735,8 +735,8 @@ class UserEnabledRenderer(TableCellRenderer):
                 #no auth
                 cell.setBackground(self.colorsAlert[0])
                 if _colorful:
-                    for y in range(2,table.getColumnCount()):
-                        if table.getValueAt(row, y) == table.getValueAt(row, column):
+                    for y in range(2,table.getColumnCount()):                        
+                        if table.getValueAt(row, y) == table.getValueAt(row, column):                        
                             if table.getValueAt(row, y).startswith("HTTP 2"):
                                 cell.setBackground(self.colorsAlert[1])
                                 toolTipMessage = "The URL returns HTTP 2XX without authentication!"
@@ -747,7 +747,7 @@ class UserEnabledRenderer(TableCellRenderer):
                         elif table.getValueAt(row, y)[:8] == table.getValueAt(row, column)[:8]:
                                 if not cell.getBackground() == self.colorsAlert[1]:
                                     cell.setBackground(self.colorsAlert[2])
-                                    toolTipMessage = "The URL returns HTTP 2XX without authentication!"
+                                    toolTipMessage = "The URL returns HTTP 2XX with different length and without authentication!"
             elif table.getValueAt(row, 0) in self.urlList[column- 1]:
                 cell.setBackground(self.colorsUser[column-2])
                 toolTipMessage = "Http response of the user's own URL!"
@@ -757,6 +757,7 @@ class UserEnabledRenderer(TableCellRenderer):
                 if _colorful:
                     for y in range(2,table.getColumnCount()):
                         if table.getValueAt(row, y) == table.getValueAt(row, column):
+                        # responses are same: red or yellow
                             if table.getValueAt(row, y).startswith("HTTP 2"):
                                 cell.setBackground(self.colorsAlert[1])
                                 toolTipMessage = "The URL is not in the user's list but returns HTTP 2XX!"
@@ -765,9 +766,10 @@ class UserEnabledRenderer(TableCellRenderer):
                                     cell.setBackground(self.colorsAlert[3])
                                     toolTipMessage = "The URL is not in the user's list and returns HTTP 3XX!"
                         elif table.getValueAt(row, y)[:8] == table.getValueAt(row, column)[:8]:
+                        # response lengths are different, but responses code might be the same
                             if not cell.getBackground() == self.colorsAlert[1]:    
                                 cell.setBackground(self.colorsAlert[2])
-                                toolTipMessage = "The URL is not in the user's list but returns HTTP 2XX!"
+                                toolTipMessage = "The URL is not in the user's list but returns HTTP 2XX with different length!"
         except:
             cell.setBackground(self.colorsAlert[0])
 
