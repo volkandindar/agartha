@@ -16,7 +16,7 @@ try:
 except ImportError:
     print "Failed to load dependencies."
 
-VERSION = "0.07"
+VERSION = "0.08"
 _colorful = True
 
 
@@ -83,7 +83,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._btnAuthReset.setEnabled(True)
         self._cbAuthGETPOST.setEnabled(True)
         self.progressBar.setValue(1000000)
-        self._lblAuthNotification.text = "RED: the url is in an user's list and returns same HTTP 2XX/Length.\t\tORANGE: the url is in an user's list and returns same HTTP 2XX with different length.\t\tYELLOW: the url is in an user's list and returns same HTTP 3XX/Length."
+        self._lblAuthNotification.text = "Yellow, Orange and Red cell colors are representation of warning severities."
         return
 
     def makeHttpCall(self, urlAdd, userID):
@@ -92,7 +92,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
             userID = self.userNames.index(userID)
             header = self.userNamesHttpReq[userID]
             if "\r\n" in header:
-                #right click
+                #right click send
                 if "GET" in header[:3]:
                     header = self._helpers.bytesToString(self._callbacks.getHelpers().toggleRequestMethod((header)))
                 header = "ABC "+ str(urlparse.urlparse(urlAdd).path) + " HTTP/1.1\r\n" + "\n".join(header.split("\n")[1:])
@@ -137,7 +137,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                 #print str(e)
                 #return "cookie handling error!"
 
-            return "HTTP " + str(self._helpers.analyzeResponse(self._helpers.bytesToString(_httpReqRes.getResponse())).getStatusCode() )+":"+format(len(self._helpers.bytesToString(_httpReqRes.getResponse())) - self._helpers.analyzeResponse(self._helpers.bytesToString(_httpReqRes.getResponse())).getBodyOffset(), ',d') + "bytes"
+            return "HTTP " + str(self._helpers.analyzeResponse(self._helpers.bytesToString(_httpReqRes.getResponse())).getStatusCode()) + " : " + format(len(self._helpers.bytesToString(_httpReqRes.getResponse())) - self._helpers.analyzeResponse(self._helpers.bytesToString(_httpReqRes.getResponse())).getBodyOffset(), ',d') + "bytes"
         except:
             self.httpReqRes[userID].append("")
             return "Error"
@@ -726,7 +726,7 @@ class UserEnabledRenderer(TableCellRenderer):
             if column == 0:
                 #URL section - default whitee
                 cell.setBackground(self.colorsAlert[0])
-                toolTipMessage = "Requested URLs"
+                toolTipMessage = "Requested URLs!"
             elif table.getValueAt(row, column) and not table.getValueAt(row, column).startswith("HTTP 2") and not table.getValueAt(row, column).startswith("HTTP 3"):
                 #error or http 4XX/5XX
                 cell.setBackground(self.colorsAlert[4])
@@ -739,15 +739,15 @@ class UserEnabledRenderer(TableCellRenderer):
                         if table.getValueAt(row, y) == table.getValueAt(row, column):
                             if table.getValueAt(row, y).startswith("HTTP 2"):
                                 cell.setBackground(self.colorsAlert[1])
-                                toolTipMessage = "The URL returns HTTP 2XX without authentication. Code Red!"
+                                toolTipMessage = "The URL returns HTTP 2XX without authentication!"
                             elif table.getValueAt(row, y).startswith("HTTP 3"):
                                 if not cell.getBackground() == self.colorsAlert[1]:
-                                    cell.setBackground(self.colorsAlert[3])
-                                    toolTipMessage = "The URL returns HTTP 3XX without authentication. Code Orange!"
+                                    #cell.setBackground(self.colorsAlert[3])
+                                    toolTipMessage = "The URL returns HTTP 3XX without authentication!"
                         elif table.getValueAt(row, y)[:8] == table.getValueAt(row, column)[:8]:
                                 if not cell.getBackground() == self.colorsAlert[1]:
                                     cell.setBackground(self.colorsAlert[2])
-                                    toolTipMessage = "The response does not look suspicious!"
+                                    toolTipMessage = "The URL returns HTTP 2XX without authentication!"
             elif table.getValueAt(row, 0) in self.urlList[column- 1]:
                 cell.setBackground(self.colorsUser[column-2])
                 toolTipMessage = "Http response of the user's own URL!"
@@ -759,23 +759,23 @@ class UserEnabledRenderer(TableCellRenderer):
                         if table.getValueAt(row, y) == table.getValueAt(row, column):
                             if table.getValueAt(row, y).startswith("HTTP 2"):
                                 cell.setBackground(self.colorsAlert[1])
-                                toolTipMessage = "The URL is not in the user's list but returns HTTP 2XX. Code Red!"
+                                toolTipMessage = "The URL is not in the user's list but returns HTTP 2XX!"
                             elif table.getValueAt(row, y).startswith("HTTP 3"):
                                 if not cell.getBackground() == self.colorsAlert[1]:
                                     cell.setBackground(self.colorsAlert[3])
-                                    toolTipMessage = "The URL is not in the user's list but returns HTTP 3XX. Code Orange!"
+                                    toolTipMessage = "The URL is not in the user's list and returns HTTP 3XX!"
                         elif table.getValueAt(row, y)[:8] == table.getValueAt(row, column)[:8]:
                             if not cell.getBackground() == self.colorsAlert[1]:    
                                 cell.setBackground(self.colorsAlert[2])
-                                toolTipMessage = "The response does not look suspicious!"
+                                toolTipMessage = "The URL is not in the user's list but returns HTTP 2XX!"
         except:
             cell.setBackground(self.colorsAlert[0])
 
         if isSelected:
-            cell.setBackground(Color(240,230,140))
+            cell.setBackground(Color(230,230,200))
             
         if hasFocus:
-            cell.setBackground(Color(238,232,220))
+            cell.setBackground(Color(230,230,220))
             cell.setFont(cell.getFont().deriveFont(Font.BOLD | Font.ITALIC));
             cell.setToolTipText(toolTipMessage)
         
