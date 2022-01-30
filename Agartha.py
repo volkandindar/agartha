@@ -3,7 +3,7 @@ Author: Volkan Dindar
 """
 try:
     from burp import (IBurpExtender, ITab, IMessageEditorController, IContextMenuFactory)
-    from java.awt import (BorderLayout, FlowLayout, Color, Font, Dimension)
+    from java.awt import (BorderLayout, FlowLayout, Color, Font, Dimension, Toolkit)
     from javax.swing import (JCheckBox, JMenuItem, JTextPane, JTable, JScrollPane, JProgressBar, SwingConstants, JComboBox, JButton, JTextField, JSplitPane, JPanel, JLabel, JRadioButton, ButtonGroup, JTabbedPane, BoxLayout)
     from javax.swing.border import EmptyBorder
     from javax.swing.table import (DefaultTableModel, TableCellRenderer, DefaultTableCellRenderer)
@@ -11,11 +11,12 @@ try:
     from java.util import ArrayList
     from threading import Thread
     from random import randrange
+    from java.awt.datatransfer import StringSelection
     
 except ImportError:
     print "Failed to load dependencies."
 
-VERSION = "0.1"
+VERSION = "0.11"
 _colorful = True
 
 class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFactory):
@@ -668,12 +669,40 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
     def createMenuItems(self, invocation):
         self.context = invocation
         menu_list = ArrayList()
-        menu_list.add(JMenuItem("Send to Agartha", actionPerformed=self.agartha_menu))
+        menu_list.add(JMenuItem("Agartha Panel", actionPerformed=self.agartha_menu))
+        menu_list.add(JMenuItem("Copy as Javascript", actionPerformed=self.js_menu))
         return menu_list
+    def js_menu(self,event):
+        # right click menu
+        clipboard = Toolkit.getDefaultToolkit().getSystemClipboard()
+        http_contexts = self.context.getSelectedMessages()
+        _req = self._helpers.bytesToString(http_contexts[0].getRequest())
+        _url = str(self._helpers.analyzeRequest(http_contexts[0]).getUrl())
+        jscript=""
+        contentType=""
+        sendData=""
+        method=_req.splitlines()[0].split(" ", 1)[0]
+        
+        if method == "GET":
+            jscript = "var xhr=new XMLHttpRequest();xhr.open('GET','" + _url + "',true);xhr.withCredentials=true;xhr.send();"
+        else:
+            for line in _req.splitlines():
+                if any(re.findall(r'Content-type', line, re.IGNORECASE)):
+                    contentType = line.split(" ", 1)[1]
+                    break
+            if contentType:
+                contentType="xhr.setRequestHeader('Content-type','" + contentType + "');"
+
+            if _req.splitlines()[-1]:
+                sendData="'" + _req.splitlines()[-1] + "'"
+            
+            jscript = "var xhr=new XMLHttpRequest();xhr.open('" + method + "','" + _url + "',true);xhr.withCredentials=true;" + contentType + "xhr.send(" + sendData + ");" 
+        
+        clipboard.setContents(StringSelection(jscript), None)
+
     def agartha_menu(self,event):
         # right click menu
         http_contexts = self.context.getSelectedMessages()
-        #_req = StringUtil.fromBytes(http_contexts[0].getRequest())
         _req = self._helpers.bytesToString(http_contexts[0].getRequest())
         _url = ""
         for http_context in http_contexts:
