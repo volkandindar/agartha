@@ -678,13 +678,13 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         http_contexts = self.context.getSelectedMessages()
         _req = self._helpers.bytesToString(http_contexts[0].getRequest())
         _url = str(self._helpers.analyzeRequest(http_contexts[0]).getUrl())
-        jscript=""
+        jscript = "Http request in JavaScript:\n"
         contentType=""
         sendData=""
         method=_req.splitlines()[0].split(" ", 1)[0]
         
         if method == "GET":
-            jscript = "var xhr=new XMLHttpRequest();xhr.open('GET','" + _url + "',true);xhr.withCredentials=true;xhr.send();"
+            jscript += "\t<script>var xhr=new XMLHttpRequest();xhr.open('GET','" + _url + "');xhr.withCredentials=true;xhr.send();</script>"
         else:
             for line in _req.splitlines():
                 if any(re.findall(r'Content-type', line, re.IGNORECASE)):
@@ -696,8 +696,12 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
             if _req.splitlines()[-1]:
                 sendData="'" + _req.splitlines()[-1] + "'"
             
-            jscript = "var xhr=new XMLHttpRequest();xhr.open('" + method + "','" + _url + "',true);xhr.withCredentials=true;" + contentType + "xhr.send(" + sendData + ");" 
+            jscript += "\t<script>var xhr=new XMLHttpRequest();xhr.open('" + method + "','" + _url + "');xhr.withCredentials=true;" + contentType + "xhr.send(" + sendData + ");</script>" 
         
+        jscript += "\n\nFor redirection, please also add:\n\t"
+        jscript += "xhr.onreadystatechange=function(){if (this.status===302){var location=this.getResponseHeader('Location');return ajax.call(this,location);}};"
+        jscript += "\n\nTo use in Developer Tools Console, you should remove 'script' tags."
+
         clipboard.setContents(StringSelection(jscript), None)
 
     def agartha_menu(self,event):
