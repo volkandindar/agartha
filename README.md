@@ -1,7 +1,7 @@
 # Agartha { LFI | RCE | Auth | SQLi | Http-Js }
 It is a burp extension for penetration testing and aimed to help researchers to find security issues. It creates dynamic word lists, access role matrix and more:
 - **Payload Generator**: It creates payloads for different attacks.
-	- **Local File Inclusion/Directory Traversal wordlist**: It creates dynamic dictionary list with various encoding and escaping characters.
+	- **Directory Traversal/Local File Inclusion wordlist**: It creates dynamic dictionary list with various encoding and escaping characters.
 	- **Remote Code Execution wordlist**: It creates dynamic dictionary list for both unix and windows enviorment with different combinations.
 	- **SQL Injection wordlist**: It creates static boolean based SQLi dictionary list to help revealing vulnerable spots.
 	- **Http Request to JavaScript Converter**: It converts Http requests to JavaScript code and might be useful for digging up XSS issues more.
@@ -9,14 +9,14 @@ It is a burp extension for penetration testing and aimed to help researchers to 
 
 Here is a small tutorial how to use each feature.
 
-## Local File Inclusion/Directory Traversal wordlist
+## Directory Traversal/Local File Inclusion wordlist
 It both supports unix and windows file systems. You can generate any wordlists for the path you want. You just need to supply a file name, and that's all. 
 
 **'Dept'** is represantion of how deep the wordlist should be. You can generates word list 'till/equal to' this value.
 
 **'Waf Bypass'** asks for if you want to include all bypass features, like null bytes, different encoding, etc.
 
-<img width="1000" alt="Local File Inclusion/Directory Traversal wordlist" src="https://user-images.githubusercontent.com/50321735/152050458-84c29e84-6e12-486b-99d2-fcf220791798.png">
+<img width="1000" alt="Directory Traversal/Local File Inclusion wordlist" src="https://user-images.githubusercontent.com/50321735/152050458-84c29e84-6e12-486b-99d2-fcf220791798.png">
 
 
 ## Remote Code Execution wordlist
