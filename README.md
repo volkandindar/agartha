@@ -42,7 +42,7 @@ It will automaticly save it to your clipboard with some remarks.
 Http request in JavaScript:
 	<script>var xhr=new XMLHttpRequest();xhr.open('POST','http://vm:80/dvwa/login.php');xhr.withCredentials=true;xhr.setRequestHeader('Content-type','application/x-www-form-urlencoded');xhr.send('username=admin&password=pwd1234&Login=Login');</script>
 
-For redirection, please also add before '</script>' tag:
+For redirection, please also add it before '</script>' tag:
 	xhr.onreadystatechange=function(){if (this.status===302){var location=this.getResponseHeader('Location');return ajax.call(this,location);}};
 
 To use in Developer Tools Console, you should remove 'script' tags.
