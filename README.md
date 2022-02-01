@@ -20,7 +20,7 @@ It both supports unix and windows file systems. You can generate any wordlists f
 
 
 ## Remote Code Execution wordlist
-It creates command exection word list for the command you supply. It combines different sepetator and terminator for unix and windows enviorments.
+It creates command exection word list for the command you supply. It combines different sepetator and terminator for unix and windows enviorments together.
 
 <img width="1000" alt="Remote Code Execution wordlist" src="https://user-images.githubusercontent.com/50321735/152050785-82901333-b5e8-4e51-9467-adc2f6f0b628.png">
 
