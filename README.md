@@ -1,10 +1,10 @@
 # agartha { LFI | RCE | Auth | SQLi | Http-Js }
 agartha is a burp extension for penetration testing and it is aimed to help researchers to find security issues. It creates dynamic word lists, access role matrix and more:
-- Local File Inclusion/Directory Traversal wordlist: It creates dynamic dictionary list with various encoding and escaping characters.
-- Remote Code Execution wordlist: It creates dynamic dictionary list for both unix and windows enviorment with different combination possibilities.
-- SQL Injection wordlist: It creates static boolean based SQLi dictionary list to help revealing vulnerable spots.
-- Http Request to JavaScript Converter: It helps to convert Http requests to JavaScript code. This feature might be useful for digging up XSS issues more.
-- Authorization Matrix: It creates a web page wide authorization role matrix and helps to find user related auhtorization/authentication issues.
+- **Local File Inclusion/Directory Traversal wordlist**: It creates dynamic dictionary list with various encoding and escaping characters.
+- **Remote Code Execution wordlist**: It creates dynamic dictionary list for both unix and windows enviorment with different combination possibilities.
+- **SQL Injection wordlist**: It creates static boolean based SQLi dictionary list to help revealing vulnerable spots.
+- **Http Request to JavaScript Converter**: It helps to convert Http requests to JavaScript code. This feature might be useful for digging up XSS issues more.
+- **Authorization Matrix**: It creates a web page wide authorization role matrix and helps to find user related auhtorization/authentication issues.
 
 Here is a small tutorial how to use each feature.
 
