@@ -12,7 +12,7 @@ Here is a small tutorial how to use each feature.
 ## Local File Inclusion/Directory Traversal wordlist
 It both supports unix and windows file systems. You can generate any wordlists for the path you want. You just need to supply a file name, and that's all. 
 
-**'Dept'** is represantion of how deep the wordlist should be. You can generates word list 'till/equal to' this number.
+**'Dept'** is represantion of how deep the wordlist should be. You can generates word list 'till/equal to' this value.
 
 **'Waf Bypass'** asks for if you want to include all bypass features, like null bytes, different encoding, etc.
 
