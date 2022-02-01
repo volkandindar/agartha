@@ -24,13 +24,13 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
 
         self._callbacks = callbacks
         self._helpers = callbacks.getHelpers()
-        self._callbacks.setExtensionName("agartha {LFI|RCE|Auth|SQLi|Http-Js}")
+        self._callbacks.setExtensionName("Agartha {LFI|RCE|Auth|SQLi|Http-Js}")
         print "Version " + VERSION + " is just loaded.\n\nAgartha is a security tool for:\n\t\t* Local File Inclusion (LFI), Directory Traversal,\n\t\t* Remote Code Execution (RCE),\n\t\t* Authorization/Authentication Control,\n\t\t* Boolean-Based SQL Injection,\n\t\t* Http Request to Javascript.\n\nFor more information and tutorial how to use, please visit:\n\t\thttps://github.com/volkandindar/agartha"        
         self._MainTabs = JTabbedPane()
         self._tabDictUI()
         self._tabAuthUI()
-        self._MainTabs.addTab("Authorization Matrix", None, self._tabAuthSplitpane, None)
         self._MainTabs.addTab("Payload Generator", None, self._tabDictPanel, None)
+        self._MainTabs.addTab("Authorization Matrix", None, self._tabAuthSplitpane, None)
         callbacks.addSuiteTab(self)
         callbacks.registerContextMenuFactory(self)
         callbacks.issueAlert("The extension has been loaded.");
