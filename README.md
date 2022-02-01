@@ -7,7 +7,7 @@ It is a burp extension for penetration testing and aimed to help researchers to 
 	- **Http Request to JavaScript Converter**: It converts Http requests to JavaScript code and might be useful for digging up XSS issues more.
 - **Authorization Matrix**: It creates a authorization role matrix and helps to find user related auhtorization/authentication issues.
 
-Here is a small tutorial how to use each feature.
+Here is a small tutorial how to use each features.
 
 ## Directory Traversal/Local File Inclusion wordlist
 It both supports unix and windows file systems. You can generate any wordlists for the path you want. You just need to supply a file name, and that's all. 
