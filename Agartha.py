@@ -749,7 +749,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
             
             jscript += "\t<script>var xhr=new XMLHttpRequest();xhr.open('" + method + "','" + _url + "');xhr.withCredentials=true;" + contentType + "xhr.send(" + sendData + ");</script>" 
         
-        jscript += "\n\nFor redirection, please also add before '</script>' tag:\n\t"
+        jscript += "\n\nFor redirection, please also add this code before '</script>' tag:\n\t"
         jscript += "xhr.onreadystatechange=function(){if (this.status===302){var location=this.getResponseHeader('Location');return ajax.call(this,location);}};"
         jscript += "\n\nTo use in Developer Tools Console, you should remove 'script' tags."
 
