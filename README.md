@@ -16,19 +16,19 @@ It both supports unix and windows file systems. You can generate any wordlists f
 
 **'Waf Bypass'** asks for if you want to include all bypass features, like null bytes, different encoding, etc.
 
-<img width="900" alt="Local File Inclusion/Directory Traversal wordlist" src="https://user-images.githubusercontent.com/50321735/152035085-cc8ab660-d4d0-486a-9fda-8cb28b180e46.png">
+<img width="1000" alt="Local File Inclusion/Directory Traversal wordlist" src="https://user-images.githubusercontent.com/50321735/152050458-84c29e84-6e12-486b-99d2-fcf220791798.png">
 
 
 ## Remote Code Execution wordlist
 It creates command exection word list for the command you supply. It combines different sepetator and terminator for unix and windows enviorments.
 
-<img width="900" alt="Remote Code Execution wordlist" src="https://user-images.githubusercontent.com/50321735/152038242-a8163921-7147-41ba-9122-2e34244669dc.png">
+<img width="1000" alt="Remote Code Execution wordlist" src="https://user-images.githubusercontent.com/50321735/152050785-82901333-b5e8-4e51-9467-adc2f6f0b628.png">
 
 
 ## SQL Injection wordlist
 It is for boolean based SQLi attacks and you dont need to supply any inputs. It generates static, vendor-neutral true and false criterias with escaping chacters and is appliaple for Mysql, Mssql, Oracle, Mariadb, PostgreSQL, etc. tests. 
 
-<img width="900" alt="SQL Injection wordlist" src="https://user-images.githubusercontent.com/50321735/152039967-baa14153-f83c-49c3-9b51-d09a36027051.png">
+<img width="1000" alt="SQL Injection wordlist" src="https://user-images.githubusercontent.com/50321735/152051426-d42cf034-3fe5-4221-9ec7-570c5f0249a8.png">
 
 
 ## Http Request to JavaScript Converter
@@ -36,7 +36,7 @@ The feature is for converting Http requests to JavaScript language. It might be 
 
 To access it, right click the Http request, extensions, agartha, copy as JavaScript.
 
-<img width="900" alt="image" src="https://user-images.githubusercontent.com/50321735/152043556-490a7c02-2d07-443e-9cf4-267f68521c0d.png">
+<img width="1000" alt="Http Request to JavaScript Converter" src="https://user-images.githubusercontent.com/50321735/152051704-ef8f4a6e-2672-4611-bcfa-6bb50a104b68.png">
 
 It will automaticly save it to your clipboard with some remarks. 
 ```
