@@ -24,7 +24,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
 
         self._callbacks = callbacks
         self._helpers = callbacks.getHelpers()
-        self._callbacks.setExtensionName("Agartha {RCE|LFI|Auth|SQLi|JS}")
+        self._callbacks.setExtensionName("agartha {LFI|RCE|Auth|SQLi|Http-Js}")
         print "Version " + VERSION + " is just loaded.\n\nAgartha is a security tool for:\n\t\t* Local File Inclusion (LFI), Directory Traversal,\n\t\t* Remote Code Execution (RCE),\n\t\t* Authorization/Authentication Control,\n\t\t* Boolean-Based SQL Injection,\n\t\t* Http Request to Javascript.\n\nFor more information and tutorial how to use, please visit:\n\t\thttps://github.com/volkandindar/agartha"        
         self._MainTabs = JTabbedPane()
         self._tabDictUI()
@@ -721,7 +721,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self.context = invocation
         menu_list = ArrayList()
         menu_list.add(JMenuItem("Agartha Panel", actionPerformed=self.agartha_menu))
-        menu_list.add(JMenuItem("Copy as Javascript", actionPerformed=self.js_menu))
+        menu_list.add(JMenuItem("Copy as JavaScript", actionPerformed=self.js_menu))
         return menu_list
     def js_menu(self,event):
         # right click menu
@@ -749,7 +749,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
             
             jscript += "\t<script>var xhr=new XMLHttpRequest();xhr.open('" + method + "','" + _url + "');xhr.withCredentials=true;" + contentType + "xhr.send(" + sendData + ");</script>" 
         
-        jscript += "\n\nFor redirection, please also add:\n\t"
+        jscript += "\n\nFor redirection, please also add before '</script>' tag:\n\t"
         jscript += "xhr.onreadystatechange=function(){if (this.status===302){var location=this.getResponseHeader('Location');return ajax.call(this,location);}};"
         jscript += "\n\nTo use in Developer Tools Console, you should remove 'script' tags."
 
