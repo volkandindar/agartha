@@ -71,5 +71,6 @@ After sending Http request to Agartha, it will fill some fields in the tool and 
 After clicking 'RUN', the tool will fill user and URL matrix with different colors. Besides the user colors, you will see orange, yellow and red cells. According to the example:
 - The cell is Orange, because the response returns 'HTTP 200' without authentication
 - The cell is Red, because the response returns 'HTTP 200' with same content without authentication
+- It will be quite similar, even if we add more users.
 
-You may notice, it support only one http request method at the same time, because it processes bulk requests and it is not possible to provide different header options for each call. But you change play with 'GET/POST' methods to see response differences.
+You may also notice, it support only one http request method and header at the same time, because it processes bulk requests and it is not possible to provide different header options for each calls. But you change play with 'GET/POST' methods to see response differences.
