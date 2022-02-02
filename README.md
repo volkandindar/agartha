@@ -34,7 +34,7 @@ It is for boolean based SQLi attacks and you dont need to supply any inputs. It 
 ## Http Request to JavaScript Converter
 The feature is for converting Http requests to JavaScript language. It can be useful to dig up XSS issues and bypass header restrictions, like CSP, CORS.
 
-To access it, right click the Http request, extensions, 'Agartha', and 'Copy as JavaScript'.
+To access it, right click the Http Request, Extensions, 'Agartha', and 'Copy as JavaScript'.
 
 <img width="1000" alt="Http Request to JavaScript Converter" src="https://user-images.githubusercontent.com/50321735/152224405-d10b78a2-9b18-44a9-a991-5b9c451c7253.png">
 
