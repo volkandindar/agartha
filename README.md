@@ -62,7 +62,7 @@ After sending Http request to Agartha, it will fill some fields in the tool and 
 4. All URLs you supply will be in here. Also user cell will be colored if it is in the user's list.
 5. Http requests and responses wihout authentication. All session cookies and tokens will be removed form the calls.
 6. Http requests and responses with the user session you created in the first step. Cell titles show Http response codes and response lenghts. 
-7. Just click the cell you want to examine and Http details will be shown.
+7. Just click the cell you want to examine and Http details will be shown in here.
 
 
 <img width="1000" alt="Role Matrix" src="https://user-images.githubusercontent.com/50321735/152227189-9e4b93df-de26-438e-ac1c-1aabcaf1ff56.png">
