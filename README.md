@@ -45,6 +45,29 @@ Http request in JavaScript:
 
 For redirection, please also add this code before '</script>' tag:
 	xhr.onreadystatechange=function(){if (this.status===302){var location=this.getResponseHeader('Location');return ajax.call(this,location);}};
-
-To use in Developer Tools Console, you should remove 'script' tags.
 ```
+
+## Authorization Matrix
+It creates a access maxtrix based on user sessions and helps to find authentication/authorization issues. You should first create a user with the followings:
+- **User session**: You can right click on any request and send it Agartha Panel.
+- **URL list** user can visit: You can use Burp's spider or any sitemap generator. You need to put here all URLs the user can visit.
+
+<img width="1000" alt="Authorization Matrix, sending http req" src="https://user-images.githubusercontent.com/50321735/152217672-353b42a8-bb06-4e92-b9af-3f4e487ab1fd.png">
+
+
+After sending Http request to Agartha, it will fill some fields in the tool, but it is not enough to perform a proper role matrix. 
+1. What's username for the session you provided.  
+3. User's request header. Session URL calls will be based on this header.
+4. URLs user can visit. You can create this list with manuel effort or automatic tools, like spiders, sitemap generators, etc.
+5. All URLs together will be shown in here. It be colored if the user provided the URL. So you will understand which one belongs to which user.
+6. Http request result wihout authentication. All session cookies or tokens will be removed form header.
+7. You can add up to 4 different users and each user will have a different color to make it easy to read.
+8. Http request and response can be examined here.
+
+After clicking 'RUN', the tool will fill user and URL matrix with different colors. Besides the user colors, you will see orange, yellow and red cells. According to the example which is shown below:
+- Orange cell means, the response returns 'HTTP 200' without authentication
+- Red cell means, the response returns 'HTTP 200' with same content without authentication
+You can see all Http response code and response lenght in the matrix.
+<img width="1000" alt="Role Matrix" src="https://user-images.githubusercontent.com/50321735/152223013-65628eb8-94ec-40ea-a523-a4cb8d42359f.png">
+
+You may notice, it support only one http request method at the same time, because it processes bulk requests and it is not possible to provide different header options for each call. But you change play with 'GET/POST' methods to see response differences.
