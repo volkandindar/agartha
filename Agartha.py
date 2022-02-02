@@ -16,7 +16,7 @@ try:
 except ImportError:
     print "Failed to load dependencies."
 
-VERSION = "0.12"
+VERSION = "0.13"
 _colorful = True
 
 class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFactory):
@@ -327,6 +327,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._cbAuthColoring.setToolTipText("Colors may help to analysis easily")
         self._cbAuthGETPOST= JComboBox(('GET', 'POST'))
         self._cbAuthGETPOST.setSelectedIndex(0)
+        self._cbAuthGETPOST.setToolTipText("Which HTTP method will be used for the test")
         self._cbAuthSessionHandling= JCheckBox('Session Handler*', False)
         self._cbAuthSessionHandling.setEnabled(False)
         self._cbAuthSessionHandling.setToolTipText("Experimental: Auto-updates cookies and paramaters, like CSRF tokens")
@@ -751,7 +752,6 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         
         jscript += "\n\nFor redirection, please also add this code before '</script>' tag:\n\t"
         jscript += "xhr.onreadystatechange=function(){if (this.status===302){var location=this.getResponseHeader('Location');return ajax.call(this,location);}};"
-        jscript += "\n\nTo use in Developer Tools Console, you should remove 'script' tags."
 
         clipboard.setContents(StringSelection(jscript), None)
 
