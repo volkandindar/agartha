@@ -26,7 +26,7 @@ It creates command exection word list for the command you supply. It combines di
 
 
 ## SQL Injection wordlist
-It is for boolean based SQLi attacks and you dont need to supply any inputs. It generates static, vendor-neutral true and false criterias with escaping chacters and is appliaple for Mysql, Mssql, Oracle, Mariadb, PostgreSQL, etc. 
+It is for boolean based SQLi attacks and you dont need to supply any inputs. It generates static, vendor-neutral true and false criterias with escaping chacters and  appliaple for Mysql, Mssql, Oracle, Mariadb, PostgreSQL, etc. 
 
 <img width="1000" alt="SQL Injection wordlist" src="https://user-images.githubusercontent.com/50321735/152051426-d42cf034-3fe5-4221-9ec7-570c5f0249a8.png">
 
@@ -34,11 +34,11 @@ It is for boolean based SQLi attacks and you dont need to supply any inputs. It 
 ## Http Request to JavaScript Converter
 The feature is for converting Http requests to JavaScript language. It can be useful to dig up XSS issues and bypass header restrictions, like CSP, CORS.
 
-To access it, right click the Http request, extensions, agartha, copy as JavaScript.
+To access it, right click the Http request, extensions, 'Agartha', and 'Copy as JavaScript'.
 
-<img width="1000" alt="Http Request to JavaScript Converter" src="https://user-images.githubusercontent.com/50321735/152051704-ef8f4a6e-2672-4611-bcfa-6bb50a104b68.png">
+<img width="1000" alt="Http Request to JavaScript Converter" src="https://user-images.githubusercontent.com/50321735/152224405-d10b78a2-9b18-44a9-a991-5b9c451c7253.png">
 
-It will automaticly save it to your clipboard with some remarks. 
+It will automaticly save it to your clipboard with some remarks. For example:
 ```
 Http request in JavaScript:
 	<script>var xhr=new XMLHttpRequest();xhr.open('POST','http://vm:80/dvwa/login.php');xhr.withCredentials=true;xhr.setRequestHeader('Content-type','application/x-www-form-urlencoded');xhr.send('username=admin&password=pwd1234&Login=Login');</script>
@@ -48,26 +48,28 @@ For redirection, please also add this code before '</script>' tag:
 ```
 
 ## Authorization Matrix
-It creates a access maxtrix based on user sessions and helps to find authentication/authorization issues. You should first create a user with the followings:
-- **User session**: You can right click on any request and send it Agartha Panel.
+It creates an access maxtrix based on user sessions/URL list, and helps to find authentication/authorization issues. You should first create a user with the followings:
+- **User session name**: You can right click on any request and send it Agartha Panel.
 - **URL list** user can visit: You can use Burp's spider or any sitemap generator. You need to put here all URLs the user can visit.
 
 <img width="1000" alt="Authorization Matrix, sending http req" src="https://user-images.githubusercontent.com/50321735/152217672-353b42a8-bb06-4e92-b9af-3f4e487ab1fd.png">
 
 
-After sending Http request to Agartha, it will fill some fields in the tool, but it is not enough to perform a proper role matrix. 
-1. What's username for the session you provided.  
-3. User's request header. Session URL calls will be based on this header.
-4. URLs user can visit. You can create this list with manuel effort or automatic tools, like spiders, sitemap generators, etc.
-5. All URLs together will be shown in here. It be colored if the user provided the URL. So you will understand which one belongs to which user.
-6. Http request result wihout authentication. All session cookies or tokens will be removed form header.
-7. You can add up to 4 different users and each user will have a different color to make it easy to read.
-8. Http request and response can be examined here.
+After sending Http request to Agartha, it will fill some fields in the tool and wait for the next step. 
+1. What's username for the session you provide. You can add up to 4 different users and each user will have a different color to make it easy to read.
+2. User's request header. Session calls will be based on it.
+3. URLs the user can visit. You can create this list with manual effort or automatic tools, like spiders, sitemap generators, etc.
+4. All URLs together will be shown in here. It will be colored if the user provide the URL. It helps to figure out which one belongs to which user.
+5. Http request and response wihout authentication. All session cookies or tokens will be removed form header.
+6. You can see all Http response codes and response lenghts for the users created in the first step. 
+7. Http request/response details can be examined here.
 
-After clicking 'RUN', the tool will fill user and URL matrix with different colors. Besides the user colors, you will see orange, yellow and red cells. According to the example which is shown below:
-- Orange cell means, the response returns 'HTTP 200' without authentication
-- Red cell means, the response returns 'HTTP 200' with same content without authentication
-You can see all Http response code and response lenght in the matrix.
-<img width="1000" alt="Role Matrix" src="https://user-images.githubusercontent.com/50321735/152223013-65628eb8-94ec-40ea-a523-a4cb8d42359f.png">
+
+<img width="1000" alt="Role Matrix" src="https://user-images.githubusercontent.com/50321735/152227189-9e4b93df-de26-438e-ac1c-1aabcaf1ff56.png">
+
+
+After clicking 'RUN', the tool will fill user and URL matrix with different colors. Besides the user colors, you will see orange, yellow and red cells. According to the example:
+- The cell is Orange, because the response returns 'HTTP 200' without authentication
+- The cell is Red, because the response returns 'HTTP 200' with same content without authentication
 
 You may notice, it support only one http request method at the same time, because it processes bulk requests and it is not possible to provide different header options for each call. But you change play with 'GET/POST' methods to see response differences.
