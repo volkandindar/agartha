@@ -59,18 +59,20 @@ After sending Http request to Agartha, it will fill some fields in the tool and 
 1. What's username for the session you provide. You can add up to 4 different users and each user will have a different color to make it easy to read.
 2. User's request header. Session calls will be based on it.
 3. URLs the user can visit. You can create this list with manual effort or automatic tools, like spiders, sitemap generators, etc.
-4. All URLs together will be shown in here. It will be colored if the user provide the URL. It helps to figure out which one belongs to which user.
-5. Http request and response wihout authentication. All session cookies or tokens will be removed form header.
-6. You can see all Http response codes and response lenghts for the users created in the first step. 
-7. Http request/response details can be examined here.
+4. All URLs you supply will be in here. Also user cell will be colored if it is in the user's list.
+5. Http requests and responses wihout authentication. All session cookies and tokens will be removed form the calls.
+6. Http requests and responses with the user session you created in the first step. Cell titles show Http response codes and response lenghts. 
+7. Just click the cell you want to examine and Http details will be shown.
 
 
 <img width="1000" alt="Role Matrix" src="https://user-images.githubusercontent.com/50321735/152227189-9e4b93df-de26-438e-ac1c-1aabcaf1ff56.png">
 
 
-After clicking 'RUN', the tool will fill user and URL matrix with different colors. Besides the user colors, you will see orange, yellow and red cells. According to the example:
-- The cell is Orange, because the response returns 'HTTP 200' without authentication
-- The cell is Red, because the response returns 'HTTP 200' with same content without authentication
-- It will be quite similar, even if we add more users.
+After clicking 'RUN', the tool will fill user and URL matrix with different colors. Besides the user colors, you will see orange, yellow and red cells.
+- The cell is Yellow, because the response returns 'HTTP 302' with authentication/authorization concerns
+- The cell is Orange, because the response returns 'HTTP 200' but different content length, with authentication/authorization concerns
+- The cell is Red, because the response returns 'HTTP 200' and same content length, with authentication/authorization concerns
+
+It will be quite similar, even if we add more users. Any authorization concerns will be highlighted.
 
 You may also notice, it support only one http request method and header at the same time, because it processes bulk requests and it is not possible to provide different header options for each calls. But you change play with 'GET/POST' methods to see response differences.
