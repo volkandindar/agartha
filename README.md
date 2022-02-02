@@ -10,7 +10,7 @@ It is a burp extension for penetration testing and aimed to help researchers to 
 Here is a small tutorial how to use each features.
 
 ## Directory Traversal/Local File Inclusion wordlist
-It both supports unix and windows file systems. You can generate any wordlists for the path you want. You just need to supply a file name, and that's all. 
+It both supports unix and windows file systems. You can generate any wordlists for the path you want. You just need to supply a file path and that's all. 
 
 **'Depth'** is represantion of how deep the wordlist should be. You can generates word list 'till/equal to' this value.
 
