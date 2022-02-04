@@ -16,7 +16,7 @@ try:
 except ImportError:
     print "Failed to load dependencies."
 
-VERSION = "0.13"
+VERSION = "0.14"
 _colorful = True
 
 class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFactory):
@@ -25,7 +25,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._callbacks = callbacks
         self._helpers = callbacks.getHelpers()
         self._callbacks.setExtensionName("Agartha {LFI|RCE|Auth|SQLi|Http-Js}")
-        print "Version " + VERSION + " is just loaded.\n\nAgartha is a security tool for:\n\t\t* Local File Inclusion (LFI), Directory Traversal,\n\t\t* Remote Code Execution (RCE),\n\t\t* Authorization/Authentication Control,\n\t\t* Boolean-Based SQL Injection,\n\t\t* Http Request to Javascript.\n\nFor more information and tutorial how to use, please visit:\n\t\thttps://github.com/volkandindar/agartha"        
+        print "Version " + VERSION + " is just loaded.\n\nAgartha is a security tool for:\n\t\t* Local File Inclusion (LFI), Directory Traversal,\n\t\t* Remote Code Execution (RCE),\n\t\t* Authorization/Authentication Access Matrix,\n\t\t* Boolean-Based SQL Injection,\n\t\t* Http Request to Javascript.\n\nFor more information and tutorial how to use, please visit:\n\t\thttps://github.com/volkandindar/agartha"        
         self._MainTabs = JTabbedPane()
         self._tabDictUI()
         self._tabAuthUI()
@@ -556,30 +556,31 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
             interruptor.strip()
             for separator in separators:
                 separator.strip()
-                listRCE.append((interruptor + separator + " " + self._txtDictParam.text).strip() + "\n")
-                listRCE.append((interruptor + separator + " " + self._txtDictParam.text + " " + interruptor).strip() + "\n")
-                listRCE.append((interruptor + separator + " " + self._txtDictParam.text + " " + separator).strip() + "\n")
-                listRCE.append((interruptor + separator + " " + self._txtDictParam.text + " " + separator + interruptor).strip() + "\n")
-                listRCE.append((separator + interruptor + " " + self._txtDictParam.text).strip() + "\n")
-                listRCE.append((separator + interruptor + " " + self._txtDictParam.text + " " + separator).strip() + "\n")
-                listRCE.append((separator + interruptor + " " + self._txtDictParam.text + " " + interruptor).strip() + "\n")
-                listRCE.append((separator + interruptor + " " + self._txtDictParam.text + " " + interruptor + separator).strip() + "\n")
+                listRCE.append(((interruptor + separator).strip() + self._txtDictParam.text).strip() + "\n")
+                listRCE.append(((interruptor + separator).strip() + self._txtDictParam.text + interruptor).strip() + "\n")
+                listRCE.append(((interruptor + separator).strip() + self._txtDictParam.text + separator).strip() + "\n")
+                listRCE.append(((interruptor + separator).strip() + self._txtDictParam.text + separator + interruptor).strip() + "\n")                
+                if separator:
+                    listRCE.append(((interruptor + separator + interruptor).strip() + self._txtDictParam.text).strip() + "\n")
+                    listRCE.append(((interruptor + separator + interruptor).strip() + self._txtDictParam.text + interruptor).strip() + "\n")
 
-        interruptors = ["", "\\n", "\\\\n", "\\r", "\\\\r"]
+        interruptors = ["", "\\n", "\\\\n", "\\r", "\\\\r"]        
         separators  = ["", "&", "&&", "|", "||", ";", "%0a", "0x0a", "%0d", "0x0d", "%1a", "0x1a", "%00", "0x00"]
         for interruptor in interruptors:
             interruptor.strip()
             for separator in separators:
                 separator.strip()
-                listRCE.append((interruptor + separator + " " + self._txtDictParam.text).strip() + "\n")
-                listRCE.append((interruptor + separator + " " + self._txtDictParam.text + " " + interruptor).strip() + "\n")
-                listRCE.append((interruptor + separator + " " + self._txtDictParam.text + " " + separator).strip() + "\n")
-                listRCE.append((interruptor + separator + " " + self._txtDictParam.text + " " + separator + interruptor).strip() + "\n")
-                listRCE.append((separator + interruptor + " " + self._txtDictParam.text).strip() + "\n")
-                listRCE.append((separator + interruptor + " " + self._txtDictParam.text + " " + separator).strip() + "\n")
-                listRCE.append((separator + interruptor + " " + self._txtDictParam.text + " " + interruptor).strip() + "\n")
-                listRCE.append((separator + interruptor + " " + self._txtDictParam.text + " " + interruptor + separator).strip() + "\n")
-
+                listRCE.append(((interruptor + separator).strip() + self._txtDictParam.text).strip() + "\n")
+                listRCE.append(((interruptor + separator).strip() + self._txtDictParam.text + separator).strip() + "\n")
+                listRCE.append(((separator + interruptor).strip() + self._txtDictParam.text).strip() + "\n")
+                listRCE.append(((separator + interruptor).strip() + self._txtDictParam.text + separator).strip() + "\n")
+                listRCE.append((interruptor + self._txtDictParam.text + separator).strip() + "\n")
+                if not interruptor:
+                    listRCE.append(separator + "{" + self._txtDictParam.text.replace(" ",",") + "}" + "\n")
+                    listRCE.append(separator + "{" + self._txtDictParam.text.replace(" ",",") + "}" + separator + "\n")
+                    listRCE.append(separator + "$(" + self._txtDictParam.text + ")" + "\n")
+                    listRCE.append(separator + "$(" + self._txtDictParam.text + ")" + separator + "\n")
+                
         listRCE = list(set(listRCE))
         listRCE.sort()
         self._tabDictResultDisplay.setText(''.join(map(str, listRCE)))
