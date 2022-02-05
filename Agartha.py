@@ -16,7 +16,7 @@ try:
 except ImportError:
     print "Failed to load dependencies."
 
-VERSION = "0.14"
+VERSION = "0.15"
 _colorful = True
 
 class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFactory):
@@ -731,28 +731,35 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         http_contexts = self.context.getSelectedMessages()
         _req = self._helpers.bytesToString(http_contexts[0].getRequest())
         _url = str(self._helpers.analyzeRequest(http_contexts[0]).getUrl())
-        jscript = "Http request in JavaScript:\n"
-        contentType=""
-        sendData=""
         method=_req.splitlines()[0].split(" ", 1)[0]
+
+        fullHeader=""
+        for line in _req.splitlines()[1:-1]:
+            if line:
+                fullHeader += "xhr.setRequestHeader('" + line.split(":", 1)[0] + "','" + line.split(":", 1)[1] + "');"
         
         if method == "GET":
-            jscript += "\t<script>var xhr=new XMLHttpRequest();xhr.open('GET','" + _url + "');xhr.withCredentials=true;xhr.send();</script>"
+            minHeader = "var xhr=new XMLHttpRequest();xhr.open('GET','" + _url + "');xhr.withCredentials=true;xhr.send();"
+            jscript = "Http request with minimum header paramaters in JavaScript:\n\t<script>" + minHeader + "</script>\n\n"
+            jscript += "Http request with all header paramaters in JavaScript:\n\t<script>" + minHeader + fullHeader + "</script>"
+
         else:
+            contentType=""
             for line in _req.splitlines():
                 if any(re.findall(r'Content-type', line, re.IGNORECASE)):
                     contentType = line.split(" ", 1)[1]
                     break
             if contentType:
                 contentType="xhr.setRequestHeader('Content-type','" + contentType + "');"
-
+                
             if _req.splitlines()[-1]:
                 sendData="'" + _req.splitlines()[-1] + "'"
             
-            jscript += "\t<script>var xhr=new XMLHttpRequest();xhr.open('" + method + "','" + _url + "');xhr.withCredentials=true;" + contentType + "xhr.send(" + sendData + ");</script>" 
+            minHeader = "var xhr=new XMLHttpRequest();xhr.open('" + method + "','" + _url + "');xhr.withCredentials=true;" + contentType.strip() + "xhr.send(" + sendData + ");" 
+            jscript = "Http request with minimum header paramaters in JavaScript:\n\t<script>" + minHeader + "</script>\n\n"
+            jscript += "Http request with all header paramaters in JavaScript:\n\t<script>" + "var xhr=new XMLHttpRequest();xhr.open('" + method + "','" + _url + "');xhr.withCredentials=true;" + fullHeader + "xhr.send(" + sendData + ");" + "</script>"
         
-        jscript += "\n\nFor redirection, please also add this code before '</script>' tag:\n\t"
-        jscript += "xhr.onreadystatechange=function(){if (this.status===302){var location=this.getResponseHeader('Location');return ajax.call(this,location);}};"
+        jscript += "\n\nFor redirection, please also add this code before '</script>' tag:\n\txhr.onreadystatechange=function(){if (this.status===302){var location=this.getResponseHeader('Location');return ajax.call(this,location);}};"
 
         clipboard.setContents(StringSelection(jscript), None)
 
