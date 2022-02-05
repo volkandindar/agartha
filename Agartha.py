@@ -20,8 +20,8 @@ VERSION = "0.16"
 _colorful = True
 
 class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFactory):
+    
     def registerExtenderCallbacks(self, callbacks):
-
         self._callbacks = callbacks
         self._helpers = callbacks.getHelpers()
         self._callbacks.setExtensionName("Agartha {LFI|RCE|Auth|SQLi|Http-Js}")
@@ -35,7 +35,6 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         callbacks.registerContextMenuFactory(self)
         callbacks.issueAlert("The extension has been loaded.");
         self.tableMatrixReset(self)
-
         return
 
     def authMatrixThread(self, ev):
@@ -86,7 +85,6 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         return
 
     def makeHttpCall(self, urlAdd, userID):
-
         try:
             userID = self.userNames.index(userID)
             header = self.userNamesHttpReq[userID]
@@ -174,7 +172,6 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         return httpReqHeader
 
     def authAdduser(self, ev):
-        
         if self.userCount==4:
             self._lblAuthNotification.text = "You can add only 4 users"
             return
@@ -249,7 +246,6 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         return
 
     def tableMatrixReset(self, ev):
-        
         self.tableMatrix=[]        
         self.tableMatrix_DM = CustomDefaultTableModel(self.tableMatrix, ('URLS','NoAuth'))
         self.tableMatrix = JTable(self.tableMatrix_DM)
@@ -299,7 +295,6 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         return
 
     def _tabAuthUI(self):
-        
         #panel top
         self._tbAuthNewUser = JTextField("", 15)
         self._tbAuthNewUser.setToolTipText("Please provide an username")
@@ -548,7 +543,6 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         return
 
     def funcRCE(self, ev):
-        
         listRCE = []
         interruptors = ["", "`", "'", "\'", "\\'", "\"", "\\\"", "\\\\\""]
         separators  = ["", "&", "&&", "|", "||", ";", "%0a", "0x0a", "%0d", "0x0d", "%1a", "0x1a", "%00", "0x00", "\\n", "\\\\n", "\\r", "\\\\r"]
