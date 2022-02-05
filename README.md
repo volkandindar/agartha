@@ -49,6 +49,7 @@ Http request with all header paramaters in JavaScript:
 For redirection, please also add this code before '</script>' tag:
 	xhr.onreadystatechange=function(){if (this.status===302){var location=this.getResponseHeader('Location');return ajax.call(this,location);}};
 ```
+Please note that, the JavaScript code will be called over original user session and many header fields will be filled automaticly. In some cases, the server may require some header field mendatory, and therefore you may need to modify the code for an adjustment.
 
 ## Authorization Matrix
 It creates an access maxtrix based on user sessions/URL list, and helps to find authentication/authorization issues. You should first supply rows and columns information:
