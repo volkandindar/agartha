@@ -16,7 +16,7 @@ try:
 except ImportError:
     print "Failed to load dependencies."
 
-VERSION = "0.17"
+VERSION = "0.18"
 _colorful = True
 
 class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFactory):
@@ -88,21 +88,16 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         try:
             userID = self.userNames.index(userID)
             header = self.userNamesHttpReq[userID]
-            if "\r\n" in header:
-                #right click send
-                if "GET" in header[:3]:
-                    header = self._helpers.bytesToString(self._callbacks.getHelpers().toggleRequestMethod((header)))
-                header = "ABC "+ str(urlparse.urlparse(urlAdd).path) + " HTTP/1.1\r\n" + "\n".join(header.split("\n")[1:])
+
+            if "GET" in header[:3]:
+                #request was in GET method and will be in POST
+                if self._cbAuthGETPOST.getSelectedIndex() == 1:
+                    header = self._callbacks.getHelpers().toggleRequestMethod((header))
             else:
-                #copy paste
-                header = header.replace("\n", "\r\n")
-                if "GET" in header[:3]:
-                    header = self._helpers.bytesToString(self._callbacks.getHelpers().toggleRequestMethod((header)))
-                header = ("ABC "+ str(urlparse.urlparse(urlAdd).path) + " HTTP/1.1\r\n" + "\n".join(header.split("\n")[1:]))
-            header = self._callbacks.getHelpers().toggleRequestMethod((header))
-            if self._cbAuthGETPOST.getSelectedIndex() == 1:
-                header = self._callbacks.getHelpers().toggleRequestMethod((header))
-    
+                #request was in POST method and will be in GET
+                if self._cbAuthGETPOST.getSelectedIndex() == 0:
+                    header = self._callbacks.getHelpers().toggleRequestMethod((header))
+
             portNum = 80
             if urlparse.urlparse(urlAdd).port:
                 portNum = urlparse.urlparse(urlAdd).port
