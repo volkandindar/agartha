@@ -51,7 +51,7 @@ For redirection, please also add this code before '</script>' tag:
 ```
 
 ## Authorization Matrix
-It creates an access maxtrix based on user sessions/URL list, and helps to find authentication/authorization issues. You should first create a user with the followings:
+It creates an access maxtrix based on user sessions/URL list, and helps to find authentication/authorization issues. You should first supply rows and columns information:
 - **User session name**: You can right click on any request and send it Agartha Panel.
 - **URL list** user can visit: You can use Burp's spider or any sitemap generator. You need to put here all URLs the user can visit.
 
