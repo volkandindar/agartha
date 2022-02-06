@@ -1,5 +1,5 @@
 # Agartha { LFI | RCE | Auth | SQLi | Http-Js }
-Agartha is a penetration testing tool which creates dynamic payload lists and user access matrix to find injection flaws and authentication/authorization issues. There are many different attack payloads exists, but Agartha creates dynamic, systematic and vendor-neutral payloads. Also it converts Http requests to JavaScript to help digging up XSS issues more. Features:
+Agartha is a penetration testing tool which creates run-time payload lists and user access matrix to find injection flaws and authentication/authorization issues. There are many different attack payloads exists, but Agartha creates dynamic, systematic and vendor-neutral payloads. Also it converts Http requests to JavaScript to help digging up XSS issues more. Features:
 
 - **Payload Generator**: It creates payloads/wordlist for different attacks.
 	- **Directory Traversal/Local File Inclusion**: It creates file dictionary lists with various encoding and escaping characters.
