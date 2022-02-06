@@ -11,7 +11,7 @@ Agartha is a penetration testing tool which creates dynamic payload lists and us
 
 Here is a small tutorial how to use.
 ## Installation
-You can install Agartha through official Burp Store automatically: from Burp menu 'Extender > BApp Store'.
+You can install Agartha through official Burp Store automatically, from Burp menu 'Extender > BApp Store'.
 
 For manual installation, you should download 'jython' file first, and then:
 - Extender > Options > Python Environment > Location of jython standalone jar file
