@@ -19,7 +19,7 @@ For manual installation, you should download 'jython' file first, and then:
 - After, you will see 'Agartha' tab in the main window and it will be also registered the right click, under 'Extensions > Agartha {LFI|RCE|Auth|SQLi|Http-Js}'.<br/><br/>
 
 ## Directory Traversal/Local File Inclusion
-It both supports unix and windows file systems. You can generate any wordlists for the path you want. You just need to supply a file path and that's all. 
+It both supports unix and windows file systems. You can generate any wordlists dynamically for the path you want. You just need to supply a file path and that's all. 
 
 **'Depth'** is represantion of how deep the wordlist should be. You can generates word list 'till/equal to' this value.
 
@@ -29,7 +29,7 @@ It both supports unix and windows file systems. You can generate any wordlists f
 
 
 ## Remote Code Execution
-It creates command exection word list for the command you supply. It combines different sepetator and terminator for unix and windows enviorments together.
+It creates command exection dynamic word lists for the command you supply. It combines different sepetator and terminator for unix and windows enviorments together.
 
 <img width="1000" alt="Remote Code Execution wordlist" src="https://user-images.githubusercontent.com/50321735/152050785-82901333-b5e8-4e51-9467-adc2f6f0b628.png"><br/><br/>
 
