@@ -14,7 +14,7 @@ Here is a small tutorial how to use.
 You can install Agartha via official Burp Store automaticly. For manual installation, you should download 'jython' file first, and then:
 - Extender > Options > Python Environment > Location of jython standalone jar file
 - Extender > Extensions > Add > Extension Type: Python > Select file: 'agartha.py'
-- After, you will see 'Agartha' tab in the main window and it will be also registered the right click, under 'Extensions > Agartha {LFI|RCE|Auth|SQLi|Http-Js}'.
+- After, you will see 'Agartha' tab in the main window and it will be also registered the right click, under 'Extensions > Agartha {LFI|RCE|Auth|SQLi|Http-Js}'.<br/><br/>
 
 ## Directory Traversal/Local File Inclusion
 It both supports unix and windows file systems. You can generate any wordlists for the path you want. You just need to supply a file path and that's all. 
@@ -23,19 +23,19 @@ It both supports unix and windows file systems. You can generate any wordlists f
 
 **'Waf Bypass'** asks for if you want to include all bypass features, like null bytes, different encoding, etc.
 
-<img width="1000" alt="Directory Traversal/Local File Inclusion wordlist" src="https://user-images.githubusercontent.com/50321735/152050458-84c29e84-6e12-486b-99d2-fcf220791798.png">
+<img width="1000" alt="Directory Traversal/Local File Inclusion wordlist" src="https://user-images.githubusercontent.com/50321735/152050458-84c29e84-6e12-486b-99d2-fcf220791798.png"><br/><br/>
 
 
 ## Remote Code Execution
 It creates command exection word list for the command you supply. It combines different sepetator and terminator for unix and windows enviorments together.
 
-<img width="1000" alt="Remote Code Execution wordlist" src="https://user-images.githubusercontent.com/50321735/152050785-82901333-b5e8-4e51-9467-adc2f6f0b628.png">
+<img width="1000" alt="Remote Code Execution wordlist" src="https://user-images.githubusercontent.com/50321735/152050785-82901333-b5e8-4e51-9467-adc2f6f0b628.png"><br/><br/>
 
 
 ## SQL Injection Boolean-based
 It is for boolean based SQLi attacks and you dont need to supply any inputs. It generates static, vendor-neutral true and false criterias with escaping chacters and  appliaple for Mysql, Mssql, Oracle, Mariadb, PostgreSQL, etc. 
 
-<img width="1000" alt="SQL Injection wordlist" src="https://user-images.githubusercontent.com/50321735/152051426-d42cf034-3fe5-4221-9ec7-570c5f0249a8.png">
+<img width="1000" alt="SQL Injection wordlist" src="https://user-images.githubusercontent.com/50321735/152051426-d42cf034-3fe5-4221-9ec7-570c5f0249a8.png"><br/><br/>
 
 
 ## Authorization Matrix
@@ -66,7 +66,7 @@ After clicking 'RUN', the tool will fill user and URL matrix with different colo
 
 It will be quite similar, even if we add more users. Any authorization concerns will be highlighted.
 
-You may also notice, it support only one http request method and header at the same time, because it processes bulk requests and it is not possible to provide different header options for each calls. But you change play with 'GET/POST' methods to see response differences.
+You may also notice, it support only one http request method and header at the same time, because it processes bulk requests and it is not possible to provide different header options for each calls. But you change play with 'GET/POST' methods to see response differences.<br/><br/>
 
 
 ## Http Request to JavaScript Converter
