@@ -1,16 +1,16 @@
 # Agartha { LFI | RCE | Auth | SQLi | Http-Js }
 Agartha is a penetration testing tool which creates dynamic payload lists and user access matrix to find injection flaws and authentication/authorization issues. Also it converts Http requests to JavaScript to help digging up XSS issues more. Features:
 
-- **Payload Generator**: It creates payloads for different attacks.
-	- **Directory Traversal/Local File Inclusion wordlist**: It creates dynamic dictionary list with various encoding and escaping characters.
-	- **Remote Code Execution wordlist**: It creates dynamic dictionary list for both unix and windows environments with different combinations.
-	- **SQL Injection wordlist**: It creates static boolean based SQLi dictionary list to help revealing vulnerable spots.
+- **Payload Generator**: It creates payloads/wordlist against different attacks.
+	- **Directory Traversal/Local File Inclusion**: It creates dynamic dictionary list with various encoding and escaping characters.
+	- **Remote Code Execution**: It creates dynamic dictionary list for both unix and windows environments with different combinations.
+	- **SQL Injection Boolean-based**: It creates static boolean based SQLi dictionary list to help revealing vulnerable spots.
 - **Authorization Matrix**: It creates an acccess role matrix based on user sessions and helps to find auhtorization/authentication related issues.
 - And **Http Request to JavaScript Converter**: It converts Http requests to JavaScript code and might be useful for digging up XSS issues more.
 
 Here is a small tutorial how to use each features.
 
-## Directory Traversal/Local File Inclusion wordlist
+## Directory Traversal/Local File Inclusion
 It both supports unix and windows file systems. You can generate any wordlists for the path you want. You just need to supply a file path and that's all. 
 
 **'Depth'** is represantion of how deep the wordlist should be. You can generates word list 'till/equal to' this value.
@@ -20,13 +20,13 @@ It both supports unix and windows file systems. You can generate any wordlists f
 <img width="1000" alt="Directory Traversal/Local File Inclusion wordlist" src="https://user-images.githubusercontent.com/50321735/152050458-84c29e84-6e12-486b-99d2-fcf220791798.png">
 
 
-## Remote Code Execution wordlist
+## Remote Code Execution
 It creates command exection word list for the command you supply. It combines different sepetator and terminator for unix and windows enviorments together.
 
 <img width="1000" alt="Remote Code Execution wordlist" src="https://user-images.githubusercontent.com/50321735/152050785-82901333-b5e8-4e51-9467-adc2f6f0b628.png">
 
 
-## SQL Injection wordlist
+## SQL Injection Boolean-based
 It is for boolean based SQLi attacks and you dont need to supply any inputs. It generates static, vendor-neutral true and false criterias with escaping chacters and  appliaple for Mysql, Mssql, Oracle, Mariadb, PostgreSQL, etc. 
 
 <img width="1000" alt="SQL Injection wordlist" src="https://user-images.githubusercontent.com/50321735/152051426-d42cf034-3fe5-4221-9ec7-570c5f0249a8.png">
