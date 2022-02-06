@@ -23,7 +23,7 @@ It both supports unix and windows file systems. You can generate any wordlists d
 
 **'Depth'** is representation of how deep the wordlist should be. You can generate wordlists 'till' or 'equal to' this value.
 
-**'Waf Bypass'** asks for if you want to include all bypass features, like null bytes, different encoding, etc.
+**'Waf Bypass'** asks for if you want to include all bypass features; like null bytes, different encoding, etc.
 
 <img width="1000" alt="Directory Traversal/Local File Inclusion wordlist" src="https://user-images.githubusercontent.com/50321735/152050458-84c29e84-6e12-486b-99d2-fcf220791798.png"><br/><br/>
 
