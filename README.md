@@ -53,9 +53,9 @@ After sending Http request to Agartha, it will fill some fields in the tool and 
 1. What's username for the session you provide. You can add up to 4 different users and each user will have a different color to make it more readable.
 2. User's request header and all user related URL visits will be based on it.
 3. URL addresses the user can visit. You can create this list with manual effort or automatic tools, like spiders, sitemap generators, etc, and do not forget to remove logout links.
-4. All URLs you supply will be in here. Also user cell will be colored if it is in the user's list.
-5. Http requests and responses without authentication. All session cookies and tokens will be removed form the calls.
-6. Http requests and responses with the user session you created in the first step. Cell titles show Http response codes and response lengths. 
+4. All URLs you supply will be in here. Also user cells will be colored, if the URL belongs to her/him.
+5. Http requests and responses without authentication. All session cookies, tokens and parameters will be removed form the calls.
+6. Http requests and responses with the user session you define in the first step. Cell titles show Http response codes and response lengths. 
 7. Just click the cell you want to examine and Http details will be shown in here.
 
 
@@ -63,19 +63,20 @@ After sending Http request to Agartha, it will fill some fields in the tool and 
 
 
 After clicking 'RUN', the tool will fill user and URL matrix with different colors. Besides the user colors, you will see orange, yellow and red cells.
-- The cell is Yellow, because the response returns 'HTTP 302' with authentication/authorization concerns
-- The cell is Orange, because the response returns 'HTTP 200' but different content length, with authentication/authorization concerns
-- The cell is Red, because the response returns 'HTTP 200' and same content length, with authentication/authorization concerns
+The URL address does not belong to the user and the cell color is
+- Yellow, because the response returns 'HTTP 302' with authentication/authorization concerns
+- Orange, because the response returns 'HTTP 200' but different content length, with authentication/authorization concerns
+- Red, because the response returns 'HTTP 200' and same content length, with authentication/authorization concerns
 
 It will be quite similar, even if we add more users. Any authorization concerns will be highlighted.
 
-You may also notice, it support only one Http request method and header at the same time, because it processes bulk requests and it is not possible to provide different header options for each calls. But you change play with 'GET/POST' methods to see response differences.<br/><br/>
+You may also notice, it support only one Http request method and example user session at the same time, because it processes bulk requests and it is not possible to provide different header options for each calls. But you may play with 'GET/POST' methods to see response differences.<br/><br/>
 
 
 ## Http Request to JavaScript Converter
-The feature is for converting Http requests to JavaScript language. It can be useful to dig up XSS issues and bypass header restrictions, like CSP, CORS.
+The feature is for converting Http requests to JavaScript code. It can be useful to dig up further XSS issues and bypass header restrictions, like CSP, CORS.
 
-To access it, right click the Http Request, Extensions, 'Agartha', and 'Copy as JavaScript'.
+To access it, right click any Http Request, Extensions, 'Agartha', and 'Copy as JavaScript'.
 
 <img width="1000" alt="Http Request to JavaScript Converter" src="https://user-images.githubusercontent.com/50321735/152224405-d10b78a2-9b18-44a9-a991-5b9c451c7253.png">
 
