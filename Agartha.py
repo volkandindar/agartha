@@ -16,7 +16,7 @@ try:
 except ImportError:
     print "Failed to load dependencies."
 
-VERSION = "0.18"
+VERSION = "0.19"
 _colorful = True
 
 class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFactory):
@@ -88,6 +88,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         try:
             userID = self.userNames.index(userID)
             header = self.userNamesHttpReq[userID]
+            header = header.replace(header.splitlines()[0].split(" ", 2)[1], str(urlparse.urlparse(urlAdd).path))
 
             if "GET" in header[:3]:
                 #request was in GET method and will be in POST
@@ -147,7 +148,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                                 for dd1 in line2.split(':')[1:]:
                                     for dd2 in dd1.split(';'):
                                         if param in dd2:
-                                            httpReqHeader = httpReqHeader.replace(value, str(dd2.split('=')[1]))                                            
+                                            httpReqHeader = httpReqHeader.replace(value, str(dd2.split('=')[1]))
                                             break
     
         if httpReqData:
@@ -216,7 +217,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         for x in range(0,self.tableMatrix.getRowCount()):
                 urlList.append(str(self.tableMatrix.getValueAt(x, 0)))
         
-        for line in self._tbAuthURL.getText().split('\n'):
+        for line in set(self._tbAuthURL.getText().split('\n')):
             if line and not any(re.findall(r'(log|sign).*(off|out)', line, re.IGNORECASE)):
                 self.userNamesHttpUrls[self.userCount].append(line)
                 if line not in urlList:
