@@ -29,7 +29,7 @@ It both supports unix and windows file systems. You can generate any wordlists d
 
 
 ## Remote Code Execution
-It creates command execution dynamic wordlists for the command you supply. It combines different separator and terminator for unix and windows environments together.
+It creates command execution dynamic wordlists for the command you supply. It combines different separators and terminators for unix and windows environments together.
 
 <img width="1000" alt="Remote Code Execution wordlist" src="https://user-images.githubusercontent.com/50321735/152050785-82901333-b5e8-4e51-9467-adc2f6f0b628.png"><br/><br/>
 
