@@ -16,7 +16,7 @@ try:
 except ImportError:
     print "Failed to load dependencies."
 
-VERSION = "0.19"
+VERSION = "0.20"
 _colorful = True
 
 class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFactory):
@@ -87,7 +87,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
     def makeHttpCall(self, urlAdd, userID):
         try:
             userID = self.userNames.index(userID)
-            header = self.userNamesHttpReq[userID]
+            header = self.userNamesHttpReq[userID]            
             header = header.replace(header.splitlines()[0].split(" ", 2)[1], str(urlparse.urlparse(urlAdd).path))
 
             if "GET" in header[:3]:
@@ -180,8 +180,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                 return
         self._tbAuthURL.setForeground (Color.black)
 
-        if not self._tbAuthHeader.getText().strip() or self._tbAuthHeader.getText().strip() == self._txtHeaderDefault:
-            self._tbAuthHeader.setText(self._txtHeaderDefault)
+        if not self._tbAuthHeader.getText().strip() or self._tbAuthHeader.getText().strip() == self._txtHeaderDefault or not self._tbAuthHeader.getText().split('\n')[0].count(' ') == 2:
             self._tbAuthHeader.setForeground (Color.red)
             self._lblAuthNotification.text = "Please provide a valid header!"
             self._lblAuthNotification.setForeground (Color.red)
@@ -219,6 +218,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         
         for line in set(self._tbAuthURL.getText().split('\n')):
             if line and not any(re.findall(r'(log|sign).*(off|out)', line, re.IGNORECASE)):
+                line=line.replace(' ','')
                 self.userNamesHttpUrls[self.userCount].append(line)
                 if line not in urlList:
                     self.tableMatrix_DM.addRow([line])
@@ -801,23 +801,24 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         except:
             self._requestViewer.setMessage("", False)
             self._responseViewer.setMessage("", False)
+    
     def isURLValid(self, urlAdd):
-        if urlAdd.startswith("http"):
+        if " " in urlAdd.strip():
+            return False
+        elif urlAdd.startswith("http"):
             return True
         else:
             #white space exception
             if urlAdd:
                 return False
-                self._lblAuthNotification.text = "Please Check URL list"
             else:
                 return True
-
 
 class UserEnabledRenderer(TableCellRenderer):
     def __init__(self, defaultCellRender, userNamesHttpUrls):
         self._defaultCellRender = defaultCellRender
         self.urlList= userNamesHttpUrls
-        self.colorsUser = [Color(204, 229, 255), Color(204, 255, 204), Color(204, 204, 255), Color(234,157,197)]
+        self.colorsUser = [Color(204, 229, 255), Color(204, 255, 204), Color(204, 204, 255), Color(189,183,107)]        
         self.colorsAlert = [Color.white, Color(255, 153, 153), Color(255,218,185), Color(255, 255, 204), Color(211,211,211)]
 
     def getTableCellRendererComponent(self, table, value, isSelected, hasFocus, row, column):
