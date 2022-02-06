@@ -43,7 +43,7 @@ It is for boolean based SQLi attacks and you do not need to supply any inputs. I
 ## Authorization Matrix
 This part focuses on user session and URLs relationships to determine access violations. The tool will visit all URLs from pre-defined user sessions and fill the table with all Http responses. It is a kind of access matrix and helps to find out authentication/authorization issues. Afterwards we will see what user can access what page contents.
 - **User session name**: You can right click on any request and send it 'Agartha Panel' to define user sessions.
-- **URL Addresses** user can visit: You can use Burp's spider or any sitemap generators. You may need to provide different URLs for different users.
+- **URL Addresses** user can visit: You can use Burp's spider feature or any sitemap generators. You may need to provide different URLs for different users.
 
 
 <img width="1000" alt="Authorization Matrix, sending http req" src="https://user-images.githubusercontent.com/50321735/152217672-353b42a8-bb06-4e92-b9af-3f4e487ab1fd.png">
