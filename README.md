@@ -62,7 +62,7 @@ After sending Http request to Agartha, the panel will fill some fields in the to
 <img width="1000" alt="Role Matrix" src="https://user-images.githubusercontent.com/50321735/152227189-9e4b93df-de26-438e-ac1c-1aabcaf1ff56.png">
 
 
-After clicking 'RUN', the tool will fill user and URL matrix with different colors. Besides the user colors, you will see orange, yellow and red cells. The URL address does not belong to the user and the cell color is
+After clicking 'RUN', the tool will fill user and URL matrix with different colors. Besides the user colors, you will see orange, yellow and red cells. The URL address does not belong to the user and the cell color is:
 - Yellow, because the response returns 'HTTP 302' with authentication/authorization concerns
 - Orange, because the response returns 'HTTP 200' but different content length, with authentication/authorization concerns
 - Red, because the response returns 'HTTP 200' and same content length, with authentication/authorization concerns
