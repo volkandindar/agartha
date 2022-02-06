@@ -21,7 +21,7 @@ For manual installation, you should download 'jython' file first, and then:
 ## Directory Traversal/Local File Inclusion
 It both supports unix and windows file systems. You can generate any wordlists dynamically for the path you want. You just need to supply a file path and that's all. 
 
-**'Depth'** is representation of how deep the wordlist should be. You can generates word list 'till' or 'equal to' this value.
+**'Depth'** is representation of how deep the wordlist should be. You can generates wordlists 'till' or 'equal to' this value.
 
 **'Waf Bypass'** asks for if you want to include all bypass features, like null bytes, different encoding, etc.
 
