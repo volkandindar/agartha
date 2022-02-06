@@ -5,7 +5,7 @@ Agartha is a penetration testing tool which creates dynamic payload lists and us
 	- **Directory Traversal/Local File Inclusion**: It creates file dictionary lists with various encoding and escaping characters.
 	- **Remote Code Execution**: It creates command dictionary lists for both unix and windows environments with different combinations.
 	- **SQL Injection Boolean-based**: It creates boolean based SQLi dictionary list to help revealing vulnerable spots.
-- **Authorization Matrix**: It creates an acccess role matrix based on user sessions and URL lists to help finding auhtorization/authentication related issues.
+- **Authorization Matrix**: It creates an acccess role matrix based on user sessions and URL lists to help finding auhtorization/authentication related access violation issues.
 - And **Http Request to JavaScript Converter**: It converts Http requests to JavaScript code and might be useful for digging up XSS issues more.<br/><br/>
 
 
