@@ -35,7 +35,7 @@ It creates command execution dynamic wordlists for the command you supply. It co
 
 
 ## SQL Injection Boolean-based
-It is for boolean based SQLi attacks and you do not need to supply any inputs. It generates static, vendor-neutral true and false criteria with escaping characters and applicable for Mysql, Mssql, Oracle, Mariadb, PostgreSQL, etc. 
+It is for boolean based SQLi attacks and you do not need to supply any inputs. It generates static, vendor-neutral, 'true and false' wordlist with escape characters for SQL language 'where' criteria and it is applicable for Mysql, Mssql, Oracle, Mariadb, PostgreSQL, etc. 
 
 <img width="1000" alt="SQL Injection wordlist" src="https://user-images.githubusercontent.com/50321735/152051426-d42cf034-3fe5-4221-9ec7-570c5f0249a8.png"><br/><br/>
 
