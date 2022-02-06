@@ -2,7 +2,7 @@
 It is a burp extension for penetration testing and aimed to help researchers to find security issues. It creates dynamic word lists, access role matrix and more:
 - **Payload Generator**: It creates payloads for different attacks.
 	- **Directory Traversal/Local File Inclusion wordlist**: It creates dynamic dictionary list with various encoding and escaping characters.
-	- **Remote Code Execution wordlist**: It creates dynamic dictionary list for both unix and windows environment with different combinations.
+	- **Remote Code Execution wordlist**: It creates dynamic dictionary list for both unix and windows environments with different combinations.
 	- **SQL Injection wordlist**: It creates static boolean based SQLi dictionary list to help revealing vulnerable spots.
 	- **Http Request to JavaScript Converter**: It converts Http requests to JavaScript code and might be useful for digging up XSS issues more.
 - **Authorization Matrix**: It creates a authorization role matrix and helps to find user related auhtorization/authentication issues.
