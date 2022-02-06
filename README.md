@@ -1,5 +1,6 @@
 # Agartha { LFI | RCE | Auth | SQLi | Http-Js }
-It is a burp extension for penetration testing and aimed to help researchers to find security issues. It creates dynamic word lists, access role matrix and more:
+Agartha is a penetration testing tool which creates dynamic payload lists and user access matrix to find injection flaws and authentication/authorization issues. Also it converts Http requests to JavaScript to help digging up XSS issues more. Features:
+
 - **Payload Generator**: It creates payloads for different attacks.
 	- **Directory Traversal/Local File Inclusion wordlist**: It creates dynamic dictionary list with various encoding and escaping characters.
 	- **Remote Code Execution wordlist**: It creates dynamic dictionary list for both unix and windows environments with different combinations.
