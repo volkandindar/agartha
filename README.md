@@ -49,7 +49,7 @@ This part focuses on user session and URLs relationships to determine access vio
 <img width="1000" alt="Authorization Matrix, sending http req" src="https://user-images.githubusercontent.com/50321735/152217672-353b42a8-bb06-4e92-b9af-3f4e487ab1fd.png">
 
 
-After sending Http request to Agartha, it will fill some fields in the tool and wait for the next step. 
+After sending Http request to Agartha, it will fill some fields in the tool and wait for the next steps. 
 1. What's username for the session you provide. You can add up to 4 different users and each user will have a different color to make it easy to read.
 2. User's request header. Session calls will be based on it.
 3. URLs the user can visit. You can create this list with manual effort or automatic tools, like spiders, sitemap generators, etc, and do not forget to remove logout links.
