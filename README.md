@@ -4,8 +4,8 @@ It is a burp extension for penetration testing and aimed to help researchers to 
 	- **Directory Traversal/Local File Inclusion wordlist**: It creates dynamic dictionary list with various encoding and escaping characters.
 	- **Remote Code Execution wordlist**: It creates dynamic dictionary list for both unix and windows environments with different combinations.
 	- **SQL Injection wordlist**: It creates static boolean based SQLi dictionary list to help revealing vulnerable spots.
-	- **Http Request to JavaScript Converter**: It converts Http requests to JavaScript code and might be useful for digging up XSS issues more.
 - **Authorization Matrix**: It creates an acccess role matrix based on user sessions and helps to find auhtorization/authentication related issues.
+- And **Http Request to JavaScript Converter**: It converts Http requests to JavaScript code and might be useful for digging up XSS issues more.
 
 Here is a small tutorial how to use each features.
 
