@@ -31,26 +31,6 @@ It is for boolean based SQLi attacks and you dont need to supply any inputs. It 
 <img width="1000" alt="SQL Injection wordlist" src="https://user-images.githubusercontent.com/50321735/152051426-d42cf034-3fe5-4221-9ec7-570c5f0249a8.png">
 
 
-## Http Request to JavaScript Converter
-The feature is for converting Http requests to JavaScript language. It can be useful to dig up XSS issues and bypass header restrictions, like CSP, CORS.
-
-To access it, right click the Http Request, Extensions, 'Agartha', and 'Copy as JavaScript'.
-
-<img width="1000" alt="Http Request to JavaScript Converter" src="https://user-images.githubusercontent.com/50321735/152224405-d10b78a2-9b18-44a9-a991-5b9c451c7253.png">
-
-It will automaticly save it to your clipboard with some remarks. For example:
-```
-Http request with minimum header paramaters in JavaScript:
-	<script>var xhr=new XMLHttpRequest();xhr.open('POST','http://vm:80/dvwa/login.php');xhr.withCredentials=true;xhr.setRequestHeader('Content-type','application/x-www-form-urlencoded');xhr.send('username=admin&password=password&Login=Login');</script>
-
-Http request with all header paramaters in JavaScript:
-	<script>var xhr=new XMLHttpRequest();xhr.open('POST','http://vm:80/dvwa/login.php');xhr.withCredentials=true;xhr.setRequestHeader('Host',' vm');xhr.setRequestHeader('User-Agent',' Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:97.0) Gecko/20100101 Firefox/97.0');xhr.setRequestHeader('Accept',' */*');xhr.setRequestHeader('Accept-Language',' en-US,en;q=0.5');xhr.setRequestHeader('Accept-Encoding',' gzip, deflate');xhr.setRequestHeader('Content-type',' application/x-www-form-urlencoded');xhr.setRequestHeader('Content-Length',' 44');xhr.setRequestHeader('Origin',' http://vm');xhr.setRequestHeader('Connection',' close');xhr.setRequestHeader('Referer',' http://vm/dvwa/login.php');xhr.send('username=admin&password=password&Login=Login');</script>
-
-For redirection, please also add this code before '</script>' tag:
-	xhr.onreadystatechange=function(){if (this.status===302){var location=this.getResponseHeader('Location');return ajax.call(this,location);}};
-```
-Please note that, the JavaScript code will be called over original user session and many header fields will be filled automaticly. In some cases, the server may require some header field mendatory, and therefore you may need to modify the code for an adjustment.
-
 ## Authorization Matrix
 It creates an access maxtrix based on user sessions/URL list, and helps to find authentication/authorization issues. You should first supply rows and columns information:
 - **User session name**: You can right click on any request and send it Agartha Panel.
@@ -80,3 +60,24 @@ After clicking 'RUN', the tool will fill user and URL matrix with different colo
 It will be quite similar, even if we add more users. Any authorization concerns will be highlighted.
 
 You may also notice, it support only one http request method and header at the same time, because it processes bulk requests and it is not possible to provide different header options for each calls. But you change play with 'GET/POST' methods to see response differences.
+
+
+## Http Request to JavaScript Converter
+The feature is for converting Http requests to JavaScript language. It can be useful to dig up XSS issues and bypass header restrictions, like CSP, CORS.
+
+To access it, right click the Http Request, Extensions, 'Agartha', and 'Copy as JavaScript'.
+
+<img width="1000" alt="Http Request to JavaScript Converter" src="https://user-images.githubusercontent.com/50321735/152224405-d10b78a2-9b18-44a9-a991-5b9c451c7253.png">
+
+It will automaticly save it to your clipboard with some remarks. For example:
+```
+Http request with minimum header paramaters in JavaScript:
+	<script>var xhr=new XMLHttpRequest();xhr.open('POST','http://vm:80/dvwa/login.php');xhr.withCredentials=true;xhr.setRequestHeader('Content-type','application/x-www-form-urlencoded');xhr.send('username=admin&password=password&Login=Login');</script>
+
+Http request with all header paramaters in JavaScript:
+	<script>var xhr=new XMLHttpRequest();xhr.open('POST','http://vm:80/dvwa/login.php');xhr.withCredentials=true;xhr.setRequestHeader('Host',' vm');xhr.setRequestHeader('User-Agent',' Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:97.0) Gecko/20100101 Firefox/97.0');xhr.setRequestHeader('Accept',' */*');xhr.setRequestHeader('Accept-Language',' en-US,en;q=0.5');xhr.setRequestHeader('Accept-Encoding',' gzip, deflate');xhr.setRequestHeader('Content-type',' application/x-www-form-urlencoded');xhr.setRequestHeader('Content-Length',' 44');xhr.setRequestHeader('Origin',' http://vm');xhr.setRequestHeader('Connection',' close');xhr.setRequestHeader('Referer',' http://vm/dvwa/login.php');xhr.send('username=admin&password=password&Login=Login');</script>
+
+For redirection, please also add this code before '</script>' tag:
+	xhr.onreadystatechange=function(){if (this.status===302){var location=this.getResponseHeader('Location');return ajax.call(this,location);}};
+```
+Please note that, the JavaScript code will be called over original user session and many header fields will be filled automaticly. In some cases, the server may require some header field mendatory, and therefore you may need to modify the code for an adjustment.
