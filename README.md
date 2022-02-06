@@ -8,7 +8,13 @@ Agartha is a penetration testing tool which creates dynamic payload lists and us
 - **Authorization Matrix**: It creates an acccess role matrix based on user sessions and helps to find auhtorization/authentication related issues.
 - And **Http Request to JavaScript Converter**: It converts Http requests to JavaScript code and might be useful for digging up XSS issues more.
 
-Here is a small tutorial how to use each features.
+Here is a small tutorial how to use.
+
+
+## Installation
+You can install Agartha via official Burp Store automaticly. For manual installation, you should download 'jython' file first, and then:
+- Extender > Options > Python Environment > Location of jython standalone jar file
+- Extender > Extensions > Add > Extension Type: Python > Select file: 'agartha.py'
 
 ## Directory Traversal/Local File Inclusion
 It both supports unix and windows file systems. You can generate any wordlists for the path you want. You just need to supply a file path and that's all. 
