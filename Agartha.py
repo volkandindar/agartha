@@ -16,7 +16,7 @@ try:
 except ImportError:
     print "Failed to load dependencies."
 
-VERSION = "0.20"
+VERSION = "0.21"
 _colorful = True
 
 class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFactory):
@@ -600,6 +600,8 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
             listLFI.append(_resultTxt + filePath + "\n")
             
             if self._cbDictEncoding.isSelected():
+                listLFI.append(_resultTxt.replace("../", "..././") + filePath + "\n")
+                listLFI.append(_resultTxt.replace("../", "...//") + filePath + "\n")
                 listLFI.append(_resultTxt + filePath + "%00index.html\n")
                 listLFI.append(_resultTxt + filePath + "%20index.html\n")
                 listLFI.append(_resultTxt + filePath + "%09index.html\n")
@@ -611,6 +613,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                 listLFI.append(_resultTxt + filePath + "%0D\n")
                 listLFI.append(_resultTxt + filePath + "%FF\n")
                 listLFI.append(_resultTxt + filePath + "/..;/\n")
+                listLFI.append("/..;/" + _resultTxt + filePath + "\n")
                 listLFI.append(_resultTxt + filePath + ";index.html\n")
                 listLFI.append(_resultTxt + filePath + "%00.jpg\n")
                 listLFI.append(_resultTxt + filePath + "%00.jpg\n")
@@ -818,7 +821,7 @@ class UserEnabledRenderer(TableCellRenderer):
     def __init__(self, defaultCellRender, userNamesHttpUrls):
         self._defaultCellRender = defaultCellRender
         self.urlList= userNamesHttpUrls
-        self.colorsUser = [Color(204, 229, 255), Color(204, 255, 204), Color(204, 204, 255), Color(189,183,107)]        
+        self.colorsUser = [Color(204, 229, 255), Color(204, 255, 204), Color(204, 204, 255), Color(189,183,107)]
         self.colorsAlert = [Color.white, Color(255, 153, 153), Color(255,218,185), Color(255, 255, 204), Color(211,211,211)]
 
     def getTableCellRendererComponent(self, table, value, isSelected, hasFocus, row, column):
