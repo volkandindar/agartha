@@ -656,7 +656,6 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                     listLFI.append((_resultTxt + filePath).replace("..", delimetersDots[i]) + "\n")
                     listLFI.append((_resultTxt).replace("/", delimetersSlash[i]).replace("..", delimetersDots[i]) + filePath + "\n")
                     listLFI.append((_resultTxt)[:-1].replace("/", delimetersSlash[i]).replace("..", delimetersDots[i]) + "/" + filePath + "\n")
-                    listLFI.append((_resultTxt)[:-1].replace("/", delimetersSlash[i]).replace("..", delimetersDots[i]) + "/" + filePath + "\n")
                     listLFI.append((_resultTxt + filePath).replace("/", delimetersSlash[i]).replace("..", delimetersDots[i]) + "\n")
                 # forward slash
 
