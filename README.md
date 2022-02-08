@@ -4,7 +4,7 @@ Agartha is a penetration testing tool which creates dynamic payload lists and us
 - **Payload Generator**: It creates payloads/wordlists for different attacks.
 	- **Directory Traversal/Local File Inclusion**: It creates file dictionary lists with various encoding and escaping characters.
 	- **Remote Code Execution**: It creates command dictionary lists for both unix and windows environments with different combinations.
-	- **SQL Injection**: It creates Boolean-Based, Union-Based and Time-Based SQLi wordlist to help finding vulnerable spots.
+	- **SQL Injection**: It creates Batched Queries, Boolean-Based, Union-Based and Time-Based SQLi wordlist to help finding vulnerable spots.
 - **Authorization Matrix**: It creates an access role matrix based on user sessions and URL lists to determine authorization/authentication related access violation issues.
 - And **Http Request to JavaScript Converter**: It converts Http requests to JavaScript code to be useful for further XSS exploitation and more.<br/><br/>
 
@@ -34,7 +34,7 @@ It creates command execution dynamic wordlists for the command you supply. It co
 <img width="1000" alt="Remote Code Execution wordlist" src="https://user-images.githubusercontent.com/50321735/152050785-82901333-b5e8-4e51-9467-adc2f6f0b628.png"><br/><br/>
 
 
-## SQL Injection Boolean-Based, Union-Based and Time-Based
+## SQL Injection Batched Queries, Boolean-Based, Union-Based and Time-Based
 It is for SQLi attacks and you do not need to supply any inputs. It generates static, vendor-neutral, wordlist with escape characters for SQL language 'where' criteria and it is applicable for Mysql, Mssql, Oracle, Mariadb, PostgreSQL, etc. 
 
 <img width="1000" alt="SQL Injection wordlist" src="https://user-images.githubusercontent.com/50321735/152051426-d42cf034-3fe5-4221-9ec7-570c5f0249a8.png"><br/><br/>
