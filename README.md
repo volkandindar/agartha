@@ -14,7 +14,7 @@ Here is a small tutorial how to use.
 <!---You can install Agartha through official Burp Store automatically, from Burp menu 'Extender > BApp Store'.-->
 
 For manual installation, you should download 'jython' file first, and then:
-- Extender > Options > Python Environment > Location of jython standalone jar file
+- Extender > Options > Python Environment > Locate jython standalone jar file
 - Extender > Extensions > Add > Extension Type: Python > Select file: 'agartha.py'
 - After, you will see 'Agartha' tab in the main window and it will be also registered the right click, under 'Extensions > Agartha {LFI|RCE|Auth|SQLi|Http-Js}'.<br/><br/>
 
