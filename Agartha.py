@@ -742,7 +742,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         listSQLi.sort(reverse=True)
 
         self._tabDictResultDisplay.setText(''.join(map(str, listSQLi)))
-        self._lblStatusLabel.setText('Boolean-Based, Union-Based, Time-Based and Batched Query Sql Injection payload generation is returned with '+ str(len(listSQLi)) + ' records! You can grep \'1337\' keyword in the Http responses.') 
+        self._lblStatusLabel.setText('Batched Queries, Boolean-Based, Union-Based and Time-Based Sql Injection payload generation is returned with '+ str(len(listSQLi)) + ' records! You can grep \'1337\' keyword in the Http responses.') 
         return
 
     def getTabCaption(self):
