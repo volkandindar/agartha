@@ -478,6 +478,8 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         _tabDictPanel_1.add(self._cbMysqlBased, BorderLayout.PAGE_START)
         _tabDictPanel_1.add(self._cbPostgreBased, BorderLayout.PAGE_START)
         _tabDictPanel_1.add(self._cbOracleBased, BorderLayout.PAGE_START)
+        _tabDictPanel_1.setPreferredSize(Dimension(400,90))
+        _tabDictPanel_1.setMinimumSize(Dimension(400,90))
         #top panel
 
         #center panel
