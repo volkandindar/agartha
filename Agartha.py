@@ -16,7 +16,7 @@ try:
 except ImportError:
     print "Failed to load dependencies."
 
-VERSION = "0.31"
+VERSION = "0.32"
 _colorful = True
 
 class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFactory):
@@ -445,22 +445,14 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         _cbDictDepthPanel = JPanel()
         _cbDictDepthPanel.add(self._cbDictDepth)
         self._cbGenericSQLi= JCheckBox('Generic SQLi', True)
-        self._cbGenericSQLi.setVisible(False)
         self._cbGenericSQLi.setEnabled(False)
         self._cbTimeBased= JCheckBox('Time-Based Inj', True)
-        self._cbTimeBased.setVisible(False)
         self._cbUnionBased= JCheckBox('Union-Based Inj', True)
-        self._cbUnionBased.setVisible(False)
         self._cbBooleanBased= JCheckBox('Boolean-Based Inj', True)
-        self._cbBooleanBased.setVisible(False)
         self._cbMssqlBased= JCheckBox('Mssql', False)
-        self._cbMssqlBased.setVisible(False)
         self._cbMysqlBased= JCheckBox('Mysql', False)
-        self._cbMysqlBased.setVisible(False)
-        self._cbPostgreBased= JCheckBox('PostgreSQL', False)
-        self._cbPostgreBased.setVisible(False)
+        self._cbPostgreBased= JCheckBox('PostgreSQL', False)        
         self._cbOracleBased= JCheckBox('Oracle', False)
-        self._cbOracleBased.setVisible(False)
         _tabDictPanel_1 = JPanel(FlowLayout(FlowLayout.LEADING, 10, 10))
         _tabDictPanel_1.setBorder(EmptyBorder(0, 0, 10, 0))
         _tabDictPanel_1.add(self._txtDictParam, BorderLayout.PAGE_START)
@@ -469,17 +461,20 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         _tabDictPanel_1.add(self._lblDepth, BorderLayout.PAGE_START)
         _tabDictPanel_1.add(self._cbDictEquality, BorderLayout.PAGE_START)
         _tabDictPanel_1.add(_cbDictDepthPanel, BorderLayout.PAGE_START)
-        _tabDictPanel_1.add(self._cbDictEncoding, BorderLayout.PAGE_START)
-        _tabDictPanel_1.add(self._cbGenericSQLi, BorderLayout.PAGE_START)
-        _tabDictPanel_1.add(self._cbTimeBased, BorderLayout.PAGE_START)
-        _tabDictPanel_1.add(self._cbUnionBased, BorderLayout.PAGE_START)
-        _tabDictPanel_1.add(self._cbBooleanBased, BorderLayout.PAGE_START)
-        _tabDictPanel_1.add(self._cbMssqlBased, BorderLayout.PAGE_START)
-        _tabDictPanel_1.add(self._cbMysqlBased, BorderLayout.PAGE_START)
-        _tabDictPanel_1.add(self._cbPostgreBased, BorderLayout.PAGE_START)
-        _tabDictPanel_1.add(self._cbOracleBased, BorderLayout.PAGE_START)
-        _tabDictPanel_1.setPreferredSize(Dimension(400,80))
-        _tabDictPanel_1.setMinimumSize(Dimension(400,80))
+        self._tabDictPanel_SQLi = JPanel(FlowLayout(FlowLayout.LEADING, 10, 10))
+        self._tabDictPanel_SQLi.add(self._cbDictEncoding, BorderLayout.PAGE_START)
+        self._tabDictPanel_SQLi.add(self._cbGenericSQLi, BorderLayout.PAGE_START)
+        self._tabDictPanel_SQLi.add(self._cbTimeBased, BorderLayout.PAGE_START)
+        self._tabDictPanel_SQLi.add(self._cbUnionBased, BorderLayout.PAGE_START)
+        self._tabDictPanel_SQLi.add(self._cbBooleanBased, BorderLayout.PAGE_START)
+        self._tabDictPanel_SQLi.add(self._cbMssqlBased, BorderLayout.PAGE_START)
+        self._tabDictPanel_SQLi.add(self._cbMysqlBased, BorderLayout.PAGE_START)
+        self._tabDictPanel_SQLi.add(self._cbPostgreBased, BorderLayout.PAGE_START)
+        self._tabDictPanel_SQLi.add(self._cbOracleBased, BorderLayout.PAGE_START)
+        self._tabDictPanel_SQLi.setVisible(False)
+        _tabDictPanel_1.add(self._tabDictPanel_SQLi, BorderLayout.PAGE_START)        
+        _tabDictPanel_1.setPreferredSize(Dimension(400,90))
+        _tabDictPanel_1.setMinimumSize(Dimension(400,90))
         #top panel
 
         #center panel
@@ -546,14 +541,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._cbDictEncoding.setVisible(False)
         self._cbDictEquality.setVisible(False)
         self._cbDictDepth.setVisible(False)
-        self._cbGenericSQLi.setVisible(False)
-        self._cbTimeBased.setVisible(False)
-        self._cbUnionBased.setVisible(False)
-        self._cbBooleanBased.setVisible(False)
-        self._cbMssqlBased.setVisible(False)
-        self._cbMysqlBased.setVisible(False)
-        self._cbPostgreBased.setVisible(False)
-        self._cbOracleBased.setVisible(False)
+        self._tabDictPanel_SQLi.setVisible(False)
         if self._rbDictLFI.isSelected():
             self._txtDictParam.setText(self._txtDefaultLFI)
             self._tabDictResultDisplay.setText(self._txtCheatSheetLFI)
@@ -566,14 +554,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
             self._tabDictResultDisplay.setText(self._txtCheatSheetRCE)
         elif self._rbDictSQLi.isSelected():
             self._txtDictParam.setText(self._txtDefaultSQLi)
-            self._cbGenericSQLi.setVisible(True)
-            self._cbTimeBased.setVisible(True)
-            self._cbUnionBased.setVisible(True)
-            self._cbBooleanBased.setVisible(True)
-            self._cbMssqlBased.setVisible(True)
-            self._cbMysqlBased.setVisible(True)
-            self._cbPostgreBased.setVisible(True)
-            self._cbOracleBased.setVisible(True)
+            self._tabDictPanel_SQLi.setVisible(True)
             self.funcSQLi(self)
         elif self._rbDictCheatSheet.isSelected():
             self._tabDictResultDisplay.setText(self._txtCheatSheet)
