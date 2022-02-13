@@ -563,7 +563,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
 
     def funcRCE(self, ev):
         listRCE = []
-        prefixes = ["", "\\n", "\\\\n", "\\r\\n", "\\\\r\\\\n", "%0a", "0x0a", "%0d%0a", "0x0d0a", "%00", "0x00", "%1a", "0x1a"]
+        prefixes = ["", "\\n", "\\\\n", "\\r\\n", "\\\\r\\\\n", "%0a", "0x0a", "%0d%0a", "0x0d0a", "%00", "0x00"]
         interruptors = ["",  "`", "'", "\\'", "\\\\'", "\"", "\\\"", "\\\\\""]
         suffixes = ["", "&", "&&", "|", "||", ";"]        
         
@@ -669,7 +669,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         #prefixes = ["", "\\n", "\\r", "%0a", "0x0a", "%0d", "0x0d", "%00", "0x00"]
         #prefixes = ["", "\\n", "\\r", "\\r\\n", "%0a", "0x0a", "%0d", "0x0d", "%0d%0a", "0x0d0a", "%1a", "0x1a", "%00", "0x00"]
         #prefixes = ["", "\\n", "\\r", "\\r\\n", "%0a", "0x0a", "%0d", "0x0d", "%0d%0a", "0x0d0a", "%00", "0x00"]
-        prefixes = ["", "\\n", "\\\\n", "\\r", "\\\\r", "\\r\\n", "\\\\r\\\\n", "%0a", "0x0a", "%0d", "0x0d", "%0d%0a", "0x0d0a", "%00", "0x00", "%1a", "0x1a"]
+        prefixes = ["", "\\n", "\\\\n", "\\r\\n", "\\\\r\\\\n", "%0a", "0x0a", "%0d%0a", "0x0d0a", "%00", "0x00"]
         
         #delimeterStarts = ["", "'", "\\'", "\"", "\\\""]
         delimeterStarts = ["", "'", "\\'", "\\\\'", "\"", "\\\"","\\\\\""]
