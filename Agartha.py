@@ -16,7 +16,7 @@ try:
 except ImportError:
     print "Failed to load dependencies."
 
-VERSION = "0.33"
+VERSION = "0.34"
 _colorful = True
 
 class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFactory):
@@ -585,6 +585,10 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                             listRCE.append(interruptor + suffix + "{" + self._txtDictParam.text.replace(" ",",") + "}" + suffix + "\n")
                             listRCE.append(interruptor + suffix + "$(" + self._txtDictParam.text + ")" + "\n")
                             listRCE.append(interruptor + suffix + "$(" + self._txtDictParam.text + ")" + suffix + "\n")
+                        #if suffix or not interruptor:    
+                        #    listRCE.append(prefix + interruptor + suffix + self._txtDictParam.text + suffix + interruptor + "\n")                                        
+                        #    if suffix and prefix and interruptor:
+                        #        listRCE.append(interruptor + suffix + interruptor + self._txtDictParam.text + "\n")
 
         listRCE = list(set(listRCE))
         listRCE.sort()
