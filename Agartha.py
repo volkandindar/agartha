@@ -16,7 +16,7 @@ try:
 except ImportError:
     print "Failed to load dependencies."
 
-VERSION = "0.38"
+VERSION = "0.39"
 _colorful = True
 
 class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFactory):
@@ -457,11 +457,24 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         _tabDictPanel_1.add(self._txtDictParam, BorderLayout.PAGE_START)
         _tabDictPanel_1.add(self._btnGenerateDict, BorderLayout.PAGE_START)
         _tabDictPanel_1.add(_rbPanel, BorderLayout.PAGE_START)
-        _tabDictPanel_1.add(self._lblDepth, BorderLayout.PAGE_START)
-        _tabDictPanel_1.add(self._cbDictEquality, BorderLayout.PAGE_START)
-        _tabDictPanel_1.add(_cbDictDepthPanel, BorderLayout.PAGE_START)
+        
+
+        #_tabDictPanel_1.add(self._lblDepth, BorderLayout.PAGE_START)
+        #_tabDictPanel_1.add(self._cbDictEquality, BorderLayout.PAGE_START)
+        #_tabDictPanel_1.add(_cbDictDepthPanel, BorderLayout.PAGE_START)
+        #_tabDictPanel_1.add(self._cbDictEncoding, BorderLayout.PAGE_START)
+
+
+        self._tabDictPanel_LFI = JPanel(FlowLayout(FlowLayout.LEADING, 10, 10))
+
+        self._tabDictPanel_LFI.add(self._lblDepth, BorderLayout.PAGE_START)
+        self._tabDictPanel_LFI.add(self._cbDictEquality, BorderLayout.PAGE_START)
+        self._tabDictPanel_LFI.add(_cbDictDepthPanel, BorderLayout.PAGE_START)
+        self._tabDictPanel_LFI.add(self._cbDictEncoding, BorderLayout.PAGE_START)
+        self._tabDictPanel_LFI.setVisible(True)
+
         self._tabDictPanel_SQLi = JPanel(FlowLayout(FlowLayout.LEADING, 10, 10))
-        self._tabDictPanel_SQLi.add(self._cbDictEncoding, BorderLayout.PAGE_START)
+        #self._tabDictPanel_SQLi.add(self._cbDictEncoding, BorderLayout.PAGE_START)
         self._tabDictPanel_SQLi.add(self._cbTimeBased, BorderLayout.PAGE_START)
         self._tabDictPanel_SQLi.add(self._cbUnionBased, BorderLayout.PAGE_START)
         self._tabDictPanel_SQLi.add(self._cbOrderBased, BorderLayout.PAGE_START)
@@ -471,6 +484,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._tabDictPanel_SQLi.add(self._cbMssqlBased, BorderLayout.PAGE_START)
         self._tabDictPanel_SQLi.add(self._cbOracleBased, BorderLayout.PAGE_START)
         self._tabDictPanel_SQLi.setVisible(False)
+        _tabDictPanel_1.add(self._tabDictPanel_LFI, BorderLayout.PAGE_START)  
         _tabDictPanel_1.add(self._tabDictPanel_SQLi, BorderLayout.PAGE_START)        
         _tabDictPanel_1.setPreferredSize(Dimension(400,90))
         _tabDictPanel_1.setMinimumSize(Dimension(400,90))
@@ -536,18 +550,20 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
 
     def funcRBSelection(self, ev):
         self._lblStatusLabel.setText("")
-        self._lblDepth.setVisible(False)
-        self._cbDictEncoding.setVisible(False)
-        self._cbDictEquality.setVisible(False)
-        self._cbDictDepth.setVisible(False)
+        #self._lblDepth.setVisible(False)
+        #self._cbDictEncoding.setVisible(False)
+        #self._cbDictEquality.setVisible(False)
+        #self._cbDictDepth.setVisible(False)
+        self._tabDictPanel_LFI.setVisible(False)
         self._tabDictPanel_SQLi.setVisible(False)
         if self._rbDictLFI.isSelected():
             self._txtDictParam.setText(self._txtDefaultLFI)
             self._tabDictResultDisplay.setText(self._txtCheatSheetLFI)
-            self._lblDepth.setVisible(True)
-            self._cbDictEncoding.setVisible(True)
-            self._cbDictEquality.setVisible(True)
-            self._cbDictDepth.setVisible(True)
+            #self._lblDepth.setVisible(True)
+            #self._cbDictEncoding.setVisible(True)
+            #self._cbDictEquality.setVisible(True)
+            #self._cbDictDepth.setVisible(True)
+            self._tabDictPanel_LFI.setVisible(True)
         elif self._rbDictRCE.isSelected():
             self._txtDictParam.setText(self._txtDefaultRCE)
             self._tabDictResultDisplay.setText(self._txtCheatSheetRCE)
@@ -602,10 +618,9 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
             while i <= counter:
                 _resultTxt += "../"
                 i = i + 1
+                listLFI.append(_resultTxt + filePath + "\n")
 
             if self._cbDictEncoding.isSelected():
-
-                listLFI.append(_resultTxt + filePath + "\n")
                 listLFI.append((_resultTxt + filePath).replace("..", "...") + "\n")
                 listLFI.append((_resultTxt + filePath).replace("..", "....") + "\n")
                 listLFI.append((_resultTxt + self._txtDictParam.text).replace("..", "...") + "\n")
