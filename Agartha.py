@@ -592,7 +592,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         counter = 0
         if self._cbDictEquality.isSelected():
             counter = dept
-            
+
         while counter <= dept:
             _resultTxt = ""
             i=1
