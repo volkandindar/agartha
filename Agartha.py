@@ -16,7 +16,7 @@ try:
 except ImportError:
     print "Failed to load dependencies."
 
-VERSION = "0.40"
+VERSION = "0.41"
 _colorful = True
 
 class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFactory):
@@ -715,7 +715,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                                 if self._cbMysqlBased.isSelected():
                                     if self._cbTimeBased.isSelected():
                                         listSQLi.append(prefix + delimeterStart + unionPhrase.replace("select null", "select sleep(1000)") + delimeterEnd + "\n")
-                               if self._cbPostgreBased.isSelected():
+                                if self._cbPostgreBased.isSelected():
                                    if self._cbTimeBased.isSelected():
                                        listSQLi.append(prefix + delimeterStart + unionPhrase.replace("select null", "select (select 1337 from pg_sleep(1000))") + delimeterEnd + "\n")
                                 #if self._cbMssqlBased.isSelected(): it seems mysql is not vulnerable with waitfor delay
