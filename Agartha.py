@@ -671,18 +671,18 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         listSQLi = []
         #prefixes = ["", "\\n", "\\\\n", "\\r\\n", "\\\\r\\\\n", "%0a", "0x0a", "%0d%0a", "0x0d0a", "%00", "0x00"]
         prefixes = ["", "\\n", "\\r\\n", "%0a", "0x0a", "%0d%0a", "0x0d0a", "%00", "0x00"]
-        prefixes = [""]
+        #prefixes = [""]
 
         #delimeterStarts = ["'", "\\'", "\\\\'", "\"", "\\\"","\\\\\""]
         delimeterStarts = ["", "'", "\\'", "\\\\'", "\"", "\\\"","\\\\\""]
-        delimeterStarts = ["", "'"]
+        #delimeterStarts = ["", "'"]
         
         #delimeterBooleans = ["1=1", "1=2", "1<2", "1>2", "true", "false"]
         delimeterBooleans = ["1=1", "1<2", "true"]
-        delimeterBooleans = ["true"]
+        #delimeterBooleans = ["true"]
         
         delimeterEnds = ["", ";", " -- ", "; -- "]
-        delimeterEnds = ["", "--"]
+        #delimeterEnds = ["", "--"]
 
         if self._cbBooleanBased.isSelected():
             for prefix in prefixes:
