@@ -16,7 +16,7 @@ try:
 except ImportError:
     print "Failed to load dependencies."
 
-VERSION = "0.47"
+VERSION = "0.48"
 _colorful = True
 
 class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFactory):
@@ -564,21 +564,23 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
 
     def funcRCE(self, ev):
         listRCE = []
-        prefixes = ["", "\\n", "\\\\n", "\\r\\n", "\\\\r\\\\n", "%0a", "0x0a", "%0d%0a", "0x0d0a", "%00", "0x00"]
+        prefixes = ["", "\\n", "\\\\n", "\\r\\n", "\\\\r\\\\n", "%0a", "0x0a", "%0d%0a", "0x0d0a"]
         escapeChars = ["",  "`", "'", "\\'", "\\\\'", "\"", "\\\"", "\\\\\""]
-        suffixes = ["", "&", "&&", "|", "||", ";"]        
+        separators = ["&", "&&", "|", "||", ";"]
+        suffixes = [" #", " ::", " %00", " 0x00"]
         
         for prefix in prefixes:
             for escapeChar in escapeChars:
-                for suffix in suffixes:
-                    if prefix[:2].count("\\") == escapeChar[:2].count("\\") or prefix.find('\\') or escapeChar.find('\\'): 
-                        if suffix or not escapeChar:
-                            listRCE.append(prefix + escapeChar + suffix + self._txtDictParam.text + suffix + escapeChar + "\n")
-                            listRCE.append(prefix + escapeChar + suffix + self._txtDictParam.text + suffix + "\n")
-                            listRCE.append(prefix + escapeChar + suffix + self._txtDictParam.text + "\n")
-                            if suffix and prefix and escapeChar:
-                                listRCE.append(escapeChar + suffix + escapeChar + self._txtDictParam.text + "\n")
-
+                for separator in separators:
+                    for suffix in suffixes:
+                        if prefix[:2].count("\\") == escapeChar[:2].count("\\") or prefix.find('\\') or escapeChar.find('\\'):                             
+                            #listRCE.append(escapeChar + separator + prefix + self._txtDictParam.text + separator + escapeChar + "\n")
+                            listRCE.append(prefix + escapeChar + separator + self._txtDictParam.text + separator + escapeChar + "\n")
+                            #listRCE.append(escapeChar+ separator + prefix + escapeChar + self._txtDictParam.text + "\n")
+                            listRCE.append(prefix + escapeChar+ separator + escapeChar + self._txtDictParam.text + "\n")
+                            #listRCE.append(escapeChar + separator + prefix + self._txtDictParam.text + suffix + "\n")
+                            listRCE.append(prefix + escapeChar + separator + self._txtDictParam.text + suffix + "\n")
+                            
         listRCE = list(set(listRCE))
         listRCE.sort()
         self._tabDictResultDisplay.setText(''.join(map(str, listRCE)))
