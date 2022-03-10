@@ -683,8 +683,8 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         escapeChars = ["", "'", "\\'", "\\\\'", "\"", "\\\"","\\\\\""]
         
         #boolExpressions = ["1=1", "1=2", "1<2", "1>2", "true", "false"]
-        n1 = str(random.randint(1,49))
-        n2 = str(random.randint(50,100))
+        n1 = str(random.randint(10,70))
+        n2 = str(random.randint(71,100))
         boolExpressions = [n1 + "=" + n1, n1 + "<" + n2, "true"]
         
         suffixes = ["", " -- ", "; -- "]
