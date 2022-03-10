@@ -16,7 +16,7 @@ try:
 except ImportError:
     print "Failed to load dependencies."
 
-VERSION = "0.48"
+VERSION = "0.49"
 _colorful = True
 
 class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFactory):
@@ -449,6 +449,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._cbMysqlBased= JCheckBox('MYSQL', True)        
         self._cbPostgreBased= JCheckBox('POSTGRESQL', True)
         self._cbOracleBased= JCheckBox('ORACLE', True)
+        self._cbSqlEncoding= JCheckBox('Waf Bypass', True)
         _tabDictPanel_1 = JPanel(FlowLayout(FlowLayout.LEADING, 10, 10))
         _tabDictPanel_1.setBorder(EmptyBorder(0, 0, 10, 0))
         _tabDictPanel_1.add(self._txtDictParam, BorderLayout.PAGE_START)
@@ -465,6 +466,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._tabDictPanel_SQLType.add(self._cbPostgreBased, BorderLayout.PAGE_START)
         self._tabDictPanel_SQLType.add(self._cbMssqlBased, BorderLayout.PAGE_START)
         self._tabDictPanel_SQLType.add(self._cbOracleBased, BorderLayout.PAGE_START)
+        self._tabDictPanel_SQLType.add(self._cbSqlEncoding, BorderLayout.PAGE_START)
         self._tabDictPanel_SQLType.setVisible(False)
         self._tabDictPanel_SQLi = JPanel(FlowLayout(FlowLayout.LEADING, 10, 0))
         self._tabDictPanel_SQLi.add(self._cbStackedSQL, BorderLayout.PAGE_START)
@@ -679,12 +681,16 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         #prefixes = ["", "\\n", "\\\\n", "\\r\\n", "\\\\r\\\\n", "%0a", "0x0a", "%0d%0a", "0x0d0a", "%00", "0x00"]
         prefixes = ["", "\\n", "\\r\\n", "%0a", "0x0a", "%0d%0a", "0x0d0a", "%00", "0x00"]
         
-        escapeChars = ["", "'", "\\'", "\\\\'", "\"", "\\\"","\\\\\""]        
+        escapeChars = ["", "'", "\\'", "\\\\'", "\"", "\\\"","\\\\\""]
         
         #boolExpressions = ["1=1", "1=2", "1<2", "1>2", "true", "false"]
         boolExpressions = ["1=1", "1<2", "true"]
         
         suffixes = ["", " -- ", "; -- "]
+        
+        if not self._cbSqlEncoding.isSelected():
+            prefixes = [""]
+            escapeChars = ["", "'"]
 
         if self._cbBooleanBased.isSelected():
             for prefix in prefixes:
