@@ -7,12 +7,10 @@ try:
     from javax.swing import (JCheckBox, JMenuItem, JTextPane, JTable, JScrollPane, JProgressBar, SwingConstants, JComboBox, JButton, JTextField, JSplitPane, JPanel, JLabel, JRadioButton, ButtonGroup, JTabbedPane, BoxLayout)
     from javax.swing.border import EmptyBorder
     from javax.swing.table import (DefaultTableModel, TableCellRenderer, DefaultTableCellRenderer)
-    import re, urlparse, urllib, urllib2, time, ssl
+    import re, urlparse, urllib, urllib2, time, ssl, random
     from java.util import ArrayList
     from threading import Thread
-    from random import randrange
     from java.awt.datatransfer import StringSelection
-    import random
     
 except ImportError:
     print "Failed to load dependencies."
