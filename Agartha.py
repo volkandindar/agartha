@@ -477,12 +477,12 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._tabDictPanel_SQLOptions.setVisible(False)
         self._tabDictPanel_SQLi = JPanel(FlowLayout(FlowLayout.LEADING, 10, 0))
         self._tabDictPanel_SQLi.add(self._cbStackedSQL, BorderLayout.PAGE_START)
+        self._tabDictPanel_SQLi.add(self._cbBooleanBased, BorderLayout.PAGE_START)
         self._tabDictPanel_SQLi.add(self._cbTimeBased, BorderLayout.PAGE_START)
         self._tabDictPanel_SQLi.add(self._cbUnionBased, BorderLayout.PAGE_START)
         self._tabDictPanel_SQLi.add(self._cbUnionDepth, BorderLayout.PAGE_START)
         self._tabDictPanel_SQLi.add(self._cbOrderBased, BorderLayout.PAGE_START)
         self._tabDictPanel_SQLi.add(self._cbOrderDepth, BorderLayout.PAGE_START)
-        self._tabDictPanel_SQLi.add(self._cbBooleanBased, BorderLayout.PAGE_START)
         self._tabDictPanel_SQLi.setVisible(False)
         _tabDictPanel_1.add(self._tabDictPanel_LFI, BorderLayout.PAGE_START)
         _tabDictPanel_1.add(self._cbDictRCEOpt, BorderLayout.PAGE_START)
@@ -580,13 +580,9 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
     def funcRCE(self, ev):
         listRCE = []
         prefixes = ["", "\\n", "\\\\n", "\\r\\n", "\\\\r\\\\n", "%0a", "0x0a", "%0d%0a", "0x0d0a"]
-        #prefixes = ["", "\\n"]
         escapeChars = ["",  "'", "\\'", "\\\\'", "\"", "\\\"", "\\\\\""]
-        #escapeChars = ["", "'"]
         separators = ["&", "&&", "|", "||", ";"]
-        #separators = [";"]
         suffixes = [" #", " ::", " %00", " 0x00"]
-        #suffixes = [" #"]
         
         for prefix in prefixes:
             for escapeChar in escapeChars:
@@ -698,6 +694,11 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
             if not self._cbMysqlBased.isSelected() and not self._cbMssqlBased.isSelected() and not self._cbPostgreBased.isSelected() and not self._cbOracleBased.isSelected():
                 self._lblStatusLabel.setForeground (Color.red)
                 self._lblStatusLabel.setText('There is no a generic method exists for this choice! Please also pick a database!')
+                self._tabDictResultDisplay.setText('')
+                return
+        if not (self._cbTimeBased.isSelected() or self._cbStackedSQL.isSelected() or self._cbUnionBased.isSelected() or self._cbBooleanBased.isSelected() or self._cbOrderBased.isSelected()):
+                self._lblStatusLabel.setForeground (Color.red)
+                self._lblStatusLabel.setText('There is no a generic method exists for this choice! Please also pick an attack type!')
                 self._tabDictResultDisplay.setText('')
                 return
 
