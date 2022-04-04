@@ -15,7 +15,7 @@ try:
 except ImportError:
     print "Failed to load dependencies."
 
-VERSION = "0.50"
+VERSION = "0.51"
 _colorful = True
 
 class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFactory):
@@ -580,22 +580,31 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
     def funcRCE(self, ev):
         listRCE = []
         prefixes = ["", "\\n", "\\\\n", "\\r\\n", "\\\\r\\\\n", "%0a", "0x0a", "%0d%0a", "0x0d0a"]
-        escapeChars = ["",  "`", "'", "\\'", "\\\\'", "\"", "\\\"", "\\\\\""]
+        #prefixes = ["", "\\n"]
+        escapeChars = ["",  "'", "\\'", "\\\\'", "\"", "\\\"", "\\\\\""]
+        #escapeChars = ["", "'"]
         separators = ["&", "&&", "|", "||", ";"]
+        #separators = [";"]
         suffixes = [" #", " ::", " %00", " 0x00"]
+        #suffixes = [" #"]
         
         for prefix in prefixes:
             for escapeChar in escapeChars:
                 for separator in separators:
                     for suffix in suffixes:
-                        if prefix[:2].count("\\") == escapeChar[:2].count("\\") or prefix.find('\\') or escapeChar.find('\\'):                             
-                            #listRCE.append(escapeChar + separator + prefix + self._txtDictParam.text + separator + escapeChar + "\n")
+                        if prefix[:2].count("\\") == escapeChar[:2].count("\\") or prefix.find('\\') or escapeChar.find('\\'):
                             listRCE.append(prefix + escapeChar + separator + self._txtDictParam.text + separator + escapeChar + "\n")
-                            #listRCE.append(escapeChar+ separator + prefix + escapeChar + self._txtDictParam.text + "\n")
-                            listRCE.append(prefix + escapeChar+ separator + escapeChar + self._txtDictParam.text + "\n")
-                            #listRCE.append(escapeChar + separator + prefix + self._txtDictParam.text + suffix + "\n")
-                            listRCE.append(prefix + escapeChar + separator + self._txtDictParam.text + suffix + "\n")
-                            
+                            listRCE.append(prefix + escapeChar + separator + escapeChar + self._txtDictParam.text + "\n")
+                            listRCE.append(prefix + escapeChar + separator + self._txtDictParam.text + suffix + "\n")                        
+                        if suffix != " ::":
+                            listRCE.append(prefix + separator + "`" + self._txtDictParam.text + "`" + suffix + "\n")
+                            listRCE.append(prefix + "`" + self._txtDictParam.text + "`" + suffix + "\n")
+                        listRCE.append(prefix + self._txtDictParam.text + suffix + "\n")
+                    listRCE.append(prefix + separator + "`" + self._txtDictParam.text + "`" + "\n")
+                    listRCE.append(prefix + separator + "`" + self._txtDictParam.text + "`" + separator + "\n")            
+            listRCE.append(prefix + self._txtDictParam.text + "\n")
+            listRCE.append(prefix + "`" + self._txtDictParam.text + "`" + "\n")
+
         listRCE = list(set(listRCE))
         listRCE.sort()
         if self._cbDictRCEEncoding.isSelected():
