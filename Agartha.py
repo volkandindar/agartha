@@ -640,7 +640,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                 listLFI.append((_resultTxt + self._txtDictParam.text).replace("..", "...") + "\n")
                 listLFI.append((_resultTxt + self._txtDictParam.text).replace("..", "....") + "\n")
 
-                prefixes = ["/", "\\\\", "/..;/", "..;/"]
+                prefixes = ["/", "\\", "/..;/", "..;/"]
                 for prefix in prefixes:
                     listLFI.append(prefix + _resultTxt + filePath + "\n")
 
