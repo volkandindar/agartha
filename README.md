@@ -4,7 +4,7 @@ Agartha is a penetration testing tool which creates dynamic payload lists and us
 - **Payload Generator**: It creates payloads/wordlists for different attacks.
 	- **Directory Traversal/Local File Inclusion**: It creates file dictionary lists with various encoding and escaping characters.
 	- **Remote Code Execution**: It creates command dictionary lists for both unix and windows environments with different combinations.
-	- **SQL Injection**: It creates Batched Queries, Boolean-Based, Union-Based and Time-Based SQLi wordlist for various databases to help finding vulnerable spots.
+	- **SQL Injection**: It creates Stacked Queries, Boolean-Based, Union-Based, Time-Based and Order-Based SQLi wordlist for various databases to help finding vulnerable spots.
 - **Authorization Matrix**: It creates an access role matrix based on user sessions and URL lists to determine authorization/authentication related access violation issues.
 - And **Http Request to JavaScript Converter**: It converts Http requests to JavaScript code to be useful for further XSS exploitation and more.<br/><br/>
 
@@ -35,8 +35,8 @@ It creates command execution dynamic wordlists for the command you supply. It co
 
 <img width="1000" alt="Remote Code Execution wordlist" src="https://user-images.githubusercontent.com/50321735/161567724-f73bfea2-1386-447d-b81b-7b811e13e426.png"><br/><br/>
 
-## SQL Injection Batched Queries, Boolean-Based, Union-Based and Time-Based
-It is for SQLi attacks and you do not need to supply any inputs. You just pick what type of SQLi attacks and databases you want, then it will generate a wordlist with escape characters and different combinations.
+## SQL Injection
+It is for SQLi attacks and you do not need to supply any inputs. You just pick what type of SQLi attacks and databases you want, then it will generate a wordlist with escape characters and different combinations. It generates payloads for Stacked Queries, Boolean-Based, Union-Based, Time-Based, Order-Based SQLi attacks.
 
 **'URL Encoding'** encodes dictionary output.
 
