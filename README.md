@@ -42,11 +42,11 @@ It generates payloads for Stacked Queries, Boolean-Based, Union-Based, Time-Base
 
 **'Waf Bypass'** asks for if you want to include all bypass features; like null bytes, different encoding, etc.
 
-**'Union-Based'** and **'Order-Based'** ask for how deep the payload should go. The default value is 5.
+**'Union-Based'** and **'Order-Based'** ask for how deep the payload should be. The default value is 5.
 
 And the rest is related with database and attack types.
 
-<img width="1000" alt="SQL Injection wordlist" src="https://user-images.githubusercontent.com/50321735/161568874-2ddde9ca-bc16-4024-a831-490c6b93b124.png"><br/><br/>
+<img width="1000" alt="SQL Injection wordlist" src="https://user-images.githubusercontent.com/50321735/161572348-eb5d610d-cb81-45c7-a9a3-796f823b0032.png"><br/><br/>
 
 
 ## Authorization Matrix
