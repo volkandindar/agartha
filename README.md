@@ -32,12 +32,21 @@ It both supports unix and windows file systems. You can generate any wordlists d
 It creates command execution dynamic wordlists for the command you supply. It combines different separators and terminators for unix and windows environments together.
 
 **'URL Encoding'** encodes dictionary output.
+
 <img width="1000" alt="Remote Code Execution wordlist" src="https://user-images.githubusercontent.com/50321735/161567724-f73bfea2-1386-447d-b81b-7b811e13e426.png"><br/><br/>
 
 ## SQL Injection Batched Queries, Boolean-Based, Union-Based and Time-Based
 It is for SQLi attacks and you do not need to supply any inputs. You just pick what type of SQLi attacks and databases you want, then it will generate a wordlist with escape characters and different combinations.
 
-<img width="1000" alt="SQL Injection wordlist" src="https://user-images.githubusercontent.com/50321735/153512142-e2f9702f-3955-458a-b6ee-82ae9dd8c7b4.png"><br/><br/>
+**'URL Encoding'** encodes dictionary output.
+
+**'Waf Bypass'** asks for if you want to include all bypass features; like null bytes, different encoding, etc.
+
+**'Union-Based'** and **'Order-Based'** ask for how deep the payload should go. The default value is 5.
+
+And the rest is related with database and attack types.
+
+<img width="1000" alt="SQL Injection wordlist" src="https://user-images.githubusercontent.com/50321735/161568874-2ddde9ca-bc16-4024-a831-490c6b93b124.png"><br/><br/>
 
 
 ## Authorization Matrix
