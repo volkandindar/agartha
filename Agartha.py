@@ -606,7 +606,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
             listRCE.append(prefix + "`" + self._txtDictParam.text + "`" + "\n")
 
         listRCE = list(set(listRCE))
-        listRCE.sort()
+        listRCE.sort(reverse=True)
         if self._cbDictRCEEncoding.isSelected():
             listRCE = self.encodeURL(listRCE)
         self._tabDictResultDisplay.setText(''.join(map(str, listRCE)))
@@ -687,7 +687,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
             counter = counter + 1
 
         listLFI = list(set(listLFI))
-        listLFI.sort()
+        listLFI.sort(reverse=True)
         self._tabDictResultDisplay.setText(''.join(map(str, listLFI)))
         self._lblStatusLabel.setText('File dictionary: "' + self._txtDictParam.text + '", with '+ str(len(listLFI)) + ' result. Please make sure payload encoding is disabled, unless you are sure what you are doing.') 
         return
