@@ -490,7 +490,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         
         #boolExpressions = ["1=1", "1=2", "1<2", "1>2", "true", "false"]
         n1 = str(random.randint(10,70))
-        n2 = str(random.randint(71,100))
+        n2 = str(random.randint(71,99))
         boolExpressions = [n1 + "=" + n1, n1 + "<" + n2, "true"]
         
         suffixes = ["", " -- ", "; -- "]
@@ -737,7 +737,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._tbAuthURL.setText(_url)
         self._MainTabs.setSelectedComponent(self._tabAuthSplitpane)
         self._MainTabs.getParent().setSelectedComponent(self._MainTabs)
-        
+
     def authMatrix(self, ev):
         t = Thread(target=self.authMatrixThread,args=[self])
         t.start()
