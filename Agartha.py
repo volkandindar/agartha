@@ -424,7 +424,8 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         n2 = str(random.randint(71,99))
         boolExpressions = [n1 + "=" + n1, n1 + "<" + n2, "true"]
         
-        suffixes = ["", " -- ", "; -- "]
+        #suffixes = ["", " -- ", "; -- "]
+        suffixes = ["", " -- "]
         
         if not self._cbSqlWafBypass.isSelected():
             prefixes = [""]
