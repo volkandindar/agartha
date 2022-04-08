@@ -6,17 +6,17 @@ try:
     from java.awt import (BorderLayout, FlowLayout, Color, Font, Dimension, Toolkit)
     from javax.swing import (JCheckBox, JMenuItem, JTextPane, JTable, JScrollPane, JProgressBar, SwingConstants, JComboBox, JButton, JTextField, JSplitPane, JPanel, JLabel, JRadioButton, ButtonGroup, JTabbedPane, BoxLayout)
     from javax.swing.border import EmptyBorder
-    from javax.swing.table import (DefaultTableModel, TableCellRenderer, DefaultTableCellRenderer)
-    import re, urlparse, urllib, urllib2, time, ssl, random
+    from javax.swing.table import (DefaultTableModel, TableCellRenderer)    
+    import re, urlparse, random
     from java.util import ArrayList
     from threading import Thread
     from java.awt.datatransfer import StringSelection
+
     
 except ImportError:
     print "Failed to load dependencies."
 
-VERSION = "0.52"
-_colorful = True
+VERSION = "0.53"
 
 class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFactory):
     
@@ -87,7 +87,9 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
             userID = self.userNames.index(userID)
             header = self.userNamesHttpReq[userID]
 
+            # changing url in the request header
             if str(urlparse.urlparse(urlAdd).path):
+                # check if query string exists
                 if str(urlparse.urlparse(urlAdd).query):
                     header = header.replace(" " + header.splitlines()[0].split(" ", 2)[1], " " + str(urlparse.urlparse(urlAdd).path + "?" + urlparse.urlparse(urlAdd).query))
                 else:
@@ -140,38 +142,6 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         except:
             self.httpReqRes[userID].append("")
             return "Error"
-
-    def sessionHandler(self, httpReqHeader, httpReqData, httpResHeader, httpResBody):
-        httpReqHeader = "\n".join(httpReqHeader.split("\n"))        
-        for line in httpReqHeader.splitlines()[1:]:
-            if not any(re.findall(r'Accept:|Accept-|Cache|Connection:|Content-|Date|Expect|Forwarded|From|Host|If-Match|If-Modified-Since|If-None-Match|If-Range|If-Unmodified-Since|Max-Forwards|Origin|Pragma|Range|Referer|Upgrade|User-Agent|Warning|DNT:', line, re.IGNORECASE)):
-                for d1 in line.split(':')[1:]:
-                    for d2 in d1.split(';'):
-                        param = str(d2.split('=')[0]).strip()
-                        value = str(d2.split('=')[1]).strip()
-                        if (re.findall(param, str(httpResHeader), re.IGNORECASE)):
-                            for line2 in httpResHeader.splitlines():
-                                for dd1 in line2.split(':')[1:]:
-                                    for dd2 in dd1.split(';'):
-                                        if param in dd2:
-                                            httpReqHeader = httpReqHeader.replace(value, str(dd2.split('=')[1]))
-                                            break
-    
-        if httpReqData:
-            httpResBody = str(httpResBody).replace('\'','').replace('\"','')
-            for d1 in httpReqData.split('&'):
-                param =  str(d1.split('=')[0]).strip()
-                value =  str(d1.split('=')[1]).strip()
-                if (re.findall(param, str(httpResBody), re.IGNORECASE)):
-                    for line in httpResBody.splitlines():
-                        if param in line:
-                            for d2 in line.split(' '):
-                                    if 'value' == str(d2.split('=')[0]):
-                                        if not value == str(d2.split('=')[1]):
-                                            httpReqData = httpReqData.replace(value, str(d2.split('=')[1]))                                        
-                                            break
-            return httpReqHeader+ "\r\n\r\n" + httpReqData
-        return httpReqHeader
 
     def authAdduser(self, ev):
         if self.userCount == 4:
@@ -244,45 +214,6 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         for y in range(0,self.tableMatrix.getColumnCount()):
             self._customTableColumnModel.getColumn (y).setCellRenderer (self._customRenderer)
 
-        return
-
-    def tableMatrixReset(self, ev):
-        self.tableMatrix = []        
-        self.tableMatrix_DM = CustomDefaultTableModel(self.tableMatrix, ('URLS','NoAuth'))
-        self.tableMatrix = JTable(self.tableMatrix_DM)
-        self.tableMatrix_SP.getViewport().setView((self.tableMatrix))
-        self.userCount = 0
-        self.userNames = []
-        self.userNames.append("NoAuth")
-        self.userNamesHttpReq = []
-        self.userNamesHttpReq.append("")
-        self.userNamesHttpReqD = []
-        self.userNamesHttpReqD.append("")
-        self.userNamesHttpUrls = [[]]
-        self.httpReqRes = [[],[],[],[],[]]
-        self.httpReqRes.append([])
-        self._requestViewer.setMessage("", False)
-        self._responseViewer.setMessage("", False)
-        self._lblAuthNotification.text = "Please add users to create an auth matrix"
-        self._tbAuthNewUser.setForeground (Color.black)        
-        self._txtHeaderDefault = "GET / HTTP/1.1\nHost: localhost\nAccept-Encoding: gzip, deflate\nConnection: close\nCookie: SessionID=......."
-        self._tbAuthHeader.setText(self._txtHeaderDefault)
-        self._txtURLDefault = "http://...."
-        self._tbAuthURL.setText(self._txtURLDefault)
-        self._txtUserDefault = "User1"
-        self._tbAuthNewUser.text = self._txtUserDefault
-        self._btnAuthRun.setEnabled(False)
-        self._btnAuthReset.setEnabled(False)
-        self._cbAuthColoring.setEnabled(False)
-        self._cbAuthSessionHandling.setEnabled(False)
-        self._cbAuthGETPOST.setEnabled(False)
-        self._btnAuthNewUserAdd.setEnabled(True)
-        self.progressBar.setValue(0)
-        self.tableMatrix.getSelectionModel().addListSelectionListener(self._updateReqResView)
-        self.tableMatrix.getColumnModel().getSelectionModel().addListSelectionListener(self._updateReqResView)
-        self._tabAuthSplitpaneHttp.setDividerLocation(0.5)
-        self._tabAuthPanel.setDividerLocation(0.25)
-        self._tabAuthSplitpane.setDividerLocation(0.7)        
         return
 
     def _cbAuthColoringFunc(self, ev):
@@ -769,6 +700,38 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
             else:
                 return True
 
+    def sessionHandler(self, httpReqHeader, httpReqData, httpResHeader, httpResBody):
+        httpReqHeader = "\n".join(httpReqHeader.split("\n"))        
+        for line in httpReqHeader.splitlines()[1:]:
+            if not any(re.findall(r'Accept:|Accept-|Cache|Connection:|Content-|Date|Expect|Forwarded|From|Host|If-Match|If-Modified-Since|If-None-Match|If-Range|If-Unmodified-Since|Max-Forwards|Origin|Pragma|Range|Referer|Upgrade|User-Agent|Warning|DNT:', line, re.IGNORECASE)):
+                for d1 in line.split(':')[1:]:
+                    for d2 in d1.split(';'):
+                        param = str(d2.split('=')[0]).strip()
+                        value = str(d2.split('=')[1]).strip()
+                        if (re.findall(param, str(httpResHeader), re.IGNORECASE)):
+                            for line2 in httpResHeader.splitlines():
+                                for dd1 in line2.split(':')[1:]:
+                                    for dd2 in dd1.split(';'):
+                                        if param in dd2:
+                                            httpReqHeader = httpReqHeader.replace(value, str(dd2.split('=')[1]))
+                                            break
+    
+        if httpReqData:
+            httpResBody = str(httpResBody).replace('\'','').replace('\"','')
+            for d1 in httpReqData.split('&'):
+                param =  str(d1.split('=')[0]).strip()
+                value =  str(d1.split('=')[1]).strip()
+                if (re.findall(param, str(httpResBody), re.IGNORECASE)):
+                    for line in httpResBody.splitlines():
+                        if param in line:
+                            for d2 in line.split(' '):
+                                    if 'value' == str(d2.split('=')[0]):
+                                        if not value == str(d2.split('=')[1]):
+                                            httpReqData = httpReqData.replace(value, str(d2.split('=')[1]))                                        
+                                            break
+            return httpReqHeader+ "\r\n\r\n" + httpReqData
+        return httpReqHeader
+
     def _tabAuthUI(self):
         #panel top
         self._tbAuthNewUser = JTextField("", 15)
@@ -800,7 +763,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._cbAuthGETPOST.setToolTipText("Which HTTP method will be used for the test")
         self._cbAuthSessionHandling = JCheckBox('Session Handler*', False)
         self._cbAuthSessionHandling.setEnabled(False)
-        self._cbAuthSessionHandling.setToolTipText("Experimental: Auto-updates cookies and paramaters, like CSRF tokens")
+        self._cbAuthSessionHandling.setToolTipText("Experimental feature: Auto-updates cookies and paramaters, like CSRF tokens.")
 
         #top panel
         _tabAuthPanel1 = JPanel(BorderLayout())
@@ -908,7 +871,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._cbDictWafBypass = JCheckBox('Waf Bypass', True)
         self._cbDictEquality = JCheckBox(')', False)
         self._cbDictDepth = JComboBox(list(range(0, 20)))
-        self._cbDictDepth.setSelectedIndex(10)
+        self._cbDictDepth.setSelectedIndex(5)
         _cbDictDepthPanel = JPanel(FlowLayout(FlowLayout.LEADING, 10, 0))
         _cbDictDepthPanel.add(self._cbDictDepth)
         self._cbDictRCEEncoding = JCheckBox('URL Encoding', False)
@@ -990,6 +953,44 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._tabDictPanel.add(_tabDictPanel_2)
         self._tabDictPanel.add(_tabDictPanel_3)
 
+    def tableMatrixReset(self, ev):
+        self.tableMatrix = []        
+        self.tableMatrix_DM = CustomDefaultTableModel(self.tableMatrix, ('URLS','NoAuth'))
+        self.tableMatrix = JTable(self.tableMatrix_DM)
+        self.tableMatrix_SP.getViewport().setView((self.tableMatrix))
+        self.userCount = 0
+        self.userNames = []
+        self.userNames.append("NoAuth")
+        self.userNamesHttpReq = []
+        self.userNamesHttpReq.append("")
+        self.userNamesHttpReqD = []
+        self.userNamesHttpReqD.append("")
+        self.userNamesHttpUrls = [[]]
+        self.httpReqRes = [[],[],[],[],[]]
+        self.httpReqRes.append([])
+        self._requestViewer.setMessage("", False)
+        self._responseViewer.setMessage("", False)
+        self._lblAuthNotification.text = "Please add users to create an auth matrix"
+        self._tbAuthNewUser.setForeground (Color.black)        
+        self._txtHeaderDefault = "GET / HTTP/1.1\nHost: localhost\nAccept-Encoding: gzip, deflate\nConnection: close\nCookie: SessionID=......."
+        self._tbAuthHeader.setText(self._txtHeaderDefault)
+        self._txtURLDefault = "http://...."
+        self._tbAuthURL.setText(self._txtURLDefault)
+        self._txtUserDefault = "User1"
+        self._tbAuthNewUser.text = self._txtUserDefault
+        self._btnAuthRun.setEnabled(False)
+        self._btnAuthReset.setEnabled(False)
+        self._cbAuthColoring.setEnabled(False)
+        self._cbAuthSessionHandling.setEnabled(False)
+        self._cbAuthGETPOST.setEnabled(False)
+        self._btnAuthNewUserAdd.setEnabled(True)
+        self.progressBar.setValue(0)
+        self.tableMatrix.getSelectionModel().addListSelectionListener(self._updateReqResView)
+        self.tableMatrix.getColumnModel().getSelectionModel().addListSelectionListener(self._updateReqResView)
+        self._tabAuthSplitpaneHttp.setDividerLocation(0.5)
+        self._tabAuthPanel.setDividerLocation(0.25)
+        self._tabAuthSplitpane.setDividerLocation(0.7)        
+        return
 
 class UserEnabledRenderer(TableCellRenderer):
     def __init__(self, defaultCellRender, userNamesHttpUrls):
