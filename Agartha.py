@@ -16,7 +16,7 @@ try:
 except ImportError:
     print "Failed to load dependencies."
 
-VERSION = "0.53"
+VERSION = "0.54"
 
 class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFactory):
     
@@ -40,10 +40,11 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         if not self._cbAuthSessionHandling.isSelected():
             self.userNamesHttpReq = []
             self.userNamesHttpReq.append("")
-            self.userNamesHttpReq = self.userNamesHttpReqD
+            self.userNamesHttpReq = self.userNamesHttpReqD        
+        self._cbAuthColoringFunc(self)
         self._requestViewer.setMessage("", False)
         self._responseViewer.setMessage("", False)
-        self._lblAuthNotification.text = ""
+        self._lblAuthNotification.text = " "
         self._tbAuthNewUser.setForeground (Color.black)
         self._btnAuthNewUserAdd.setEnabled(False)
         self._btnAuthRun.setEnabled(False)
@@ -79,7 +80,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._btnAuthReset.setEnabled(True)
         self._cbAuthGETPOST.setEnabled(True)
         self.progressBar.setValue(1000000)
-        self._lblAuthNotification.text = "Yellow, Orange and Red cell colors are representation of warning severities."
+        self._lblAuthNotification.text = "Blue, Green, Purple and Beige colors are representation of users. Yellow, Orange and Red cell colors show warning severities."        
         return
 
     def makeHttpCall(self, urlAdd, userID):
@@ -670,7 +671,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._MainTabs.setSelectedComponent(self._tabAuthSplitpane)
         self._MainTabs.getParent().setSelectedComponent(self._MainTabs)
 
-    def authMatrix(self, ev):
+    def authMatrix(self, ev):        
         t = Thread(target=self.authMatrixThread,args=[self])
         t.start()
         return
@@ -739,7 +740,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._tbAuthNewUser.setToolTipText("Please provide an username")
         self._btnAuthNewUserAdd = JButton("Add User", actionPerformed=self.authAdduser)
         self._btnAuthNewUserAdd.setPreferredSize(Dimension(90,27))
-        self._btnAuthNewUserAdd.setToolTipText("Add User a specific user to create an auth matrix")
+        self._btnAuthNewUserAdd.setToolTipText("Please add user/s to populate authentication matrix!")
         self._btnAuthRun = JButton("RUN", actionPerformed=self.authMatrix)
         self._btnAuthRun.setPreferredSize(Dimension(150,27))
         self._btnAuthRun.setToolTipText("Start comparison")
@@ -764,6 +765,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._cbAuthGETPOST.setToolTipText("Which HTTP method will be used for the test")
         self._cbAuthSessionHandling = JCheckBox('Session Handler*', False)
         self._cbAuthSessionHandling.setEnabled(False)
+        self._cbAuthSessionHandling.setVisible(False)
         self._cbAuthSessionHandling.setToolTipText("Experimental feature: Auto-updates cookies and paramaters, like CSRF tokens.")
 
         #top panel
@@ -984,6 +986,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._cbAuthColoring.setEnabled(False)
         self._cbAuthSessionHandling.setEnabled(False)
         self._cbAuthGETPOST.setEnabled(False)
+        self._cbAuthGETPOST.setSelectedIndex(0)
         self._btnAuthNewUserAdd.setEnabled(True)
         self.progressBar.setValue(0)
         self.tableMatrix.getSelectionModel().addListSelectionListener(self._updateReqResView)
@@ -997,7 +1000,7 @@ class UserEnabledRenderer(TableCellRenderer):
     def __init__(self, defaultCellRender, userNamesHttpUrls):
         self._defaultCellRender = defaultCellRender
         self.urlList = userNamesHttpUrls
-        self.colorsUser = [Color(204, 229, 255), Color(204, 255, 204), Color(204, 204, 255), Color(189,183,107)]
+        self.colorsUser = [Color(204, 229, 255), Color(204, 255, 204), Color(204, 204, 255), Color(255,228,196)]        
         self.colorsAlert = [Color.white, Color(255, 153, 153), Color(255,218,185), Color(255, 255, 204), Color(211,211,211)]
 
     def getTableCellRendererComponent(self, table, value, isSelected, hasFocus, row, column):
@@ -1055,11 +1058,11 @@ class UserEnabledRenderer(TableCellRenderer):
         except:
             cell.setBackground(self.colorsAlert[0])
 
-        if isSelected:
+        if isSelected:            
             cell.setBackground(Color(230,230,200))
             
-        if hasFocus:
-            cell.setBackground(Color(230,230,220))
+        if hasFocus:           
+            cell.setBackground(Color(230,230,240))
             cell.setFont(cell.getFont().deriveFont(Font.BOLD | Font.ITALIC));
             cell.setToolTipText(toolTipMessage)
         
