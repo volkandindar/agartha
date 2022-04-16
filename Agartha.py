@@ -16,7 +16,7 @@ try:
 except ImportError:
     print "Failed to load dependencies."
 
-VERSION = "0.54"
+VERSION = "0.55"
 
 class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFactory):
     
