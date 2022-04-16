@@ -303,12 +303,17 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                         if prefix[:2].count("\\") == escapeChar[:2].count("\\") or prefix.find('\\') or escapeChar.find('\\'):
                             listRCE.append(prefix + escapeChar + separator + self._txtTargetPath.text + separator + escapeChar + "\n")
                             listRCE.append(prefix + escapeChar + separator + escapeChar + self._txtTargetPath.text + "\n")
-                            listRCE.append(prefix + escapeChar + separator + self._txtTargetPath.text + suffix + "\n")                        
+                            if escapeChar:
+                                listRCE.append(prefix + separator + self._txtTargetPath.text + escapeChar + suffix + "\n")
+                                listRCE.append(prefix + escapeChar + separator + self._txtTargetPath.text + suffix + "\n")
                         if suffix != " ::":
-                            listRCE.append(prefix + separator + "`" + self._txtTargetPath.text + "`" + suffix + "\n")
-                            listRCE.append(prefix + "`" + self._txtTargetPath.text + "`" + suffix + "\n")
-                        listRCE.append(prefix + self._txtTargetPath.text + suffix + "\n")
-                    listRCE.append(prefix + separator + "`" + self._txtTargetPath.text + "`" + "\n")
+                            listRCE.append(prefix + separator + "`" + self._txtTargetPath.text + "`" + "\n")                            
+                            if prefix[:2].count("\\") == escapeChar[:2].count("\\") or prefix.find('\\') or escapeChar.find('\\'):
+                                listRCE.append(prefix + escapeChar + separator + "`" + self._txtTargetPath.text + "`" + separator + escapeChar + "\n")
+                                if escapeChar:    
+                                    listRCE.append(prefix + escapeChar + separator + "`" + self._txtTargetPath.text + "`" + suffix + "\n")
+                                    listRCE.append(prefix + "`" + self._txtTargetPath.text + "`" + escapeChar + suffix + "\n")
+                        listRCE.append(prefix + self._txtTargetPath.text + "\n")
                     listRCE.append(prefix + separator + "`" + self._txtTargetPath.text + "`" + separator + "\n")            
             listRCE.append(prefix + self._txtTargetPath.text + "\n")
             listRCE.append(prefix + "`" + self._txtTargetPath.text + "`" + "\n")
