@@ -490,7 +490,6 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                                         listSQLi.append(prefix + unionPhrase + " waitfor delay '00:20'" + "\n")
                                         if self._cbSqlWafBypass.isSelected():
                                             listSQLi.append(prefix + unionPhrase + " waitfor delay \\'00:20\\'" + "\n")
-                                            listSQLi.append(prefix + unionPhrase + " waitfor delay \\\\'00:20\\\\'" + "\n")
                             if self._cbOracleBased.isSelected():
                                 listSQLi.append(prefix + escapeChar + unionPhrase + " from dual" + suffix + "\n")
                                 if not escapeChar:
