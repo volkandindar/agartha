@@ -417,7 +417,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
 
         listSQLi = []
         prefixes = ["", "\\n", "\\r\\n", "%0a", "0x0a", "%0d%0a", "0x0d0a", "%00", "0x00"]
-        prefixes = ["", "\\n"]
+        
         
         escapeChars = ["", "'", "\\'", "\\\\'"]
 
