@@ -11,7 +11,6 @@ try:
     from java.util import ArrayList
     from threading import Thread
     from java.awt.datatransfer import StringSelection
-    
 except ImportError:
     print "Failed to load dependencies."
 
