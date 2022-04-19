@@ -16,7 +16,7 @@ try:
 except ImportError:
     print "Failed to load dependencies."
 
-VERSION = "0.63"
+VERSION = "0.64"
 
 class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFactory):
     
@@ -668,8 +668,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         if method == "GET":
             minHeader = "var xhr=new XMLHttpRequest();xhr.open('GET','" + _url + "');xhr.withCredentials=true;"
             jscript = "Http request with minimum header paramaters in JavaScript:\n\t<script>" + minHeader + "xhr.send();</script>\n\n"
-            jscript += "Http request with all header paramaters in JavaScript:\n\t<script>" + minHeader + fullHeader + "xhr.send();</script>"
-
+            jscript += "Http request with all header paramaters (except cookies, tokes, etc) in JavaScript:\n\t<script>" + minHeader + fullHeader + "xhr.send();</script>"
         else:
             contentType = ""
             for line in _req.splitlines():
@@ -678,7 +677,8 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                     break
             if contentType:
                 contentType = "xhr.setRequestHeader('Content-type','" + contentType + "');"
-                
+            
+            sendData = ""
             if _req.splitlines()[-1]:
                 sendData = "'" + _req.splitlines()[-1] + "'"
             
