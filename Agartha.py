@@ -669,7 +669,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
             if method == "GET":
                 minHeader = "var xhr=new XMLHttpRequest();xhr.open('GET','" + _url + "');xhr.withCredentials=true;"
                 jscript = "Http request with minimum header paramaters in JavaScript:\n\t<script>" + minHeader + "xhr.send();</script>\n\n"
-                jscript += "Http request with all header paramaters (except cookies, tokes, etc) in JavaScript:\n\t<script>" + minHeader + fullHeader + "xhr.send();</script>"
+                jscript += "Http request with all header paramaters (except cookies, tokes, etc) in JavaScript, you may need to remove unnecessary fields:\n\t<script>" + minHeader + fullHeader + "xhr.send();</script>"
             else:
                 contentType = ""
                 for line in _req.splitlines():
