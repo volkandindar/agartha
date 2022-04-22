@@ -11,10 +11,11 @@ try:
     from java.util import ArrayList
     from threading import Thread
     from java.awt.datatransfer import StringSelection
+    import sys
 except ImportError:
     print "Failed to load dependencies."
 
-VERSION = "0.65"
+VERSION = "0.66"
 
 class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFactory):
     
@@ -113,13 +114,13 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                 if urlparse.urlparse(urlAdd).scheme == "https":
                     portNum = 443
     
-            try:
-                #check for if service accessible                
-                urllib2.urlopen(urlAdd, timeout=5).getcode()
-            except Exception as e:
-                if (re.findall(r'Host is down|timed out|Connection refused', str(e), re.IGNORECASE)):
-                    self.httpReqRes[userID].append("")
-                    return "Service not accessible!"
+            #try:
+            #    #check for if service accessible                
+            #    urllib2.urlopen(urlAdd, timeout=5).getcode()
+            #except Exception as e:
+            #    if (re.findall(r'Host is down|timed out|Connection refused', str(e), re.IGNORECASE)):
+            #        self.httpReqRes[userID].append("")
+            #        return "Service not accessible!"
             
             _httpReqRes = self._callbacks.makeHttpRequest(self._helpers.buildHttpService(urlparse.urlparse(urlAdd).hostname, portNum, urlparse.urlparse(urlAdd).scheme), header)
             self.httpReqRes[userID].append(_httpReqRes)
@@ -140,7 +141,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
             return "HTTP " + str(self._helpers.analyzeResponse(self._helpers.bytesToString(_httpReqRes.getResponse())).getStatusCode()) + " : " + format(len(self._helpers.bytesToString(_httpReqRes.getResponse())) - self._helpers.analyzeResponse(self._helpers.bytesToString(_httpReqRes.getResponse())).getBodyOffset(), ',d') + "bytes"
         except:
             self.httpReqRes[userID].append("")
-            return "Error"
+            return str(sys.exc_info()[1])
 
     def authAdduser(self, ev):
         if self.userCount == 4:
