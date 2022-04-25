@@ -12,7 +12,7 @@ try:
     from threading import Thread
     from java.awt.datatransfer import StringSelection
     import sys
-except ImportError:
+except:
     print "Failed to load dependencies."
 
 VERSION = "0.67"
