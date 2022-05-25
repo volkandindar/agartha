@@ -15,7 +15,7 @@ try:
 except:
     print "Failed to load dependencies."
 
-VERSION = "0.69"
+VERSION = "0.70"
 
 class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFactory):
     
@@ -423,7 +423,8 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         n2 = str(random.randint(71,99))
         boolExpressions = [n1 + "=" + n1, n1 + "<" + n2]
         
-        suffixes = ["", " -- "]
+        #suffixes = ["", " -- "]
+        suffixes = ["", "; -- "]
         
         if not self._cbSqlWafBypass.isSelected():
             prefixes = [""]
