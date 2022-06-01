@@ -22,7 +22,7 @@ For manual installation, you should download 'jython' file first, and then:
 - Java versions:
 	- openjdk 14 2020-03-17, OpenJDK Runtime Environment (build 14+36-1461)
 	- java version "1.8.0_331", Java(TM) SE Runtime Environment (build 1.8.0_331-b09)
-- jython versions:
+- Jython versions:
 	- v2.7.1
 	- v2.7.2
 
