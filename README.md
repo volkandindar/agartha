@@ -19,7 +19,9 @@ For manual installation, you should download 'jython' file first, and then:
 - After, you will see 'Agartha' tab in the main window and it will be also registered the right click, under 'Extensions > Agartha {LFI|RCE|Auth|SQLi|Http-Js}'.<br/><br/>
 
 ## Tested in
-- openjdk 14 2020-03-17, OpenJDK Runtime Environment (build 14+36-1461)
+- Java versions:
+	- openjdk 14 2020-03-17, OpenJDK Runtime Environment (build 14+36-1461)
+	- java version "1.8.0_331", Java(TM) SE Runtime Environment (build 1.8.0_331-b09)
 - jython v2.7.1
 
 ## Directory Traversal/Local File Inclusion
