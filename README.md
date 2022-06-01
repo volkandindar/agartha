@@ -18,6 +18,10 @@ For manual installation, you should download 'jython' file first, and then:
 - Burp Menu > Extender > Extensions > Add > Extension Type: Python > Select file: 'agartha.py'
 - After, you will see 'Agartha' tab in the main window and it will be also registered the right click, under 'Extensions > Agartha {LFI|RCE|Auth|SQLi|Http-Js}'.<br/><br/>
 
+## Tested in
+- openjdk 14 2020-03-17, OpenJDK Runtime Environment (build 14+36-1461)
+- jython v2.7.1
+
 ## Directory Traversal/Local File Inclusion
 It both supports unix and windows file systems. You can generate any wordlists dynamically for the path you want. You just need to supply a file path and that's all. 
 
