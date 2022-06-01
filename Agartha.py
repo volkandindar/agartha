@@ -13,9 +13,9 @@ try:
     from java.awt.datatransfer import StringSelection
     import sys
 except:
-    print "Failed to load dependencies."
+    print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
 
-VERSION = "0.70"
+VERSION = "0.71"
 
 class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFactory):
     
@@ -23,7 +23,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._callbacks = callbacks
         self._helpers = callbacks.getHelpers()
         self._callbacks.setExtensionName("Agartha {LFI|RCE|Auth|SQLi|Http-Js}")
-        print "Version " + VERSION + " is just loaded.\n\nAgartha is a security tool for:\n\t\t* Local File Inclusion (LFI), Directory Traversal,\n\t\t* Code Injection/Remote Code Execution (RCE),\n\t\t* Authorization/Authentication Access Matrix,\n\t\t* SQL Injection Wordlists,\n\t\t* Http Request to Javascript.\n\nFor more information and tutorial how to use, please visit:\n\t\thttps://github.com/volkandindar/agartha"        
+        print "Version " + VERSION + " is just loaded.\n\nAgartha is a security tool for:\n\t\t* Local File Inclusion (LFI), Directory Traversal,\n\t\t* Code Injection/Remote Code Execution (RCE),\n\t\t* Authorization/Authentication Access Matrix,\n\t\t* SQL Injection Wordlists,\n\t\t* Http Request to Javascript.\n\nTested in:\n\t\t* openjdk 14 2020-03-17,  OpenJDK Runtime Environment (build 14+36-1461)\n\t\t* jython v2.7.1\n\nFor more information and tutorial how to use, please visit:\n\t\thttps://github.com/volkandindar/agartha"
         self._MainTabs = JTabbedPane()
         self._tabDictUI()
         self._tabAuthUI()
