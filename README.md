@@ -69,12 +69,17 @@ This part focuses on user session and URLs relationships to determine access vio
 
 After sending Http request to Agartha, the panel will fill some fields in the tool. 
 1. What's username for the session you provide. You can add up to 4 different users and each user will have a different color to make it more readable.
-2. User's request header and all user related URL visits will be based on it.
-3. URL addresses the user can visit. You can create this list with manual effort or automatic tools, like spiders, sitemap generators, etc, and do not forget to remove logout links.
-4. All URLs you supply will be in here. Also user cells will be colored, if the URL belongs to her/him.
-5. Http requests and responses without authentication. All session cookies, tokens and parameters will be removed form Http calls.
-6. Http requests and responses with the user session you define in the first step. Cell titles show Http response codes and response lengths. 
-7. Just click the cell you want to examine and Http details will be shown in here.
+	- 'Add User' for adding user session
+	- You can change HTTP request method between 'GET' and POST.
+	- 'Reset' button clear all table and field contents.
+	- 'Run' button execute the task.
+	- 'Colorful' indicates possible issues in different colors.
+3. User's request header and all user related URL visits will be based on it.
+4. URL addresses the user can visit. You can create this list with manual effort or automatic tools, like spiders, sitemap generators, etc, and do not forget to remove logout links.
+5. All URLs you supply will be in here. Also user cells will be colored, if the URL belongs to her/him.
+6. Http requests and responses without authentication. All session cookies, tokens and parameters will be removed form Http calls.
+7. Http requests and responses with the user session you define in the first step. Cell titles show Http response codes and response lengths. 
+8. Just click the cell you want to examine and Http details will be shown in here.
 
 
 <img width="1000" alt="Role Matrix" src="https://user-images.githubusercontent.com/50321735/152227189-9e4b93df-de26-438e-ac1c-1aabcaf1ff56.png">
