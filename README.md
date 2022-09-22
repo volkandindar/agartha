@@ -19,7 +19,7 @@ For manual installation, you should download 'jython' file first, and then:
 - After, you will see 'Agartha' tab in the main window and it will be also registered the right click, under 'Extensions > Agartha {LFI|RCE|Auth|SQLi|Http-Js}'.<br/><br/>
 
 ## Tested in
-- Jython version v2.7.3 - jython-standalone-2.7.3.jar
+- Jython version v2.7.3
 
 ## Directory Traversal/Local File Inclusion
 It both supports unix and windows file systems. You can generate any wordlists dynamically for the path you want. You just need to supply a file path and that's all. 
