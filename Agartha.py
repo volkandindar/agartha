@@ -15,7 +15,7 @@ try:
 except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
 
-VERSION = "0.73"
+VERSION = "0.74"
 
 class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFactory):
     
@@ -33,6 +33,8 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         callbacks.registerContextMenuFactory(self)
         callbacks.issueAlert("The extension has been loaded.")
         self.tableMatrixReset(self)
+
+
         return
 
     def authMatrixThread(self, ev):
@@ -248,10 +250,10 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
             self._lblStatusLabel.setText("input is not valid. ")
             if self._rbDictLFI.isSelected():
                 self._lblStatusLabel.setText("File "+ self._lblStatusLabel.text + self._txtDefaultLFI)
-                self._txtTargetPath.setText("etc/passwd")
+                self._txtTargetPath.setText(random.choice(["etc/passwd", "C:\\Windows\\System32\\drivers\\etc\\hosts"]))
             elif self._rbDictCommandInj.isSelected():
                 self._lblStatusLabel.setText("Remote code " +self._lblStatusLabel.text + self._txtDefaultCommandInj)
-                self._txtTargetPath.setText("sleep 3600")
+                self._txtTargetPath.setText(random.choice(["sleep 3600", "timeout 3600"]))
             return 
 
         self._lblStatusLabel.setForeground (Color.black)
