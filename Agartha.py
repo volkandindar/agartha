@@ -15,7 +15,7 @@ try:
 except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
 
-VERSION = "0.72"
+VERSION = "0.73"
 
 class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFactory):
     
@@ -224,6 +224,20 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
             _colorful = False
 
         self.tableMatrix.repaint()
+        return
+
+    def _cbUnionBasedFunc(self, ev):
+        if self._cbUnionBased.isSelected(): 
+            self._cbUnionDepth.setEnabled(True)
+        else:
+            self._cbUnionDepth.setEnabled(False)
+        return
+
+    def _cbOrderBasedFunc(self, ev):
+        if self._cbOrderBased.isSelected(): 
+            self._cbOrderDepth.setEnabled(True)
+        else:
+            self._cbOrderDepth.setEnabled(False)
         return
 
     def funcGeneratePayload(self, ev):
@@ -936,12 +950,14 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._cbDictCommandInjOpt.setVisible(False)
         self._cbStackedSQL = JCheckBox('Stacked Queries', False)
         self._cbTimeBased = JCheckBox('Time-Based', True)
-        self._cbUnionBased = JCheckBox('Union-Based', False)
+        self._cbUnionBased = JCheckBox('Union-Based', False, itemStateChanged=self._cbUnionBasedFunc)
         self._cbUnionDepth = JComboBox(list(range(1, 20)))
         self._cbUnionDepth.setSelectedIndex(4)
-        self._cbOrderBased = JCheckBox('Order-Based', False)
+        self._cbUnionDepth.setEnabled(False)
+        self._cbOrderBased = JCheckBox('Order-Based', False, itemStateChanged=self._cbOrderBasedFunc)
         self._cbOrderDepth = JComboBox(list(range(1, 20)))
         self._cbOrderDepth.setSelectedIndex(4)
+        self._cbOrderDepth.setEnabled(False)
         self._cbBooleanBased = JCheckBox('Boolean-Based', True)
         self._cbMssqlBased = JCheckBox('MSSQL', True)
         self._cbMysqlBased = JCheckBox('MYSQL', True)        
