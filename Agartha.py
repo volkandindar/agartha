@@ -122,6 +122,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
             #        self.httpReqRes[userID].append("")
             #        return "Service not accessible!"
             
+            #Experimental feature: Auto-updates cookies and paramaters, like CSRF tokens.
             _httpReqRes = self._callbacks.makeHttpRequest(self._helpers.buildHttpService(urlparse.urlparse(urlAdd).hostname, portNum, urlparse.urlparse(urlAdd).scheme), header)
             self.httpReqRes[userID].append(_httpReqRes)
             try:
