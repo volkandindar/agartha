@@ -709,7 +709,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._MainTabs.getParent().setSelectedComponent(self._MainTabs)
 
     def authMatrix(self, ev):
-        t = Thread(target=self.authMatrixThread,args=[self])
+        t = Thread(target=self.authMatrixThread, args=[self])
         t.start()
         return
 
