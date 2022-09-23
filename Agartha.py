@@ -2,16 +2,16 @@
 Author: Volkan Dindar
 """
 try:
+    import sys
+    import re, urlparse, random
     from burp import (IBurpExtender, ITab, IMessageEditorController, IContextMenuFactory)
     from java.awt import (BorderLayout, FlowLayout, Color, Font, Dimension, Toolkit)
     from javax.swing import (JCheckBox, JMenuItem, JTextPane, JTable, JScrollPane, JProgressBar, SwingConstants, JComboBox, JButton, JTextField, JSplitPane, JPanel, JLabel, JRadioButton, ButtonGroup, JTabbedPane, BoxLayout)
     from javax.swing.border import EmptyBorder
-    from javax.swing.table import (DefaultTableModel, TableCellRenderer)    
-    import re, urlparse, random
+    from javax.swing.table import (DefaultTableModel, TableCellRenderer)
     from java.util import ArrayList
     from threading import Thread
     from java.awt.datatransfer import StringSelection
-    import sys
 except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
 
