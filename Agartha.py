@@ -15,7 +15,7 @@ try:
 except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
 
-VERSION = "0.75"
+VERSION = "0.8"
 
 class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFactory):
     
@@ -36,10 +36,6 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         return
 
     def authMatrixThread(self, ev):
-        if not self._cbAuthSessionHandling.isSelected():
-            self.userNamesHttpReq = []
-            self.userNamesHttpReq.append("")
-            self.userNamesHttpReq = self.userNamesHttpReqD        
         self._cbAuthColoringFunc(self)
         self._requestViewer.setMessage("", False)
         self._responseViewer.setMessage("", False)
@@ -48,7 +44,6 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._btnAuthNewUserAdd.setEnabled(False)
         self._btnAuthRun.setEnabled(False)
         self._cbAuthColoring.setEnabled(False)
-        self._cbAuthSessionHandling.setEnabled(False)
         self._btnAuthReset.setEnabled(False)
         self._cbAuthGETPOST.setEnabled(False)
         self.progressBar.setValue(0)
@@ -75,7 +70,6 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._btnAuthNewUserAdd.setEnabled(True)
         self._btnAuthRun.setEnabled(True)
         self._cbAuthColoring.setEnabled(True)
-        self._cbAuthSessionHandling.setEnabled(True)
         self._btnAuthReset.setEnabled(True)
         self._cbAuthGETPOST.setEnabled(True)
         self.progressBar.setValue(1000000)
@@ -114,32 +108,9 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                 if urlparse.urlparse(urlAdd).scheme == "https":
                     portNum = 443
     
-            #try:
-            #    #check for if service accessible                
-            #    urllib2.urlopen(urlAdd, timeout=5).getcode()
-            #except Exception as e:
-            #    if (re.findall(r'Host is down|timed out|Connection refused', str(e), re.IGNORECASE)):
-            #        self.httpReqRes[userID].append("")
-            #        return "Service not accessible!"
-            
             _httpReqRes = self._callbacks.makeHttpRequest(self._helpers.buildHttpService(urlparse.urlparse(urlAdd).hostname, portNum, urlparse.urlparse(urlAdd).scheme), header)
             self.httpReqRes[userID].append(_httpReqRes)
             
-            try:
-                #Experimental feature: Auto-updates cookies and paramaters, like CSRF tokens.
-                if userID > 0 and self._cbAuthSessionHandling.isSelected():
-                    if "GET" in self._helpers.bytesToString(header)[:3]:    
-                        header = self._callbacks.getHelpers().toggleRequestMethod((header))
-                    httpReqHeader = self._helpers.bytesToString(header).split('\r\n\r\n')[0]
-                    httpReqData = self._helpers.bytesToString(header).split('\r\n\r\n')[1]
-                    httpResHeader = str(self._helpers.analyzeResponse(_httpReqRes.getResponse()).getHeaders())
-                    httpResBody = str(self._helpers.bytesToString(_httpReqRes.getResponse())[self._helpers.analyzeResponse(self._helpers.bytesToString(_httpReqRes.getResponse())).getBodyOffset():])
-                    self.userNamesHttpReq[userID]= self.sessionHandler(httpReqHeader,httpReqData,httpResHeader,httpResBody)
-            except Exception as e:
-                pass
-                #print str(e)
-                #return "cookie handling error!"
-
             return "HTTP " + str(self._helpers.analyzeResponse(self._helpers.bytesToString(_httpReqRes.getResponse())).getStatusCode()) + " : " + format(len(self._helpers.bytesToString(_httpReqRes.getResponse())) - self._helpers.analyzeResponse(self._helpers.bytesToString(_httpReqRes.getResponse())).getBodyOffset(), ',d') + "bytes"
         except:
             self.httpReqRes[userID].append("")
@@ -181,12 +152,10 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                 if not line:
                     break
             self.userNamesHttpReq[0] = unauthHeader
-            self.userNamesHttpReqD[0] = unauthHeader
         
         self.userCount = self.userCount + 1
         self.userNames.append(self._tbAuthNewUser.text)
         self.userNamesHttpReq.append(self._tbAuthHeader.getText())
-        self.userNamesHttpReqD.append(self._tbAuthHeader.getText())
         self.tableMatrix_DM.addColumn(self._tbAuthNewUser.text)
         self.userNamesHttpUrls.append([])
 
@@ -207,7 +176,6 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._lblAuthNotification.text = self._tbAuthNewUser.text + " added successfully!"
         self._lblAuthNotification.setForeground (Color.black)
         self._cbAuthColoring.setEnabled(True)
-        self._cbAuthSessionHandling.setEnabled(True)
         self._cbAuthGETPOST.setEnabled(True)
         self.tableMatrix.repaint()
         self.tableMatrix.setSelectionForeground(Color.red)
@@ -771,38 +739,6 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
             else:
                 return True
 
-    def sessionHandler(self, httpReqHeader, httpReqData, httpResHeader, httpResBody):
-        httpReqHeader = "\n".join(httpReqHeader.split("\n"))        
-        for line in httpReqHeader.splitlines()[1:]:
-            if not any(re.findall(r'Accept:|Accept-|Cache|Connection:|Content-|Date|Expect|Forwarded|From|Host|If-Match|If-Modified-Since|If-None-Match|If-Range|If-Unmodified-Since|Max-Forwards|Origin|Pragma|Range|Referer|Upgrade|User-Agent|Warning|DNT:', line, re.IGNORECASE)):
-                for d1 in line.split(':')[1:]:
-                    for d2 in d1.split(';'):
-                        param = str(d2.split('=')[0]).strip()
-                        value = str(d2.split('=')[1]).strip()
-                        if (re.findall(param, str(httpResHeader), re.IGNORECASE)):
-                            for line2 in httpResHeader.splitlines():
-                                for dd1 in line2.split(':')[1:]:
-                                    for dd2 in dd1.split(';'):
-                                        if param in dd2:
-                                            httpReqHeader = httpReqHeader.replace(value, str(dd2.split('=')[1]))
-                                            break
-    
-        if httpReqData:
-            httpResBody = str(httpResBody).replace('\'','').replace('\"','')
-            for d1 in httpReqData.split('&'):
-                param =  str(d1.split('=')[0]).strip()
-                value =  str(d1.split('=')[1]).strip()
-                if (re.findall(param, str(httpResBody), re.IGNORECASE)):
-                    for line in httpResBody.splitlines():
-                        if param in line:
-                            for d2 in line.split(' '):
-                                    if 'value' == str(d2.split('=')[0]):
-                                        if not value == str(d2.split('=')[1]):
-                                            httpReqData = httpReqData.replace(value, str(d2.split('=')[1]))                                        
-                                            break
-            return httpReqHeader+ "\r\n\r\n" + httpReqData
-        return httpReqHeader
-
     def _tabAuthUI(self):
         #panel top
         self._tbAuthNewUser = JTextField("", 15)
@@ -832,10 +768,6 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._cbAuthGETPOST = JComboBox(('GET', 'POST'))
         self._cbAuthGETPOST.setSelectedIndex(0)
         self._cbAuthGETPOST.setToolTipText("Which HTTP method will be used for the test")
-        self._cbAuthSessionHandling = JCheckBox('Session Handler*', False)
-        self._cbAuthSessionHandling.setEnabled(False)
-        self._cbAuthSessionHandling.setVisible(False)
-        self._cbAuthSessionHandling.setToolTipText("Experimental feature: Auto-updates cookies and paramaters, like CSRF tokens.")
 
         #top panel
         _tabAuthPanel1 = JPanel(BorderLayout())
@@ -849,7 +781,6 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         _tabAuthPanel1_A.add(self._btnAuthReset)
         _tabAuthPanel1_A.add(self._btnAuthRun)
         _tabAuthPanel1_A.add(self._cbAuthColoring)
-        _tabAuthPanel1_A.add(self._cbAuthSessionHandling)
         _tabAuthPanel1_B = JScrollPane(self._tbAuthHeader, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_NEVER)
         _tabAuthPanel1_C = JScrollPane(self._tbAuthURL, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_NEVER)
         self._tabAuthSplitpaneHttp = JSplitPane(JSplitPane.HORIZONTAL_SPLIT, _tabAuthPanel1_B, _tabAuthPanel1_C)
@@ -1037,8 +968,6 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self.userNames.append("NoAuth")
         self.userNamesHttpReq = []
         self.userNamesHttpReq.append("")
-        self.userNamesHttpReqD = []
-        self.userNamesHttpReqD.append("")
         self.userNamesHttpUrls = [[]]
         self.httpReqRes = [[],[],[],[],[]]
         self.httpReqRes.append([])
@@ -1055,7 +984,6 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._btnAuthRun.setEnabled(False)
         self._btnAuthReset.setEnabled(False)
         self._cbAuthColoring.setEnabled(False)
-        self._cbAuthSessionHandling.setEnabled(False)
         self._cbAuthGETPOST.setEnabled(False)
         self._cbAuthGETPOST.setSelectedIndex(0)
         self._btnAuthNewUserAdd.setEnabled(True)
