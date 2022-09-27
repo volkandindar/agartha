@@ -16,7 +16,10 @@ Here is a small tutorial how to use.
 For manual installation, you should download 'jython' file first, and then:
 - Burp Menu > Extender > Options > Python Environment > Locate jython standalone jar file
 - Burp Menu > Extender > Extensions > Add > Extension Type: Python > Select file: 'agartha.py'
-- After, you will see 'Agartha' tab in the main window and it will be also registered the right click, under 'Extensions > Agartha {LFI|RCE|Auth|SQLi|Http-Js}'.<br/><br/>
+- After, you will see 'Agartha' tab in the main window and it will be also registered the right click, under: 
+	- 'Extensions > Agartha {LFI|RCE|Auth|SQLi|Http-Js}', with two options:
+		- 'Agartha Panel'
+		- 'Copy as JavaScript'<br/><br/>
 
 ## Tested in
 - Jython version v2.7.3
