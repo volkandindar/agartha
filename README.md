@@ -49,7 +49,7 @@ It generates payloads for Stacked Queries, Boolean-Based, Union-Based, Time-Base
 
 And the rest is related with database and attack types.
 
-<img width="1000" alt="SQL Injection wordlist" src="https://user-images.githubusercontent.com/50321735/161572348-eb5d610d-cb81-45c7-a9a3-796f823b0032.png"><br/><br/>
+<img width="1000" alt="SQL Injection wordlist" src="https://user-images.githubusercontent.com/50321735/192443768-a8113e64-3f56-4282-bd11-b2c3d91be53e.png"><br/><br/>
 
 
 ## Authorization Matrix
