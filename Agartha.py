@@ -763,7 +763,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._tbAuthURL.setToolTipText("What url links can be accessible by her/him. Please dont forget to remove logout links!")
         self._tbAuthURL.setEditable(True)
         self._cbAuthColoring = JCheckBox('Warnings', False, itemStateChanged=self._cbAuthColoringFunc)
-        self._cbAuthColoring.setEnabled(False)
+        self._cbAuthColoring.setEnabled(True)
         self._cbAuthColoring.setToolTipText("Colors may help to analysis easily")
         self._cbAuthGETPOST = JComboBox(('GET', 'POST'))
         self._cbAuthGETPOST.setSelectedIndex(0)
