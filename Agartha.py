@@ -1053,7 +1053,7 @@ class UserEnabledRenderer(TableCellRenderer):
                         elif table.getValueAt(row, y)[:8] == table.getValueAt(row, column)[:8]:
                                 if not cell.getBackground() == self.colorsAlert[1]:
                                     cell.setBackground(self.colorsAlert[2])
-                                    toolTipMessage = "The URL returns HTTP 2XX with different length and without authentication!"
+                                    toolTipMessage = "The URL returns HTTP 2XX with different length without authentication!"
             elif table.getValueAt(row, 0) in self.urlList[column- 1]:
                 cell.setBackground(self.colorsUser[column-2])
                 toolTipMessage = "Http response of the user's own URL!"
