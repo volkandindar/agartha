@@ -625,7 +625,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
     def encodeURL(self, payloads):
         urlList = []
         for payload in payloads:
-            urlList.append(payload.replace(" ", "%20").replace("'", "%27").replace("\"", "%22").replace("\\", "%5c").replace("=", "%3d").replace("<", "%3c").replace(";", "%3b").replace("|", "%7c").replace("&", "%26").replace(":", "%3a").replace("`", "%60").replace("#", "%23"))
+            urlList.append(payload.replace(" ", "%20").replace("\"", "%22").replace("\\", "%5c").replace("=", "%3d").replace("<", "%3c").replace(";", "%3b").replace("|", "%7c").replace("&", "%26").replace(":", "%3a").replace("`", "%60").replace("#", "%23"))
         return urlList
 
     def getTabCaption(self):
