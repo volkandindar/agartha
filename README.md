@@ -71,7 +71,7 @@ After sending Http request to Agartha, the panel will fill some fields in the to
 	- You can change HTTP request method between 'GET' and POST.
 	- 'Reset' button clear all table and field contents.
 	- 'Run' button execute the task.
-	- 'Colorful' indicates possible issues in different colors.
+	- 'Warnings' indicates possible issues in different colors.
 3. User's request header and all user related URL visits will be based on it.
 4. URL addresses the user can visit. You can create this list with manual effort or automatic tools, like spiders, sitemap generators, etc, and do not forget to remove logout links.
 5. All URLs you supply will be in here. Also user cells will be colored, if the URL belongs to her/him.
