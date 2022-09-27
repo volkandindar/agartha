@@ -28,7 +28,7 @@ It both supports unix and windows file systems. You can generate any wordlists d
 
 **'Waf Bypass'** asks for if you want to include all bypass features; like null bytes, different encoding, etc.
 
-<img width="1000" alt="Directory Traversal/Local File Inclusion wordlist" src="https://user-images.githubusercontent.com/50321735/152050458-84c29e84-6e12-486b-99d2-fcf220791798.png"><br/><br/>
+<img width="1000" alt="Directory Traversal/Local File Inclusion wordlist" src="https://user-images.githubusercontent.com/50321735/192443238-ac8f9913-9d35-4642-8122-aec89baa1b6f.png"><br/><br/>
 
 
 ## Remote Code Execution
