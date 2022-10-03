@@ -22,8 +22,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
     def registerExtenderCallbacks(self, callbacks):
         self._callbacks = callbacks
         self._helpers = callbacks.getHelpers()
-        self._callbacks.setExtensionName("Agartha {LFI|RCE|Auth|SQLi|Http-Js}")
-        print "Agartha(v" + VERSION + ") is a security tool for:\n\t\t* Local File Inclusion (LFI), Directory Traversal,\n\t\t* Code Injection/Remote Code Execution (RCE),\n\t\t* Authorization/Authentication Access Matrix,\n\t\t* SQL Injection,\n\t\t* Http Request to Javascript.\n\nFor more information and tutorial how to use, please visit:\n\t\thttps://github.com/volkandindar/agartha\n\nAuthor: Volkan Dindar\n        volkan.dindar@owasp.org"
+        self._callbacks.setExtensionName("Agartha {LFI|RCE|Auth|SQLi|Http-Js}")        
         self._MainTabs = JTabbedPane()
         self._tabDictUI()
         self._tabAuthUI()
@@ -33,6 +32,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         callbacks.registerContextMenuFactory(self)
         callbacks.issueAlert("The extension has been loaded.")
         self.tableMatrixReset(self)
+        print "Agartha(v" + VERSION + ") is a security tool for:\n\t\t* Local File Inclusion (LFI), Directory Traversal,\n\t\t* Code Injection/Remote Code Execution (RCE),\n\t\t* Authorization/Authentication Access Matrix,\n\t\t* SQL Injection,\n\t\t* Http Request to Javascript.\n\nFor more information and tutorial how to use, please visit:\n\t\thttps://github.com/volkandindar/agartha\n\nAuthor: Volkan Dindar\n        volkan.dindar@owasp.org"
         return
 
     def authMatrixThread(self, ev):
