@@ -6,7 +6,7 @@ try:
     import re, urlparse, random
     from burp import (IBurpExtender, ITab, IMessageEditorController, IContextMenuFactory)
     from java.awt import (BorderLayout, FlowLayout, Color, Font, Dimension, Toolkit)
-    from javax.swing import (JCheckBox, JMenuItem, JTextPane, JTable, JScrollPane, JProgressBar, SwingConstants, JComboBox, JButton, JTextField, JSplitPane, JPanel, JLabel, JRadioButton, ButtonGroup, JTabbedPane, BoxLayout)
+    from javax.swing import (JCheckBox, JMenuItem, JTextPane, JTable, JScrollPane, JProgressBar, SwingConstants, JComboBox, JButton, JTextField, JSplitPane, JPanel, JLabel, JRadioButton, ButtonGroup, JTabbedPane, BoxLayout, JEditorPane)
     from javax.swing.border import EmptyBorder
     from javax.swing.table import (DefaultTableModel, TableCellRenderer)
     from java.util import ArrayList
@@ -15,7 +15,7 @@ try:
 except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
 
-VERSION = "0.81"
+VERSION = "0.83"
 
 class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFactory):
     
@@ -26,8 +26,10 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._MainTabs = JTabbedPane()
         self._tabDictUI()
         self._tabAuthUI()
+        self._tabHelpUI()
         self._MainTabs.addTab("Payload Generator", None, self._tabDictPanel, None)
         self._MainTabs.addTab("Authorization Matrix", None, self._tabAuthSplitpane, None)
+        self._MainTabs.addTab("Help", None, self._tabHelpJPanel, None)
         callbacks.addSuiteTab(self)
         callbacks.registerContextMenuFactory(self)
         callbacks.issueAlert("The extension has been loaded.")
@@ -827,6 +829,78 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._tabAuthSplitpane = JSplitPane(JSplitPane.VERTICAL_SPLIT)
         self._tabAuthSplitpane.setTopComponent(self._tabAuthPanel)
         self._tabAuthSplitpane.setBottomComponent(_tabsReqRes)
+
+    def _tabHelpUI(self):
+        self._tabHelpJPanel = JPanel(BorderLayout())
+        self._tabHelpJPanel.setBorder(EmptyBorder(10, 10, 10, 10))
+        self.editorPaneInfo = JEditorPane()
+        self.editorPaneInfo.setEditable(False)
+        self.editorPaneInfo.setContentType("text/html");
+        htmlString ="<html>"
+        htmlString +="<div><h1>Agartha { LFI | RCE | Auth | SQLi | Http-Js }</h1>"
+        htmlString +="<p>Agartha is a penetration testing tool which creates dynamic payload lists and user access matrix to reveal injection flaws and authentication/authorization issues. There are many different attack payloads alredy exist, but Agartha creates run-time, systematic and vendor-neutral payloads with many different possibilities and bypassing methods. It also draws attention to user session and URL relationships, which makes easy to find user access violations. And additionally, it converts Http requests to JavaScript to help digging up XSS issues more. In summary:</p><ul>"
+        htmlString +="<li><strong>Payload Generator</strong>: It creates payloads/wordlists for different attack types.<ul>"
+        htmlString +="<li><strong>Directory Traversal/Local File Inclusion</strong>: It creates file dictionary lists with various encoding and escaping characters.</li>"
+        htmlString +="<li><strong>Code Injection / Remote Code Execution</strong>: It creates command dictionary lists for both unix and windows environments with different combinations.</li>"
+        htmlString +="<li><strong>SQL Injection</strong>: It creates Stacked Queries, Boolean-Based, Union-Based, Time-Based and Order-Based SQLi wordlist for various databases to help finding vulnerable spots.</li></ul></li>"
+        htmlString +="<li><strong>Authorization Matrix</strong>: It creates an access role matrix based on user sessions and URL lists to determine authorization/authentication related access violation issues.</li>"
+        htmlString +="<li>And <strong>Http Request to JavaScript Converter</strong>: It converts Http requests to JavaScript code to be useful for further XSS exploitation and more.<br><br></li></ul>"
+        htmlString +="<p>Here is a small tutorial how to use.</p>"
+        htmlString +="<h2>Directory Traversal/Local File Inclusion</h2>"
+        htmlString +="<p>It both supports unix and windows file systems. You can generate any wordlists dynamically for the path you want. You just need to supply a file path and that's all.</p>"
+        htmlString +="<p><strong>'Depth'</strong> is representation of how deep the wordlist should be. You can generate wordlists 'till' or 'equal to' this value.</p>"
+        htmlString +="<p><strong>'Waf Bypass'</strong> asks for if you want to include all bypass features; like null bytes, different encoding, etc.</p>"
+        htmlString +="<p><img width=\"1000\" alt=\"Directory Traversal/Local File Inclusion wordlist\" src=\"https://user-images.githubusercontent.com/50321735/192443238-ac8f9913-9d35-4642-8122-aec89baa1b6f.png\" style=\"max-width: 100%;\"><br><br></p>"
+        htmlString +="<h2>Code Injection / Remote Code Execution</h2>"
+        htmlString +="<p>It creates command execution dynamic wordlists with the command you supply. It combines different separators and terminators for unix and windows environments together.</p>"
+        htmlString +="<p><strong>'URL Encoding'</strong> encodes dictionary output.</p>"
+        htmlString +="<p><img width=\"1000\" alt=\"Remote Code Execution wordlist\" src=\"https://user-images.githubusercontent.com/50321735/192442838-fb338e2c-93f8-445c-ace6-af1c78131711.png\" style=\"max-width: 100%;\"><br><br></p>"
+        htmlString +="<h2>SQL Injection</h2>"
+        htmlString +="<p>It generates payloads for Stacked Queries, Boolean-Based, Union-Based, Time-Based, Order-Based SQLi attacks, and you do not need to supply any inputs. You just pick what type of SQLi attacks and databases you want, then it will generate a wordlist with different combinations.</p>"
+        htmlString +="<p><strong>'URL Encoding'</strong> encodes dictionary output.</p>"
+        htmlString +="<p><strong>'Waf Bypass'</strong> asks for if you want to include all bypass features; like null bytes, different encoding, etc.</p>"
+        htmlString +="<p><strong>'Union-Based'</strong> and <strong>'Order-Based'</strong> ask for how deep the payload should be. The default value is 5.</p>"
+        htmlString +="<p>And the rest is related with database and attack types.</p>"
+        htmlString +="<p><img width=\"1000\" alt=\"SQL Injection wordlist\" src=\"https://user-images.githubusercontent.com/50321735/192443768-a8113e64-3f56-4282-bd11-b2c3d91be53e.png\" style=\"max-width: 100%;\"><br><br></p>"
+        htmlString +="<h2>Authorization Matrix</h2>"
+        htmlString +="<p>This part focuses on user session and URLs relationships to determine access violations. The tool will visit all URLs from pre-defined user sessions and fill the table with all Http responses. It is a kind of access matrix and helps to find out authentication/authorization issues. Afterwards we will see what user can access what page contents.</p><ul>"
+        htmlString +="<li><strong>User session name</strong>: You can right click on any request and send it 'Agartha Panel' to define user sessions.</li>"
+        htmlString +="<li><strong>URL Addresses</strong> user can visit: You can use Burp's spider feature or any sitemap generators. You may need to provide different URLs for different users.</li>"
+        htmlString +="<li>After providing session name, HTTP header and allowed URLs you can use 'Add User' button to add it.</li></ul>"
+        htmlString +="<p><img width=\"1000\" alt=\"Authorization Matrix, sending http req\" src=\"https://user-images.githubusercontent.com/50321735/152217672-353b42a8-bb06-4e92-b9af-3f4e487ab1fd.png\" style=\"max-width: 100%;\"></p>"
+        htmlString +="<p>After sending Http request to Agartha, the panel will fill some fields in the tool.</p><ol>"
+        htmlString +="<li>What's username for the session you provide. You can add up to 4 different users and each user will have a different color to make it more readable.<ul>"
+        htmlString +="<li>'Add User' for adding user session</li>"
+        htmlString +="<li>You can change HTTP request method between 'GET' and POST.</li>"
+        htmlString +="<li>'Reset' button clear all table and field contents.</li>"
+        htmlString +="<li>'Run' button execute the task.</li>"
+        htmlString +="<li>'Warnings' indicates possible issues in different colors.</li></ul></li>"
+        htmlString +="<li>User's request header and all user related URL visits will be based on it.</li>"
+        htmlString +="<li>URL addresses the user can visit. You can create this list with manual effort or automatic tools, like spiders, sitemap generators, etc, and do not forget to remove logout links.</li>"
+        htmlString +="<li>All URLs you supply will be in here. Also user cells will be colored, if the URL belongs to her/him.</li>"
+        htmlString +="<li>Http requests and responses without authentication. All session cookies, tokens and parameters will be removed form Http calls.</li>"
+        htmlString +="<li>Http requests and responses with the user session you define in the first step. Cell titles show Http response codes and response lengths.</li>"
+        htmlString +="<li>Just click the cell you want to examine and Http details will be shown in here.</li></ol>"
+        htmlString +="<p><img width=\"1000\" alt=\"Role Matrix\" src=\"https://user-images.githubusercontent.com/50321735/192441769-1632b642-2048-4b10-a91b-ae2c4db3d111.png\" style=\"max-width: 100%;\"></p>"
+        htmlString +="<p>After clicking 'RUN', the tool will fill user and URL matrix with different colors. Besides the user colors, you will see orange, yellow and red cells. The URL address does not belong to the user and the cell color is:</p><ul>"
+        htmlString +="<li>Yellow, because the response returns 'HTTP 302' with authentication/authorization concerns</li>"
+        htmlString +="<li>Orange, because the response returns 'HTTP 200' but different content length, with authentication/authorization concerns</li>"
+        htmlString +="<li>Red, because the response returns 'HTTP 200' and same content length, with authentication/authorization concerns</li></ul>"
+        htmlString +="<p>It will be quite similar, even if we add more users and any authorization concerns will be highlighted in the same way.</p>"
+        htmlString +="<p>You may also notice, it support only one Http request method and user session at the same time, because it processes bulk requests and it is not possible to provide different header options for each calls. But you may play with 'GET/POST' methods to see response differences.<br><br></p>"
+        htmlString +="<h2>Http Request to JavaScript Converter</h2>"
+        htmlString +="<p>The feature is for converting Http requests to JavaScript code. It can be useful to dig up further XSS issues and bypass header restrictions, like CSP, CORS.</p>"
+        htmlString +="<p>To access it, right click any Http Request, Extensions, 'Agartha', and 'Copy as JavaScript'.</p>"
+        htmlString +="<p><img width=\"1000\" alt=\"Http Request to JavaScript Converter\" src=\"https://user-images.githubusercontent.com/50321735/152224405-d10b78a2-9b18-44a9-a991-5b9c451c7253.png\" style=\"max-width: 100%;\"></a></p>"
+        htmlString +="<p>It will automatically save it to your clipboard</p></div>"
+        htmlString +="<p>Please note that, the JavaScript code will be called over original user session and many header fields will be filled automatically. In some cases, the server may require some header field mandatory, and therefore you may need to modify the code for an adjustment.</p>"
+        htmlString +="</article>"
+        htmlString +="</div>"
+        htmlString +="</html>"
+        self.editorPaneInfo.setText(htmlString);
+        self.editorScrollPaneInfo = JScrollPane(self.editorPaneInfo);
+        self.editorScrollPaneInfo.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        self._tabHelpJPanel.add(self.editorScrollPaneInfo,BorderLayout.CENTER);
 
     def _tabDictUI(self):
         #top panel
