@@ -22,7 +22,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
     def registerExtenderCallbacks(self, callbacks):
         self._callbacks = callbacks
         self._helpers = callbacks.getHelpers()
-        self._callbacks.setExtensionName("Agartha {LFI|RCE|Auth|SQLi|Http-Js}")        
+        self._callbacks.setExtensionName("Agartha {LFI|RCE|Auth|SQLi|Http->Js}")        
         self._MainTabs = JTabbedPane()
         self._tabDictUI()
         self._tabAuthUI()
