@@ -838,7 +838,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self.editorPaneInfo.setContentType("text/html");
         htmlString ="<html>"
         htmlString +="<div><h3>Author: Volkan Dindar,  Github Repo: https://github.com/volkandindar/agartha</h3>"
-        htmlString +="<h1>Agartha { LFI | RCE | Auth | SQLi | Http-Js }</h1>"
+        htmlString +="<h1>Agartha { LFI | RCE | Auth | SQLi | Http->Js }</h1>"
         htmlString +="<p>Agartha is a penetration testing tool which creates dynamic payload lists and user access matrix to reveal injection flaws and authentication/authorization issues. There are many different attack payloads alredy exist, but Agartha creates run-time, systematic and vendor-neutral payloads with many different possibilities and bypassing methods. It also draws attention to user session and URL relationships, which makes easy to find user access violations. And additionally, it converts Http requests to JavaScript to help digging up XSS issues more. In summary:</p><ul>"
         htmlString +="<li><strong>Payload Generator</strong>: It creates payloads/wordlists for different attack types.<ul>"
         htmlString +="<li><strong>Directory Traversal/Local File Inclusion</strong>: It creates file dictionary lists with various encoding and escaping characters.</li>"
