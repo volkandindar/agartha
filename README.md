@@ -79,7 +79,7 @@ After sending Http request to Agartha, the panel will fill some fields in the to
 7. Http requests and responses with the user session you define in the first step. Cell titles show Http response codes and response lengths. 
 8. Just click the cell you want to examine and Http details will be shown in here.
 
-<img width="1000" alt="Role Matrix" src="https://user-images.githubusercontent.com/50321735/192441769-1632b642-2048-4b10-a91b-ae2c4db3d111.png">
+<img width="1000" alt="Role Matrix" src="https://user-images.githubusercontent.com/50321735/195400306-4b17090c-4e73-42ee-a802-d2a153049ddf.gif">
 
 
 After clicking 'RUN', the tool will fill user and URL matrix with different colors. Besides the user colors, you will see orange, yellow and red cells. The URL address does not belong to the user and the cell color is:
