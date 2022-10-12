@@ -62,7 +62,7 @@ This part focuses on user session and URLs relationships to determine access vio
 - After providing session name, HTTP header and allowed URLs you can use 'Add User' button to add it.
 
 
-<img width="1000" alt="Authorization Matrix, sending http req" src="https://user-images.githubusercontent.com/50321735/152217672-353b42a8-bb06-4e92-b9af-3f4e487ab1fd.png">
+<img width="1000" alt="Authorization Matrix, sending http req" src="https://user-images.githubusercontent.com/50321735/195400306-4b17090c-4e73-42ee-a802-d2a153049ddf.gif">
 
 
 After sending Http request to Agartha, the panel will fill some fields in the tool. 
@@ -79,7 +79,7 @@ After sending Http request to Agartha, the panel will fill some fields in the to
 7. Http requests and responses with the user session you define in the first step. Cell titles show Http response codes and response lengths. 
 8. Just click the cell you want to examine and Http details will be shown in here.
 
-<img width="1000" alt="Role Matrix" src="https://user-images.githubusercontent.com/50321735/195400306-4b17090c-4e73-42ee-a802-d2a153049ddf.gif">
+<img width="1000" alt="Role Matrix" src="https://user-images.githubusercontent.com/50321735/192441769-1632b642-2048-4b10-a91b-ae2c4db3d111.png">
 
 
 After clicking 'RUN', the tool will fill user and URL matrix with different colors. Besides the user colors, you will see orange, yellow and red cells. The URL address does not belong to the user and the cell color is:
