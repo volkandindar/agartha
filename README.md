@@ -61,8 +61,7 @@ This part focuses on user session and URLs relationships to determine access vio
 - **URL Addresses** user can visit: You can use Burp's spider feature or any sitemap generators. You may need to provide different URLs for different users.
 - After providing session name, HTTP header and allowed URLs you can use 'Add User' button to add it.
 
-
-<img width="1000" alt="Authorization Matrix" src="https://user-images.githubusercontent.com/50321735/195400306-4b17090c-4e73-42ee-a802-d2a153049ddf.gif">
+<img width="1000" alt="Authorization Matrix" src="https://user-images.githubusercontent.com/50321735/195411200-d8728663-1735-4659-adf5-7276660d5afd.gif">
 
 
 After sending Http request to Agartha, the panel will fill some fields in the tool. 
