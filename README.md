@@ -39,7 +39,7 @@ It creates command execution dynamic wordlists with the command you supply. It c
 
 **'URL Encoding'** encodes dictionary output.
 
-<img width="1000" alt="Remote Code Execution wordlist" src="https://user-images.githubusercontent.com/50321735/192442838-fb338e2c-93f8-445c-ace6-af1c78131711.png"><br/><br/>
+<img width="1000" alt="Remote Code Execution wordlist" src="https://user-images.githubusercontent.com/50321735/195392183-cea812d2-4301-4bf0-8d2a-43510c144a99.gif"><br/><br/>
 
 ## SQL Injection
 It generates payloads for Stacked Queries, Boolean-Based, Union-Based, Time-Based, Order-Based SQLi attacks, and you do not need to supply any inputs. You just pick what type of SQLi attacks and databases you want, then it will generate a wordlist with different combinations. 
