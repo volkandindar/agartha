@@ -15,7 +15,7 @@ try:
 except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
 
-VERSION = "0.83"
+VERSION = "0.84"
 
 class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFactory):
     
@@ -658,6 +658,11 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         http_contexts = self.context.getSelectedMessages()
         _req = self._helpers.bytesToString(http_contexts[0].getRequest())
         _url = str(self._helpers.analyzeRequest(http_contexts[0]).getUrl())
+        if _url.startswith("https"):
+            _url = _url.replace(":443/", "/")
+        elif _url.startswith("http"):
+            _url = _url.replace(":80/", "/")
+
         method = _req.splitlines()[0].split(" ", 1)[0]
 
         if "]" in _req.splitlines()[-1] or "}" in _req.splitlines()[-1] or ">" in _req.splitlines()[-1]:
