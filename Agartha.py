@@ -1,5 +1,7 @@
 """
 Author: Volkan Dindar
+        volkan.dindar@owasp.org
+        https://github.com/volkandindar/agartha
 """
 try:
     import sys
@@ -15,7 +17,7 @@ try:
 except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
 
-VERSION = "0.84"
+VERSION = "0.85"
 
 class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFactory):
     
@@ -279,23 +281,19 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         prefixes = ["", "\\n", "\\r\\n", "%0a", "%0d%0a"]
         escapeChars = ["",  "'", "\\'", "\"", "\\\""]
         separators = ["&", "&&", "|", "||", ";"]
-        suffixes = [" #", " ::", " %00"]
         
         for prefix in prefixes:
-            for escapeChar in escapeChars:
-                for separator in separators:
-                    for suffix in suffixes:
-                        listCommandInj.append(prefix + escapeChar + separator + self._txtTargetPath.text + separator + escapeChar + "\n")
-                        if escapeChar:
-                            listCommandInj.append(prefix + separator + self._txtTargetPath.text + escapeChar + suffix + "\n")
-                            listCommandInj.append(prefix + escapeChar + separator + self._txtTargetPath.text + suffix + "\n")
-                            listCommandInj.append(prefix + escapeChar + separator + escapeChar + self._txtTargetPath.text + "\n")
-                            if suffix != " ::":                            
-                                listCommandInj.append(prefix + escapeChar + separator + "`" + self._txtTargetPath.text + "`" + suffix + "\n")
-                                listCommandInj.append(prefix + "`" + self._txtTargetPath.text + "`" + escapeChar + suffix + "\n")
-                        listCommandInj.append(prefix + self._txtTargetPath.text + "\n")                    
-                    listCommandInj.append(prefix + separator + "`" + self._txtTargetPath.text + "`" + separator + "\n")
+            for separator in separators:
+                for escapeChar in escapeChars:
+                    listCommandInj.append(prefix + escapeChar + separator + self._txtTargetPath.text + separator + escapeChar + "\n")
+                    listCommandInj.append(prefix + escapeChar + separator + self._txtTargetPath.text + escapeChar + "\n")
+                    listCommandInj.append(prefix + escapeChar + separator + escapeChar + self._txtTargetPath.text + "\n")
                     listCommandInj.append(prefix + escapeChar + separator + "`" + self._txtTargetPath.text + "`" + separator + escapeChar + "\n")
+                    listCommandInj.append(prefix + escapeChar + separator + "`" + self._txtTargetPath.text + "`" + escapeChar + "\n")
+                
+                listCommandInj.append(prefix + separator + "`" + self._txtTargetPath.text + "`" + separator + "\n")
+                listCommandInj.append(prefix + separator + "`" + self._txtTargetPath.text + "`" + "\n")
+            
             listCommandInj.append(prefix + self._txtTargetPath.text + "\n")
             listCommandInj.append(prefix + "`" + self._txtTargetPath.text + "`" + "\n")
 
