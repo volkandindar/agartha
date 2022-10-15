@@ -166,12 +166,12 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         for x in range(0,self.tableMatrix.getRowCount()):
                 urlList.append(str(self.tableMatrix.getValueAt(x, 0)))
         
-        for line in set(self._tbAuthURL.getText().split('\n')):
-            if line and not any(re.findall(r'(log|sign).*(off|out)', line, re.IGNORECASE)):
-                line = line.replace(' ','')
-                self.userNamesHttpUrls[self.userCount].append(line)
-                if line not in urlList:
-                    self.tableMatrix_DM.addRow([line])
+        for _url in set(self._tbAuthURL.getText().split('\n')):
+            if _url and not any(re.findall(r'(log|sign).*(off|out)', _url, re.IGNORECASE)):
+                _url = _url.replace(' ','')
+                self.userNamesHttpUrls[self.userCount].append(_url)
+                if _url not in urlList:
+                    self.tableMatrix_DM.addRow([_url])
         
         self._tbAuthURL.setText("")
         self._btnAuthRun.setEnabled(True)
