@@ -666,9 +666,9 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
             jscript = "JSON/XML is not supported yet :/"
         else:
             fullHeader = ""
-            for line in _req.splitlines()[1:-1]:
-                if line and not any(re.findall(r'cookie|token|auth', line, re.IGNORECASE)):
-                    fullHeader += "xhr.setRequestHeader('" + line.split(":", 1)[0] + "','" + line.split(":", 1)[1] + "');"
+            for _reqLine in _req.splitlines()[1:-1]:
+                if _reqLine and not any(re.findall(r'cookie|token|auth', _reqLine, re.IGNORECASE)):
+                    fullHeader += "xhr.setRequestHeader('" + _reqLine.split(":", 1)[0] + "','" + _reqLine.split(":", 1)[1] + "');"
 
             if method == "GET":
                 minHeader = "var xhr=new XMLHttpRequest();xhr.open('GET','" + _url + "');xhr.withCredentials=true;"
@@ -676,9 +676,9 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                 jscript += "Http request with all header paramaters (except cookies, tokens, etc) in JavaScript, you may need to remove unnecessary fields:\n\t<script>" + minHeader + fullHeader + "xhr.send();</script>"
             else:
                 contentType = ""
-                for line in _req.splitlines():
-                    if any(re.findall(r'Content-type', line, re.IGNORECASE)):
-                        contentType = line.split(" ", 1)[1]
+                for _reqLine in _req.splitlines():
+                    if any(re.findall(r'Content-type', _reqLine, re.IGNORECASE)):
+                        contentType = _reqLine.split(" ", 1)[1]
                         break
                 if contentType:
                     contentType = "xhr.setRequestHeader('Content-type','" + contentType + "');"
