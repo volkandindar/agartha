@@ -734,15 +734,16 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
     
     def isURLValid(self, urlAdd):
         if " " in urlAdd.strip():
+            # check if space exists
             return False
-        elif urlAdd.startswith("http"):
+        elif urlAdd.startswith("http://") or urlAdd.startswith("https://"):
+            # check if it starts with http
+            return True
+        elif not urlAdd:
+            # check if whitespace exists
             return True
         else:
-            #white space exception
-            if urlAdd:
-                return False
-            else:
-                return True
+            return False
 
     def _tabAuthUI(self):
         #panel top
