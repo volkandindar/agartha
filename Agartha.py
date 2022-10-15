@@ -912,7 +912,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._txtDefaultCommandInj = "Examples: $'sleep 120', >'timeout 120' - for 2 minutes"
         self._txtDefaultSQLi = "No input is needed to supply!"
         self._txtCheatSheetLFI = ""
-        self._txtCheatSheetLFI += "Directory Traversal Linux\t\t\tDirectory Traversal Windows\n"
+        self._txtCheatSheetLFI += "Common files for Linux\t\t\tCommon files for Windows\n"
         self._txtCheatSheetLFI += "\t/etc/passwd\t\t\t\tC:\\boot.ini\n"
         self._txtCheatSheetLFI += "\t/etc/profile\t\t\t\tC:\\windows\\win.ini\n"
         self._txtCheatSheetLFI += "\t/proc/self/environ\t\t\tC:\\windows\\system.ini\n"
@@ -923,7 +923,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._txtCheatSheetLFI += "\t/var/log/auth.log\t\t\tC:\\windows\\system32\\eula.txt\n"
         
         self._txtCheatSheetCommandInj = ""
-        self._txtCheatSheetCommandInj += "Command Inj Unix\t\t\t\tCommand Inj Windows\n"
+        self._txtCheatSheetCommandInj += "Common commands for Unix\t\t\tCommon commands for Windows\n"
         self._txtCheatSheetCommandInj += "\tcat /etc/passwd\t\t\t\ttype file.txt\n"
         self._txtCheatSheetCommandInj += "\tuname -a\t\t\t\t\tsysteminfo\n"
         self._txtCheatSheetCommandInj += "\tid\t\t\t\t\twhoami /priv\n"
