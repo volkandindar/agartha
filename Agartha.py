@@ -215,10 +215,10 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
 
     def funcGeneratePayload(self, ev):
         self._lblStatusLabel.setForeground (Color.red)
+        self._tabDictResultDisplay.setText("")
         if self._rbDictSQLi.isSelected():            
             self._txtTargetPath.setText(self._txtDefaultSQLi)
         elif not self.isValid():
-            self._tabDictResultDisplay.setText("")
             if self._rbDictLFI.isSelected():
                 self._lblStatusLabel.setText("File input is not valid. "+ self._txtDefaultLFI)
                 self._txtTargetPath.setText(random.choice(["etc/passwd", "C:\\windows\\system32\\drivers\\etc\\hosts"]))
@@ -229,7 +229,6 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
 
         self._lblStatusLabel.setForeground (Color.black)
         self._txtTargetPath.text = self._txtTargetPath.text.strip()
-        self._tabDictResultDisplay.setText("")
         self._lblStatusLabel.setText("")
         if self._rbDictCommandInj.isSelected():
             self.funcCommandInj(self)
@@ -259,6 +258,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._tabDictPanel_SQLType.setVisible(False)
         self._tabDictPanel_SQLi.setVisible(False)
         self._tabDictPanel_SQLOptions.setVisible(False)
+        self._tabDictResultDisplay.setText("")
         if self._rbDictLFI.isSelected():
             self._txtTargetPath.setText(self._txtDefaultLFI)
             self._tabDictResultDisplay.setText(self._txtCheatSheetLFI)
