@@ -219,12 +219,12 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         if self._rbDictSQLi.isSelected():            
             self._txtTargetPath.setText(self._txtDefaultSQLi)
         elif not self.isValid():
-            self._lblStatusLabel.setText("input is not valid. ")
+            self._tabDictResultDisplay.setText("")
             if self._rbDictLFI.isSelected():
-                self._lblStatusLabel.setText("File "+ self._lblStatusLabel.text + self._txtDefaultLFI)
+                self._lblStatusLabel.setText("File input is not valid. "+ self._txtDefaultLFI)
                 self._txtTargetPath.setText(random.choice(["etc/passwd", "C:\\windows\\system32\\drivers\\etc\\hosts"]))
             elif self._rbDictCommandInj.isSelected():
-                self._lblStatusLabel.setText("Remote code " +self._lblStatusLabel.text + self._txtDefaultCommandInj)
+                self._lblStatusLabel.setText("Command input is not valid. " + self._txtDefaultCommandInj)
                 self._txtTargetPath.setText(random.choice(["sleep 120", "timeout 120"]))
             return 
 
@@ -241,9 +241,11 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         return
        
     def isValid(self):
-        # check if any special chars
-        regex = re.compile('[@,\'\"!#$%^&*<>\|}{]')
-        if(regex.search(self._txtTargetPath.text) == None) and self._txtTargetPath.text.strip():
+        # check if ' or " exist
+        # input should not be empty
+        # and input should contain at least one alphanumeric char
+
+        if(re.compile('[\'\"]').search(self._txtTargetPath.text) == None) and self._txtTargetPath.text.strip() and re.compile("[0-9a-zA-Z]").findall(self._txtTargetPath.text):
             #clear
             return True
         else:
