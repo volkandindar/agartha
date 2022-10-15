@@ -4,8 +4,7 @@ Author: Volkan Dindar
         https://github.com/volkandindar/agartha
 """
 try:
-    import sys
-    import re, urlparse, random
+    import sys, re, urlparse, random
     from burp import (IBurpExtender, ITab, IMessageEditorController, IContextMenuFactory)
     from java.awt import (BorderLayout, FlowLayout, Color, Font, Dimension, Toolkit)
     from javax.swing import (JCheckBox, JMenuItem, JTextPane, JTable, JScrollPane, JProgressBar, SwingConstants, JComboBox, JButton, JTextField, JSplitPane, JPanel, JLabel, JRadioButton, ButtonGroup, JTabbedPane, BoxLayout, JEditorPane)
