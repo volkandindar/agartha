@@ -167,8 +167,8 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                 urlList.append(str(self.tableMatrix.getValueAt(x, 0)))
         
         for _url in set(self._tbAuthURL.getText().split('\n')):
-            if _url.strip() and not any(re.findall(r'(log|sign).*(off|out)', _url, re.IGNORECASE)):
-                _url = _url.replace(' ','')
+            _url = _url.strip()
+            if _url and not any(re.findall(r'(log|sign).*(off|out)', _url, re.IGNORECASE)):
                 self.userNamesHttpUrls[self.userCount].append(_url)
                 if _url not in urlList:
                     self.tableMatrix_DM.addRow([_url])
