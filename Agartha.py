@@ -402,8 +402,10 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
 
         listSQLi = []
         prefixes = ["", "\\n", "\\r\\n", "%0a", "0x0a", "%0d%0a", "0x0d0a", "%00", "0x00"]
-        
         escapeChars = ["", "'", "\\'"]
+        if not self._cbSqlWafBypass.isSelected():
+            prefixes = [""]
+            escapeChars = ["", "'"]
 
         n1 = str(random.randint(10,70))
         n2 = str(random.randint(71,99))
@@ -411,10 +413,6 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         
         #suffixes = ["", " -- "]
         suffixes = ["", "; -- "]
-        
-        if not self._cbSqlWafBypass.isSelected():
-            prefixes = [""]
-            escapeChars = ["", "'"]
 
         if self._cbBooleanBased.isSelected():
             for prefix in prefixes:
