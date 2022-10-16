@@ -767,7 +767,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._btnAuthReset.setEnabled(False)       
         self._tbAuthHeader = JTextPane()
         self._tbAuthHeader.setContentType("text")
-        self._tbAuthHeader.setToolTipText("HTTP request belongs to the user. You can set up this field from right click: 'Extensions > Agartha'.")
+        self._tbAuthHeader.setToolTipText("HTTP header belongs to the user. You can set up this field from right click: 'Extensions > Agartha'.")
         self._tbAuthHeader.setEditable(True)
         self._tbAuthURL = JTextPane()
         self._tbAuthURL.setContentType("text")
