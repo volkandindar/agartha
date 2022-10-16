@@ -22,7 +22,7 @@ You can install Agartha through official Burp extension store automatically:
 
 For manual installation:
 
-- Burp Menu > Extender > Extensions > Add > Extension Type: Python > Extension file(.py): 'agartha.py'
+- Burp Menu > Extender > Extensions > Add > Extension Type: Python > Extension file(.py): Select 'agartha.py' file
 
 After all, you will see 'Agartha' tab in the main window and it will be also registered the right click, under: 
 - 'Extensions > Agartha {LFI|RCE|Auth|SQLi|Http->Js}', with two options
