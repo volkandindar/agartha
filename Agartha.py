@@ -856,7 +856,6 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         htmlString +="<li><strong>SQL Injection</strong>: It creates Stacked Queries, Boolean-Based, Union-Based, Time-Based and Order-Based SQLi wordlist for various databases to help finding vulnerable spots.</li></ul></li>"
         htmlString +="<li><strong>Authorization Matrix</strong>: It creates an access role matrix based on user sessions and URL lists to determine authorization/authentication related access violation issues.</li>"
         htmlString +="<li>And <strong>Http Request to JavaScript Converter</strong>: It converts Http requests to JavaScript code to be useful for further XSS exploitation and more.<br><br></li></ul>"
-        htmlString +="<p>Here is a small tutorial how to use.</p>"
         htmlString +="<h2>Directory Traversal/Local File Inclusion</h2>"
         htmlString +="<p>It both supports unix and windows file systems. You can generate any wordlists dynamically for the path you want. You just need to supply a file path and that's all.</p>"
         htmlString +="<p><strong>'Depth'</strong> is representation of how deep the wordlist should be. You can generate wordlists 'till' or 'equal to' this value.</p>"
