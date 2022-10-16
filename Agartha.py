@@ -961,7 +961,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         _rbGroup.add(_rbDictCheatSheet)
         _rbGroup.add(_rbDictFuzzer)
         self._cbDictWafBypass = JCheckBox('Waf Bypass', True)
-        self._cbDictWafBypass.setToolTipText("It includes protection bypass techniques, like null bytes, encoding, etc.")
+        self._cbDictWafBypass.setToolTipText("It includes bypass techniques like null bytes, various type of encodings, different file extensions, etc.")
         self._cbDictEquality = JCheckBox(')', False)
         self._cbDictEquality.setToolTipText("Generate payloads only for some certain folder depth.")
         self._cbDictDepth = JComboBox(list(range(0, 20)))        
