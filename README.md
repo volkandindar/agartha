@@ -2,7 +2,7 @@
 Agartha is a penetration testing tool which creates dynamic payload lists and user access matrix to reveal injection flaws and authentication/authorization issues. There are many different attack payloads alredy exist, but Agartha creates run-time, systematic and vendor-neutral payloads with many different possibilities and bypassing methods. It also draws attention to user session and URL relationships, which makes easy to find user access violations. And additionally, it converts Http requests to JavaScript to help digging up XSS issues more. In summary:
 
 - **Payload Generator**: It creates payloads/wordlists for different attack types.
-	- **Directory Traversal/Local File Inclusion**: It creates file dictionary lists with various encoding and escaping characters.
+	- **Local or Remote File Inclusion, Directory Traversal**: It creates file dictionary lists with various encoding and escaping characters.
 	- **Command Injection / Remote Code Execution**: It creates command dictionary lists for both unix and windows environments with different combinations.
 	- **SQL Injection**: It creates Stacked Queries, Boolean-Based, Union-Based, Time-Based and Order-Based SQLi wordlist for various databases to help finding vulnerable spots.
 - **Authorization Matrix**: It creates an access role matrix based on user sessions and URL lists to determine authorization/authentication related access violation issues.
@@ -30,7 +30,7 @@ After all, you will see 'Agartha' tab in the main window and it will be also reg
 ## Tested in
 - Jython version v2.7.3
 
-## Directory Traversal/Local File Inclusion
+## Local or Remote File Inclusion, Directory Traversal
 It both supports unix and windows file systems. You can generate any wordlists dynamically for the path you want. You just need to supply a file path and that's all. 
 
 **'Depth'** is representation of how deep the wordlist should be. You can generate wordlists 'till' or 'equal to' this value.
