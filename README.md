@@ -3,7 +3,7 @@ Agartha is a penetration testing tool which creates dynamic payload lists and us
 
 - **Payload Generator**: It creates payloads/wordlists for different attack types.
 	- **Directory Traversal/Local File Inclusion**: It creates file dictionary lists with various encoding and escaping characters.
-	- **Code Injection / Remote Code Execution**: It creates command dictionary lists for both unix and windows environments with different combinations.
+	- **Command Injection / Remote Code Execution**: It creates command dictionary lists for both unix and windows environments with different combinations.
 	- **SQL Injection**: It creates Stacked Queries, Boolean-Based, Union-Based, Time-Based and Order-Based SQLi wordlist for various databases to help finding vulnerable spots.
 - **Authorization Matrix**: It creates an access role matrix based on user sessions and URL lists to determine authorization/authentication related access violation issues.
 - And **Http Request to JavaScript Converter**: It converts Http requests to JavaScript code to be useful for further XSS exploitation and more.<br/><br/>
@@ -40,7 +40,7 @@ It both supports unix and windows file systems. You can generate any wordlists d
 <img width="1000" alt="Directory Traversal/Local File Inclusion wordlist" src="https://user-images.githubusercontent.com/50321735/195392551-f43be30a-5dc8-4337-bd49-2c3d65da325c.gif"><br/><br/>
 
 
-## Code Injection / Remote Code Execution
+## Command Injection / Remote Code Execution
 It creates command execution dynamic wordlists with the command you supply. It combines different separators and terminators for unix and windows environments together.
 
 **'URL Encoding'** encodes dictionary output.
