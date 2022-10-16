@@ -65,7 +65,7 @@ And the rest is related with database and attack types.
 This part focuses on user session and URLs relationships to determine access violations. The tool will visit all URLs from pre-defined user sessions and fill the table with all Http responses. It is a kind of access matrix and helps to find out authentication/authorization issues. Afterwards we will see what user can access what page contents.
 - **User session name**: You can right click on any request and send it from 'Extensions > Agartha > Agartha Panel' to define a user session.
 - **URL Addresses** user can visit: You can use Burp's spider feature or any sitemap generators. You may need to provide different URLs for different users.
-- After providing session name, HTTP header and allowed URLs you can use 'Add User' button to add it.
+- After providing session name, Http header and allowed URLs you can use 'Add User' button to add it.
 
 <img width="1000" alt="Authorization Matrix" src="https://user-images.githubusercontent.com/50321735/195411200-d8728663-1735-4659-adf5-7276660d5afd.gif">
 
@@ -106,10 +106,10 @@ To access it, right click any Http Request, Extensions, 'Agartha', and 'Copy as 
 
 It will automatically save it to your clipboard with some remarks. For example:
 ```
-Http request with minimum header paramaters in JavaScript:
+HTTP request with minimum header paramaters in JavaScript:
 	<script>var xhr=new XMLHttpRequest();xhr.open('POST','http://vm/login.php');xhr.withCredentials=true;xhr.setRequestHeader('Content-type','application/x-www-form-urlencoded');xhr.send('username=admin&password=password&Login=Login');</script>
 
-Http request with all header paramaters in JavaScript:
+HTTP request with all header paramaters in JavaScript:
 	<script>var xhr=new XMLHttpRequest();xhr.open('POST','http://vm/login.php');xhr.withCredentials=true;xhr.setRequestHeader('Host',' vm');xhr.setRequestHeader('User-Agent',' Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:97.0) Gecko/20100101 Firefox/97.0');xhr.setRequestHeader('Accept',' */*');xhr.setRequestHeader('Accept-Language',' en-US,en;q=0.5');xhr.setRequestHeader('Accept-Encoding',' gzip, deflate');xhr.setRequestHeader('Content-type',' application/x-www-form-urlencoded');xhr.setRequestHeader('Content-Length',' 44');xhr.setRequestHeader('Origin',' http://vm');xhr.setRequestHeader('Connection',' close');xhr.setRequestHeader('Referer',' http://vm/login.php');xhr.send('username=admin&password=password&Login=Login');</script>
 
 For redirection, please also add this code before '</script>' tag:
