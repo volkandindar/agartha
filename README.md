@@ -110,7 +110,7 @@ It will automatically save it to your clipboard with some remarks. For example:
 HTTP request with minimum header paramaters in JavaScript:
 	<script>var xhr=new XMLHttpRequest();xhr.open('POST','http://vm/login.php');xhr.withCredentials=true;xhr.setRequestHeader('Content-type','application/x-www-form-urlencoded');xhr.send('username=admin&password=password&Login=Login');</script>
 
-HTTP request with all header paramaters in JavaScript:
+Http request with all header paramaters (except cookies, tokens, etc) in JavaScript, you may need to remove unnecessary fields:
 	<script>var xhr=new XMLHttpRequest();xhr.open('POST','http://vm/login.php');xhr.withCredentials=true;xhr.setRequestHeader('Host',' vm');xhr.setRequestHeader('User-Agent',' Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:97.0) Gecko/20100101 Firefox/97.0');xhr.setRequestHeader('Accept',' */*');xhr.setRequestHeader('Accept-Language',' en-US,en;q=0.5');xhr.setRequestHeader('Accept-Encoding',' gzip, deflate');xhr.setRequestHeader('Content-type',' application/x-www-form-urlencoded');xhr.setRequestHeader('Content-Length',' 44');xhr.setRequestHeader('Origin',' http://vm');xhr.setRequestHeader('Connection',' close');xhr.setRequestHeader('Referer',' http://vm/login.php');xhr.send('username=admin&password=password&Login=Login');</script>
 
 For redirection, please also add this code before '</script>' tag:
