@@ -95,8 +95,6 @@ After clicking 'RUN', the tool will fill user and URL matrix with different colo
 - Orange, because the response returns 'HTTP 200' but different content length, with authentication/authorization concerns
 - Red, because the response returns 'HTTP 200' and same content length, with authentication/authorization concerns
 
-It will be quite similar, even if we add more users and any authorization concerns will be highlighted in the same way. 
-
 You may also notice, it support only one Http request method and user session at the same time, because it processes bulk requests and it is not possible to provide different header options for each calls. But you may play with 'GET/POST' methods to see response differences.<br/><br/>
 
 
