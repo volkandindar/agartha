@@ -169,9 +169,13 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         for _url in set(self._tbAuthURL.getText().split('\n')):
             _url = _url.strip()
             if _url and not any(re.findall(r'(log|sign).*(off|out)', _url, re.IGNORECASE)):
-                self.userNamesHttpUrls[self.userCount].append(_url)
-                if _url not in urlList:
-                    self.tableMatrix_DM.addRow([_url])
+                # ignore logout, logoff, etc. paths
+                if _url not in self.userNamesHttpUrls[self.userCount]:
+                    # check first if the url exist in user's url list
+                    self.userNamesHttpUrls[self.userCount].append(_url)
+                    if _url not in urlList:
+                        # check table if url exists
+                        self.tableMatrix_DM.addRow([_url])
         
         self._tbAuthURL.setText("")
         self._btnAuthRun.setEnabled(True)
