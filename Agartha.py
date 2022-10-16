@@ -947,7 +947,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._rbDictCommandInj = JRadioButton('Command Inj / RCE', itemStateChanged=self.funcRBSelection)
         self._rbDictCommandInj.setToolTipText("It generates payload for Command Injection, Remote Code Execution.")
         self._rbDictSQLi = JRadioButton('SQLi', itemStateChanged=self.funcRBSelection)
-        self._rbDictSQLi.setToolTipText("It generates payload for SQL Injection attacks, including Stack Queries, Boolean-Based, Time-Based, Union-Based, Order-Based injections.")
+        self._rbDictSQLi.setToolTipText("It generates payload for various type of SQL attacks.")
         _rbDictCheatSheet = JRadioButton('Cheat Sheet', itemStateChanged=self.funcRBSelection)
         _rbDictFuzzer = JRadioButton('Fuzzer', itemStateChanged=self.funcRBSelection)
         _rbPanel = JPanel()
