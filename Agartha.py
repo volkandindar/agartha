@@ -15,7 +15,6 @@ try:
     from java.awt.datatransfer import StringSelection
 except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
-
 VERSION = "1.0"
 
 class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFactory):
