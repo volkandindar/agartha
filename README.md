@@ -101,7 +101,7 @@ You may also notice, it support only one Http request method and user session at
 ## Http Request to JavaScript Converter
 The feature is for converting Http requests to JavaScript code. It can be useful to dig up further XSS issues and bypass header restrictions.
 
-To access it, right click any Http Request, Extensions, 'Agartha', and 'Copy as JavaScript'.
+To access it, right click any Http Request and 'Extensions > Agartha > Copy as JavaScript'.
 
 <img width="1000" alt="Http Request to JavaScript Converter" src="https://user-images.githubusercontent.com/50321735/152224405-d10b78a2-9b18-44a9-a991-5b9c451c7253.png">
 
