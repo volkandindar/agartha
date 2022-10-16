@@ -942,8 +942,8 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._lblStatusLabel = JLabel()
         self._lblStatusLabel.setText("Please provide a path for payload generation!")
         self._txtTargetPath = JTextField(self._txtDefaultLFI, 30)
-        self._rbDictLFI = JRadioButton('DT/LFI', True, itemStateChanged=self.funcRBSelection);
-        self._rbDictLFI.setToolTipText("It generates payload for Directory Traversal, Local File Inclusion.")
+        self._rbDictLFI = JRadioButton('LFI/DT', True, itemStateChanged=self.funcRBSelection);
+        self._rbDictLFI.setToolTipText("It generates payload for Local File Inclusion, Directory Traversal.")
         self._rbDictCommandInj = JRadioButton('Command Inj / RCE', itemStateChanged=self.funcRBSelection)
         self._rbDictCommandInj.setToolTipText("It generates payload for Command Injection, Remote Code Execution.")
         self._rbDictSQLi = JRadioButton('SQLi', itemStateChanged=self.funcRBSelection)
