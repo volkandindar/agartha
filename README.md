@@ -99,7 +99,7 @@ You may also notice, it support only one Http request method and user session at
 
 
 ## Http Request to JavaScript Converter
-The feature is for converting Http requests to JavaScript code. It can be useful to dig up further XSS issues and bypass header restrictions, like CSP, CORS.
+The feature is for converting Http requests to JavaScript code. It can be useful to dig up further XSS issues and bypass header restrictions.
 
 To access it, right click any Http Request, Extensions, 'Agartha', and 'Copy as JavaScript'.
 
