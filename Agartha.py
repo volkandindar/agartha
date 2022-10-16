@@ -16,7 +16,7 @@ try:
 except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
 
-VERSION = "0.86"
+VERSION = "1.0"
 
 class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFactory):
     
@@ -53,20 +53,20 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self.httpReqRes = [[],[],[],[],[]]
         self.httpReqRes.append([])
         self.tableMatrix.clearSelection()
-        for x in range(0,self.tableMatrix.getRowCount()):
-            for y in range(1,self.tableMatrix.getColumnCount()):
+        for x in range(0, self.tableMatrix.getRowCount()):
+            for y in range(1, self.tableMatrix.getColumnCount()):
                 self.tableMatrix.setValueAt("", x, y)
         
         i = 1000000 / ( self.tableMatrix.getRowCount() * (self.tableMatrix.getColumnCount()-1) )
 
-        for x in range(0,self.tableMatrix.getRowCount()):
-            for y in range(1,self.tableMatrix.getColumnCount()):
+        for x in range(0, self.tableMatrix.getRowCount()):
+            for y in range(1, self.tableMatrix.getColumnCount()):
                 self.tableMatrix.setValueAt(self.makeHttpCall(self.tableMatrix.getValueAt(x, 0), self.tableMatrix.getColumnName(y)), x, y)
                 self.progressBar.setValue(self.progressBar.getValue() + i)
         
         self._customRenderer =  UserEnabledRenderer(self.tableMatrix.getDefaultRenderer(str), self.userNamesHttpUrls)
         self._customTableColumnModel = self.tableMatrix.getColumnModel()
-        for y in range(0,self.tableMatrix.getColumnCount()):
+        for y in range(0, self.tableMatrix.getColumnCount()):
             self._customTableColumnModel.getColumn (y).setCellRenderer (self._customRenderer)
         self.tableMatrix.repaint()
         self.tableMatrix.setSelectionForeground(Color.red)
@@ -96,11 +96,11 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
 
             # header methods
             if "GET" in header[:3]:
-                #request was in GET method and will be in POST
+                # request was in GET method and will be in POST
                 if self._cbAuthGETPOST.getSelectedIndex() == 1:
                     header = self._callbacks.getHelpers().toggleRequestMethod((header))
             else:
-                #request was in POST method and will be in GET
+                # request was in POST method and will be in GET
                 if self._cbAuthGETPOST.getSelectedIndex() == 0:
                     header = self._callbacks.getHelpers().toggleRequestMethod((header))
 
@@ -147,7 +147,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._tbAuthNewUser.setForeground (Color.black)
 
         if self.userCount == 0:
-            #header for unauth user
+            # header for unauth user
             unauthHeader = self._tbAuthHeader.getText().split('\n')[0] + "\n" + self._tbAuthHeader.getText().split('\n')[1]
             for line in self._tbAuthHeader.getText().split('\n')[2:]:
                 if not any(re.findall(r'cookie|token|auth', line, re.IGNORECASE)):
@@ -169,7 +169,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         for _url in set(self._tbAuthURL.getText().split('\n')):
             _url = _url.strip()
             if _url and not any(re.findall(r'(log|sign).*(off|out)', _url, re.IGNORECASE)):
-                # ignore logout, logoff, etc. paths
+                # ignore logout, signoff, etc. paths
                 if _url not in self.userNamesHttpUrls[self.userCount]:
                     # check first if the url exist in user's url list
                     self.userNamesHttpUrls[self.userCount].append(_url)
@@ -246,12 +246,10 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         # check if ' or " exist
         # input should not be empty
         # and input should contain at least one alphanumeric char
-
         if(re.compile('[\'\"]').search(self._txtTargetPath.text) == None) and self._txtTargetPath.text.strip() and re.compile("[0-9a-zA-Z]").findall(self._txtTargetPath.text):
-            #clear
+            # clear
             return True
         else:
-            #special char
             return False
 
     def funcRBSelection(self, ev):
@@ -304,8 +302,10 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
 
         listCommandInj = list(set(listCommandInj))
         listCommandInj.sort(reverse=True)
+        
         if self._cbDictCommandInjEncoding.isSelected():
             listCommandInj = self.encodeURL(listCommandInj)
+        
         self._tabDictResultDisplay.setText(''.join(map(str, listCommandInj)))
         self._lblStatusLabel.setText('Remote code dictionary: "' + self._txtTargetPath.text + '", with '+ str(len(listCommandInj)) + ' result.')
         return
@@ -410,12 +410,11 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
             prefixes = [""]
             escapeChars = ["", "'"]
 
-        n1 = str(random.randint(10,70))
-        n2 = str(random.randint(71,99))
+        n1 = str(random.randint(10, 70))
+        n2 = str(random.randint(71, 99))
         boolExpressions = [n1 + "=" + n1, n1 + "<" + n2]
         
-        #suffixes = ["", " -- "]
-        suffixes = ["", "; -- "]
+        suffixes = ["", " -- "]
 
         if self._cbBooleanBased.isSelected():
             for prefix in prefixes:
@@ -653,7 +652,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         menu_list.add(JMenuItem("Copy as JavaScript", actionPerformed=self.js_menu))
         return menu_list
 
-    def js_menu(self,event):
+    def js_menu(self, event):
         # right click menu
         clipboard = Toolkit.getDefaultToolkit().getSystemClipboard()
         http_contexts = self.context.getSelectedMessages()
@@ -698,7 +697,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         
         clipboard.setContents(StringSelection(jscript), None)
 
-    def agartha_menu(self,event):
+    def agartha_menu(self, event):
         # right click menu
         http_contexts = self.context.getSelectedMessages()
         _req = self._helpers.bytesToString(http_contexts[0].getRequest())
@@ -752,17 +751,17 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
             return False
 
     def _tabAuthUI(self):
-        #panel top
+        # panel top
         self._tbAuthNewUser = JTextField("", 15)
         self._tbAuthNewUser.setToolTipText("Please provide an username")
         self._btnAuthNewUserAdd = JButton("Add User", actionPerformed=self.authAdduser)
-        self._btnAuthNewUserAdd.setPreferredSize(Dimension(90,27))
+        self._btnAuthNewUserAdd.setPreferredSize(Dimension(90, 27))
         self._btnAuthNewUserAdd.setToolTipText("Please add user/s to populate authentication matrix!")
         self._btnAuthRun = JButton("RUN", actionPerformed=self.authMatrix)
-        self._btnAuthRun.setPreferredSize(Dimension(150,27))
+        self._btnAuthRun.setPreferredSize(Dimension(150, 27))
         self._btnAuthRun.setToolTipText("Start comparison")
         self._btnAuthReset = JButton("Reset", actionPerformed=self.tableMatrixReset)
-        self._btnAuthReset.setPreferredSize(Dimension(90,27))
+        self._btnAuthReset.setPreferredSize(Dimension(90, 27))
         self._btnAuthReset.setToolTipText("Clear all")
         self._btnAuthRun.setEnabled(False)
         self._btnAuthReset.setEnabled(False)       
@@ -781,26 +780,26 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._cbAuthGETPOST.setSelectedIndex(0)
         self._cbAuthGETPOST.setToolTipText("Which HTTP method will be used for the test")
 
-        #top panel
+        # top panel
         _tabAuthPanel1 = JPanel(BorderLayout())
         _tabAuthPanel1.setBorder(EmptyBorder(0, 0, 10, 0))
         _tabAuthPanel1_A = JPanel(FlowLayout(FlowLayout.LEADING, 10, 10))
-        _tabAuthPanel1_A.setPreferredSize(Dimension(400,105))
-        _tabAuthPanel1_A.setMinimumSize(Dimension(400,105))
+        _tabAuthPanel1_A.setPreferredSize(Dimension(400, 105))
+        _tabAuthPanel1_A.setMinimumSize(Dimension(400, 105))
         _tabAuthPanel1_A.add(self._btnAuthNewUserAdd)
         _tabAuthPanel1_A.add(self._tbAuthNewUser)
         _tabAuthPanel1_A.add(self._cbAuthGETPOST)
         _tabAuthPanel1_A.add(self._btnAuthReset)
         _tabAuthPanel1_A.add(self._btnAuthRun)
         _tabAuthPanel1_A.add(self._cbAuthColoring)
-        _tabAuthPanel1_B = JScrollPane(self._tbAuthHeader, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_NEVER)
-        _tabAuthPanel1_C = JScrollPane(self._tbAuthURL, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_NEVER)
+        _tabAuthPanel1_B = JScrollPane(self._tbAuthHeader, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER)
+        _tabAuthPanel1_C = JScrollPane(self._tbAuthURL, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER)
         self._tabAuthSplitpaneHttp = JSplitPane(JSplitPane.HORIZONTAL_SPLIT, _tabAuthPanel1_B, _tabAuthPanel1_C)
-        _tabAuthPanel1.add(_tabAuthPanel1_A,BorderLayout.WEST)
-        _tabAuthPanel1.add(self._tabAuthSplitpaneHttp,BorderLayout.CENTER)
-        #panel top
+        _tabAuthPanel1.add(_tabAuthPanel1_A, BorderLayout.WEST)
+        _tabAuthPanel1.add(self._tabAuthSplitpaneHttp, BorderLayout.CENTER)
+        # panel top
 
-        #panel center
+        # panel center
         self._lblAuthNotification = JLabel("", SwingConstants.LEFT)
         self.tableMatrix = []
         self.tableMatrix_DM = CustomDefaultTableModel(self.tableMatrix, ('URLS','NoAuth'))
@@ -815,26 +814,26 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self.tableMatrix_SP.getViewport().setView((self.tableMatrix))
         _tabAuthPanel2 = JPanel()
         _tabAuthPanel2.setLayout(BoxLayout(_tabAuthPanel2, BoxLayout.Y_AXIS))
-        _tabAuthPanel2.add(self._lblAuthNotification,BorderLayout.NORTH)
-        _tabAuthPanel2.add(self.tableMatrix_SP,BorderLayout.NORTH)
+        _tabAuthPanel2.add(self._lblAuthNotification, BorderLayout.NORTH)
+        _tabAuthPanel2.add(self.tableMatrix_SP, BorderLayout.NORTH)
         self.progressBar = JProgressBar()
         self.progressBar.setMaximum(1000000)
         self.progressBar.setMinimum(0)
         _tabAuthPanel2.add( self.progressBar, BorderLayout.SOUTH)
-        #panel center
+        # panel center
 
         self._tabAuthPanel = JSplitPane(JSplitPane.VERTICAL_SPLIT)
         self._tabAuthPanel.setBorder(EmptyBorder(10, 10, 10, 10))
         self._tabAuthPanel.setTopComponent(_tabAuthPanel1)
         self._tabAuthPanel.setBottomComponent(_tabAuthPanel2)
 
-        #panel bottom
+        # panel bottom
         _tabsReqRes = JTabbedPane()        
         self._requestViewer = self._callbacks.createMessageEditor(self, False)
         self._responseViewer = self._callbacks.createMessageEditor(self, False)
         _tabsReqRes.addTab("Request", self._requestViewer.getComponent())
         _tabsReqRes.addTab("Response", self._responseViewer.getComponent())
-        #panel bottom
+        # panel bottom
 
         self._tabAuthSplitpane = JSplitPane(JSplitPane.VERTICAL_SPLIT)
         self._tabAuthSplitpane.setTopComponent(self._tabAuthPanel)
@@ -910,10 +909,10 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self.editorPaneInfo.setText(htmlString);
         self.editorScrollPaneInfo = JScrollPane(self.editorPaneInfo);
         self.editorScrollPaneInfo.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        self._tabHelpJPanel.add(self.editorScrollPaneInfo,BorderLayout.CENTER);
+        self._tabHelpJPanel.add(self.editorScrollPaneInfo, BorderLayout.CENTER);
 
     def _tabDictUI(self):
-        #top panel
+        # top panel
         self._txtDefaultLFI = "Example: 'etc/passwd', 'C:\\boot.ini'"
         self._txtDefaultCommandInj = "Examples: $'sleep 120', >'timeout 120' - for 2 minutes"
         self._txtDefaultSQLi = "No input is needed to supply!"
@@ -1039,25 +1038,24 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         _tabDictPanel_1.add(self._tabDictPanel_SQLType, BorderLayout.PAGE_START)
         _tabDictPanel_1.add(self._tabDictPanel_SQLOptions, BorderLayout.PAGE_START)
         _tabDictPanel_1.add(self._tabDictPanel_SQLi, BorderLayout.PAGE_START)
-        _tabDictPanel_1.setPreferredSize(Dimension(400,90))
-        _tabDictPanel_1.setMinimumSize(Dimension(400,90))
-        #top panel
+        _tabDictPanel_1.setPreferredSize(Dimension(400, 90))
+        _tabDictPanel_1.setMinimumSize(Dimension(400, 90))
+        # top panel
 
-        #center panel
+        # center panel
         _tabDictPanel_2 = JPanel(FlowLayout(FlowLayout.LEADING, 10, 0))
         _tabDictPanel_2.add(self._lblStatusLabel)
-        #center panel
+        # center panel
         
-        #bottom panel 
+        # bottom panel 
         self._tabDictResultDisplay = JTextPane()
-        #self._tabDictResultDisplay.setFont(self._tabDictResultDisplay.getFont().deriveFont(Font.PLAIN, self._tabDictResultDisplay.getFont().getSize() + 4))
         self._tabDictResultDisplay.setContentType("text")
         self._tabDictResultDisplay.setText(self._txtCheatSheetLFI)
         self._tabDictResultDisplay.setEditable(False)
         _tabDictPanel_3 = JPanel(BorderLayout(10, 10))
         _tabDictPanel_3.setBorder(EmptyBorder(10, 0, 0, 0))
         _tabDictPanel_3.add(JScrollPane(self._tabDictResultDisplay), BorderLayout.CENTER)
-        #bottom panel 
+        # bottom panel 
 
         self._tabDictPanel = JPanel()
         self._tabDictPanel.setLayout(BoxLayout(self._tabDictPanel, BoxLayout.Y_AXIS))
@@ -1106,8 +1104,8 @@ class UserEnabledRenderer(TableCellRenderer):
     def __init__(self, defaultCellRender, userNamesHttpUrls):
         self._defaultCellRender = defaultCellRender
         self.urlList = userNamesHttpUrls
-        self.colorsUser = [Color(204, 229, 255), Color(204, 255, 204), Color(204, 204, 255), Color(255,228,196)]        
-        self.colorsAlert = [Color.white, Color(255, 153, 153), Color(255,218,185), Color(255, 255, 204), Color(211,211,211)]
+        self.colorsUser = [Color(204, 229, 255), Color(204, 255, 204), Color(204, 204, 255), Color(255, 228, 196)]        
+        self.colorsAlert = [Color.white, Color(255, 153, 153), Color(255, 218, 185), Color(255, 255, 204), Color(211, 211, 211)]
 
     def getTableCellRendererComponent(self, table, value, isSelected, hasFocus, row, column):
         cell = self._defaultCellRender.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
@@ -1115,25 +1113,24 @@ class UserEnabledRenderer(TableCellRenderer):
         cell.setBackground(self.colorsAlert[0])
         try:
             if column == 0:
-                #URL section - default whitee
+                # URL section - default white
                 cell.setBackground(self.colorsAlert[0])
                 toolTipMessage = "Requested URLs!"
             elif table.getValueAt(row, column) and not table.getValueAt(row, column).startswith("HTTP 2") and not table.getValueAt(row, column).startswith("HTTP 3"):
-                #error or http 4XX/5XX
+                # error or http 4XX/5XX
                 cell.setBackground(self.colorsAlert[4])
                 toolTipMessage = "The request returns HTTP 4XX/5xx response!"
             elif column == 1:
-                #no auth
+                # no auth
                 cell.setBackground(self.colorsAlert[0])
                 if _colorful:
-                    for y in range(2,table.getColumnCount()):                        
+                    for y in range(2, table.getColumnCount()):                        
                         if table.getValueAt(row, y) == table.getValueAt(row, column):                        
                             if table.getValueAt(row, y).startswith("HTTP 2"):
                                 cell.setBackground(self.colorsAlert[1])
                                 toolTipMessage = "The URL returns HTTP 2XX without authentication!"
                             elif table.getValueAt(row, y).startswith("HTTP 3"):
                                 if not cell.getBackground() == self.colorsAlert[1]:
-                                    #cell.setBackground(self.colorsAlert[3])
                                     toolTipMessage = "The URL returns HTTP 3XX without authentication!"
                         elif table.getValueAt(row, y)[:8] == table.getValueAt(row, column)[:8]:
                                 if not cell.getBackground() == self.colorsAlert[1]:
@@ -1143,10 +1140,10 @@ class UserEnabledRenderer(TableCellRenderer):
                 cell.setBackground(self.colorsUser[column-2])
                 toolTipMessage = "Http response of the user's own URL!"
             else:    
-                #other users
+                # other users
                 cell.setBackground(self.colorsAlert[0])
                 if _colorful:
-                    for y in range(2,table.getColumnCount()):
+                    for y in range(2, table.getColumnCount()):
                         if table.getValueAt(row, y) == table.getValueAt(row, column):
                         # responses are same: red or yellow
                             if table.getValueAt(row, y).startswith("HTTP 2"):
@@ -1165,10 +1162,10 @@ class UserEnabledRenderer(TableCellRenderer):
             cell.setBackground(self.colorsAlert[0])
 
         if isSelected:            
-            cell.setBackground(Color(240,240,240))
+            cell.setBackground(Color(240, 240, 240))
             
         if hasFocus:           
-            cell.setBackground(Color(240,240,240))
+            cell.setBackground(Color(240, 240, 240))
             cell.setFont(cell.getFont().deriveFont(Font.BOLD | Font.ITALIC));
             cell.setToolTipText(toolTipMessage)
         
