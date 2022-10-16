@@ -35,7 +35,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         callbacks.registerContextMenuFactory(self)
         callbacks.issueAlert("The extension has been loaded.")
         self.tableMatrixReset(self)
-        print "Agartha(v" + VERSION + ") is a security tool for:\n\t\t* Local or Remote File Inclusion, Directory Traversal,\n\t\t* Command Injection, Code Execution,\n\t\t* Authentication/Authorization Access Matrix,\n\t\t* SQL Injections,\n\t\t* Http request to Javascript conversion.\n\nFor more information and tutorial how to use, please visit:\n\t\thttps://github.com/volkandindar/agartha\n\nAuthor: Volkan Dindar\n        volkan.dindar@owasp.org"
+        print "Agartha(v" + VERSION + ") is a security tool for:\n\t\t* Local File Inclusion, Directory Traversal,\n\t\t* Command Injection, Code Execution,\n\t\t* Authentication/Authorization Access Matrix,\n\t\t* SQL Injections,\n\t\t* Http request to Javascript conversion.\n\nFor more information and tutorial how to use, please visit:\n\t\thttps://github.com/volkandindar/agartha\n\nAuthor: Volkan Dindar\n        volkan.dindar@owasp.org"
         return
 
     def authMatrixThread(self, ev):
@@ -850,17 +850,17 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         htmlString +="<h1>Agartha { LFI | RCE | Auth | SQLi | Http->Js }</h1>"
         htmlString +="<p>Agartha is a penetration testing tool which creates dynamic payload lists and user access matrix to reveal injection flaws and authentication/authorization issues. There are many different attack payloads alredy exist, but Agartha creates run-time, systematic and vendor-neutral payloads with many different possibilities and bypassing methods. It also draws attention to user session and URL relationships, which makes easy to find user access violations. And additionally, it converts Http requests to JavaScript to help digging up XSS issues more. In summary:</p><ul>"
         htmlString +="<li><strong>Payload Generator</strong>: It creates payloads/wordlists for different attack types.<ul>"
-        htmlString +="<li><strong>Directory Traversal/Local File Inclusion</strong>: It creates file dictionary lists with various encoding and escaping characters.</li>"
-        htmlString +="<li><strong>Code Injection / Remote Code Execution</strong>: It creates command dictionary lists for both unix and windows environments with different combinations.</li>"
+        htmlString +="<li><strong>Local File Inclusion, Directory Traversal</strong>: It creates file dictionary lists with various encoding and escaping characters.</li>"
+        htmlString +="<li><strong>Command Injection / Remote Code Execution</strong>: It creates command dictionary lists for both unix and windows environments with different combinations.</li>"
         htmlString +="<li><strong>SQL Injection</strong>: It creates Stacked Queries, Boolean-Based, Union-Based, Time-Based and Order-Based SQLi wordlist for various databases to help finding vulnerable spots.</li></ul></li>"
         htmlString +="<li><strong>Authorization Matrix</strong>: It creates an access role matrix based on user sessions and URL lists to determine authorization/authentication related access violation issues.</li>"
         htmlString +="<li>And <strong>Http Request to JavaScript Converter</strong>: It converts Http requests to JavaScript code to be useful for further XSS exploitation and more.<br><br></li></ul>"
-        htmlString +="<h2>Directory Traversal/Local File Inclusion</h2>"
+        htmlString +="<h2>Local File Inclusion, Directory Traversal</h2>"
         htmlString +="<p>It both supports unix and windows file systems. You can generate any wordlists dynamically for the path you want. You just need to supply a file path and that's all.</p>"
         htmlString +="<p><strong>'Depth'</strong> is representation of how deep the wordlist should be. You can generate wordlists 'till' or 'equal to' this value.</p>"
         htmlString +="<p><strong>'Waf Bypass'</strong> asks for if you want to include all bypass features; like null bytes, different encoding, etc.</p>"
         htmlString +="<p><img width=\"1000\" alt=\"Images from Github Repo - Directory Traversal/Local File Inclusion wordlist\" src=\"https://user-images.githubusercontent.com/50321735/192443238-ac8f9913-9d35-4642-8122-aec89baa1b6f.png\" style=\"max-width: 100%;\"><br><br></p>"
-        htmlString +="<h2>Code Injection / Remote Code Execution</h2>"
+        htmlString +="<h2>Command Injection / Remote Code Execution</h2>"
         htmlString +="<p>It creates command execution dynamic wordlists with the command you supply. It combines different separators and terminators for unix and windows environments together.</p>"
         htmlString +="<p><strong>'URL Encoding'</strong> encodes dictionary output.</p>"
         htmlString +="<p><img width=\"1000\" alt=\"Images from Github Repo - Remote Code Execution wordlist\" src=\"https://user-images.githubusercontent.com/50321735/192442838-fb338e2c-93f8-445c-ace6-af1c78131711.png\" style=\"max-width: 100%;\"><br><br></p>"
@@ -943,7 +943,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._lblStatusLabel.setText("Please provide a path for payload generation!")
         self._txtTargetPath = JTextField(self._txtDefaultLFI, 30)
         self._rbDictLFI = JRadioButton('DT/LFI', True, itemStateChanged=self.funcRBSelection);
-        self._rbDictLFI.setToolTipText("It generates payload for Directory Traversal, Local File Inclusion, Remote File Inclusion.")
+        self._rbDictLFI.setToolTipText("It generates payload for Directory Traversal, Local File Inclusion.")
         self._rbDictCommandInj = JRadioButton('Command Inj / RCE', itemStateChanged=self.funcRBSelection)
         self._rbDictCommandInj.setToolTipText("It generates payload for Command Injection, Remote Code Execution.")
         self._rbDictSQLi = JRadioButton('SQLi', itemStateChanged=self.funcRBSelection)
