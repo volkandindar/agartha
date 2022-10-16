@@ -35,7 +35,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         callbacks.registerContextMenuFactory(self)
         callbacks.issueAlert("The extension has been loaded.")
         self.tableMatrixReset(self)
-        print "Agartha(v" + VERSION + ") is a security tool for:\n\t\t* Local or Remote File Inclusion, Directory Traversal,\n\t\t* Code Injection, Code Execution,\n\t\t* Authorization/Authentication Access Matrix,\n\t\t* SQL Injections,\n\t\t* Http Request to Javascript.\n\nFor more information and tutorial how to use, please visit:\n\t\thttps://github.com/volkandindar/agartha\n\nAuthor: Volkan Dindar\n        volkan.dindar@owasp.org"
+        print "Agartha(v" + VERSION + ") is a security tool for:\n\t\t* Local or Remote File Inclusion, Directory Traversal,\n\t\t* Code Injection, Code Execution,\n\t\t* Authentication/Authorization Access Matrix,\n\t\t* SQL Injections,\n\t\t* Http Request to Javascript.\n\nFor more information and tutorial how to use, please visit:\n\t\thttps://github.com/volkandindar/agartha\n\nAuthor: Volkan Dindar\n        volkan.dindar@owasp.org"
         return
 
     def authMatrixThread(self, ev):
