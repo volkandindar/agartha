@@ -1,4 +1,4 @@
-# Agartha { LFI | RCE | Auth | SQLi | Http->Js }
+# Agartha { LFI | RCE | Auth | SQL Injection | Http->Js }
 Agartha is a penetration testing tool which creates dynamic payload lists and user access matrix to reveal injection flaws and authentication/authorization issues. There are many different attack payloads alredy exist, but Agartha creates run-time, systematic and vendor-neutral payloads with many different possibilities and bypassing methods. It also draws attention to user session and URL relationships, which makes easy to find user access violations. And additionally, it converts Http requests to JavaScript to help digging up XSS issues more. 
 
 In summary:
@@ -6,7 +6,7 @@ In summary:
 - **Payload Generator**: It creates payloads/wordlists for different attack types.
 	- **Local File Inclusion, Directory Traversal**: It creates file dictionary lists with various encoding and escaping characters.
 	- **Command Injection / Remote Code Execution**: It creates command dictionary lists for both unix and windows environments with different combinations.
-	- **SQL Injection**: It creates Stacked Queries, Boolean-Based, Union-Based, Time-Based and Order-Based SQLi wordlist for various databases to help finding vulnerable spots.
+	- **SQL Injection**: It creates Stacked Queries, Boolean-Based, Union-Based, Time-Based and Order-Based SQL Injection wordlist for various databases to help finding vulnerable spots.
 - **Authorization Matrix**: It creates an access role matrix based on user sessions and URL lists to determine authorization/authentication related access violation issues.
 - And **Http Request to JavaScript Converter**: It converts Http requests to JavaScript code to be useful for further XSS exploitation and more.<br/><br/>
 
@@ -24,7 +24,7 @@ For manual installation:
 - Burp Menu > Extender > Extensions > Add > Extension Type: Python > Extension file(.py): Select 'agartha.py' file
 
 After all, you will see 'Agartha' tab in the main window and it will be also registered the right click, under: 
-- 'Extensions > Agartha {LFI|RCE|Auth|SQLi|Http->Js}', with two options
+- 'Extensions > Agartha {LFI|RCE|Auth|SQL Injection|Http->Js}', with two options
 	- 'Agartha Panel'
 	- 'Copy as JavaScript'<br/><br/>
 
@@ -50,7 +50,7 @@ It creates command execution dynamic wordlists with the command you supply. It c
 <img width="1000" alt="Remote Code Execution wordlist" src="https://user-images.githubusercontent.com/50321735/195392183-cea812d2-4301-4bf0-8d2a-43510c144a99.gif"><br/><br/>
 
 ## SQL Injection
-It generates payloads for Stacked Queries, Boolean-Based, Union-Based, Time-Based, Order-Based SQLi attacks, and you do not need to supply any inputs. You just pick what type of SQLi attacks and databases you want, then it will generate a wordlist with different combinations. 
+It generates payloads for Stacked Queries, Boolean-Based, Union-Based, Time-Based, Order-Based SQL Injection attacks, and you do not need to supply any inputs. You just pick what type of SQL attacks and databases you want, then it will generate a wordlist with different combinations. 
 
 **'URL Encoding'** encodes dictionary output.
 
