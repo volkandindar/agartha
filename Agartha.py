@@ -620,7 +620,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         if self._cbSqlEncoding.isSelected():
             listSQLi = self.encodeURL(listSQLi)
         self._tabDictResultDisplay.setText(''.join(map(str, listSQLi)))
-        self._lblStatusLabel.setText('SQLi payload generation is returned with '+ str(len(listSQLi)) + ' records!')
+        self._lblStatusLabel.setText('SQL Injection payload generation is returned with '+ str(len(listSQLi)) + ' records!')
         return
 
     def encodeURL(self, payloads):
