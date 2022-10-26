@@ -23,7 +23,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
     def registerExtenderCallbacks(self, callbacks):
         self._callbacks = callbacks
         self._helpers = callbacks.getHelpers()
-        self._callbacks.setExtensionName("Agartha {LFI|RCE|Auth|SQLi|Http->Js}")        
+        self._callbacks.setExtensionName("Agartha {LFI|RCE|Auth|SQL Injection|Http->Js}")        
         self._MainTabs = JTabbedPane()
         self._tabDictUI()
         self._tabAuthUI()
@@ -846,12 +846,12 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self.editorPaneInfo.setContentType("text/html");
         htmlString ="<html>"
         htmlString +="<div><h3>Author: Volkan Dindar,  Github Repo: https://github.com/volkandindar/agartha</h3>"
-        htmlString +="<h1>Agartha { LFI | RCE | Auth | SQLi | Http->Js }</h1>"
+        htmlString +="<h1>Agartha { LFI | RCE | Auth | SQL Injection | Http->Js }</h1>"
         htmlString +="<p>Agartha is a penetration testing tool which creates dynamic payload lists and user access matrix to reveal injection flaws and authentication/authorization issues. There are many different attack payloads alredy exist, but Agartha creates run-time, systematic and vendor-neutral payloads with many different possibilities and bypassing methods. It also draws attention to user session and URL relationships, which makes easy to find user access violations. And additionally, it converts Http requests to JavaScript to help digging up XSS issues more. In summary:</p><ul>"
         htmlString +="<li><strong>Payload Generator</strong>: It creates payloads/wordlists for different attack types.<ul>"
         htmlString +="<li><strong>Local File Inclusion, Directory Traversal</strong>: It creates file dictionary lists with various encoding and escaping characters.</li>"
         htmlString +="<li><strong>Command Injection / Remote Code Execution</strong>: It creates command dictionary lists for both unix and windows environments with different combinations.</li>"
-        htmlString +="<li><strong>SQL Injection</strong>: It creates Stacked Queries, Boolean-Based, Union-Based, Time-Based and Order-Based SQLi wordlist for various databases to help finding vulnerable spots.</li></ul></li>"
+        htmlString +="<li><strong>SQL Injection</strong>: It creates Stacked Queries, Boolean-Based, Union-Based, Time-Based and Order-Based SQL Injection wordlist for various databases to help finding vulnerable spots.</li></ul></li>"
         htmlString +="<li><strong>Authorization Matrix</strong>: It creates an access role matrix based on user sessions and URL lists to determine authorization/authentication related access violation issues.</li>"
         htmlString +="<li>And <strong>Http Request to JavaScript Converter</strong>: It converts Http requests to JavaScript code to be useful for further XSS exploitation and more.<br><br></li></ul>"
         htmlString +="<h2>Local File Inclusion, Directory Traversal</h2>"
@@ -864,7 +864,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         htmlString +="<p><strong>'URL Encoding'</strong> encodes dictionary output.</p>"
         htmlString +="<p><img width=\"1000\" alt=\"Images from Github Repo - Remote Code Execution wordlist\" src=\"https://user-images.githubusercontent.com/50321735/192442838-fb338e2c-93f8-445c-ace6-af1c78131711.png\" style=\"max-width: 100%;\"><br><br></p>"
         htmlString +="<h2>SQL Injection</h2>"
-        htmlString +="<p>It generates payloads for Stacked Queries, Boolean-Based, Union-Based, Time-Based, Order-Based SQLi attacks, and you do not need to supply any inputs. You just pick what type of SQLi attacks and databases you want, then it will generate a wordlist with different combinations.</p>"
+        htmlString +="<p>It generates payloads for Stacked Queries, Boolean-Based, Union-Based, Time-Based, Order-Based SQL Injection attacks, and you do not need to supply any inputs. You just pick what type of SQL Injection attacks and databases you want, then it will generate a wordlist with different combinations.</p>"
         htmlString +="<p><strong>'URL Encoding'</strong> encodes dictionary output.</p>"
         htmlString +="<p><strong>'Waf Bypass'</strong> asks for if you want to include all bypass features; like null bytes, different encoding, etc.</p>"
         htmlString +="<p><strong>'Union-Based'</strong> and <strong>'Order-Based'</strong> ask for how deep the payload should be. The default value is 5.</p>"
@@ -944,7 +944,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._rbDictLFI.setToolTipText("It generates payload for Local File Inclusion, Directory Traversal.")
         self._rbDictCommandInj = JRadioButton('Command Inj / RCE', itemStateChanged=self.funcRBSelection)
         self._rbDictCommandInj.setToolTipText("It generates payload for Command Injection, Remote Code Execution.")
-        self._rbDictSQLi = JRadioButton('SQLi', itemStateChanged=self.funcRBSelection)
+        self._rbDictSQLi = JRadioButton('SQL Injection', itemStateChanged=self.funcRBSelection)
         self._rbDictSQLi.setToolTipText("It generates payload for various type of SQL attacks.")
         _rbDictCheatSheet = JRadioButton('Cheat Sheet', itemStateChanged=self.funcRBSelection)
         _rbDictFuzzer = JRadioButton('Fuzzer', itemStateChanged=self.funcRBSelection)
