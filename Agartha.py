@@ -864,7 +864,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         htmlString +="<p><strong>'URL Encoding'</strong> encodes dictionary output.</p>"
         htmlString +="<p><img width=\"1000\" alt=\"Images from Github Repo - Remote Code Execution wordlist\" src=\"https://user-images.githubusercontent.com/50321735/192442838-fb338e2c-93f8-445c-ace6-af1c78131711.png\" style=\"max-width: 100%;\"><br><br></p>"
         htmlString +="<h2>SQL Injection</h2>"
-        htmlString +="<p>It generates payloads for Stacked Queries, Boolean-Based, Union-Based, Time-Based, Order-Based SQL Injection attacks, and you do not need to supply any inputs. You just pick what type of SQL Injection attacks and databases you want, then it will generate a wordlist with different combinations.</p>"
+        htmlString +="<p>It generates payloads for Stacked Queries, Boolean-Based, Union-Based, Time-Based, Order-Based SQL Injection attacks, and you do not need to supply any inputs. You just pick what type of SQL attacks and databases you want, then it will generate a wordlist with different combinations.</p>"
         htmlString +="<p><strong>'URL Encoding'</strong> encodes dictionary output.</p>"
         htmlString +="<p><strong>'Waf Bypass'</strong> asks for if you want to include all bypass features; like null bytes, different encoding, etc.</p>"
         htmlString +="<p><strong>'Union-Based'</strong> and <strong>'Order-Based'</strong> ask for how deep the payload should be. The default value is 5.</p>"
