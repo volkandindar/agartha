@@ -242,10 +242,9 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         return
        
     def isValid(self):
-        # check if ' or " exist
         # input should not be empty
         # and input should contain at least one alphanumeric char
-        if(re.compile('[\'\"]').search(self._txtTargetPath.text) == None) and self._txtTargetPath.text.strip() and re.compile("[0-9a-zA-Z]").findall(self._txtTargetPath.text):
+        if self._txtTargetPath.text.strip() and re.compile("[0-9a-zA-Z]").findall(self._txtTargetPath.text):
             # clear
             return True
         else:
@@ -664,7 +663,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
 
         method = _req.splitlines()[0].split(" ", 1)[0]
 
-        if "]" in _req.splitlines()[-1] or "}" in _req.splitlines()[-1] or ">" in _req.splitlines()[-1]:
+        if "]" in _req.splitlines()[-1][-1:] or "}" in _req.splitlines()[-1][-1:] or ">" in _req.splitlines()[-1][-1:]:
             jscript = "JSON/XML is not supported yet :/"
         else:
             fullHeader = ""
