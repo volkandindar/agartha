@@ -825,6 +825,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._tabAuthPanel.setBorder(EmptyBorder(10, 10, 10, 10))
         self._tabAuthPanel.setTopComponent(_tabAuthPanel1)
         self._tabAuthPanel.setBottomComponent(_tabAuthPanel2)
+        self._tabAuthPanel.setResizeWeight(0.25)
 
         # panel bottom
         _tabsReqRes = JTabbedPane()        
@@ -837,6 +838,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._tabAuthSplitpane = JSplitPane(JSplitPane.VERTICAL_SPLIT)
         self._tabAuthSplitpane.setTopComponent(self._tabAuthPanel)
         self._tabAuthSplitpane.setBottomComponent(_tabsReqRes)
+        self._tabAuthSplitpane.setResizeWeight(0.7)
 
     def _tabHelpUI(self):
         self._tabHelpJPanel = JPanel(BorderLayout())
