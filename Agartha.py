@@ -840,10 +840,6 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._tabAuthSplitpane.setTopComponent(self._tabAuthPanel)
         self._tabAuthSplitpane.setBottomComponent(_tabsReqRes)
 
-        self._tabAuthSplitpane.setResizeWeight(0.7)
-        self._tabAuthPanel.setResizeWeight(0.25)
-        self._tabAuthSplitpaneHttp.setResizeWeight(0.5)
-
     def _tabHelpUI(self):
         self._tabHelpJPanel = JPanel(BorderLayout())
         self._tabHelpJPanel.setBorder(EmptyBorder(10, 10, 10, 10))
