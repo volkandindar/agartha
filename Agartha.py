@@ -1081,9 +1081,9 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._responseViewer.setMessage("", False)
         self._lblAuthNotification.text = "Please add users to create an auth matrix"
         self._tbAuthNewUser.setForeground (Color.black)        
-        self._txtHeaderDefault = "GET /example HTTP/1.1\nHost: localhost\nAccept-Encoding: *\nConnection: close\nCookie: SessionID=......"
+        self._txtHeaderDefault = "GET / HTTP/1.1\nHost: localhost\nAccept-Encoding: *\nConnection: close\nCookie: SessionID=......"
         self._tbAuthHeader.setText(self._txtHeaderDefault)
-        self._txtURLDefault = "http://localhost/example\nhttp://...."
+        self._txtURLDefault = "http://...."
         self._tbAuthURL.setText(self._txtURLDefault)
         self._txtUserDefault = "User1"
         self._tbAuthNewUser.text = self._txtUserDefault
