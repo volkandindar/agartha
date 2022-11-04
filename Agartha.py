@@ -1075,7 +1075,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self.userNamesHttpReq.append("")
         self.userNamesHttpUrls = [[]]
         self.httpReqRes = [[],[],[],[],[]]
-        self.httpReqRes.append([])
+        self.httpReqRes.append([])      
         self._requestViewer.setMessage("", False)
         self._responseViewer.setMessage("", False)
         self._lblAuthNotification.text = "Please add users to create an auth matrix"
@@ -1095,9 +1095,10 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self.progressBar.setValue(0)
         self.tableMatrix.getSelectionModel().addListSelectionListener(self._updateReqResView)
         self.tableMatrix.getColumnModel().getSelectionModel().addListSelectionListener(self._updateReqResView)
-        self._tabAuthSplitpaneHttp.setDividerLocation(0.5)
         self._tabAuthPanel.setDividerLocation(0.25)
-        self._tabAuthSplitpane.setDividerLocation(0.7)        
+        self._tabAuthSplitpane.setDividerLocation(0.7)
+        self._tabAuthSplitpaneHttp.setDividerLocation(0.5)
+
         return
 
 class UserEnabledRenderer(TableCellRenderer):
