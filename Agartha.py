@@ -793,6 +793,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         _tabAuthPanel1_B = JScrollPane(self._tbAuthHeader, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER)
         _tabAuthPanel1_C = JScrollPane(self._tbAuthURL, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER)
         self._tabAuthSplitpaneHttp = JSplitPane(JSplitPane.HORIZONTAL_SPLIT, _tabAuthPanel1_B, _tabAuthPanel1_C)
+        self._tabAuthSplitpaneHttp.setResizeWeight(0.5)
         _tabAuthPanel1.add(_tabAuthPanel1_A, BorderLayout.WEST)
         _tabAuthPanel1.add(self._tabAuthSplitpaneHttp, BorderLayout.CENTER)
         # panel top
@@ -821,6 +822,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         # panel center
 
         self._tabAuthPanel = JSplitPane(JSplitPane.VERTICAL_SPLIT)
+        self._tabAuthPanel.setResizeWeight(0.25)
         self._tabAuthPanel.setBorder(EmptyBorder(10, 10, 10, 10))
         self._tabAuthPanel.setTopComponent(_tabAuthPanel1)
         self._tabAuthPanel.setBottomComponent(_tabAuthPanel2)
@@ -834,6 +836,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         # panel bottom
 
         self._tabAuthSplitpane = JSplitPane(JSplitPane.VERTICAL_SPLIT)
+        self._tabAuthSplitpane.setResizeWeight(0.7)
         self._tabAuthSplitpane.setTopComponent(self._tabAuthPanel)
         self._tabAuthSplitpane.setBottomComponent(_tabsReqRes)
 
