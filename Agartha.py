@@ -124,7 +124,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
             return
         
         for _url in self._tbAuthURL.getText().split('\n'):
-            if not self.isURLValid(str(_url)) or _url == self._txtURLDefault:
+            if not self.isURLValid(str(_url)) or _url.strip() == self._txtURLDefault:
                 self._tbAuthURL.setForeground (Color.red)
                 self._lblAuthNotification.text = "Please check url list!"
                 self._lblAuthNotification.setForeground (Color.red)
