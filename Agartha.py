@@ -124,7 +124,8 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
             return
         
         for _url in self._tbAuthURL.getText().split('\n'):
-            if not self.isURLValid(str(_url)) or _url.strip() == self._txtURLDefault:
+            _url = _url.strip()
+            if not self.isURLValid(str(_url)) or _url == self._txtURLDefault:
                 self._tbAuthURL.setForeground (Color.red)
                 self._lblAuthNotification.text = "Please check url list!"
                 self._lblAuthNotification.setForeground (Color.red)
@@ -736,7 +737,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         if " " in urlAdd.strip():
             # check if space exists
             return False
-        elif urlAdd.startswith("http://") or urlAdd.startswith("https://"):
+        elif urlAdd.strip().startswith("http://") or urlAdd.startswith("https://"):
             # check if it starts with http
             return True
         elif not urlAdd:
