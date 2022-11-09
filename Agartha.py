@@ -225,7 +225,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         elif not self.isValid():
             if self._rbDictLFI.isSelected():
                 self._lblStatusLabel.setText("File input is not valid. "+ self._txtDefaultLFI)
-                self._txtTargetPath.setText(random.choice(["etc/passwd", "C:\\windows\\system32\\drivers\\etc\\hosts"]))
+                self._txtTargetPath.setText(random.choice(["/etc/passwd", "C:\\windows\\system32\\drivers\\etc\\hosts"]))
             elif self._rbDictCommandInj.isSelected():
                 self._lblStatusLabel.setText("Command input is not valid. " + self._txtDefaultCommandInj)
                 self._txtTargetPath.setText(random.choice(["sleep 120", "timeout 120"]))
@@ -245,7 +245,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
     def isValid(self):
         # input should not be empty
         # and input should contain at least one alphanumeric char
-        if self._txtTargetPath.text.strip() and re.compile("[0-9a-zA-Z]").findall(self._txtTargetPath.text):
+        if self._txtTargetPath.text.strip() and re.compile("[0-9a-zA-Z]").findall(self._txtTargetPath.text) and self._txtTargetPath.text.strip() !=self._txtDefaultLFI and self._txtTargetPath.text.strip() !=self._txtDefaultCommandInj:
             # clear
             return True
         else:
@@ -914,7 +914,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
 
     def _tabDictUI(self):
         # top panel
-        self._txtDefaultLFI = "Example: 'etc/passwd', 'C:\\boot.ini'"
+        self._txtDefaultLFI = "Example: '/etc/passwd', 'C:\\boot.ini'"
         self._txtDefaultCommandInj = "Examples: $'sleep 120', >'timeout 120' - for 2 minutes"
         self._txtDefaultSQLi = "No input is needed to supply!"
         self._txtCheatSheetLFI = ""
