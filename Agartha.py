@@ -306,7 +306,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
             listCommandInj = self.encodeURL(listCommandInj)
         
         self._tabDictResultDisplay.setText(''.join(map(str, listCommandInj)))
-        self._lblStatusLabel.setText('Remote code dictionary: "' + self._txtTargetPath.text + '", with '+ str(len(listCommandInj)) + ' result.')
+        self._lblStatusLabel.setText('Payload list for "' + self._txtTargetPath.text + '" command returns with '+ str(len(listCommandInj)) + ' result.')
         return
 
     def funcLFI(self, ev):
@@ -385,7 +385,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         listLFI = list(set(listLFI))
         listLFI.sort(reverse=True)
         self._tabDictResultDisplay.setText(''.join(map(str, listLFI)))
-        self._lblStatusLabel.setText('File dictionary: "' + self._txtTargetPath.text + '", with '+ str(len(listLFI)) + ' result. Please make sure payload encoding is disabled, unless you are sure what you are doing.') 
+        self._lblStatusLabel.setText('Payload list for "' + self._txtTargetPath.text + '" path returns with '+ str(len(listLFI)) + ' result. Please make sure payload encoding is disabled, unless you are sure what you are doing.') 
         return
 
     def funcSQLi(self, ev):
