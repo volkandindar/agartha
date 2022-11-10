@@ -709,6 +709,9 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         elif _url.startswith("http"):
             _url = _url.replace(":80/", "/")
         
+        if not self.tableMatrix.getRowCount():
+            self.tableMatrixReset(self)
+
         self._tbAuthHeader.setText(_req)
         self._tbAuthURL.setText(_url)
         self._MainTabs.setSelectedComponent(self._tabAuthSplitpane)
