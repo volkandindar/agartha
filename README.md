@@ -13,7 +13,7 @@ In summary:
 Here is a small tutorial how to use.
 
 ## Installation
-You should download 'jython' file first, and then:
+You should download 'jython' file and set your environment first:
 - Burp Menu > Extender > Options > Python Environment > Locate jython standalone jar file
 
 <!--You can install Agartha through official Burp extension store automatically: 
