@@ -20,7 +20,7 @@ You should download 'jython' file first, and then:
 - Burp Menu > Extender > BApp Store > Agartha
 
 For manual installation:-->
-For installation:
+And then:
 
 - Burp Menu > Extender > Extensions > Add > Extension Type: Python > Extension file(.py): Select 'agartha.py' file
 
