@@ -16,14 +16,14 @@ try:
 except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
 
-VERSION = "1.0"
+VERSION = "0.9"
 
 class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFactory):
     
     def registerExtenderCallbacks(self, callbacks):
         self._callbacks = callbacks
         self._helpers = callbacks.getHelpers()
-        self._callbacks.setExtensionName("Agartha {LFI|RCE|Auth|SQL Injection|Http->Js}")        
+        self._callbacks.setExtensionName("Agartha {LFI|RCE|SQLi|Auth|Http->Js}")        
         self._MainTabs = JTabbedPane()
         self._tabDictUI()
         self._tabAuthUI()
@@ -35,7 +35,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         callbacks.registerContextMenuFactory(self)
         callbacks.issueAlert("The extension has been loaded.")
         self.tableMatrixReset(self)
-        print "Agartha(v" + VERSION + ") is a security tool for:\n\t\t* Local File Inclusion, Directory Traversal,\n\t\t* Command Injection, Code Execution,\n\t\t* Authentication/Authorization Access Matrix,\n\t\t* SQL Injections,\n\t\t* Http request to Javascript conversion.\n\nFor more information and tutorial how to use, please visit:\n\t\thttps://github.com/volkandindar/agartha\n\nAuthor:\tVolkan Dindar\n\t\t\t\tvolkan.dindar@owasp.org"
+        print "Agartha(v" + VERSION + ") is a security tool for:\n\t\t* Local File Inclusion, Directory Traversal,\n\t\t* Command Injection, Code Execution,\n\t\t* SQL Injections,\n\t\t* Authentication/Authorization Access Matrix,\n\t\t* Http request to Javascript conversion.\n\nFor more information and tutorial how to use, please visit:\n\t\thttps://github.com/volkandindar/agartha\n\nAuthor:\tVolkan Dindar\n\t\t\t\tvolkan.dindar@owasp.org"
         return
 
     def authMatrixThread(self, ev):
@@ -447,7 +447,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                 for escapeChar in escapeChars:
                     for suffix in suffixes[1:]:
                         for union in unions:
-                            unionPhrase = " union select "
+                            unionPhrase = " union all select "
                             for i in range(int(self._cbUnionDepth.getSelectedItem())):
                                 unionPhrase += union
                                 if self._cbMysqlBased.isSelected():
