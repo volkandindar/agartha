@@ -16,7 +16,7 @@ try:
 except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
 
-VERSION = "0.95"
+VERSION = "0.951"
 
 class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFactory):
     
@@ -454,10 +454,10 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
             for prefix in prefixes:
                 for escapeChar in escapeChars:
                     for suffix in suffixes[1:]:
+                        if (prefix[:2].count("\\")) and (escapeChar[:2].count("\\")):
+                            if (prefix[:2].count("\\") != escapeChar[:2].count("\\")):
+                                continue
                         for union in unions:
-                            if (prefix[:2].count("\\")) and (escapeChar[:2].count("\\")):
-                                if (prefix[:2].count("\\") != escapeChar[:2].count("\\")):
-                                    continue
                             unionPhrase = " union all select "
                             for i in range(int(self._cbUnionDepth.getSelectedItem())):
                                 unionPhrase += union
