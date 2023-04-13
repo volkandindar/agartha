@@ -8,7 +8,7 @@ In summary:
 	- **Command Injection / Remote Code Execution**: It creates command dictionary lists for both unix and windows environments with different combinations.
 	- **SQL Injection**: It creates Stacked Queries, Boolean-Based, Union-Based, Time-Based and Order-Based SQL Injection wordlist for various databases to help finding vulnerable spots.
 - **Authorization Matrix**: It creates an access role matrix based on user sessions and URL lists to determine authorization/authentication related access violation issues.
-- And **Http Request to JavaScript Converter**: It converts Http requests to JavaScript code to be useful for further XSS exploitation and more.<br/><br/>
+- And **Copy as JavaScript**: It converts Http requests to JavaScript code to be useful for further XSS exploitation and more.<br/><br/>
 
 Here is a small tutorial how to use.
 
@@ -98,12 +98,12 @@ After clicking 'RUN', the tool will fill user and URL matrix with different colo
 You may also notice, it support only one Http request method and user session at the same time, because it processes bulk requests and it is not possible to provide different header options for each calls. But you may play with 'GET/POST' methods to see response differences.<br/><br/>
 
 
-## Http Request to JavaScript Converter
+## Copy as JavaScript
 The feature is for converting Http requests to JavaScript code. It can be useful to dig up further XSS issues and bypass header restrictions.
 
 To access it, right click any Http Request and 'Extensions > Agartha > Copy as JavaScript'.
 
-<img width="1000" alt="Http Request to JavaScript Converter" src="https://user-images.githubusercontent.com/50321735/152224405-d10b78a2-9b18-44a9-a991-5b9c451c7253.png">
+<img width="1000" alt="Copy as JavaScript" src="https://user-images.githubusercontent.com/50321735/152224405-d10b78a2-9b18-44a9-a991-5b9c451c7253.png">
 
 It will automatically save it to your clipboard with some remarks. For example:
 ```
