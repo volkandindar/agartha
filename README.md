@@ -19,14 +19,12 @@ You should download 'jython' file and set your environment first:
 You can install Agartha through official store: 
 - Burp Menu > Extender > BApp Store > Agartha
 
-For manual installation:
-And then:
-
+Or for manual installation:
 - Burp Menu > Extender > Extensions > Add > Extension Type: Python > Extension file(.py): Select 'agartha.py' file
 
 After all, you will see 'Agartha' tab in the main window and it will be also registered the right click, under: 
-- 'Extensions > Agartha {LFI|RCE|Auth|SQL Injection|Http->Js}', with two options
-	- 'Agartha Panel'
+- 'Extensions > Agartha - LFI, RCE, SQLi, Auth, HTTP to JS', with two options
+	- 'Authorization Matrix'
 	- 'Copy as JavaScript'<br/><br/>
 
 ## Tested in
