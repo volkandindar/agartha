@@ -16,14 +16,14 @@ try:
 except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
 
-VERSION = "0.952"
+VERSION = "0.954"
 
 class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFactory):
     
     def registerExtenderCallbacks(self, callbacks):
         self._callbacks = callbacks
         self._helpers = callbacks.getHelpers()
-        self._callbacks.setExtensionName("Agartha {LFI|RCE|SQLi|Auth|Http->Js}")        
+        self._callbacks.setExtensionName("Agartha - LFI, RCE, SQLi, Auth, HTTP to JS")
         self._MainTabs = JTabbedPane()
         self._tabDictUI()
         self._tabAuthUI()
@@ -35,7 +35,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         callbacks.registerContextMenuFactory(self)
         callbacks.issueAlert("The extension has been loaded.")
         self.tableMatrixReset(self)
-        print "Agartha(v" + VERSION + ") is a security tool for:\n\t\t* Local File Inclusion, Directory Traversal\n\t\t* Command Injection, RCE\n\t\t* SQL Injections\n\t\t* Access Violations, Authentication/Authorization Matrix\n\t\t* Http request to Javascript conversion\n\nFor more information and tutorial how to use, please visit:\n\t\thttps://github.com/volkandindar/agartha\n\nAuthor:\tVolkan Dindar\n\t\t\t\tvolkan.dindar@owasp.org"
+        print "Agartha(v" + VERSION + ") is a security tool for:\n\t\t* Local File Inclusion, Directory Traversal\n\t\t* Command Injection, RCE\n\t\t* SQL Injections\n\t\t* Access Violations, Authentication/Authorization Matrix\n\t\t* Http request to Javascript conversion\n\nFor more information and tutorial, please visit:\n\t\thttps://github.com/volkandindar/agartha\n\nAuthor:\tVolkan Dindar\n\t\t\t\tvolkan.dindar@owasp.org"
         return
 
     def authMatrixThread(self, ev):
@@ -661,7 +661,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
     def createMenuItems(self, invocation):
         self.context = invocation
         menu_list = ArrayList()
-        menu_list.add(JMenuItem("Agartha Panel", actionPerformed=self.agartha_menu))
+        menu_list.add(JMenuItem("Authorization Matrix", actionPerformed=self.agartha_menu))
         menu_list.add(JMenuItem("Copy as JavaScript", actionPerformed=self.js_menu))
         return menu_list
 
@@ -866,14 +866,14 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self.editorPaneInfo.setContentType("text/html");
         htmlString ="<html>"
         htmlString +="<div><h3>Author: Volkan Dindar,  Github Repo: https://github.com/volkandindar/agartha</h3>"
-        htmlString +="<h1>Agartha { LFI | RCE | SQLi | Auth | Http->Js }</h1>"
+        htmlString +="<h1>Agartha - LFI, RCE, SQLi, Auth, HTTP to JS</h1>"
         htmlString +="<p>Agartha is a penetration testing tool which creates dynamic payload lists and user access matrix to reveal injection flaws and authentication/authorization issues. There are many different attack payloads alredy exist, but Agartha creates run-time, systematic and vendor-neutral payloads with many different possibilities and bypassing methods. It also draws attention to user session and URL relationships, which makes easy to find user access violations. And additionally, it converts Http requests to JavaScript to help digging up XSS issues more. In summary:</p><ul>"
         htmlString +="<li><strong>Payload Generator</strong>: It creates payloads/wordlists for different attack types.<ul>"
         htmlString +="<li><strong>Local File Inclusion, Directory Traversal</strong>: It creates file dictionary lists with various encoding and escaping characters.</li>"
         htmlString +="<li><strong>Command Injection / Remote Code Execution</strong>: It creates command dictionary lists for both unix and windows environments with different combinations.</li>"
         htmlString +="<li><strong>SQL Injection</strong>: It creates Stacked Queries, Boolean-Based, Union-Based, Time-Based and Order-Based SQL Injection wordlist for various databases to help finding vulnerable spots.</li></ul></li>"
         htmlString +="<li><strong>Authorization Matrix</strong>: It creates an access role matrix based on user sessions and URL lists to determine authorization/authentication related access violation issues.</li>"
-        htmlString +="<li>And <strong>Http Request to JavaScript Converter</strong>: It converts Http requests to JavaScript code to be useful for further XSS exploitation and more.<br><br></li></ul>"
+        htmlString +="<li>And <strong>Copy as JavaScript</strong>: It converts Http requests to JavaScript code to be useful for further XSS exploitation and more.<br><br></li></ul>"
         htmlString +="<h2>Local File Inclusion, Directory Traversal</h2>"
         htmlString +="<p>It both supports unix and windows file systems. You can generate any wordlists dynamically for the path you want. You just need to supply a file path and that's all.</p>"
         htmlString +="<p><strong>'Depth'</strong> is representation of how deep the wordlist should be. You can generate wordlists 'till' or 'equal to' this value.</p>"
@@ -892,7 +892,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         htmlString +="<p><img width=\"1000\" alt=\"Images from Github Repo - SQL Injection wordlist\" src=\"https://user-images.githubusercontent.com/50321735/192443768-a8113e64-3f56-4282-bd11-b2c3d91be53e.png\" style=\"max-width: 100%;\"><br><br></p>"
         htmlString +="<h2>Authorization Matrix</h2>"
         htmlString +="<p>This part focuses on user session and URLs relationships to determine access violations. The tool will visit all URLs from pre-defined user sessions and fill the table with all Http responses. It is a kind of access matrix and helps to find out authentication/authorization issues. Afterwards we will see what user can access what page contents.</p><ul>"
-        htmlString +="<li><strong>User session name</strong>: You can right click on any request and send it from 'Extensions > Agartha > Agartha Panel' to define a user session.</li>"
+        htmlString +="<li><strong>User session name</strong>: You can right click on any request and send it from 'Extensions > Agartha > Authorization Matrix' to define a user session.</li>"
         htmlString +="<li><strong>URL Addresses</strong> user can visit: You can use Burp's spider feature or any sitemap generators. You may need to provide different URLs for different users.</li>"
         htmlString +="<li>After providing session name, Http header and allowed URLs you can use 'Add User' button to add it.</li></ul>"
         htmlString +="<p><img width=\"1000\" alt=\"Images from Github Repo - Authorization Matrix, sending http req\" src=\"https://user-images.githubusercontent.com/50321735/152217672-353b42a8-bb06-4e92-b9af-3f4e487ab1fd.png\" style=\"max-width: 100%;\"></p>"
@@ -915,10 +915,10 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         htmlString +="<li>Orange, because the response returns 'HTTP 200' but different content length, with authentication/authorization concerns</li>"
         htmlString +="<li>Red, because the response returns 'HTTP 200' and same content length, with authentication/authorization concerns</li></ul>"
         htmlString +="<p>You may also notice, it support only one Http request method and user session at the same time, because it processes bulk requests and it is not possible to provide different header options for each calls. But you may play with 'GET/POST' methods to see response differences.<br><br></p>"
-        htmlString +="<h2>Http Request to JavaScript Converter</h2>"
+        htmlString +="<h2>Copy as JavaScript</h2>"
         htmlString +="<p>The feature is for converting Http requests to JavaScript code. It can be useful to dig up further XSS issues and bypass header restrictions.</p>"
         htmlString +="<p>To access it, right click any Http Request and 'Extensions > Agartha > Copy as JavaScript'.</p>"
-        htmlString +="<p><img width=\"1000\" alt=\"Images from Github Repo - Http Request to JavaScript Converter\" src=\"https://user-images.githubusercontent.com/50321735/152224405-d10b78a2-9b18-44a9-a991-5b9c451c7253.png\" style=\"max-width: 100%;\"></a></p>"
+        htmlString +="<p><img width=\"1000\" alt=\"Images from Github Repo - Copy as JavaScript\" src=\"https://user-images.githubusercontent.com/50321735/152224405-d10b78a2-9b18-44a9-a991-5b9c451c7253.png\" style=\"max-width: 100%;\"></a></p>"
         htmlString +="<p>It will automatically save it to your clipboard</p></div>"
         htmlString +="<p>Please note that, the JavaScript code will be called over original user session and many header fields will be filled automatically by browsers. In some cases, the server may require some header field mandatory, and therefore you may need to modify the code for an adjustment.</p>"
         htmlString +="</article>"
