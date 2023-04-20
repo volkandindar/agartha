@@ -16,7 +16,7 @@ try:
 except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
 
-VERSION = "0.954"
+VERSION = "0.956"
 
 class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFactory):
     
@@ -127,7 +127,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
             _url = _url.strip()
             if not self.isURLValid(str(_url)) or _url == self._txtURLDefault:
                 self._tbAuthURL.setForeground (Color.red)
-                self._lblAuthNotification.text = "Please check url list!"
+                self._lblAuthNotification.text = "URLs should start with 'http/s' and not have any spaces. Please check: '" + _url + "'"
                 self._lblAuthNotification.setForeground (Color.red)
                 return
         self._tbAuthURL.setForeground (Color.black)
@@ -208,13 +208,6 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
             self._cbUnionDepth.setEnabled(True)
         else:
             self._cbUnionDepth.setEnabled(False)
-        return
-
-    def _cbOrderBasedFunc(self, ev):
-        if self._cbOrderBased.isSelected(): 
-            self._cbOrderDepth.setEnabled(True)
-        else:
-            self._cbOrderDepth.setEnabled(False)
         return
 
     def funcGeneratePayload(self, ev):
@@ -397,7 +390,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                 self._lblStatusLabel.setText('There is no a generic method exists for this choice! Please also pick a database!')
                 self._tabDictResultDisplay.setText('')
                 return
-        if not (self._cbTimeBased.isSelected() or self._cbStackedSQL.isSelected() or self._cbUnionBased.isSelected() or self._cbBooleanBased.isSelected() or self._cbOrderBased.isSelected()):
+        if not (self._cbTimeBased.isSelected() or self._cbStackedSQL.isSelected() or self._cbUnionBased.isSelected() or self._cbBooleanBased.isSelected()):
                 self._lblStatusLabel.setForeground (Color.red)
                 self._lblStatusLabel.setText('There is no a generic method exists for this choice! Please also pick an attack type!')
                 self._tabDictResultDisplay.setText('')
@@ -436,18 +429,6 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                         listSQLi.append(prefix + escapeChar + " or " + escapeChar + "xyz" + escapeChar + "=" + escapeChar + "xyz" + escapeChar + suffix + "\n")
                         listSQLi.append(prefix + " or " + escapeChar + "xyz" + escapeChar + "=" + escapeChar + "xyz" + escapeChar + "\n")
                         listSQLi.append(prefix + " or " + escapeChar + "xyz" + escapeChar + "=" + escapeChar + "xyz" + escapeChar + suffix + "\n")
-        
-        if self._cbOrderBased.isSelected():
-            for prefix in prefixes:
-                for escapeChar in escapeChars:
-                    if (prefix[:2].count("\\")) and (escapeChar[:2].count("\\")):
-                        if (prefix[:2].count("\\") != escapeChar[:2].count("\\")):
-                            continue
-                    for suffix in suffixes[1:]:
-                        for i in range(int(self._cbOrderDepth.getSelectedItem())):
-                            listSQLi.append(prefix + escapeChar + " order by " + str(i+1) + suffix + "\n")
-                            if not escapeChar:
-                                listSQLi.append(prefix + escapeChar + " order by " + str(i+1) + "\n")
 
         unions = ["null", "1337", "'1337'"]
         if self._cbUnionBased.isSelected():
@@ -751,18 +732,8 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
             self._responseViewer.setMessage("", False)
     
     def isURLValid(self, urlAdd):
-        if " " in urlAdd.strip():
-            # check if space exists
-            return False
-        elif urlAdd.strip().startswith("http://") or urlAdd.startswith("https://"):
-            # check if it starts with http
-            return True
-        elif not urlAdd:
-            # check if whitespace exists
-            return True
-        elif urlAdd.isspace():
-            # check if only spaces
-            return True    
+        if (urlparse.urlparse(urlAdd) and urlparse.urlparse(urlAdd).scheme and not " " in urlAdd.strip()) or urlAdd.isspace() or not urlAdd:
+            return True  
         else:
             return False
 
@@ -1002,12 +973,6 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._cbUnionDepth.setSelectedIndex(4)
         self._cbUnionDepth.setEnabled(False)
         self._cbUnionDepth.setToolTipText("Column numbers")
-        self._cbOrderBased = JCheckBox('Order-Based', False, itemStateChanged=self._cbOrderBasedFunc)
-        self._cbOrderBased.setToolTipText("Order-Based SQL Injection")
-        self._cbOrderDepth = JComboBox(list(range(1, 20)))
-        self._cbOrderDepth.setSelectedIndex(4)
-        self._cbOrderDepth.setEnabled(False)
-        self._cbOrderDepth.setToolTipText("Column numbers")
         self._cbBooleanBased = JCheckBox('Boolean-Based', True)
         self._cbBooleanBased.setToolTipText("Boolean-Based SQL Injection")
         self._cbMssqlBased = JCheckBox('MSSQL', True)
@@ -1048,8 +1013,6 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._tabDictPanel_SQLi.add(self._cbTimeBased, BorderLayout.PAGE_START)
         self._tabDictPanel_SQLi.add(self._cbUnionBased, BorderLayout.PAGE_START)
         self._tabDictPanel_SQLi.add(self._cbUnionDepth, BorderLayout.PAGE_START)
-        self._tabDictPanel_SQLi.add(self._cbOrderBased, BorderLayout.PAGE_START)
-        self._tabDictPanel_SQLi.add(self._cbOrderDepth, BorderLayout.PAGE_START)
         self._tabDictPanel_SQLi.setVisible(False)
         _tabDictPanel_1.add(self._tabDictPanel_LFI, BorderLayout.PAGE_START)
         _tabDictPanel_1.add(self._cbDictCommandInjOpt, BorderLayout.PAGE_START)
