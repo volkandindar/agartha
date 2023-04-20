@@ -23,13 +23,13 @@ Or for manual installation:
 - Burp Menu > Extender > Extensions > Add > Extension Type: Python > Extension file(.py): Select 'agartha.py' file
 
 After all, you will see 'Agartha' tab in the main window and it will be also registered the right click, under: 
-- 'Extensions > Agartha - LFI, RCE, SQLi, Auth, HTTP to JS', with two options
+- 'Extensions > Agartha - LFI, RCE, SQLi, Auth, HTTP to JS', with two sub-menus
 	- 'Authorization Matrix'
 	- 'Copy as JavaScript'<br/><br/>
 
-## Tested in
+<!---## Tested in
 - Jython version v2.7.3
-- Burp Suite v2022.8.5<br/><br/>
+- Burp Suite v2022.8.5<br/><br/>-->
 
 ## Local File Inclusion, Directory Traversal
 It both supports unix and windows file systems. You can generate any wordlists dynamically for the path you want. You just need to supply a file path and that's all. 
