@@ -16,7 +16,7 @@ try:
 except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
 
-VERSION = "0.957"
+VERSION = "0.958"
 
 class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFactory):
     
@@ -100,7 +100,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                 if self._cbAuthGETPOST.getSelectedIndex() == 1:
                     header = self._callbacks.getHelpers().toggleRequestMethod((header))
             else:
-                # request was in POST method and will be in GET
+                # request was in POST alike method and will be in GET
                 if self._cbAuthGETPOST.getSelectedIndex() == 0:
                     header = self._callbacks.getHelpers().toggleRequestMethod((header))
 
@@ -132,7 +132,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                 return
         self._tbAuthURL.setForeground (Color.black)
 
-        if not self._tbAuthHeader.getText().strip() or self._tbAuthHeader.getText().strip() == self._txtHeaderDefault or not self._tbAuthHeader.getText().split('\n')[0].count(' ') == 2:
+        if not self._tbAuthHeader.getText().strip() or self._tbAuthHeader.getText().strip() == self._txtHeaderDefault:
             self._tbAuthHeader.setForeground (Color.red)
             self._lblAuthNotification.text = "Please provide a valid header!"
             self._lblAuthNotification.setForeground (Color.red)
@@ -759,7 +759,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._btnAuthReset.setEnabled(False)       
         self._tbAuthHeader = JTextPane()
         self._tbAuthHeader.setContentType("text")
-        self._tbAuthHeader.setToolTipText("HTTP header belongs to the user. You can set up this field from right click: 'Extensions > Agartha'.")
+        self._tbAuthHeader.setToolTipText("HTTP header belongs to the user. You can set up this field from right click: 'Extensions > Agartha > Authorization Matrix'.")
         self._tbAuthHeader.setEditable(True)
         self._tbAuthURL = JTextPane()
         self._tbAuthURL.setContentType("text")
