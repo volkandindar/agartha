@@ -16,7 +16,7 @@ try:
 except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
 
-VERSION = "0.956"
+VERSION = "0.957"
 
 class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFactory):
     
@@ -711,6 +711,11 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._tbAuthURL.setText(_url)
         self._MainTabs.setSelectedComponent(self._tabAuthSplitpane)
         self._MainTabs.getParent().setSelectedComponent(self._MainTabs)
+
+        if _req.splitlines()[0].split(" ", 1)[0] == "GET":
+            self._cbAuthGETPOST.setSelectedIndex(0)
+        else:
+            self._cbAuthGETPOST.setSelectedIndex(1)
 
     def authMatrix(self, ev):
         t = Thread(target=self.authMatrixThread, args=[self])
