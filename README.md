@@ -6,7 +6,7 @@ In summary:
 - **Payload Generator**: It creates payloads/wordlists for different attack types.
 	- **Local File Inclusion, Directory Traversal**: It creates file dictionary lists with various encoding and escaping characters.
 	- **Command Injection / Remote Code Execution**: It creates command dictionary lists for both unix and windows environments with different combinations.
-	- **SQL Injection**: It creates Stacked Queries, Boolean-Based, Union-Based, Time-Based and Order-Based SQL Injection wordlist for various databases to help finding vulnerable spots.
+	- **SQL Injection**: It creates Stacked Queries, Boolean-Based, Union-Based and Time-Based SQL Injection wordlist for various databases to help finding vulnerable spots.
 - **Authorization Matrix**: It creates an access role matrix based on user sessions and URL lists to determine authorization/authentication related access violation issues.
 - And **Copy as JavaScript**: It converts Http requests to JavaScript code to be useful for further XSS exploitation and more.<br/><br/>
 
@@ -49,13 +49,13 @@ It creates command execution dynamic wordlists with the command you supply. It c
 <img width="1000" alt="Remote Code Execution wordlist" src="https://user-images.githubusercontent.com/50321735/195392183-cea812d2-4301-4bf0-8d2a-43510c144a99.gif"><br/><br/>
 
 ## SQL Injection
-It generates payloads for Stacked Queries, Boolean-Based, Union-Based, Time-Based, Order-Based SQL Injection attacks, and you do not need to supply any inputs. You just pick what type of SQL attacks and databases you want, then it will generate a wordlist with different combinations. 
+It generates payloads for Stacked Queries, Boolean-Based, Union-Based, Time-Based SQL Injection attacks, and you do not need to supply any inputs. You just pick what type of SQL attacks and databases you want, then it will generate a wordlist with different combinations. 
 
 **'URL Encoding'** encodes dictionary output.
 
 **'Waf Bypass'** asks for if you want to include all bypass features; like null bytes, different encoding, etc.
 
-**'Union-Based'** and **'Order-Based'** ask for how deep the payload should be. The default value is 5.
+**'Union-Based'** ask for how deep the payload should be. The default value is 5.
 
 And the rest is related with database and attack types.
 
