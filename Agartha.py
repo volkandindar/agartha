@@ -16,7 +16,7 @@ try:
 except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
 
-VERSION = "0.958"
+VERSION = "0.959"
 
 class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFactory):
     
@@ -737,8 +737,8 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
             self._responseViewer.setMessage("", False)
     
     def isURLValid(self, urlAdd):
-        if (urlparse.urlparse(urlAdd) and urlparse.urlparse(urlAdd).scheme and not " " in urlAdd.strip()) or urlAdd.isspace() or not urlAdd:
-            return True  
+        if (urlparse.urlparse(urlAdd) and urlAdd.strip().startswith("http") and not " " in urlAdd.strip()) or urlAdd.isspace() or not urlAdd:
+            return True
         else:
             return False
 
