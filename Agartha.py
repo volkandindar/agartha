@@ -4,7 +4,7 @@ Author: Volkan Dindar
         https://github.com/volkandindar/agartha
 """
 try:
-    import sys, re, urlparse, random
+    import sys, re, urlparse, random, os, urllib, posixpath
     from burp import (IBurpExtender, ITab, IMessageEditorController, IContextMenuFactory)
     from java.awt import (BorderLayout, FlowLayout, Color, Font, Dimension, Toolkit)
     from javax.swing import (JCheckBox, JMenuItem, JTextPane, JTable, JScrollPane, JProgressBar, SwingConstants, JComboBox, JButton, JTextField, JSplitPane, JPanel, JLabel, JRadioButton, ButtonGroup, JTabbedPane, BoxLayout, JEditorPane)
@@ -16,14 +16,14 @@ try:
 except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
 
-VERSION = "0.96"
+VERSION = "0.98"
 
 class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFactory):
     
     def registerExtenderCallbacks(self, callbacks):
         self._callbacks = callbacks
         self._helpers = callbacks.getHelpers()
-        self._callbacks.setExtensionName("Agartha - LFI, RCE, SQLi, Auth, HTTP to JS")
+        self._callbacks.setExtensionName("Agartha - LFI, RCE, SQLi, Auth Matrix, HTTP to JS")
         self._MainTabs = JTabbedPane()
         self._tabDictUI()
         self._tabAuthUI()
@@ -35,7 +35,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         callbacks.registerContextMenuFactory(self)
         callbacks.issueAlert("The extension has been loaded.")
         self.tableMatrixReset(self)
-        print "Agartha(v" + VERSION + ") is a security tool for:\n\t\t* Local File Inclusion, Directory Traversal\n\t\t* Command Injection, RCE\n\t\t* SQL Injections\n\t\t* Access Violations, Authentication/Authorization Matrix\n\t\t* Http request to Javascript conversion\n\nFor more information and tutorial, please visit:\n\t\thttps://github.com/volkandindar/agartha\n\nAuthor:\tVolkan Dindar\n\t\t\t\tvolkan.dindar@owasp.org"
+        print "Agartha(v" + VERSION + ") is a security tool for:\n\t\t* Local File Inclusion, Directory Traversal\n\t\t* Command Injection, RCE\n\t\t* SQL Injections\n\t\t* Access Violations, Authentication/Authorization Matrix\n\t\t* Http request to Javascript conversion\n\nFor more information and tutorial, please visit:\n\t\thttps://github.com/volkandindar/agartha\n\nAuthor\n\t\tVolkan Dindar\n\t\tvolkan.dindar@owasp.org"
         return
 
     def authMatrixThread(self, ev):
@@ -139,7 +139,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
             return
         self._tbAuthHeader.setForeground (Color.black)
 
-        if self._tbAuthNewUser.text in self.userNames:
+        if self._tbAuthNewUser.text.strip() in self.userNames:
             self._tbAuthNewUser.setForeground (Color.red)
             self._lblAuthNotification.text = "Please add another user name!"
             self._lblAuthNotification.setForeground (Color.red)
@@ -157,9 +157,9 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
             self.userNamesHttpReq[0] = unauthHeader
         
         self.userCount = self.userCount + 1
-        self.userNames.append(self._tbAuthNewUser.text)
+        self.userNames.append(self._tbAuthNewUser.text.strip())
         self.userNamesHttpReq.append(self._tbAuthHeader.getText())
-        self.tableMatrix_DM.addColumn(self._tbAuthNewUser.text)
+        self.tableMatrix_DM.addColumn(self._tbAuthNewUser.text.strip())
         self.userNamesHttpUrls.append([])
 
         urlList = []
@@ -168,7 +168,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         for _url in set(self._tbAuthURL.getText().split('\n')):
             _url = _url.strip()
             _ext = os.path.splitext(urlparse.urlparse(_url).path)[1]
-            if _url and not any(re.findall(r'(log|sign|time).*(off|out)', _url, re.IGNORECASE)) and not any(re.findall(r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff|woff2|ttf)$', _ext, re.IGNORECASE)):
+            if _url and not any(re.findall(r'(log|sign|time).*(off|out|in|on)|(error|expire|kill|terminat|delete|remove)', _url, re.IGNORECASE)) and not any(re.findall(r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff|woff2|ttf)$', _ext, re.IGNORECASE)):
                 # ignore logout, signoff, etc. paths
                 if _url not in self.userNamesHttpUrls[self.userCount]:
                     # check first if the url exist in user's url list
@@ -177,10 +177,10 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                         # check table if url exists
                         self.tableMatrix_DM.addRow([_url])
         
-        self._tbAuthURL.setText("")
+        self._tbAuthURL.setText(self._tbAuthURL.getText().split('\n')[0]+"\n")
         self._btnAuthRun.setEnabled(True)
         self._btnAuthReset.setEnabled(True)
-        self._lblAuthNotification.text = self._tbAuthNewUser.text + " added successfully! Possible session terminators (log|sign|time - off|out), and file extensions (gif, jpg, jpeg, png, css, js, ico, svg, eot, woff, woff2, ttf) have been filtered out!"
+        self._lblAuthNotification.text = "'" + self._tbAuthNewUser.text.strip() + "'' added successfully! Possible session terminators (log|sign|time - off|out|in|on), and file extensions (gif, jpg, jpeg, png, css, js, ico, svg, eot, woff, woff2, ttf) have been filtered out!"
         self._lblAuthNotification.setForeground (Color.black)
         self._cbAuthColoring.setEnabled(True)
         self._cbAuthGETPOST.setEnabled(True)
@@ -754,11 +754,15 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._btnAuthRun = JButton("RUN", actionPerformed=self.authMatrix)
         self._btnAuthRun.setPreferredSize(Dimension(150, 27))
         self._btnAuthRun.setToolTipText("Execute the task.")
+        self._btnSiteMapGeneratorRun = JButton("SiteMap", actionPerformed=self.siteMapGenerator)
+        self._btnSiteMapGeneratorRun.setPreferredSize(Dimension(90, 27))
+        self._btnSiteMapGeneratorRun.setToolTipText("Generate user's sitemap and populate URL list automatically.")
+        self._btnAuthRun.setEnabled(True)
         self._btnAuthReset = JButton("Reset", actionPerformed=self.tableMatrixReset)
         self._btnAuthReset.setPreferredSize(Dimension(90, 27))
         self._btnAuthReset.setToolTipText("Clear all.")
         self._btnAuthRun.setEnabled(False)
-        self._btnAuthReset.setEnabled(False)       
+        self._btnAuthReset.setEnabled(False)
         self._tbAuthHeader = JTextPane()
         self._tbAuthHeader.setContentType("text")
         self._tbAuthHeader.setToolTipText("HTTP header belongs to the user. You can set up this field from right click: 'Extensions > Agartha > Authorization Matrix'.")
@@ -774,6 +778,12 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._cbAuthGETPOST.setSelectedIndex(0)
         self._cbAuthGETPOST.setToolTipText("Which HTTP method will be used for the test.")
 
+        #self._cbSiteMapDepth = JComboBox(list(range(0, 11)))
+        self._cbSiteMapDepth = JComboBox(('Only current URL', 'Max crawl depth is 1', 'Max crawl depth is 2', 'Max crawl depth is 3', 'Max crawl depth is 4', 'Max crawl depth is 5', 'Max crawl depth is 6', 'Max crawl depth is 7', 'Max crawl depth is 8', 'Max crawl depth is 9', 'Max crawl depth is 10'))
+        self._cbSiteMapDepth.setPreferredSize(Dimension(150, 27))
+        self._cbSiteMapDepth.setSelectedIndex(3)
+        self._cbSiteMapDepth.setToolTipText("Webpage spider depth. How many sub-links should the web crawler go?")
+
         # top panel
         _tabAuthPanel1 = JPanel(BorderLayout())
         _tabAuthPanel1.setBorder(EmptyBorder(0, 0, 10, 0))
@@ -786,6 +796,8 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         _tabAuthPanel1_A.add(self._btnAuthReset)
         _tabAuthPanel1_A.add(self._btnAuthRun)
         _tabAuthPanel1_A.add(self._cbAuthColoring)
+        _tabAuthPanel1_A.add(self._btnSiteMapGeneratorRun)
+        _tabAuthPanel1_A.add(self._cbSiteMapDepth)
         _tabAuthPanel1_B = JScrollPane(self._tbAuthHeader, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER)
         _tabAuthPanel1_C = JScrollPane(self._tbAuthURL, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER)
         self._tabAuthSplitpaneHttp = JSplitPane(JSplitPane.HORIZONTAL_SPLIT, _tabAuthPanel1_B, _tabAuthPanel1_C)
@@ -960,7 +972,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._cbDictWafBypass.setToolTipText("It includes bypass techniques like null bytes, various type of encodings, different file extensions, etc.")
         self._cbDictEquality = JCheckBox(')', False)
         self._cbDictEquality.setToolTipText("Generate payloads only for a specific depth.")
-        self._cbDictDepth = JComboBox(list(range(0, 20)))        
+        self._cbDictDepth = JComboBox(list(range(0, 20)))
         self._cbDictDepth.setSelectedIndex(5)
         self._cbDictDepth.setToolTipText("Folder depth limit. How much folder above should it go?")
         _cbDictDepthPanel = JPanel(FlowLayout(FlowLayout.LEADING, 10, 0))
@@ -1066,7 +1078,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self.httpReqRes.append([])      
         self._requestViewer.setMessage("", False)
         self._responseViewer.setMessage("", False)
-        self._lblAuthNotification.text = "Please add users to create an auth matrix"
+        self._lblAuthNotification.text = "Please add users to create an auth matrix!"
         self._lblAuthNotification.setForeground (Color.black)
         self._tbAuthNewUser.setForeground (Color.black)        
         self._txtHeaderDefault = "GET /example HTTP/1.1\nHost: localhost.com\nAccept-Encoding: gzip,deflate\nConnection: close\nCookie: SessionID=......"
@@ -1074,12 +1086,13 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._txtURLDefault = "http://localhost.com/example"
         self._tbAuthURL.setText(self._txtURLDefault)
         self._txtUserDefault = "User1"
-        self._tbAuthNewUser.text = self._txtUserDefault
+        self._tbAuthNewUser.text = self._txtUserDefault.strip()
         self._btnAuthRun.setEnabled(False)
         self._btnAuthReset.setEnabled(False)
         self._cbAuthColoring.setEnabled(False)
         self._cbAuthGETPOST.setEnabled(False)
         self._cbAuthGETPOST.setSelectedIndex(0)
+        self._cbSiteMapDepth.setSelectedIndex(3)
         self._btnAuthNewUserAdd.setEnabled(True)
         self.progressBar.setValue(0)
         self.tableMatrix.getSelectionModel().addListSelectionListener(self._updateReqResView)
@@ -1089,6 +1102,135 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._tabAuthSplitpaneHttp.setDividerLocation(0.5)
 
         return
+
+    def siteMapGenerator(self, ev):
+        t = Thread(target=self.siteMapGeneratorThread, args=[self])
+        t.start()
+        return
+
+    def siteMapGeneratorThread(self, ev):
+        if not self._tbAuthURL.getText().split('\n')[0].strip():
+            self._lblAuthNotification.text = "Please provide a valid URL."
+            self._lblAuthNotification.setForeground (Color.red)
+            return
+
+        _urlAdd = self._tbAuthURL.getText().split('\n')[0].strip()
+
+        if not self.isURLValid(str(_urlAdd)) or _urlAdd == self._txtURLDefault:
+            self._tbAuthURL.setForeground (Color.red)
+            self._lblAuthNotification.text = "URLs should start with 'http/s' and not have any spaces. Please check: '" + _urlAdd + "'"
+            self._lblAuthNotification.setForeground (Color.red)
+            return
+        self._tbAuthURL.setForeground (Color.black)
+        if not self._tbAuthHeader.getText().strip() or self._tbAuthHeader.getText().strip() == self._txtHeaderDefault:
+            self._tbAuthHeader.setForeground (Color.red)
+            self._lblAuthNotification.text = "Please provide a valid header!"
+            self._lblAuthNotification.setForeground (Color.red)
+            return        
+        self._tbAuthHeader.setForeground (Color.black)        
+        self._lblAuthNotification.setForeground (Color.black)
+
+        self._lblAuthNotification.text = "Spider has just started. Please bear in mind, links based on Javascript may not be detected properly."
+        
+        #disabled upper folders/paths
+        #for i in range(_urlAdd.count('/') - 2):
+        #    _userURLs.append(_urlAdd.rsplit('/', i+1)[0] + "/")
+
+        _userURLs = []
+        _userURLs.append(_urlAdd)
+        folderDepth = 0
+        crawledURLs = 0
+        header = self._tbAuthHeader.getText()
+        userLinks = _urlAdd + "\n"
+
+        for _url in _userURLs:
+            try:
+                # changing url in the request header
+                if str(urlparse.urlparse(_url).path):
+                    # check if query string exists
+                    if str(urlparse.urlparse(_url).query):
+                        header = header.replace(" " + header.splitlines()[0].split(" ", 2)[1], " " + str(urlparse.urlparse(_url).path + "?" + urlparse.urlparse(_url).query))
+                    else:
+                        header = header.replace(" " + header.splitlines()[0].split(" ", 2)[1], " " + str(urlparse.urlparse(_url).path))
+                else:
+                    header = header.replace(" " + header.splitlines()[0].split(" ", 2)[1], " " + "/")
+                
+                # header methods
+                if "GET" in header[:3]:
+                    # request was in GET method and will be in POST
+                    if self._cbAuthGETPOST.getSelectedIndex() == 1:
+                        header = self._callbacks.getHelpers().toggleRequestMethod((header))
+                else:
+                    # request was in POST alike method and will be in GET
+                    if self._cbAuthGETPOST.getSelectedIndex() == 0:
+                        header = self._callbacks.getHelpers().toggleRequestMethod((header))
+                
+                portNum = 80
+                if urlparse.urlparse(_url).port:
+                    portNum = urlparse.urlparse(_url).port
+                else:
+                    if urlparse.urlparse(_url).scheme == "https":
+                        portNum = 443
+
+                _httpReqRes = self._callbacks.makeHttpRequest(self._helpers.buildHttpService(urlparse.urlparse(_url).hostname, portNum, urlparse.urlparse(_url).scheme), header)
+                msgBody = self._helpers.bytesToString(_httpReqRes.getResponse()[self._helpers.analyzeResponse(self._helpers.bytesToString(_httpReqRes.getResponse())).getBodyOffset():])
+
+                if msgBody:
+                    links = re.findall("(https?://[^\\s\'\"<]+)", msgBody, re.IGNORECASE)
+                    for link in links:
+                        _ext = os.path.splitext(urlparse.urlparse(link).path)[1]
+                        if link not in _userURLs and link and urlparse.urlparse(_url).hostname == urlparse.urlparse(link).hostname and not any(re.findall(r'(log|sign|time).*(off|out|in|on)|(error|expire|kill|terminat|delete|remove)', link, re.IGNORECASE)) and "/." not in link and not any(re.findall(r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff|woff2|ttf)$', _ext, re.IGNORECASE)):
+                            _userURLs.append(link)
+                            userLinks = userLinks + link + "\n"
+
+                    links = re.findall("<a\\s+[^>]*?href=[\'|\"](.*?)[\'\"].*?>", msgBody, re.IGNORECASE)
+                    for link in (links.pop(0) for _ in xrange(len(links))):
+                        if not ".." in link:
+                            link = link.replace("/.", "/")
+                        if link == ".":
+                            link = "/"
+                        if "%3a" in link[0:10]:
+                            link =  urllib.unquote(link)
+
+                        if link.startswith('/'):
+                            link = urlparse.urlparse(_url).scheme + "://" + urlparse.urlparse(_url)[1] + link
+                        elif link.startswith('#'): 
+                            link = urlparse.urlparse(_url).scheme + "://" + urlparse.urlparse(_url)[1] + urlparse.urlparse(_url)[2] + link
+                        elif link.startswith('..'):
+                            path = urlparse.urlparse(_url)[2]
+                            if not path.endswith('/'):
+                                path = str(urlparse.urlparse(_url)[2]).rsplit('/', 1)[0] + "/"
+                            _endswith =""
+                            if link.endswith('/'):
+                                _endswith ="/"
+                            link = urlparse.urlparse(_url).scheme + "://" + urlparse.urlparse(_url)[1] + str(posixpath.normpath(path + link)) + _endswith
+                        elif link.startswith('javascript'):
+                            link = ""
+                            continue
+                        elif not link.startswith('http') and link:
+                            link = urlparse.urlparse(_url).scheme + "://" + urlparse.urlparse(_url)[1] + '/' + link
+                        else: 
+                            link = ""
+                            continue
+
+                        _ext = os.path.splitext(urlparse.urlparse(link).path)[1]
+
+                        if link not in _userURLs and link and urlparse.urlparse(_url).hostname == urlparse.urlparse(link).hostname and not any(re.findall(r'(log|sign|time).*(off|out|in|on)|(error|expire|kill|terminat|delete|remove)', link, re.IGNORECASE)) and "/." not in link and not any(re.findall(r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff|woff2|ttf)$', _ext, re.IGNORECASE)):
+                            _userURLs.append(link)
+                            userLinks = userLinks + link + "\n"
+                            self._lblAuthNotification.text = "Spider has just started, and " + str(len(_userURLs)) + " links have been found so far, but it is still in progress: '" + str(_userURLs.index(_url) + 1) + "/" + str(len(_userURLs)) + "', current folder dept: '" + str(folderDepth) + "'."
+
+                if _userURLs.index(_url) == crawledURLs:
+                    if folderDepth == self._cbSiteMapDepth.getSelectedIndex():
+                        break
+                    crawledURLs = len(_userURLs) - 1
+                    folderDepth = folderDepth + 1
+                
+            except:
+                self._lblAuthNotification.text = str(sys.exc_info()[1])
+        
+        self._tbAuthURL.setText(userLinks)
+        self._lblAuthNotification.text = "Spider has just finished, and " + str(len(_userURLs)) + " links have been found. Other hosts than user session are ignored." 
 
 class UserEnabledRenderer(TableCellRenderer):
     def __init__(self, defaultCellRender, userNamesHttpUrls):
@@ -1114,40 +1256,41 @@ class UserEnabledRenderer(TableCellRenderer):
                 # no auth
                 cell.setBackground(self.colorsAlert[0])
                 if _colorful:
-                    for y in range(2, table.getColumnCount()):                        
-                        if table.getValueAt(row, y) == table.getValueAt(row, column):                        
-                            if table.getValueAt(row, y).startswith("HTTP 2"):
-                                cell.setBackground(self.colorsAlert[1])
-                                toolTipMessage = "The URL returns HTTP 2XX without authentication!"
-                            elif table.getValueAt(row, y).startswith("HTTP 3"):
-                                if not cell.getBackground() == self.colorsAlert[1]:
-                                    toolTipMessage = "The URL returns HTTP 3XX without authentication!"
-                        elif table.getValueAt(row, y)[:8] == table.getValueAt(row, column)[:8]:
+                    for y in range(2, table.getColumnCount()):
+                        if table.getValueAt(row, 0) in self.urlList[y - 1]:
+                            if table.getValueAt(row, y) == table.getValueAt(row, column):
+                                if table.getValueAt(row, y).startswith("HTTP 2"):
+                                    cell.setBackground(self.colorsAlert[1])
+                                    toolTipMessage = "The URL returns HTTP 2XX without authentication, and the response is same as URL owner!"
+                                elif table.getValueAt(row, y).startswith("HTTP 3"):
+                                    if not cell.getBackground() == self.colorsAlert[1] and not cell.getBackground() == self.colorsAlert[2]:
+                                        cell.setBackground(self.colorsAlert[3])
+                                        toolTipMessage = "The URL returns HTTP 3XX without authentication, but the response is same as URL owner!"
+                            elif table.getValueAt(row, y)[:8] == table.getValueAt(row, column)[:8]:
                                 if not cell.getBackground() == self.colorsAlert[1]:
                                     cell.setBackground(self.colorsAlert[2])
-                                    toolTipMessage = "The URL returns HTTP 2XX with different length without authentication!"
-            elif table.getValueAt(row, 0) in self.urlList[column- 1]:
-                cell.setBackground(self.colorsUser[column-2])
+                                    toolTipMessage = "The URL returns same HTTP response code with URL owner, but no authentication!"
+            elif table.getValueAt(row, 0) in self.urlList[column - 1]:
+                cell.setBackground(self.colorsUser[column - 2])
                 toolTipMessage = "Http response of the user's own URL!"
             else:    
                 # other users
                 cell.setBackground(self.colorsAlert[0])
                 if _colorful:
                     for y in range(2, table.getColumnCount()):
-                        if table.getValueAt(row, y) == table.getValueAt(row, column):
-                        # responses are same: red or yellow
-                            if table.getValueAt(row, y).startswith("HTTP 2"):
-                                cell.setBackground(self.colorsAlert[1])
-                                toolTipMessage = "The URL is not in the user's list but returns HTTP 2XX!"
-                            elif table.getValueAt(row, y).startswith("HTTP 3"):
-                                if not cell.getBackground() == self.colorsAlert[1]:
-                                    cell.setBackground(self.colorsAlert[3])
-                                    toolTipMessage = "The URL is not in the user's list and returns HTTP 3XX!"
-                        elif table.getValueAt(row, y)[:8] == table.getValueAt(row, column)[:8]:
-                        # response lengths are different, but responses code might be the same
-                            if not cell.getBackground() == self.colorsAlert[1]:    
-                                cell.setBackground(self.colorsAlert[2])
-                                toolTipMessage = "The URL is not in the user's list but returns HTTP 2XX with different length!"
+                        if table.getValueAt(row, 0) in self.urlList[y - 1]:
+                            if table.getValueAt(row, y) == table.getValueAt(row, column):
+                                if table.getValueAt(row, y).startswith("HTTP 2"):
+                                    cell.setBackground(self.colorsAlert[1])
+                                    toolTipMessage = "The URL is not in the user's list, but the response is same as URL owner"
+                                elif table.getValueAt(row, y).startswith("HTTP 3"):
+                                    if not cell.getBackground() == self.colorsAlert[1] and not cell.getBackground() == self.colorsAlert[2]:
+                                        cell.setBackground(self.colorsAlert[3])
+                                        toolTipMessage = "The URL is not in the user's list, but the response is same as URL owner!"
+                            elif table.getValueAt(row, y)[:8] == table.getValueAt(row, column)[:8]:
+                                if not cell.getBackground() == self.colorsAlert[1]:    
+                                    cell.setBackground(self.colorsAlert[2])
+                                    toolTipMessage = "The URL is not in the user's list, but returns same HTTP response code with URL owner!"
         except:
             cell.setBackground(self.colorsAlert[0])
 
