@@ -103,7 +103,8 @@ The feature is for converting Http requests to JavaScript code. It can be useful
 
 To access it, right click any Http Request and 'Extensions > Agartha > Copy as JavaScript'.
 
-<img width="1000" alt="Copy as JavaScript" src="https://user-images.githubusercontent.com/50321735/152224405-d10b78a2-9b18-44a9-a991-5b9c451c7253.png">
+<!--- <img width="1000" alt="Copy as JavaScript" src="https://user-images.githubusercontent.com/50321735/152224405-d10b78a2-9b18-44a9-a991-5b9c451c7253.png"> ---> 
+<img width="1000" alt="Copy as JavaScript" src="https://github.com/volkandindar/agartha/assets/50321735/33bf8e0a-6ffa-42c2-ba0e-ab9e6f4bb051">
 
 It will automatically save it to your clipboard with some remarks. For example:
 ```
