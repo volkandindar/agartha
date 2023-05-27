@@ -69,8 +69,7 @@ This part focuses on user session and URLs relationships to determine access vio
 - After providing session name, Http header and allowed URLs you can use 'Add User' button to add it.
 <!--- <img width="1000" alt="Authorization Matrix" src="https://user-images.githubusercontent.com/50321735/195411200-d8728663-1735-4659-adf5-7276660d5afd.gif"> ---> 
 
-![auth](https://github.com/volkandindar/agartha/assets/50321735/5dc1a166-714f-4abf-9d00-b83ef4db70db)
-
+<img width="1000" alt="Authorization Matrix" src="https://github.com/volkandindar/agartha/assets/50321735/5dc1a166-714f-4abf-9d00-b83ef4db70db">
 
 
 After sending Http request to Agartha, the panel will fill some fields in the tool. 
@@ -87,8 +86,9 @@ After sending Http request to Agartha, the panel will fill some fields in the to
 7. Http requests and responses with the user session you define in the first step. Cell titles show Http response codes and response lengths. 
 8. Just click the cell you want to examine and Http details will be shown in here.
 
-<img width="1000" alt="Matrix Details" src="https://user-images.githubusercontent.com/50321735/192441769-1632b642-2048-4b10-a91b-ae2c4db3d111.png">
+<!--- <img width="1000" alt="Matrix Details" src="https://user-images.githubusercontent.com/50321735/192441769-1632b642-2048-4b10-a91b-ae2c4db3d111.png"> ---> 
 
+<img width="1000" alt="Matrix Details" src="https://github.com/volkandindar/agartha/assets/50321735/4418ad6f-cd24-425e-bd3b-00dfdfda8c4f">
 
 After clicking 'RUN', the tool will fill user and URL matrix with different colors. Besides the user colors, you will see orange, yellow and red cells. The URL address does not belong to the user and the cell color is:
 - Yellow, because the response returns 'HTTP 302' with authentication/authorization concerns
