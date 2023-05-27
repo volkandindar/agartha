@@ -85,8 +85,9 @@ After sending Http request to Agartha, the panel will fill some fields in the to
 3. URL addresses the user can visit. You can create this list with manual effort or automatic tools, like spiders, sitemap generators, etc, and do not forget to remove logout links.
 4. All URLs you supply will be in here. Also user cells will be colored, if the URL belongs to her/him.
 5. Http requests and responses without authentication. All session cookies, tokens and parameters will be removed form Http calls.
-6 and 7. The rest of columns belong to users you created respectively and each of them has a unique color which indicates URLs owners. Cell titles show Http response codes and response lengths. 
-8. Just click the cell you want to examine and Http details will be shown in here.
+6. The rest of columns belong to users you created respectively and each of them has a unique color which indicates the URLs owners.  
+7. Cell titles show Http response codes and response lengths for each user sessions.
+8. Just click the cell you want to examine and Http details will be shown in the bottom.
 
 <!--- <img width="1000" alt="Matrix Details" src="https://user-images.githubusercontent.com/50321735/192441769-1632b642-2048-4b10-a91b-ae2c4db3d111.png"> ---> 
 
