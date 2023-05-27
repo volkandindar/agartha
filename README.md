@@ -67,8 +67,10 @@ This part focuses on user session and URLs relationships to determine access vio
 - **User session name**: You can right click on any request and send it from 'Extensions > Agartha > Agartha Panel' to define a user session.
 - **URL Addresses** user can visit: You can use Burp's spider feature or any sitemap generators. You may need to provide different URLs for different users.
 - After providing session name, Http header and allowed URLs you can use 'Add User' button to add it.
+<!--- <img width="1000" alt="Authorization Matrix" src="https://user-images.githubusercontent.com/50321735/195411200-d8728663-1735-4659-adf5-7276660d5afd.gif"> ---> 
 
-<img width="1000" alt="Authorization Matrix" src="https://user-images.githubusercontent.com/50321735/195411200-d8728663-1735-4659-adf5-7276660d5afd.gif">
+![auth](https://github.com/volkandindar/agartha/assets/50321735/5dc1a166-714f-4abf-9d00-b83ef4db70db)
+
 
 
 After sending Http request to Agartha, the panel will fill some fields in the tool. 
