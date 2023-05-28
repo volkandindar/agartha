@@ -66,7 +66,7 @@ And the rest is related with database and attack types.
 <img width="1000" alt="SQL Injection wordlist" src="https://github.com/volkandindar/agartha/assets/50321735/4ed52961-0343-461e-847d-0649d169eb94"><br/><br/>
 
 
-## Authorization Matrix
+## Authorization Matrix / User Access Table
 This part focuses on user session and URLs relationships to determine access violations. The tool will visit all URLs from pre-defined user sessions and fill the table with all Http responses. It is a kind of access matrix and helps to find out authentication/authorization issues. Afterwards we will see what user can access what page contents.
 - **User session name**: You can right click on any request and send it from 'Extensions > Agartha > Agartha Panel' to define a user session.
 - **URL Addresses** user can visit: You can use 'SiteMap' generator feature or any sitemap tools. You need to provide different URLs for different users.
