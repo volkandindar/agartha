@@ -61,7 +61,8 @@ It generates payloads for Stacked Queries, Boolean-Based, Union-Based, Time-Base
 
 And the rest is related with database and attack types.
 
-<img width="1000" alt="SQL Injection wordlist" src="https://user-images.githubusercontent.com/50321735/195392775-8f7a7ada-ed03-4024-b4fc-5d2783470bfb.gif"><br/><br/>
+<!---<img width="1000" alt="SQL Injection wordlist" src="https://user-images.githubusercontent.com/50321735/195392775-8f7a7ada-ed03-4024-b4fc-5d2783470bfb.gif">-->
+<img width="1000" alt="SQL Injection wordlist" src="https://github.com/volkandindar/agartha/assets/50321735/4ed52961-0343-461e-847d-0649d169eb94"><br/><br/>
 
 
 ## Authorization Matrix
