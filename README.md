@@ -78,7 +78,7 @@ After sending Http request to Agartha, the user header and URL address will be f
 1. What's username for the session you provide. You can add up to 4 different users and each user will have a different color to make it more readable.
 	- 'Add User' for adding user session
 	- You can change HTTP request method between 'GET' and POST.
-	- 'Reset' button clear all table and field contents.
+	- 'Reset' button clear all contents.
 	- 'Run' button execute the task.
 	- 'Warnings' indicates possible issues in different colors.
 	- 'SiteMap' button generates URL list automatically and the result totally depends on the user's header you provide. Visible URLs will be populated in next textbox and you can still modify it.
