@@ -855,7 +855,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self.editorPaneInfo.setEditable(False)
         self.editorPaneInfo.setContentType("text/html");
         htmlString ="<html>"
-        htmlString +="<div><h3>Author: Volkan Dindar,  Github Repo: https://github.com/volkandindar/agartha</h3>"
+        htmlString +="<div><h3>Author: Volkan Dindar, https://github.com/volkandindar/agartha</h3>"
         
         htmlString += """
         <h1>Agartha - LFI, RCE, SQLi, Auth, HTTP to JS</h1>
