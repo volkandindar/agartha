@@ -857,110 +857,120 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         htmlString ="<html>"
         htmlString +="<div><h3>Author: Volkan Dindar,  Github Repo: https://github.com/volkandindar/agartha</h3>"
         
-        htmlString +="<h1>Agartha - LFI, RCE, SQLi, Auth, HTTP to JS</h1>"
-        htmlString +="<p>Agartha is a penetration testing tool which creates dynamic payload lists and user access matrix to reveal injection flaws and authentication/authorization issues. There are many different attack payloads alredy exist, but Agartha creates run-time, systematic and vendor-neutral payloads with many different possibilities and bypassing methods. It also draws attention to user session and URL relationships, which makes easy to find user access violations. And additionally, it converts Http requests to JavaScript to help digging up XSS issues more. </p>"
-        htmlString +="<p>In summary:</p>"
-        htmlString +="<ul>"
-        htmlString +="<li><strong>Payload Generator</strong>: It creates payloads/wordlists for different attack types.<ul>"
-        htmlString +="<li><strong>Local File Inclusion, Directory Traversal</strong>: It creates file dictionary lists with various encoding and escaping characters.</li>"
-        htmlString +="<li><strong>Command Injection / Remote Code Execution</strong>: It creates command dictionary lists for both unix and windows environments with different combinations.</li>"
-        htmlString +="<li><strong>SQL Injection</strong>: It creates Stacked Queries, Boolean-Based, Union-Based and Time-Based SQL Injection wordlist for various databases to help finding vulnerable spots.</li>"
-        htmlString +="</ul>"
-        htmlString +="</li>"
-        htmlString +="<li><strong>Authorization Matrix</strong>: It creates an access role matrix based on user sessions and URL lists to determine authorization/authentication related access violation issues. <ul>"
-        htmlString +="<li>You can use <strong>&#39;SiteMap&#39;</strong> generator feature to create URL list. It will populate visible links automatically and the result depends on the user&#39;s header. </li>"
-        htmlString +="<li>Or you can provide URL list by yourself.</li>"
-        htmlString +="</ul>"
-        htmlString +="</li>"
-        htmlString +="<li>And <strong>Copy as JavaScript</strong>: It converts Http requests to JavaScript code to be useful for further XSS exploitation and more.<br/><br/></li>"
-        htmlString +="</ul>"
-        htmlString +="<p>Here is a small tutorial how to use.</p>"
-        htmlString +="<h2>Installation</h2>"
-        htmlString +="<p>You should download &#39;Jython&#39; file and set your environment first:</p>"
-        htmlString +="<ul>"
-        htmlString +="<li>Burp Menu &gt; Extender &gt; Options &gt; Python Environment &gt; Locate Jython standalone jar file (tested in Jython v2.7.3).</li>"
-        htmlString +="</ul>"
-        htmlString +="<p>You can install Agartha through official store: </p>"
-        htmlString +="<ul>"
-        htmlString +="<li>Burp Menu &gt; Extender &gt; BApp Store &gt; Agartha</li>"
-        htmlString +="</ul>"
-        htmlString +="<p>Or for manual installation:</p>"
-        htmlString +="<ul>"
-        htmlString +="<li>Burp Menu &gt; Extender &gt; Extensions &gt; Add &gt; Extension Type: Python &gt; Extension file(.py): Select &#39;agartha.py&#39; file</li>"
-        htmlString +="</ul>"
-        htmlString +="<p>After all, you will see &#39;Agartha&#39; tab in the main window and it will be also registered the right click, under: </p>"
-        htmlString +="<ul>"
-        htmlString +="<li>&#39;Extensions &gt; Agartha - LFI, RCE, SQLi, Auth, HTTP to JS&#39;, with two sub-menus<ul>"
-        htmlString +="<li>&#39;Authorization Matrix&#39;</li>"
-        htmlString +="<li>&#39;Copy as JavaScript&#39;<br/><br/></li>"
-        htmlString +="</ul>"
-        htmlString +="</li>"
-        htmlString +="</ul>"
-        htmlString +=""
-        htmlString +="<h2>Local File Inclusion, Directory Traversal</h2>"
-        htmlString +="<p>It both supports unix and windows file syntax. You can generate any wordlists dynamically for the path you want. You just need to supply a file path and that&#39;s all. </p>"
-        htmlString +="<p><strong>&#39;Depth&#39;</strong> is representation of how deep the wordlist should be. You can generate wordlists &#39;till&#39; or &#39;equal to&#39; this value.</p>"
-        htmlString +="<p><strong>&#39;Waf Bypass&#39;</strong> asks for if you want to include all bypass features; like null bytes, different encoding, etc.</p>"
-        htmlString +="<p><img width=\"1000\" alt=\"Directory Traversal/Local File Inclusion wordlist\" src=\"https://github.com/volkandindar/agartha/assets/50321735/f08653e3-41ee-4cbe-bcd9-9a197005f5c9\"><br/><br/></p>"
-        htmlString +="<h2>Command Injection / Remote Code Execution</h2>"
-        htmlString +="<p>It creates command execution dynamic wordlists with the command you supply. It combines different separators and terminators for both unix and windows environments together.</p>"
-        htmlString +="<p><strong>&#39;URL Encoding&#39;</strong> encodes dictionary output.</p>"
-        htmlString +="<p><img width=\"1000\" alt=\"Remote Code Execution wordlist\" src=\"https://github.com/volkandindar/agartha/assets/50321735/1e83b404-f4f8-4d5d-a61e-07a9b8057be4\"><br/><br/></p>"
-        htmlString +="<h2>SQL Injection</h2>"
-        htmlString +="<p>It generates payloads for Stacked Queries, Boolean-Based, Union-Based, Time-Based SQL Injection attacks, and you do not need to supply any inputs. You just pick what type of SQL attacks and databases you want, then it will generate a wordlist with different combinations. </p>"
-        htmlString +="<p><strong>&#39;URL Encoding&#39;</strong> encodes dictionary output.</p>"
-        htmlString +="<p><strong>&#39;Waf Bypass&#39;</strong> asks for if you want to include all bypass features; like null bytes, different encoding, etc.</p>"
-        htmlString +="<p><strong>&#39;Union-Based&#39;</strong> ask for how deep the payload should be. The default value is 5.</p>"
-        htmlString +="<p>And the rest is related with database and attack types.</p>"
-        htmlString +="<p><img width=\"1000\" alt=\"SQL Injection wordlist\" src=\"https://github.com/volkandindar/agartha/assets/50321735/f8f86e68-ad2f-4a14-b76a-0c679f1f1673\"><br/><br/></p>"
-        htmlString +="<h2>Authorization Matrix / User Access Table</h2>"
-        htmlString +="<p>This part focuses on user session and URLs relationships to determine access violations. The tool will visit all URLs from pre-defined user sessions and fill the table with all Http responses. It is a kind of access matrix and helps to find out authentication/authorization issues. Afterwards we will see what user can access what page contents.</p>"
-        htmlString +="<ul>"
-        htmlString +="<li><strong>User session name</strong>: You can right click on any request and send it from &#39;Extensions &gt; Agartha &gt; Agartha Panel&#39; to define a user session.</li>"
-        htmlString +="<li><strong>URL Addresses</strong> user can visit: You can use &#39;SiteMap&#39; generator feature or any sitemap tools. You need to provide different URLs for different users.</li>"
-        htmlString +="<li>After providing session name, Http header and allowed URLs you can use &#39;Add User&#39; button to add it.</li>"
-        htmlString +="</ul>"
-        htmlString +="<img width=\"1000\" alt=\"Authorization Matrix\" src=\"https://github.com/volkandindar/agartha/assets/50321735/167293ad-28a7-4cd4-8ca8-e8a34e316e81\">"
-        htmlString +=""
-        htmlString +="<p>After sending Http request to Agartha, the user header and URL address will be filled.</p>"
-        htmlString +="<ol>"
-        htmlString +="<li>What&#39;s username for the session you provide. You can add up to 4 different users and each user will have a different color to make it more readable.<ul>"
-        htmlString +="<li>&#39;Add User&#39; for adding user session</li>"
-        htmlString +="<li>You can change Http request method between &#39;GET&#39; and POST.</li>"
-        htmlString +="<li>&#39;Reset&#39; button clear all contents.</li>"
-        htmlString +="<li>&#39;Run&#39; button execute the task and the result will show user access matrix.</li>"
-        htmlString +="<li>&#39;Warnings&#39; indicates possible issues in different colors.</li>"
-        htmlString +="<li>&#39;SiteMap&#39; button generates URL list automatically and the result totally depends on the user&#39;s header you provide. Visible URLs will be populated in next textbox and you can still modify it.</li>"
-        htmlString +="<li>&#39;Crawl Depth&#39; is defination for how many sub-links (max depth) should &#39;SiteMap&#39; spider go and detec links.</li>"
-        htmlString +="</ul>"
-        htmlString +="</li>"
-        htmlString +="<li>User&#39;s request header and all URLs will be visited by it.</li>"
-        htmlString +="<li>URL addresses the user can visit. You can create this list with manual effort or use <strong>&#39;SiteMap&#39;</strong> generator feature.</li>"
-        htmlString +="<li>All URLs you supply will be in here and they will be visited with the corresponding user sessions.</li>"
-        htmlString +="<li>No authentication column. All cookies, tokens and possible session parameters will be removed form Http calls.</li>"
-        htmlString +="<li>The rest of columns belong to users you created respectively and each of them has a unique color which indicates the URL owners.  </li>"
-        htmlString +="<li>Cell titles show Http response codes and response lengths for each user sessions.</li>"
-        htmlString +="<li>Just click the cell you want to examine and Http details will be shown in the bottom.</li>"
-        htmlString +="</ol>"
-        htmlString +=""
-        htmlString +="<img width=\"1000\" alt=\"Matrix Details\" src=\"https://github.com/volkandindar/agartha/assets/50321735/4418ad6f-cd24-425e-bd3b-00dfdfda8c4f\">"
-        htmlString +=""
-        htmlString +="<p>After clicking &#39;RUN&#39;, the tool will fill user and URL matrix with different colors. Besides the user colors, you will see orange, yellow and red cells. The URL address does not belong to the user and the cell color is:</p>"
-        htmlString +="<ul>"
-        htmlString +="<li>Yellow, because the response returns &#39;HTTP 302&#39; with authentication/authorization concerns</li>"
-        htmlString +="<li>Orange, because the response returns &#39;HTTP 200&#39; but different content length, with authentication/authorization concerns</li>"
-        htmlString +="<li>Red, because the response returns &#39;HTTP 200&#39; and same content length, with authentication/authorization concerns</li>"
-        htmlString +="</ul>"
-        htmlString +="<p>You may also notice, it support only one Http request method and user session at the same time, because it processes bulk requests and it is not possible to provide different header options for each calls. But you may play with &#39;GET/POST&#39; methods to see response differences.<br/><br/></p>"
-        htmlString +="<h2>Copy as JavaScript</h2>"
-        htmlString +="<p>The feature is for converting Http requests to JavaScript code. It can be useful to dig up further XSS issues and bypass header restrictions.</p>"
-        htmlString +="<p>To access it, right click any Http Request and &#39;Extensions &gt; Agartha &gt; Copy as JavaScript&#39;.</p>"
-        htmlString +=""
-        htmlString +="<img width=\"1000\" alt=\"Copy as JavaScript\" src=\"https://github.com/volkandindar/agartha/assets/50321735/4605b296-4c94-456c-b5b2-c8042a348cd2\">"
-        htmlString +=""
-        htmlString +="<p>It will automatically save it to your clipboard with some remarks."
-        htmlString +="<p>Please note that, the JavaScript code will be called over original user session and many header fields will be filled automatically by browsers. In some cases, the server may require some header field mandatory, and therefore you may need to modify the code for an adjustment."
-        htmlString +="<br/><br/>"
+        htmlString += """
+        <h1>Agartha - LFI, RCE, SQLi, Auth, HTTP to JS</h1>
+        <p>Agartha is a penetration testing tool which creates dynamic payload lists and user access matrix to reveal injection flaws and authentication/authorization issues. There are many different attack payloads alredy exist, but Agartha creates run-time, systematic and vendor-neutral payloads with many different possibilities and bypassing methods. It also draws attention to user session and URL relationships, which makes easy to find user access violations. And additionally, it converts Http requests to JavaScript to help digging up XSS issues more. </p>
+        <p>In summary:</p>
+        <ul>
+        <li><strong>Payload Generator</strong>: It creates payloads/wordlists for different attack types.<ul>
+        <li><strong>Local File Inclusion, Directory Traversal</strong>: It creates file dictionary lists with various encoding and escaping characters.</li>
+        <li><strong>Command Injection / Remote Code Execution</strong>: It creates command dictionary lists for both unix and windows environments with different combinations.</li>
+        <li><strong>SQL Injection</strong>: It creates Stacked Queries, Boolean-Based, Union-Based and Time-Based SQL Injection wordlist for various databases to help finding vulnerable spots.</li>
+        </ul>
+        </li>
+        <li><strong>Authorization Matrix</strong>: It creates an access role matrix based on user sessions and URL lists to determine authorization/authentication related access violation issues. <ul>
+        <li>You can use <strong>&#39;SiteMap&#39;</strong> generator feature to create URL list. It will populate visible links automatically and the result depends on the user&#39;s header. </li>
+        <li>Or you can provide URL list by yourself.</li>
+        </ul>
+        </li>
+        <li>And <strong>Copy as JavaScript</strong>: It converts Http requests to JavaScript code to be useful for further XSS exploitation and more.<br/><br/></li>
+        </ul>
+        <p>Here is a small tutorial how to use.</p>
+        <h2>Installation</h2>
+        <p>You should download &#39;Jython&#39; file and set your environment first:</p>
+        <ul>
+        <li>Burp Menu &gt; Extender &gt; Options &gt; Python Environment &gt; Locate Jython standalone jar file (tested in Jython v2.7.3).</li>
+        </ul>
+        <p>You can install Agartha through official store: </p>
+        <ul>
+        <li>Burp Menu &gt; Extender &gt; BApp Store &gt; Agartha</li>
+        </ul>
+        <p>Or for manual installation:</p>
+        <ul>
+        <li>Burp Menu &gt; Extender &gt; Extensions &gt; Add &gt; Extension Type: Python &gt; Extension file(.py): Select &#39;agartha.py&#39; file</li>
+        </ul>
+        <p>After all, you will see &#39;Agartha&#39; tab in the main window and it will be also registered the right click, under: </p>
+        <ul>
+        <li>&#39;Extensions &gt; Agartha - LFI, RCE, SQLi, Auth, HTTP to JS&#39;, with two sub-menus<ul>
+        <li>&#39;Authorization Matrix&#39;</li>
+        <li>&#39;Copy as JavaScript&#39;<br/><br/></li>
+        </ul>
+        </li>
+        </ul>
+
+        <h2>Local File Inclusion, Directory Traversal</h2>
+        <p>It both supports unix and windows file syntax. You can generate any wordlists dynamically for the path you want. You just need to supply a file path and that&#39;s all. </p>
+        <p><strong>&#39;Depth&#39;</strong> is representation of how deep the wordlist should be. You can generate wordlists &#39;till&#39; or &#39;equal to&#39; this value.</p>
+        <p><strong>&#39;Waf Bypass&#39;</strong> asks for if you want to include all bypass features; like null bytes, different encoding, etc.</p>
+        <p><img width=\"1000\" alt=\"Directory Traversal/Local File Inclusion wordlist\" src=\"https://github.com/volkandindar/agartha/assets/50321735/f08653e3-41ee-4cbe-bcd9-9a197005f5c9\"><br/><br/></p>
+        <h2>Command Injection / Remote Code Execution</h2>
+        <p>It creates command execution dynamic wordlists with the command you supply. It combines different separators and terminators for both unix and windows environments together.</p>
+        <p><strong>&#39;URL Encoding&#39;</strong> encodes dictionary output.</p>
+        <p><img width=\"1000\" alt=\"Remote Code Execution wordlist\" src=\"https://github.com/volkandindar/agartha/assets/50321735/1e83b404-f4f8-4d5d-a61e-07a9b8057be4\"><br/><br/></p>
+        <h2>SQL Injection</h2>
+        <p>It generates payloads for Stacked Queries, Boolean-Based, Union-Based, Time-Based SQL Injection attacks, and you do not need to supply any inputs. You just pick what type of SQL attacks and databases you want, then it will generate a wordlist with different combinations. </p>
+        <p><strong>&#39;URL Encoding&#39;</strong> encodes dictionary output.</p>
+        <p><strong>&#39;Waf Bypass&#39;</strong> asks for if you want to include all bypass features; like null bytes, different encoding, etc.</p>
+        <p><strong>&#39;Union-Based&#39;</strong> ask for how deep the payload should be. The default value is 5.</p>
+        <p>And the rest is related with database and attack types.</p>
+        <p><img width=\"1000\" alt=\"SQL Injection wordlist\" src=\"https://github.com/volkandindar/agartha/assets/50321735/f8f86e68-ad2f-4a14-b76a-0c679f1f1673\"><br/><br/></p>
+        <h2>Authorization Matrix / User Access Table </h2>
+        <p>This part focuses on user session and URLs relationships to determine access violations. The tool will visit all URLs from pre-defined user sessions and fill the table with all Http responses. It is a kind of access matrix and helps to find out authentication/authorization issues. Afterwards we will see what user can access what page contents.</p>
+        <ul>
+        <li><strong>User session name</strong>: You can right click on any request and send it from &#39;Extensions &gt; Agartha &gt; Agartha Panel&#39; to define a user session.</li>
+        <li><strong>URL Addresses</strong> user can visit: You can use &#39;SiteMap&#39; generator feature or any sitemap tools. You need to provide different URLs for different users.</li>
+        <li>After providing session name, Http header and allowed URLs you can use &#39;Add User&#39; button to add it.</li>
+        </ul>
+        <img width=\"1000\" alt=\"Authorization Matrix\" src=\"https://github.com/volkandindar/agartha/assets/50321735/167293ad-28a7-4cd4-8ca8-e8a34e316e81\">
+
+        <p>After sending Http request to Agartha, the user header and URL address will be filled.</p>
+        <ol>
+        <li>What&#39;s username for the session you provide. You can add up to 4 different users and each user will have a different color to make it more readable.<ul>
+        <li>&#39;Add User&#39; for adding user session</li>
+        <li>You can change Http request method between &#39;GET&#39; and POST.</li>
+        <li>&#39;Reset&#39; button clear all contents.</li>
+        <li>&#39;Run&#39; button execute the task and the result will show user access matrix.</li>
+        <li>&#39;Warnings&#39; indicates possible issues in different colors.</li>
+        <li>&#39;SiteMap&#39; button generates URL list automatically and the result totally depends on the user&#39;s header you provide. Visible URLs will be populated in next textbox and you can still modify it.</li>
+        <li>&#39;Crawl Depth&#39; is defination for how many sub-links (max depth) should &#39;SiteMap&#39; spider go and detec links.</li>
+        </ul>
+        </li>
+        <li>User&#39;s request header and all URLs will be visited by it.</li>
+        <li>URL addresses the user can visit. You can create this list with manual effort or use <strong>&#39;SiteMap&#39;</strong> generator feature.</li>
+        <li>All URLs you supply will be in here and they will be visited with the corresponding user sessions.</li>
+        <li>No authentication column. All cookies, tokens and possible session parameters will be removed form Http calls.</li>
+        <li>The rest of columns belong to users you created respectively and each of them has a unique color which indicates the URL owners.  </li>
+        <li>Cell titles show Http response codes and response lengths for each user sessions.</li>
+        <li>Just click the cell you want to examine and Http details will be shown in the bottom.</li>
+        </ol>
+
+        <img width=\"1000\" alt=\"Matrix Details\" src=\"https://github.com/volkandindar/agartha/assets/50321735/4418ad6f-cd24-425e-bd3b-00dfdfda8c4f\">
+
+        <p>After clicking &#39;RUN&#39;, the tool will fill user and URL matrix with different colors. Besides the user colors, you will see orange, yellow and red cells. The URL address does not belong to the user and the cell color is:</p>
+        <ul>
+        <li>Yellow, because the response returns &#39;HTTP 302&#39; with authentication/authorization concerns</li>
+        <li>Orange, because the response returns &#39;HTTP 200&#39; but different content length, with authentication/authorization concerns</li>
+        <li>Red, because the response returns &#39;HTTP 200&#39; and same content length, with authentication/authorization concerns</li>
+        </ul>
+        <p>You may also notice, it support only one Http request method and user session at the same time, because it processes bulk requests and it is not possible to provide different header options for each calls. But you may play with &#39;GET/POST&#39; methods to see response differences.<br/><br/></p>
+        <h2>Copy as JavaScript</h2>
+        <p>The feature is for converting Http requests to JavaScript code. It can be useful to dig up further XSS issues and bypass header restrictions.</p>
+        <p>To access it, right click any Http Request and &#39;Extensions &gt; Agartha &gt; Copy as JavaScript&#39;.</p>
+
+        <img width=\"1000\" alt=\"Copy as JavaScript\" src=\"https://github.com/volkandindar/agartha/assets/50321735/4605b296-4c94-456c-b5b2-c8042a348cd2\">
+
+        <p>It will automatically save it to your clipboard with some remarks. For example:</p>
+        <pre><code>Http request with minimum header paramaters in JavaScript:
+            &lt;script&gt;var xhr=new XMLHttpRequest();xhr.open(&#39;GET&#39;,&#39;http://dvwa.local/vulnerabilities/xss_r/?name=XSS&#39;);xhr.withCredentials=true;xhr.send();&lt;/script&gt;
+
+        Http request with all header paramaters (except cookies, tokens, etc) in JavaScript, you may need to remove unnecessary fields:
+            &lt;script&gt;var xhr=new XMLHttpRequest();xhr.open(&#39;GET&#39;,&#39;http://dvwa.local/vulnerabilities/xss_r/?name=XSS&#39;);xhr.withCredentials=true;xhr.setRequestHeader(&#39;Host&#39;,&#39; dvwa.local&#39;);xhr.setRequestHeader(&#39;User-Agent&#39;,&#39; Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:109.0) Gecko/20100101 Firefox/114.0&#39;);xhr.setRequestHeader(&#39;Accept&#39;,&#39; text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8&#39;);xhr.setRequestHeader(&#39;Accept-Language&#39;,&#39; en-GB,en;q=0.5&#39;);xhr.setRequestHeader(&#39;Accept-Encoding&#39;,&#39; gzip, deflate&#39;);xhr.setRequestHeader(&#39;Connection&#39;,&#39; close&#39;);xhr.setRequestHeader(&#39;Referer&#39;,&#39; http://dvwa.local/vulnerabilities/xss_r/&#39;);xhr.setRequestHeader(&#39;Upgrade-Insecure-Requests&#39;,&#39; 1&#39;);xhr.send();&lt;/script&gt;
+
+        For redirection, please also add this code before &#39;&lt;/script&gt;&#39; tag:
+            xhr.onreadystatechange=function(){if (this.status===302){var location=this.getResponseHeader(&#39;Location&#39;);return ajax.call(this,location);}};
+        </code></pre>
+        <p>Please note that, the JavaScript code will be called over original user session and many header fields will be filled automatically by browsers. In some cases, the server may require some header field mandatory, and therefore you may need to modify the code for an adjustment.</p>        
+        """
         
         htmlString +="</div>"
         htmlString +="</html>"
