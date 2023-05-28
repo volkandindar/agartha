@@ -44,7 +44,7 @@ It both supports unix and windows file systems. You can generate any wordlists d
 
 
 ## Command Injection / Remote Code Execution
-It creates command execution dynamic wordlists with the command you supply. It combines different separators and terminators for unix and windows environments together.
+It creates command execution dynamic wordlists with the command you supply. It combines different separators and terminators for both unix and windows environments together.
 
 **'URL Encoding'** encodes dictionary output.
 
