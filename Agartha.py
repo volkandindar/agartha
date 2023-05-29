@@ -16,7 +16,7 @@ try:
 except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
 
-VERSION = "0.981"
+VERSION = "0.982"
 
 class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFactory):
     
@@ -962,21 +962,25 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         <p>It will automatically save it to your clipboard with some remarks. For example:</p>
         <pre><code>
         Http request with minimum header paramaters in JavaScript:
-            &lt;script&gt;var xhr=new XMLHttpRequest();xhr.open(&#39;GET&#39;,&#39;http://dvwa.local/vulnerabilities/xss_r/?name=XSS&#39;);xhr.withCredentials=true;xhr.send();&lt;/script&gt;
+            &lt;script&gt;var xhr=new XMLHttpRequest();
+                    xhr.open(&#39;GET&#39;,&#39;http://dvwa.local/vulnerabilities/xss_r/?name=XSS&#39;);
+                    xhr.withCredentials=true;
+                    xhr.send();
+            &lt;/script&gt;
 
         Http request with all header paramaters (except cookies, tokens, etc) in JavaScript, you may need to remove unnecessary fields:
             &lt;script&gt;var xhr=new XMLHttpRequest();xhr.open(&#39;GET&#39;,&#39;http://dvwa.local/vulnerabilities/xss_r/?name=XSS&#39;);
-                        xhr.withCredentials=true;
-                        xhr.setRequestHeader(&#39;Host&#39;,&#39; dvwa.local&#39;);
-                        xhr.setRequestHeader(&#39;User-Agent&#39;,&#39; Mozilla/5.0 Gecko/20100101 Firefox/114.0&#39;);
-                        xhr.setRequestHeader(&#39;Accept&#39;,&#39; text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8&#39;);
-                        xhr.setRequestHeader(&#39;Accept-Language&#39;,&#39; en-GB,en;q=0.5&#39;);
-                        xhr.setRequestHeader(&#39;Accept-Encoding&#39;,&#39; gzip, deflate&#39;);
-                        xhr.setRequestHeader(&#39;Connection&#39;,&#39; close&#39;);
-                        xhr.setRequestHeader(&#39;Referer&#39;,&#39; http://dvwa.local/vulnerabilities/xss_r/&#39;);
-                        xhr.setRequestHeader(&#39;Upgrade-Insecure-Requests&#39;,&#39; 1&#39;);
-                        xhr.send();
-                &lt;/script&gt;
+                    xhr.withCredentials=true;
+                    xhr.setRequestHeader(&#39;Host&#39;,&#39; dvwa.local&#39;);
+                    xhr.setRequestHeader(&#39;User-Agent&#39;,&#39; Mozilla/5.0 Gecko/20100101 Firefox/114.0&#39;);
+                    xhr.setRequestHeader(&#39;Accept&#39;,&#39; text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8&#39;);
+                    xhr.setRequestHeader(&#39;Accept-Language&#39;,&#39; en-GB,en;q=0.5&#39;);
+                    xhr.setRequestHeader(&#39;Accept-Encoding&#39;,&#39; gzip, deflate&#39;);
+                    xhr.setRequestHeader(&#39;Connection&#39;,&#39; close&#39;);
+                    xhr.setRequestHeader(&#39;Referer&#39;,&#39; http://dvwa.local/vulnerabilities/xss_r/&#39;);
+                    xhr.setRequestHeader(&#39;Upgrade-Insecure-Requests&#39;,&#39; 1&#39;);
+                    xhr.send();
+            &lt;/script&gt;
 
         For redirection, please also add this code before &#39;&lt;/script&gt;&#39; tag:
             xhr.onreadystatechange=function(){if (this.status===302){var location=this.getResponseHeader(&#39;Location&#39;);return ajax.call(this,location);}};
