@@ -117,10 +117,23 @@ To access it, right click any Http Request and 'Extensions > Agartha > Copy as J
 It will automatically save it to your clipboard with some remarks. For example:
 ```
 Http request with minimum header paramaters in JavaScript:
-	<script>var xhr=new XMLHttpRequest();xhr.open('GET','http://dvwa.local/vulnerabilities/xss_r/?name=XSS');xhr.withCredentials=true;xhr.send();</script>
+	<script>var xhr=new XMLHttpRequest();
+		xhr.open('GET','http://dvwa.local/vulnerabilities/xss_r/?name=XSS');
+		xhr.withCredentials=true;
+		xhr.send();
+	</script>
 
 Http request with all header paramaters (except cookies, tokens, etc) in JavaScript, you may need to remove unnecessary fields:
-	<script>var xhr=new XMLHttpRequest();xhr.open('GET','http://dvwa.local/vulnerabilities/xss_r/?name=XSS');xhr.withCredentials=true;xhr.setRequestHeader('Host',' dvwa.local');xhr.setRequestHeader('User-Agent',' Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:109.0) Gecko/20100101 Firefox/114.0');xhr.setRequestHeader('Accept',' text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8');xhr.setRequestHeader('Accept-Language',' en-GB,en;q=0.5');xhr.setRequestHeader('Accept-Encoding',' gzip, deflate');xhr.setRequestHeader('Connection',' close');xhr.setRequestHeader('Referer',' http://dvwa.local/vulnerabilities/xss_r/');xhr.setRequestHeader('Upgrade-Insecure-Requests',' 1');xhr.send();</script>
+	<script>var xhr=new XMLHttpRequest();
+		xhr.open('GET','http://dvwa.local/vulnerabilities/xss_r/?name=XSS');
+		xhr.withCredentials=true;xhr.setRequestHeader('Host',' dvwa.local');xhr.setRequestHeader('User-Agent',' Mozilla/5.0 Gecko/20100101 Firefox/114.0');
+		xhr.setRequestHeader('Accept',' text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8');
+		xhr.setRequestHeader('Accept-Language',' en-GB,en;q=0.5');xhr.setRequestHeader('Accept-Encoding',' gzip, deflate');
+		xhr.setRequestHeader('Connection',' close');
+		xhr.setRequestHeader('Referer',' http://dvwa.local/vulnerabilities/xss_r/');
+		xhr.setRequestHeader('Upgrade-Insecure-Requests',' 1');
+		xhr.send();
+	</script>
 
 For redirection, please also add this code before '</script>' tag:
 	xhr.onreadystatechange=function(){if (this.status===302){var location=this.getResponseHeader('Location');return ajax.call(this,location);}};
