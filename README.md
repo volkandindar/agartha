@@ -84,7 +84,7 @@ After sending Http request to Agartha, the user header and URL address will be f
 	- 'Run' button execute the task and the result will show user access matrix.
 	- 'Warnings' indicates possible issues in different colors.
 	- 'SiteMap' button generates URL list automatically and the result totally depends on the user's header you provide. Visible URLs will be populated in next textbox and you can still modify it.
-	- 'Crawl Depth' is defination for how many sub-links (max depth) should 'SiteMap' spider go and detec links.
+	- 'Crawl Depth' is defination for how many sub-links (max depth) should 'SiteMap' spider go and detect links.
 2. User's request header and all URLs will be visited by it.
 3. URL addresses the user can visit. You can create this list with manual effort or use **'SiteMap'** generator feature.
 4. All URLs you supply will be in here and they will be visited with the corresponding user sessions.
