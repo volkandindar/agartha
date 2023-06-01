@@ -16,7 +16,7 @@ try:
 except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
 
-VERSION = "0.982"
+VERSION = "0.983"
 
 class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFactory):
     
@@ -854,12 +854,11 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self.editorPaneInfo = JEditorPane()
         self.editorPaneInfo.setEditable(False)
         self.editorPaneInfo.setContentType("text/html");
-        htmlString ="<html>"
-        htmlString +="<div><h3>Author: Volkan Dindar, https://github.com/volkandindar/agartha</h3>"
+        htmlString ="<html><body><table width=1000 border=0 cellspacing=0><tr><td><h3>Author:\t\t\tVolkan Dindar<br/>Github:\t\t\thttps://github.com/volkandindar/agartha</h3>"
         
         htmlString += """
         <h1>Agartha - LFI, RCE, SQLi, Auth, HTTP to JS</h1>
-        <p>Agartha is a penetration testing tool which creates dynamic payload lists and user access matrix to reveal injection flaws and authentication/authorization issues.<br/>There are many different attack payloads alredy exist, but Agartha creates run-time, systematic and vendor-neutral payloads with many different possibilities and bypassing methods.<br/>It also draws attention to user session and URL relationships, which makes easy to find user access violations. And additionally, it converts Http requests to JavaScript to help digging up XSS issues more. </p>
+        <p>Agartha is a penetration testing tool which creates dynamic payload lists and user access matrix to reveal injection flaws and authentication/authorization issues. There are many different attack payloads alredy exist, but Agartha creates run-time, systematic and vendor-neutral payloads with many different possibilities and bypassing methods. It also draws attention to user session and URL relationships, which makes easy to find user access violations. And additionally, it converts Http requests to JavaScript to help digging up XSS issues more. </p>
         <p>In summary:</p>
         <ul>
         <li><strong>Payload Generator</strong>: It creates payloads/wordlists for different attack types.<ul>
@@ -897,7 +896,6 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         </ul>
         </li>
         </ul>
-
         <h2>Local File Inclusion, Directory Traversal</h2>
         <p>It both supports unix and windows file syntax. You can generate any wordlists dynamically for the path you want. You just need to supply a file path and that&#39;s all. </p>
         <p><strong>&#39;Depth&#39;</strong> is representation of how deep the wordlist should be. You can generate wordlists &#39;till&#39; or &#39;equal to&#39; this value.</p>
@@ -908,14 +906,14 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         <p><strong>&#39;URL Encoding&#39;</strong> encodes dictionary output.</p>
         <p><img width=\"1000\" alt=\"Remote Code Execution wordlist\" src=\"https://github.com/volkandindar/agartha/assets/50321735/1e83b404-f4f8-4d5d-a61e-07a9b8057be4\"><br/><br/></p>
         <h2>SQL Injection</h2>
-        <p>It generates payloads for Stacked Queries, Boolean-Based, Union-Based, Time-Based SQL Injection attacks, and you do not need to supply any inputs.<br/>You just pick what type of SQL attacks and databases you want, then it will generate a wordlist with different combinations. </p>
+        <p>It generates payloads for Stacked Queries, Boolean-Based, Union-Based, Time-Based SQL Injection attacks, and you do not need to supply any inputs. You just pick what type of SQL attacks and databases you want, then it will generate a wordlist with different combinations. </p>
         <p><strong>&#39;URL Encoding&#39;</strong> encodes dictionary output.</p>
         <p><strong>&#39;Waf Bypass&#39;</strong> asks for if you want to include all bypass features; like null bytes, different encoding, etc.</p>
         <p><strong>&#39;Union-Based&#39;</strong> ask for how deep the payload should be. The default value is 5.</p>
         <p>And the rest is related with database and attack types.</p>
         <p><img width=\"1000\" alt=\"SQL Injection wordlist\" src=\"https://github.com/volkandindar/agartha/assets/50321735/f8f86e68-ad2f-4a14-b76a-0c679f1f1673\"><br/><br/></p>
         <h2>Authorization Matrix / User Access Table </h2>
-        <p>This part focuses on user session and URLs relationships to determine access violations. The tool will visit all URLs from pre-defined user sessions and fill the table with all Http responses.<br/>It is a kind of access matrix and helps to find out authentication/authorization issues. Afterwards we will see what user can access what page contents.</p>
+        <p>This part focuses on user session and URLs relationships to determine access violations. The tool will visit all URLs from pre-defined user sessions and fill the table with all Http responses. It is a kind of access matrix and helps to find out authentication/authorization issues. Afterwards we will see what user can access what page contents.</p>
         <ul>
         <li><strong>User session name</strong>: You can right click on any request and send it from &#39;Extensions &gt; Agartha &gt; Agartha Panel&#39; to define a user session.</li>
         <li><strong>URL Addresses</strong> user can visit: You can use &#39;SiteMap&#39; generator feature or any sitemap tools. You need to provide different URLs for different users.</li>
@@ -952,7 +950,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         <li>Orange, because the response returns &#39;HTTP 200&#39; but different content length, with authentication/authorization concerns</li>
         <li>Red, because the response returns &#39;HTTP 200&#39; and same content length, with authentication/authorization concerns</li>
         </ul>
-        <p>You may also notice, it support only one Http request method and user session at the same time, because it processes bulk requests and it is not possible to provide different header options for each calls.<br/>But you may play with &#39;GET/POST&#39; methods to see response differences.<br/><br/></p>
+        <p>You may also notice, it support only one Http request method and user session at the same time, because it processes bulk requests and it is not possible to provide different header options for each calls. But you may play with &#39;GET/POST&#39; methods to see response differences.<br/><br/></p>
         <h2>Copy as JavaScript</h2>
         <p>The feature is for converting Http requests to JavaScript code. It can be useful to dig up further XSS issues and bypass header restrictions.</p>
         <p>To access it, right click any Http Request and &#39;Extensions &gt; Agartha &gt; Copy as JavaScript&#39;.</p>
@@ -985,11 +983,10 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         For redirection, please also add this code before &#39;&lt;/script&gt;&#39; tag:
             xhr.onreadystatechange=function(){if (this.status===302){var location=this.getResponseHeader(&#39;Location&#39;);return ajax.call(this,location);}};
         </code></pre>
-        <p>Please note that, the JavaScript code will be called over original user session and many header fields will be filled automatically by browsers.<br/>In some cases, the server may require some header field mandatory, and therefore you may need to modify the code for an adjustment.</p>        
+        <p>Please note that, the JavaScript code will be called over original user session and many header fields will be filled automatically by browsers. In some cases, the server may require some header field mandatory, and therefore you may need to modify the code for an adjustment.</p>        
         """
         
-        htmlString +="</div>"
-        htmlString +="</html>"
+        htmlString +="</td></tr></table></body></html>"
         self.editorPaneInfo.setText(htmlString);
         self.editorScrollPaneInfo = JScrollPane(self.editorPaneInfo);
         self.editorScrollPaneInfo.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
