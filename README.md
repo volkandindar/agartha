@@ -64,7 +64,7 @@ And the rest is related with database and attack types.
 
 <!---<img width="1000" alt="SQL Injection wordlist" src="https://user-images.githubusercontent.com/50321735/195392775-8f7a7ada-ed03-4024-b4fc-5d2783470bfb.gif">-->
 
-<img width="1000" alt="SQL Injection wordlist" src="https://github.com/volkandindar/agartha/assets/50321735/f76f9990-b97d-478e-a427-f6cfbe69f4cc"><br/><br/>
+<img width="1000" alt="SQL Injection wordlist" src="https://github.com/volkandindar/agartha/assets/50321735/b604c709-11a5-481c-b8b8-17868144ddcc"><br/><br/>
 
 
 ## Authorization Matrix / User Access Table
@@ -74,7 +74,7 @@ This part focuses on user session and URLs relationships to determine access vio
 - After providing session name, Http header and allowed URLs you can use 'Add User' button to add it.
 <!--- <img width="1000" alt="Authorization Matrix" src="https://user-images.githubusercontent.com/50321735/195411200-d8728663-1735-4659-adf5-7276660d5afd.gif"> ---> 
 
-<img width="1000" alt="Authorization Matrix" src="https://github.com/volkandindar/agartha/assets/50321735/5dc1a166-714f-4abf-9d00-b83ef4db70db">
+<img width="1000" alt="Authorization Matrix" src="https://github.com/volkandindar/agartha/assets/50321735/d43f5bee-6eb3-4fda-9737-d8cdad293863">
 
 After sending Http request to Agartha, the user header and URL address will be filled.
 1. What's username for the session you provide. You can add up to 4 different users and each user will have a different color to make it more readable.
