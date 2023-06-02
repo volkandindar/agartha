@@ -75,7 +75,7 @@ This part focuses on user session and URLs relationships to determine access vio
 
 <img width="1000" alt="Authorization Matrix" src="https://github.com/volkandindar/agartha/assets/50321735/d43f5bee-6eb3-4fda-9737-d8cdad293863">
 
-After sending Http request to Agartha, the user header and URL address will be filled.
+A little bit more details:
 1. What's username for the session you provide. You can add up to 4 different users and each user will have a different color to make it more readable.
 	- 'Add User' for adding user session.
 	- You can change Http request method between 'GET' and POST.
