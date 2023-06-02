@@ -71,7 +71,7 @@ This part focuses on user session and URLs relationships to determine access vio
 - You can right click on any request ('Extensions > Agartha > Authorization Matrix') to define **user sessions**.
 - Next, you need to provide **URL addresses** the user (Http header/session owner) can visit. You can use internal 'SiteMap' generator feature or supply any manual list. 
 - And then, you can use **'Add User'** button to add the user sessions.
-- Now, you can execute the task with clicking **'Run'** button and it will fill the table. 
+- Now, it is ready for execution with only clicking **'Run'** button, and it will fill the table. 
 <!--- <img width="1000" alt="Authorization Matrix" src="https://user-images.githubusercontent.com/50321735/195411200-d8728663-1735-4659-adf5-7276660d5afd.gif"> ---> 
 
 <img width="1000" alt="Authorization Matrix" src="https://github.com/volkandindar/agartha/assets/50321735/d43f5bee-6eb3-4fda-9737-d8cdad293863">
