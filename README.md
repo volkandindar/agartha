@@ -108,7 +108,7 @@ You may also notice, it support only one Http request method and user session at
 ## Copy as JavaScript
 The feature is for converting Http requests to JavaScript code. It can be useful to dig up further XSS issues and bypass header restrictions.
 
-To access it, right click any Http Request and 'Extensions > Agartha > Copy as JavaScript'.
+To access it, right click any Http request and 'Extensions > Agartha > Copy as JavaScript'.
 
 <!--- <img width="1000" alt="Copy as JavaScript" src="https://user-images.githubusercontent.com/50321735/152224405-d10b78a2-9b18-44a9-a991-5b9c451c7253.png"> ---> 
 
@@ -126,7 +126,8 @@ Http request with minimum header paramaters in JavaScript:
 Http request with all header paramaters (except cookies, tokens, etc) in JavaScript, you may need to remove unnecessary fields:
 	<script>var xhr=new XMLHttpRequest();
 		xhr.open('GET','http://dvwa.local/vulnerabilities/xss_r/?name=XSS');
-		xhr.withCredentials=true;xhr.setRequestHeader('Host',' dvwa.local');
+		xhr.withCredentials=true;
+		xhr.setRequestHeader('Host',' dvwa.local');
 		xhr.setRequestHeader('User-Agent',' Mozilla/5.0 Gecko/20100101 Firefox/114.0');
 		xhr.setRequestHeader('Accept',' text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8');
 		xhr.setRequestHeader('Accept-Language',' en-GB,en;q=0.5');
