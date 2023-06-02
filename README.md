@@ -59,7 +59,7 @@ It generates payloads for Stacked Queries, Boolean-Based, Union-Based, Time-Base
 
 **'Union-Based'** ask for how deep the payload should be. The default value is 5.
 
-And the rest is related with database and attack types.
+And the rest is related with databases and attack types.
 
 <!---<img width="1000" alt="SQL Injection wordlist" src="https://user-images.githubusercontent.com/50321735/195392775-8f7a7ada-ed03-4024-b4fc-5d2783470bfb.gif">-->
 
