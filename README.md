@@ -77,7 +77,7 @@ This part focuses on user session and URLs relationships to determine access vio
 
 After sending Http request to Agartha, the user header and URL address will be filled.
 1. What's username for the session you provide. You can add up to 4 different users and each user will have a different color to make it more readable.
-	- 'Add User' for adding user session
+	- 'Add User' for adding user session.
 	- You can change Http request method between 'GET' and POST.
 	- 'Reset' button clear all contents.
 	- 'Run' button execute the task and the result will show user access matrix.
