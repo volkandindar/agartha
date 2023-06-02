@@ -83,14 +83,14 @@ A little bit more details:
 	- 'Reset' button clear all contents.
 	- 'Run' button execute the task and the result will show user access matrix.
 	- 'Warnings' indicates possible issues in different colors.
-	- 'SiteMap' button generates URL list automatically and the result totally depends on the user's header you provide. Visible URLs will be populated in next textbox and you can still modify it.
-	- 'Crawl Depth' is defination for how many sub-links (max depth) should 'SiteMap' spider go and detect links.
-2. User's request header and all URLs will be visited over it.
+	- 'SiteMap' button generates URL list automatically and the result totally depends on the user's header/session. Visible URLs will be populated in next textbox and you can still modify it.
+	- 'Crawl Depth' is defination for how many sub-links (max depth) 'SiteMap' spider should go and detect links.
+2. It is the field for request headers and all URLs will be visited over the session defined in here.
 3. URL addresses that user can visit. You can create this list with manual effort or use **'SiteMap'** generator feature. You need to provide visitable URL lists for each users.
 4. All URLs you supply will be in here and they will be visited with the corresponding user sessions.
 5. No authentication column. All cookies, tokens and possible session parameters will be removed form Http calls.
 6. The rest of columns belong to users you created respectively and each of them has a unique color which indicates the URL owners.  
-7. Cell titles show Http response codes and response lengths for each user sessions.
+7. Cell titles show Http 'response codes:response lengths' for each user sessions.
 8. Just click the cell you want to examine and Http details will be shown in the bottom.
 
 <!--- <img width="1000" alt="Matrix Details" src="https://user-images.githubusercontent.com/50321735/192441769-1632b642-2048-4b10-a91b-ae2c4db3d111.png"> ---> 
