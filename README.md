@@ -8,9 +8,8 @@ In summary:
 	- **Local File Inclusion, Directory Traversal**: It creates file dictionary lists with various encoding and escaping characters.
 	- **Command Injection / Remote Code Execution**: It creates command dictionary lists for both unix and windows environments with different combinations.
 	- **SQL Injection**: It creates Stacked Queries, Boolean-Based, Union-Based and Time-Based SQL Injection wordlist for various databases to help finding vulnerable spots.
-- **Authorization Matrix**: It creates an access role matrix based on user sessions and URL lists to determine authorization/authentication related access violation issues. 
-	- You can use **'SiteMap'** generator feature to create URL list. It will populate visible links automatically and the result will depend on the user's header. 
-	- Or you can provide URL list by yourself.
+- **Authorization Matrix**: It creates an access matrix based on user sessions and URL lists, to determine authorization/authentication related violations. 
+	- You can use **'SiteMap'** generator feature to create URL list. It will populate visible links automatically and the result will totally depend on the user's header.
 - And **Copy as JavaScript**: It converts Http requests to JavaScript code to be useful for further XSS exploitation and more.<br/><br/>
 
 Here is a small tutorial how to use.
