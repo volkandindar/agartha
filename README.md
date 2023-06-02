@@ -67,7 +67,7 @@ And the rest is related with databases and attack types.
 
 
 ## Authorization Matrix / User Access Table
-This part focuses on user session and URLs relationships to determine access violations. The tool will visit all URLs from pre-defined user sessions and fill the table with all Http responses. It is a kind of access matrix and helps to find out authentication/authorization issues. Afterwards we will see what user can access what page contents.
+This part focuses on user session and URLs relationships to determine access violations. The tool will visit all URLs from pre-defined user sessions and fill the table with all Http responses. It is a kind of access matrix and helps to find out authentication/authorization issues. Afterwards you will see what users can access what page contents.
 - **User session name**: You can right click on any request and send it from 'Extensions > Agartha > Agartha Panel' to define a user session.
 - **URL Addresses** user can visit: You can use 'SiteMap' generator feature or any sitemap tools. You need to provide different URLs for different users.
 - After providing session name, Http header and allowed URLs you can use 'Add User' button to add it.
