@@ -97,7 +97,7 @@ A little bit more details:
 
 <img width="1000" alt="Matrix Details" src="https://github.com/volkandindar/agartha/assets/50321735/4418ad6f-cd24-425e-bd3b-00dfdfda8c4f">
 
-After clicking 'RUN', the tool will fill user and URL matrix with different colors. Besides the user colors, you will see orange, yellow and red cells. The URL address does not belong to the user and the cell color is:
+After clicking 'RUN', the tool will fill user and URL matrix with different colors. Besides the user colors, you will see orange, yellow and red cells. The URL address does not belong to the user, and if the cell color is:
 - Yellow, because the response returns 'HTTP 302' with authentication/authorization concerns
 - Orange, because the response returns 'HTTP 200' but different content length, with authentication/authorization concerns
 - Red, because the response returns 'HTTP 200' and same content length, with authentication/authorization concerns
