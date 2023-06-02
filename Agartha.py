@@ -16,7 +16,7 @@ try:
 except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
 
-VERSION = "0.984"
+VERSION = "0.985"
 
 class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFactory):
     
@@ -855,7 +855,6 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self.editorPaneInfo.setEditable(False)
         self.editorPaneInfo.setContentType("text/html");
         htmlString ="<html><body><table width=1000 border=0 cellspacing=0><tr><td><h3>Author:\t\t\tVolkan Dindar<br/>Github:\t\t\thttps://github.com/volkandindar/agartha</h3>"
-        
         htmlString += """
         <h1>Agartha - LFI, RCE, SQLi, Auth, HTTP to JS</h1>
         <p>Agartha is a penetration testing tool which creates dynamic payload lists and user access matrix to reveal injection flaws and authentication/authorization issues. There are many different attack payloads alredy exist, but Agartha creates run-time, systematic and vendor-neutral payloads with many different possibilities and bypassing methods. It also draws attention to user session and URL relationships, which makes easy to find user access violations. And additionally, it converts Http requests to JavaScript to help digging up XSS issues more. </p>
@@ -895,23 +894,27 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         </ul>
         </li>
         </ul>
-        
         <h2>Local File Inclusion, Directory Traversal</h2>
         <p>It both supports unix and windows file syntax. You can generate any wordlists dynamically for the path you want. You just need to supply a file path and that&#39;s all. </p>
-        <p><strong>&#39;Depth&#39;</strong> is representation of how deep the wordlist should be. You can generate wordlists &#39;till&#39; or &#39;equal to&#39; this value.</p>
-        <p><strong>&#39;Waf Bypass&#39;</strong> asks for if you want to include all bypass features; like null bytes, different encoding, etc.</p>
+        <ul>
+        <li><strong>&#39;Depth&#39;</strong> is representation of how deep the wordlist should be. You can generate wordlists &#39;till&#39; or &#39;equal to&#39; this value.</li>
+        <li><strong>&#39;Waf Bypass&#39;</strong> asks for if you want to include all bypass features; like null bytes, different encoding, etc.</li>
+        </ul>
         <p><img width=\"1000\" alt=\"Directory Traversal/Local File Inclusion wordlist\" src=\"https://github.com/volkandindar/agartha/assets/50321735/f08653e3-41ee-4cbe-bcd9-9a197005f5c9\"><br/><br/></p>
         <h2>Command Injection / Remote Code Execution</h2>
         <p>It creates command execution dynamic wordlists with the command you supply. It combines different separators and terminators for both unix and windows environments together.</p>
-        <p><strong>&#39;URL Encoding&#39;</strong> encodes dictionary output.</p>
+        <ul>
+        <li><strong>&#39;URL Encoding&#39;</strong> encodes dictionary output.</li>
+        </ul>
         <p><img width=\"1000\" alt=\"Remote Code Execution wordlist\" src=\"https://github.com/volkandindar/agartha/assets/50321735/1e83b404-f4f8-4d5d-a61e-07a9b8057be4\"><br/><br/></p>
         <h2>SQL Injection</h2>
         <p>It generates payloads for Stacked Queries, Boolean-Based, Union-Based, Time-Based SQL Injection attacks, and you do not need to supply any inputs. You just pick what type of SQL attacks and databases you want, then it will generate a wordlist with different combinations. </p>
-        <p><strong>&#39;URL Encoding&#39;</strong> encodes dictionary output.</p>
-        <p><strong>&#39;Waf Bypass&#39;</strong> asks for if you want to include all bypass features; like null bytes, different encoding, etc.</p>
-        <p><strong>&#39;Union-Based&#39;</strong> ask for how deep the payload should be. The default value is 5.</p>
-        <p>And the rest is related with databases and attack types.</p>
-        
+        <ul>
+        <li><strong>&#39;URL Encoding&#39;</strong> encodes dictionary output.</li>
+        <li><strong>&#39;Waf Bypass&#39;</strong> asks for if you want to include all bypass features; like null bytes, different encoding, etc.</li>
+        <li><strong>&#39;Union-Based&#39;</strong> ask for how deep the payload should be. The default value is 5.</li>
+        <li>And the rest is related with databases and attack types.</li>
+        </ul>
         <p><img width=\"1000\" alt=\"SQL Injection wordlist\" src=\"https://github.com/volkandindar/agartha/assets/50321735/f8f86e68-ad2f-4a14-b76a-0c679f1f1673\"><br/><br/></p>
         <h2>Authorization Matrix / User Access Table</h2>
         <p>This part focuses on user session and URLs relationships to determine access violations. The tool will visit all URLs from pre-defined user sessions and fill the table with all Http responses. It is a kind of access matrix and helps to find out authentication/authorization issues. Afterwards you will see what users can access what page contents.</p>
@@ -943,8 +946,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         <li>Cell titles show Http &#39;response codes:response lengths&#39; for each user sessions.</li>
         <li>Just click the cell you want to examine and Http details will be shown in the bottom.</li>
         </ol>
-        
-        <img width=\"1000\" alt=\"Matrix Details\" src=\"https://github.com/volkandindar/agartha/assets/50321735/4418ad6f-cd24-425e-bd3b-00dfdfda8c4f\">
+        <img width=\"1000\" alt=\"User Access Table Details\" src=\"https://github.com/volkandindar/agartha/assets/50321735/4418ad6f-cd24-425e-bd3b-00dfdfda8c4f\">
         
         <p>After clicking &#39;RUN&#39;, the tool will fill user and URL matrix with different colors. Besides the user colors, you will see orange, yellow and red cells. The URL address does not belong to the user, and if the cell color is:</p>
         <ul>
@@ -956,11 +958,11 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         <h2>Copy as JavaScript</h2>
         <p>The feature is for converting Http requests to JavaScript code. It can be useful to dig up further XSS issues and bypass header restrictions.</p>
         <p>To access it, right click any Http request and &#39;Extensions &gt; Agartha &gt; Copy as JavaScript&#39;.</p>
-        
         <img width=\"1000\" alt=\"Copy as JavaScript\" src=\"https://github.com/volkandindar/agartha/assets/50321735/4605b296-4c94-456c-b5b2-c8042a348cd2\">
         
         <p>It will automatically save it to your clipboard with some remarks. For example:</p>
-        <pre><code>Http request with minimum header paramaters in JavaScript:
+        <pre><code>
+        Http request with minimum header paramaters in JavaScript:
             &lt;script&gt;var xhr=new XMLHttpRequest();
                 xhr.open(&#39;GET&#39;,&#39;http://dvwa.local/vulnerabilities/xss_r/?name=XSS&#39;);
                 xhr.withCredentials=true;
@@ -986,10 +988,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
             xhr.onreadystatechange=function(){if (this.status===302){var location=this.getResponseHeader(&#39;Location&#39;);return ajax.call(this,location);}};
         </code></pre>
         <p>Please note that, the JavaScript code will be called over original user session and many header fields will be filled automatically by browsers. In some cases, the server may require some header field mandatory, and therefore you may need to modify the code for an adjustment.
-        <br/><br/>
-        <a href=\"https://www.linkedin.com/pulse/agartha-lfi-rce-auth-sqli-http-js-volkan-dindar\">Another tutorial link</a></p>
         """
-        
         htmlString +="</td></tr></table></body></html>"
         self.editorPaneInfo.setText(htmlString);
         self.editorScrollPaneInfo = JScrollPane(self.editorPaneInfo);
