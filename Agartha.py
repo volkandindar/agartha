@@ -16,7 +16,7 @@ try:
 except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
 
-VERSION = "0.983"
+VERSION = "0.984"
 
 class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFactory):
     
@@ -867,12 +867,11 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         <li><strong>SQL Injection</strong>: It creates Stacked Queries, Boolean-Based, Union-Based and Time-Based SQL Injection wordlist for various databases to help finding vulnerable spots.</li>
         </ul>
         </li>
-        <li><strong>Authorization Matrix</strong>: It creates an access role matrix based on user sessions and URL lists to determine authorization/authentication related access violation issues. <ul>
-        <li>You can use <strong>&#39;SiteMap&#39;</strong> generator feature to create URL list. It will populate visible links automatically and the result depends on the user&#39;s header. </li>
-        <li>Or you can provide URL list by yourself.</li>
+        <li><strong>Authorization Matrix</strong>: It creates an access matrix based on user sessions and URL lists, to determine authorization/authentication related violations. <ul>
+        <li>You can use <strong>&#39;SiteMap&#39;</strong> generator feature to create URL list. It will populate visible links automatically and the result will totally depend on the user&#39;s header.</li>
         </ul>
         </li>
-        <li>And <strong>Copy as JavaScript</strong>: It converts Http requests to JavaScript code to be useful for further XSS exploitation and more.<br/><br/></li>
+        <li>And <strong>Copy as JavaScript</strong>: It converts Http requests to JavaScript code for further XSS exploitation and more.<br/><br/></li>
         </ul>
         <p>Here is a small tutorial how to use.</p>
         <h2>Installation</h2>
@@ -896,6 +895,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         </ul>
         </li>
         </ul>
+        
         <h2>Local File Inclusion, Directory Traversal</h2>
         <p>It both supports unix and windows file syntax. You can generate any wordlists dynamically for the path you want. You just need to supply a file path and that&#39;s all. </p>
         <p><strong>&#39;Depth&#39;</strong> is representation of how deep the wordlist should be. You can generate wordlists &#39;till&#39; or &#39;equal to&#39; this value.</p>
@@ -910,41 +910,43 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         <p><strong>&#39;URL Encoding&#39;</strong> encodes dictionary output.</p>
         <p><strong>&#39;Waf Bypass&#39;</strong> asks for if you want to include all bypass features; like null bytes, different encoding, etc.</p>
         <p><strong>&#39;Union-Based&#39;</strong> ask for how deep the payload should be. The default value is 5.</p>
-        <p>And the rest is related with database and attack types.</p>
+        <p>And the rest is related with databases and attack types.</p>
+        
         <p><img width=\"1000\" alt=\"SQL Injection wordlist\" src=\"https://github.com/volkandindar/agartha/assets/50321735/f8f86e68-ad2f-4a14-b76a-0c679f1f1673\"><br/><br/></p>
-        <h2>Authorization Matrix / User Access Table </h2>
-        <p>This part focuses on user session and URLs relationships to determine access violations. The tool will visit all URLs from pre-defined user sessions and fill the table with all Http responses. It is a kind of access matrix and helps to find out authentication/authorization issues. Afterwards we will see what user can access what page contents.</p>
+        <h2>Authorization Matrix / User Access Table</h2>
+        <p>This part focuses on user session and URLs relationships to determine access violations. The tool will visit all URLs from pre-defined user sessions and fill the table with all Http responses. It is a kind of access matrix and helps to find out authentication/authorization issues. Afterwards you will see what users can access what page contents.</p>
         <ul>
-        <li><strong>User session name</strong>: You can right click on any request and send it from &#39;Extensions &gt; Agartha &gt; Agartha Panel&#39; to define a user session.</li>
-        <li><strong>URL Addresses</strong> user can visit: You can use &#39;SiteMap&#39; generator feature or any sitemap tools. You need to provide different URLs for different users.</li>
-        <li>After providing session name, Http header and allowed URLs you can use &#39;Add User&#39; button to add it.</li>
+        <li>You can right click on any request (&#39;Extensions &gt; Agartha &gt; Authorization Matrix&#39;) to define <strong>user sessions</strong>.</li>
+        <li>Next, you need to provide <strong>URL addresses</strong> the user (Http header/session owner) can visit. You can use internal &#39;SiteMap&#39; generator feature or supply any manual list. </li>
+        <li>And then, you can use <strong>&#39;Add User&#39;</strong> button to add the user sessions.</li>
+        <li>Now, it is ready for execution with only clicking <strong>&#39;Run&#39;</strong> button, and it will fill the table.</li>
         </ul>
         <img width=\"1000\" alt=\"Authorization Matrix\" src=\"https://github.com/volkandindar/agartha/assets/50321735/167293ad-28a7-4cd4-8ca8-e8a34e316e81\">
-
-        <p>After sending Http request to Agartha, the user header and URL address will be filled.</p>
+        
+        <p>A little bit more details:</p>
         <ol>
         <li>What&#39;s username for the session you provide. You can add up to 4 different users and each user will have a different color to make it more readable.<ul>
-        <li>&#39;Add User&#39; for adding user session</li>
+        <li>&#39;Add User&#39; for adding user sessions to matrix.</li>
         <li>You can change Http request method between &#39;GET&#39; and POST.</li>
         <li>&#39;Reset&#39; button clear all contents.</li>
         <li>&#39;Run&#39; button execute the task and the result will show user access matrix.</li>
         <li>&#39;Warnings&#39; indicates possible issues in different colors.</li>
-        <li>&#39;SiteMap&#39; button generates URL list automatically and the result totally depends on the user&#39;s header you provide. Visible URLs will be populated in next textbox and you can still modify it.</li>
-        <li>&#39;Crawl Depth&#39; is defination for how many sub-links (max depth) should &#39;SiteMap&#39; spider go and detec links.</li>
+        <li>&#39;SiteMap&#39; button generates URL list automatically and the result totally depends on the user&#39;s header/session. Visible URLs will be populated in next textbox and you can still modify it.</li>
+        <li>&#39;Crawl Depth&#39; is defination for how many sub-links (max depth) &#39;SiteMap&#39; spider should go and detect links.</li>
         </ul>
         </li>
-        <li>User&#39;s request header and all URLs will be visited by it.</li>
-        <li>URL addresses the user can visit. You can create this list with manual effort or use <strong>&#39;SiteMap&#39;</strong> generator feature.</li>
+        <li>It is the field for request headers and all URLs will be visited over the session defined in here.</li>
+        <li>URL addresses that user can visit. You can create this list with manual effort or use <strong>&#39;SiteMap&#39;</strong> generator feature. You need to provide visitable URL lists for each users.</li>
         <li>All URLs you supply will be in here and they will be visited with the corresponding user sessions.</li>
         <li>No authentication column. All cookies, tokens and possible session parameters will be removed form Http calls.</li>
         <li>The rest of columns belong to users you created respectively and each of them has a unique color which indicates the URL owners.  </li>
-        <li>Cell titles show Http response codes and response lengths for each user sessions.</li>
+        <li>Cell titles show Http &#39;response codes:response lengths&#39; for each user sessions.</li>
         <li>Just click the cell you want to examine and Http details will be shown in the bottom.</li>
         </ol>
-
+        
         <img width=\"1000\" alt=\"Matrix Details\" src=\"https://github.com/volkandindar/agartha/assets/50321735/4418ad6f-cd24-425e-bd3b-00dfdfda8c4f\">
-
-        <p>After clicking &#39;RUN&#39;, the tool will fill user and URL matrix with different colors. Besides the user colors, you will see orange, yellow and red cells. The URL address does not belong to the user and the cell color is:</p>
+        
+        <p>After clicking &#39;RUN&#39;, the tool will fill user and URL matrix with different colors. Besides the user colors, you will see orange, yellow and red cells. The URL address does not belong to the user, and if the cell color is:</p>
         <ul>
         <li>Yellow, because the response returns &#39;HTTP 302&#39; with authentication/authorization concerns</li>
         <li>Orange, because the response returns &#39;HTTP 200&#39; but different content length, with authentication/authorization concerns</li>
@@ -953,37 +955,39 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         <p>You may also notice, it support only one Http request method and user session at the same time, because it processes bulk requests and it is not possible to provide different header options for each calls. But you may play with &#39;GET/POST&#39; methods to see response differences.<br/><br/></p>
         <h2>Copy as JavaScript</h2>
         <p>The feature is for converting Http requests to JavaScript code. It can be useful to dig up further XSS issues and bypass header restrictions.</p>
-        <p>To access it, right click any Http Request and &#39;Extensions &gt; Agartha &gt; Copy as JavaScript&#39;.</p>
-
+        <p>To access it, right click any Http request and &#39;Extensions &gt; Agartha &gt; Copy as JavaScript&#39;.</p>
+        
         <img width=\"1000\" alt=\"Copy as JavaScript\" src=\"https://github.com/volkandindar/agartha/assets/50321735/4605b296-4c94-456c-b5b2-c8042a348cd2\">
-
+        
         <p>It will automatically save it to your clipboard with some remarks. For example:</p>
-        <pre><code>
-        Http request with minimum header paramaters in JavaScript:
+        <pre><code>Http request with minimum header paramaters in JavaScript:
             &lt;script&gt;var xhr=new XMLHttpRequest();
-                    xhr.open(&#39;GET&#39;,&#39;http://dvwa.local/vulnerabilities/xss_r/?name=XSS&#39;);
-                    xhr.withCredentials=true;
-                    xhr.send();
+                xhr.open(&#39;GET&#39;,&#39;http://dvwa.local/vulnerabilities/xss_r/?name=XSS&#39;);
+                xhr.withCredentials=true;
+                xhr.send();
             &lt;/script&gt;
-
+        
         Http request with all header paramaters (except cookies, tokens, etc) in JavaScript, you may need to remove unnecessary fields:
-            &lt;script&gt;var xhr=new XMLHttpRequest();xhr.open(&#39;GET&#39;,&#39;http://dvwa.local/vulnerabilities/xss_r/?name=XSS&#39;);
-                    xhr.withCredentials=true;
-                    xhr.setRequestHeader(&#39;Host&#39;,&#39; dvwa.local&#39;);
-                    xhr.setRequestHeader(&#39;User-Agent&#39;,&#39; Mozilla/5.0 Gecko/20100101 Firefox/114.0&#39;);
-                    xhr.setRequestHeader(&#39;Accept&#39;,&#39; text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8&#39;);
-                    xhr.setRequestHeader(&#39;Accept-Language&#39;,&#39; en-GB,en;q=0.5&#39;);
-                    xhr.setRequestHeader(&#39;Accept-Encoding&#39;,&#39; gzip, deflate&#39;);
-                    xhr.setRequestHeader(&#39;Connection&#39;,&#39; close&#39;);
-                    xhr.setRequestHeader(&#39;Referer&#39;,&#39; http://dvwa.local/vulnerabilities/xss_r/&#39;);
-                    xhr.setRequestHeader(&#39;Upgrade-Insecure-Requests&#39;,&#39; 1&#39;);
-                    xhr.send();
+            &lt;script&gt;var xhr=new XMLHttpRequest();
+                xhr.open(&#39;GET&#39;,&#39;http://dvwa.local/vulnerabilities/xss_r/?name=XSS&#39;);
+                xhr.withCredentials=true;
+                xhr.setRequestHeader(&#39;Host&#39;,&#39; dvwa.local&#39;);
+                xhr.setRequestHeader(&#39;User-Agent&#39;,&#39; Mozilla/5.0 Gecko/20100101 Firefox/114.0&#39;);
+                xhr.setRequestHeader(&#39;Accept&#39;,&#39; text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8&#39;);
+                xhr.setRequestHeader(&#39;Accept-Language&#39;,&#39; en-GB,en;q=0.5&#39;);
+                xhr.setRequestHeader(&#39;Accept-Encoding&#39;,&#39; gzip, deflate&#39;);
+                xhr.setRequestHeader(&#39;Connection&#39;,&#39; close&#39;);
+                xhr.setRequestHeader(&#39;Referer&#39;,&#39; http://dvwa.local/vulnerabilities/xss_r/&#39;);
+                xhr.setRequestHeader(&#39;Upgrade-Insecure-Requests&#39;,&#39; 1&#39;);
+                xhr.send();
             &lt;/script&gt;
-
+        
         For redirection, please also add this code before &#39;&lt;/script&gt;&#39; tag:
             xhr.onreadystatechange=function(){if (this.status===302){var location=this.getResponseHeader(&#39;Location&#39;);return ajax.call(this,location);}};
         </code></pre>
-        <p>Please note that, the JavaScript code will be called over original user session and many header fields will be filled automatically by browsers. In some cases, the server may require some header field mandatory, and therefore you may need to modify the code for an adjustment.</p>        
+        <p>Please note that, the JavaScript code will be called over original user session and many header fields will be filled automatically by browsers. In some cases, the server may require some header field mandatory, and therefore you may need to modify the code for an adjustment.
+        <br/><br/>
+        <a href=\"https://www.linkedin.com/pulse/agartha-lfi-rce-auth-sqli-http-js-volkan-dindar\">Another tutorial link</a></p>
         """
         
         htmlString +="</td></tr></table></body></html>"
