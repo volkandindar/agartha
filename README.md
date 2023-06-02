@@ -31,36 +31,25 @@ After all, you will see 'Agartha' tab in the main window and it will be also reg
 
 ## Local File Inclusion, Directory Traversal
 It both supports unix and windows file syntax. You can generate any wordlists dynamically for the path you want. You just need to supply a file path and that's all. 
-
-**'Depth'** is representation of how deep the wordlist should be. You can generate wordlists 'till' or 'equal to' this value.
-
-**'Waf Bypass'** asks for if you want to include all bypass features; like null bytes, different encoding, etc.
+- **'Depth'** is representation of how deep the wordlist should be. You can generate wordlists 'till' or 'equal to' this value.
+- **'Waf Bypass'** asks for if you want to include all bypass features; like null bytes, different encoding, etc.
 
 <img width="1000" alt="Directory Traversal/Local File Inclusion wordlist" src="https://user-images.githubusercontent.com/50321735/195392551-f43be30a-5dc8-4337-bd49-2c3d65da325c.gif"><br/><br/>
 
-
 ## Command Injection / Remote Code Execution
 It creates command execution dynamic wordlists with the command you supply. It combines different separators and terminators for both unix and windows environments together.
-
-**'URL Encoding'** encodes dictionary output.
+- **'URL Encoding'** encodes dictionary output.
 
 <img width="1000" alt="Remote Code Execution wordlist" src="https://user-images.githubusercontent.com/50321735/195392183-cea812d2-4301-4bf0-8d2a-43510c144a99.gif"><br/><br/>
 
 ## SQL Injection
 It generates payloads for Stacked Queries, Boolean-Based, Union-Based, Time-Based SQL Injection attacks, and you do not need to supply any inputs. You just pick what type of SQL attacks and databases you want, then it will generate a wordlist with different combinations. 
-
-**'URL Encoding'** encodes dictionary output.
-
-**'Waf Bypass'** asks for if you want to include all bypass features; like null bytes, different encoding, etc.
-
-**'Union-Based'** ask for how deep the payload should be. The default value is 5.
-
-And the rest is related with databases and attack types.
-
-<!---<img width="1000" alt="SQL Injection wordlist" src="https://user-images.githubusercontent.com/50321735/195392775-8f7a7ada-ed03-4024-b4fc-5d2783470bfb.gif">-->
+- **'URL Encoding'** encodes dictionary output.
+- **'Waf Bypass'** asks for if you want to include all bypass features; like null bytes, different encoding, etc.
+- **'Union-Based'** ask for how deep the payload should be. The default value is 5.
+- And the rest is related with databases and attack types.
 
 <img width="1000" alt="SQL Injection wordlist" src="https://github.com/volkandindar/agartha/assets/50321735/b604c709-11a5-481c-b8b8-17868144ddcc"><br/><br/>
-
 
 ## Authorization Matrix / User Access Table
 This part focuses on user session and URLs relationships to determine access violations. The tool will visit all URLs from pre-defined user sessions and fill the table with all Http responses. It is a kind of access matrix and helps to find out authentication/authorization issues. Afterwards you will see what users can access what page contents.
@@ -68,7 +57,6 @@ This part focuses on user session and URLs relationships to determine access vio
 - Next, you need to provide **URL addresses** the user (Http header/session owner) can visit. You can use internal 'SiteMap' generator feature or supply any manual list. 
 - And then, you can use **'Add User'** button to add the user sessions.
 - Now, it is ready for execution with only clicking **'Run'** button, and it will fill the table. 
-<!--- <img width="1000" alt="Authorization Matrix" src="https://user-images.githubusercontent.com/50321735/195411200-d8728663-1735-4659-adf5-7276660d5afd.gif"> ---> 
 
 <img width="1000" alt="Authorization Matrix" src="https://github.com/volkandindar/agartha/assets/50321735/d43f5bee-6eb3-4fda-9737-d8cdad293863">
 
@@ -89,9 +77,7 @@ A little bit more details:
 7. Cell titles show Http 'response codes:response lengths' for each user sessions.
 8. Just click the cell you want to examine and Http details will be shown in the bottom.
 
-<!--- <img width="1000" alt="Matrix Details" src="https://user-images.githubusercontent.com/50321735/192441769-1632b642-2048-4b10-a91b-ae2c4db3d111.png"> ---> 
-
-<img width="1000" alt="Matrix Details" src="https://github.com/volkandindar/agartha/assets/50321735/4418ad6f-cd24-425e-bd3b-00dfdfda8c4f">
+<img width="1000" alt="User Access Table Details" src="https://github.com/volkandindar/agartha/assets/50321735/4418ad6f-cd24-425e-bd3b-00dfdfda8c4f">
 
 After clicking 'RUN', the tool will fill user and URL matrix with different colors. Besides the user colors, you will see orange, yellow and red cells. The URL address does not belong to the user, and if the cell color is:
 - Yellow, because the response returns 'HTTP 302' with authentication/authorization concerns
@@ -105,8 +91,6 @@ You may also notice, it support only one Http request method and user session at
 The feature is for converting Http requests to JavaScript code. It can be useful to dig up further XSS issues and bypass header restrictions.
 
 To access it, right click any Http request and 'Extensions > Agartha > Copy as JavaScript'.
-
-<!--- <img width="1000" alt="Copy as JavaScript" src="https://user-images.githubusercontent.com/50321735/152224405-d10b78a2-9b18-44a9-a991-5b9c451c7253.png"> ---> 
 
 <img width="1000" alt="Copy as JavaScript" src="https://github.com/volkandindar/agartha/assets/50321735/4605b296-4c94-456c-b5b2-c8042a348cd2">
 
