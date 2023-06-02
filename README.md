@@ -29,10 +29,6 @@ After all, you will see 'Agartha' tab in the main window and it will be also reg
 	- 'Authorization Matrix'
 	- 'Copy as JavaScript'<br/><br/>
 
-<!---## Tested in
-- Jython version v2.7.3
-- Burp Suite v2022.8.5<br/><br/>-->
-
 ## Local File Inclusion, Directory Traversal
 It both supports unix and windows file syntax. You can generate any wordlists dynamically for the path you want. You just need to supply a file path and that's all. 
 
