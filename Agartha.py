@@ -16,7 +16,7 @@ try:
 except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
 
-VERSION = "0.985"
+VERSION = "0.986"
 
 class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFactory):
     
@@ -139,7 +139,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
             return
         self._tbAuthHeader.setForeground (Color.black)
 
-        if self._tbAuthNewUser.text.strip() in self.userNames:
+        if self._tbAuthNewUser.text.strip() in self.userNames or not self._tbAuthNewUser.text.strip():
             self._tbAuthNewUser.setForeground (Color.red)
             self._lblAuthNotification.text = "Please add another user name!"
             self._lblAuthNotification.setForeground (Color.red)
