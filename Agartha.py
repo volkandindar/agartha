@@ -16,7 +16,7 @@ try:
 except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
 
-VERSION = "0.986"
+VERSION = "0.987"
 
 class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFactory):
     
@@ -139,9 +139,9 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
             return
         self._tbAuthHeader.setForeground (Color.black)
 
-        if self._tbAuthNewUser.text.strip() in self.userNames or not self._tbAuthNewUser.text.strip():
+        if self._tbAuthNewUser.text.strip() in self.userNames or not self._tbAuthNewUser.text.strip() or len(self._tbAuthNewUser.text.strip()) > 20:
             self._tbAuthNewUser.setForeground (Color.red)
-            self._lblAuthNotification.text = "Please add another user name!"
+            self._lblAuthNotification.text = "Please add another user name, that must be unique and less then 20 chars!"
             self._lblAuthNotification.setForeground (Color.red)
             return
         self._tbAuthNewUser.setForeground (Color.black)
@@ -746,7 +746,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
 
     def _tabAuthUI(self):
         # panel top
-        self._tbAuthNewUser = JTextField("", 15)
+        self._tbAuthNewUser = JTextField("", 14)
         self._tbAuthNewUser.setToolTipText("Please provide an username.")
         self._btnAuthNewUserAdd = JButton("Add User", actionPerformed=self.authAdduser)
         self._btnAuthNewUserAdd.setPreferredSize(Dimension(90, 27))
@@ -809,7 +809,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         # panel center
         self._lblAuthNotification = JLabel("", SwingConstants.LEFT)
         self.tableMatrix = []
-        self.tableMatrix_DM = CustomDefaultTableModel(self.tableMatrix, ('URLs','NoAuth'))
+        self.tableMatrix_DM = CustomDefaultTableModel(self.tableMatrix, ('URLs','No Authentication'))
         self.tableMatrix = JTable(self.tableMatrix_DM)        
         self.tableMatrix.setAutoCreateRowSorter(False)
         self.tableMatrix.setSelectionForeground(Color.red)
@@ -1141,12 +1141,12 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
 
     def tableMatrixReset(self, ev):
         self.tableMatrix = []        
-        self.tableMatrix_DM = CustomDefaultTableModel(self.tableMatrix, ('URLs','NoAuth'))
+        self.tableMatrix_DM = CustomDefaultTableModel(self.tableMatrix, ('URLs','No Authentication'))
         self.tableMatrix = JTable(self.tableMatrix_DM)
         self.tableMatrix_SP.getViewport().setView((self.tableMatrix))
         self.userCount = 0
         self.userNames = []
-        self.userNames.append("NoAuth")
+        self.userNames.append("No Authentication")
         self.userNamesHttpReq = []
         self.userNamesHttpReq.append("")
         self.userNamesHttpUrls = [[]]
