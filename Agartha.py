@@ -16,7 +16,7 @@ try:
 except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
 
-VERSION = "0.987"
+VERSION = "0.988"
 
 class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFactory):
     
@@ -676,10 +676,8 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                 contentType = ""
                 for _reqLine in _req.splitlines():
                     if any(re.findall(r'Content-type', _reqLine, re.IGNORECASE)):
-                        contentType = _reqLine.split(" ", 1)[1]
-                        break
-                if contentType:
-                    contentType = "xhr.setRequestHeader('Content-type','" + contentType + "');"
+                        contentType = "xhr.setRequestHeader('Content-type','" + _reqLine.split(" ", 1)[1] + "');"
+                        break                    
                 
                 sendData = ""
                 if _req.splitlines()[-1]:
