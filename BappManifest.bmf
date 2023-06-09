@@ -1,0 +1,13 @@
+Uuid: b4915681326648b1a12e4059d71bc909
+ExtensionType: 2
+Name: Agartha - LFI, RCE, SQLi, Auth, HTTP to JS
+RepoName: agartha
+ScreenVersion: 1.0
+SerialVersion: 3
+MinPlatformVersion: 0
+ProOnly: False
+Author: Volkan Dindar
+ShortDescription: Creates dynamic payloads to reveal injection flaws, generates user access tables to spot authentication/authorization issues, and copy Http requests as JavaScript code.
+EntryPoint: Agartha.py
+BuildCommand: 
+SupportedProducts: Pro, Community
