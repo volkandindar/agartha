@@ -1287,7 +1287,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                         if link not in _userURLs and link and urlparse.urlparse(_url).hostname == urlparse.urlparse(link).hostname and not any(re.findall(r'(log|sign|time).*(off|out|in|on)|(error|expire|kill|terminat|delete|remove)', link, re.IGNORECASE)) and "/." not in link and not any(re.findall(r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff|woff2|ttf)$', _ext, re.IGNORECASE)):
                             _userURLs.append(link)
                             userLinks = userLinks + link + "\n"
-                            self._lblAuthNotification.text = "The crawler has found " + str(len(_userURLs)) + " links so far, and it is still in progress: '" + str(_userURLs.index(_url) + 1) + "/" + str(len(_userURLs)) + "', current folder dept: '" + str(folderDepth) + "'."
+                            self._lblAuthNotification.text = "The crawler has found " + str(len(_userURLs)) + " links so far, and it is still in progress: '" + str(_userURLs.index(_url) + 1) + "/" + str(crawledURLs + 1) + "', current folder dept: '" + str(folderDepth) + "'."
 
                 if _userURLs.index(_url) == crawledURLs:
                     if folderDepth == self._cbSiteMapDepth.getSelectedIndex():
