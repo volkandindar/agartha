@@ -1203,12 +1203,8 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._tbAuthHeader.setForeground (Color.black)        
         self._lblAuthNotification.setForeground (Color.black)
 
-        self._lblAuthNotification.text = "Spider has just started. Please bear in mind, links based on Javascript may not be detected properly."
+        self._lblAuthNotification.text = "The crawler has just started. Please bear in mind, links based on Javascript may not be detected properly."
         
-        #disabled upper folders/paths
-        #for i in range(_urlAdd.count('/') - 2):
-        #    _userURLs.append(_urlAdd.rsplit('/', i+1)[0] + "/")
-
         _userURLs = []
         _userURLs.append(_urlAdd)
         folderDepth = 0
@@ -1291,7 +1287,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                         if link not in _userURLs and link and urlparse.urlparse(_url).hostname == urlparse.urlparse(link).hostname and not any(re.findall(r'(log|sign|time).*(off|out|in|on)|(error|expire|kill|terminat|delete|remove)', link, re.IGNORECASE)) and "/." not in link and not any(re.findall(r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff|woff2|ttf)$', _ext, re.IGNORECASE)):
                             _userURLs.append(link)
                             userLinks = userLinks + link + "\n"
-                            self._lblAuthNotification.text = "Spider has just started, and " + str(len(_userURLs)) + " links have been found so far, but it is still in progress: '" + str(_userURLs.index(_url) + 1) + "/" + str(len(_userURLs)) + "', current folder dept: '" + str(folderDepth) + "'."
+                            self._lblAuthNotification.text = "The crawler has found " + str(len(_userURLs)) + " links so far, and it is still in progress: '" + str(_userURLs.index(_url) + 1) + "/" + str(len(_userURLs)) + "', current folder dept: '" + str(folderDepth) + "'."
 
                 if _userURLs.index(_url) == crawledURLs:
                     if folderDepth == self._cbSiteMapDepth.getSelectedIndex():
