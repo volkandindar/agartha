@@ -1299,7 +1299,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                 self._lblAuthNotification.text = str(sys.exc_info()[1])
         
         self._tbAuthURL.setText(userLinks)
-        self._lblAuthNotification.text = "Spider has just finished, and " + str(len(_userURLs)) + " links have been found. Other hosts than user session are ignored." 
+        self._lblAuthNotification.text = "The crawler has just finished, and " + str(len(_userURLs)) + " links have been found. Other hosts than user session are ignored." 
 
 class UserEnabledRenderer(TableCellRenderer):
     def __init__(self, defaultCellRender, userNamesHttpUrls):
