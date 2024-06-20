@@ -29,7 +29,7 @@ After all, you will see 'Agartha' tab in the main window and it will be also reg
 	- 'Authorization Matrix'
 	- 'Copy as JavaScript'<br/><br/>
 
-## Local File Inclusion, Path Traversal
+## Local File Inclusion / Path Traversal
 It supports both Unix and Windows file syntaxes, enabling dynamic wordlist generation for any desired path. Additionally, it can attempt to bypass Web Application Firewall (WAF) implementations, with various encodings and other techniques.
 - **'Depth'** is representation of how deep the wordlist should be. You can generate wordlists 'till' or 'equal to' this value.
 - **'Waf Bypass'** asks for if you want to include all bypass features; like null bytes, different encoding, etc.
@@ -88,6 +88,9 @@ The task at hand involves a bulk process, and you might wonder about which HTTP 
 - **GET**, All requests are sent using the GET method.
 - **POST**, All requests are sent using the POST method.
 - **Dynamic**, The request method depends on the proxy history.<br/><br/>
+
+## 403 Bypass
+{TO DO}
 
 
 ## Copy as JavaScript
