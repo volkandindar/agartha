@@ -9,7 +9,7 @@ In summary:
 	- **SQL Injection**: It creates Stacked Queries, Boolean-Based, Union-Based and Time-Based SQL Injection wordlist for various databases to help finding vulnerable spots.
 - **Auth Matrix**: It creates an access matrix based on user sessions and URL lists, to determine authorization/authentication related violations. 
 	- You can use **'SiteMap'** generator feature to create URL list. It will populate visible links automatically and the result will totally depend on the user's header.
-- **403 Bypass**:
+- **403 Bypass**: A 403 Forbidden error occurs when access to a requested resource is denied. The feature tries various methods to bypass it, with appending special characters to the URL or modifying request headers.
 - And **Copy as JavaScript**: It converts Http requests to JavaScript code for further XSS exploitation and more.<br/><br/>
 
 Here is a small tutorial how to use.
