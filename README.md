@@ -91,7 +91,7 @@ The task at hand involves a bulk process, and you might wonder about which HTTP 
 
 
 ## Copy as JavaScript
-The feature is for converting Http requests to JavaScript code. It can be useful to dig up further XSS issues and bypass header restrictions.
+The feature allows for converting HTTP requests to JavaScript code, which can be valuable for digging up further XSS issues with bypassing header restrictions.
 
 To access it, right click any Http request and 'Extensions > Agartha > Copy as JavaScript'.
 
