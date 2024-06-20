@@ -97,7 +97,7 @@ The task at hand involves a bulk process, and it is worth to mention which HTTP 
 
 2 different usage cases:
 - Authentication issues, you can remove all session identifier to see if any sources can be accessible publicly. 
-- Privilege Escalation/Authorization, you can keep session identifier for a limited user to see if privileged sources can be accessible by limited users. For example, you can use a regular user sesson with replacing an administrative URL.
+- Privilege Escalation/Authorization, you can keep session identifier for a limited user to see if privileged sources can be accessible. For example, you can use a regular user's sesson with replacing an administrative URL.
 
 
 ## Copy as JavaScript
