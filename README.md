@@ -30,7 +30,7 @@ After all, you will see 'Agartha' tab in the main window and it will be also reg
 	- 'Copy as JavaScript'<br/><br/>
 
 ## Local File Inclusion, Directory Traversal
-It both supports unix and windows file syntax. You can generate any wordlists dynamically for the path you want. You just need to supply a file path and that's all. 
+It supports both unix and windows file syntax. You can generate any wordlists dynamically for the path you want. You just need to supply a file path and that's all. 
 - **'Depth'** is representation of how deep the wordlist should be. You can generate wordlists 'till' or 'equal to' this value.
 - **'Waf Bypass'** asks for if you want to include all bypass features; like null bytes, different encoding, etc.
 
