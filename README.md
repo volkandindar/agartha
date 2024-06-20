@@ -95,6 +95,10 @@ The task at hand involves a bulk process, and it is worth to mention which HTTP 
 ## 403 Bypass
 {TO DO}
 
+2 different usage cases, finding:
+- Authentication issues, you can remove all session identifier to see if any sources can be accessible publicly. 
+- Privilege Escalation/Authorization, you can keep session identifier for a limited user to see if privileged sources can be accessible by limited users. For example, you can use a regular user sesson with replacing an administrative URL.
+
 
 ## Copy as JavaScript
 The feature allows for converting HTTP requests to JavaScript code, which can be valuable for digging up further XSS issues and bypassing header restrictions.
