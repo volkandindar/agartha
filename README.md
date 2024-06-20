@@ -3,13 +3,13 @@ Agartha, specializes in dynamic payload analysis and access control assessment. 
 
 In summary:
 
-- **Payload Generator**: It creates payloads/wordlists for different attack types.
-	- **Local File Inclusion, Directory Traversal**: It creates file dictionaries with various encoding and escaping characters.
-	- **Command Injection / Remote Code Execution**: It creates command dictionary lists for both unix and windows environments with different combinations.
-	- **SQL Injection**: It creates Stacked Queries, Boolean-Based, Union-Based and Time-Based SQL Injection wordlist for various databases to help finding vulnerable spots.
-- **Auth Matrix**: It creates an access matrix based on user sessions and URL lists, to determine authorization/authentication related violations. 
+- **Payload Generator**: It dynamically constructs comprehensive wordlists for injection attacks, incorporating various encoding and escaping characters. These wordlists cover critical vulnerabilities such as SQL Injection, Local File Inclusion (LFI), and Remote Code Execution, making them indispensable for robust security testing.
+	- **Local File Inclusion, Path Traversal**
+	- **Command Injection / Remote Code Execution**
+	- **SQL Injection**
+- **Auth Matrix**: By constructing a comprehensive access matrix, the tool reveals potential access violations and privilege escalation paths. This feature enhances security posture by addressing authentication and authorization issues. 
 	- You can use **'SiteMap'** generator feature to create URL list. It will populate visible links automatically and the result will totally depend on the user's header.
-- **403 Bypass**: A 403 Forbidden error occurs when access to a requested resource is denied. The feature tries various methods to bypass it, with appending special characters to the URL or modifying request headers.
+- **403 Bypass**: It tackles the common 403 Forbidden error. It employs techniques like URL manipulation and request header modification to bypass access restrictions.
 - And **Copy as JavaScript**: It converts Http requests to JavaScript code for further XSS exploitation and more.<br/><br/>
 
 Here is a small tutorial how to use.
