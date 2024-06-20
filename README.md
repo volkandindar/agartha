@@ -95,9 +95,9 @@ The task at hand involves a bulk process, and it is worth to mention which HTTP 
 ## 403 Bypass
 {TO DO}
 
-2 different usage cases:
-- Authentication issues, you can remove all session identifier to see if any sources can be accessible publicly. 
-- Privilege Escalation/Authorization, you can keep session identifier for a limited user to see if privileged sources can be accessible. For example, you can use a regular user's sesson with replacing an administrative URL.
+Two Usage Cases:
+- In scenarios related to **Authentication Issues**, consider removing all session identifiers. Then you can test whether any sources become accessible publicly. This approach helps identify unauthentication accesses and ensures that sensitive information remains protected.
+- For **Privilege Escalation/Authorization** testing, retain session identifiers but limit their use to specific user roles. For instance, you can utilize a regular user’s session while substituting an administrative URL. This controlled approach allows you to assess whether privileged sources are accessible without proper roles.
 
 
 ## Copy as JavaScript
