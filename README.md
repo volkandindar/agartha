@@ -80,9 +80,9 @@ A little bit more details:
 <img width="1000" alt="User Access Table Details" src="https://github.com/volkandindar/agartha/assets/50321735/4418ad6f-cd24-425e-bd3b-00dfdfda8c4f">
 
 After clicking 'RUN', the tool will fill user and URL matrix with different colors. Besides the user colors, you will see orange, yellow and red cells. The URL address does not belong to the user, and if the cell color is:
-- Yellow, because the response returns 'HTTP 302' with authentication/authorization concerns
-- Orange, because the response returns 'HTTP 200' but different content length, with authentication/authorization concerns
 - Red, because the response returns 'HTTP 200' and same content length, with authentication/authorization concerns
+- Orange, because the response returns 'HTTP 200' but different content length, with authentication/authorization concerns
+- Yellow, because the response returns 'HTTP 302' with authentication/authorization concerns
 
 You may also notice, it support only one Http request method and user session at the same time, because it processes bulk requests and it is not possible to provide different header options for each calls. But you may play with 'GET/POST' methods to see response differences.<br/><br/>
 
