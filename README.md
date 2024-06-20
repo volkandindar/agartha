@@ -29,12 +29,15 @@ After all, you will see 'Agartha' tab in the main window and it will be also reg
 	- 'Authorization Matrix'
 	- 'Copy as JavaScript'<br/><br/>
 
+
 ## Local File Inclusion / Path Traversal
 It supports both Unix and Windows file syntaxes, enabling dynamic wordlist generation for any desired path. Additionally, it can attempt to bypass Web Application Firewall (WAF) implementations, with various encodings and other techniques.
 - **'Depth'** is representation of how deep the wordlist should be. You can generate wordlists 'till' or 'equal to' this value.
 - **'Waf Bypass'** asks for if you want to include all bypass features; like null bytes, different encoding, etc.
 
-<img width="1000" alt="Directory Traversal/Local File Inclusion wordlist" src="https://user-images.githubusercontent.com/50321735/195392551-f43be30a-5dc8-4337-bd49-2c3d65da325c.gif"><br/><br/>
+<img width="1000" alt="Directory Traversal/Local File Inclusion wordlist" src="https://github.com/volkandindar/agartha/assets/50321735/b457e6c2-0829-4959-84aa-9116886b99f7"><br/><br/>
+
+
 
 ## Command Injection / Remote Code Execution
 It generates dynamic wordlists for command execution based on the supplied command. It combines various separators and terminators for both Unix and Windows environments.
