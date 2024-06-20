@@ -66,7 +66,7 @@ This part focuses on analyzing user session and URL relationships to identify ac
 A little bit more details:
 1. What's username for the session you provide. You can add up to 4 different users and each user will have a different color to make it more readable.
 	- 'Add User' for adding user sessions to matrix.
-	- You can change Http request method between 'GET' and POST.
+	- You can change Http request method between 'GET', 'POST' or 'Dynamic', which bases on proxy history.
 	- 'Reset' button clear all contents.
 	- 'Run' button execute the task and the result will show user access matrix.
 	- 'Warnings' indicates possible issues in different colors.
@@ -101,7 +101,7 @@ The feature allows for converting HTTP requests to JavaScript code, which can be
 
 To access it, right click any Http request and 'Extensions > Agartha > Copy as JavaScript'.
 
-<img width="1000" alt="Copy as JavaScript" src="https://github.com/volkandindar/agartha/assets/50321735/4605b296-4c94-456c-b5b2-c8042a348cd2">
+<img width="1000" alt="Copy as JavaScript" src="https://github.com/volkandindar/agartha/assets/50321735/771fd1db-c2ba-4a32-8b17-ef5cc53fa5bd">
 
 It will automatically save it to your clipboard with some remarks. For example:
 ```
