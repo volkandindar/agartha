@@ -37,7 +37,7 @@ It supports both Unix and Windows file syntaxes, enabling dynamic wordlist gener
 <img width="1000" alt="Directory Traversal/Local File Inclusion wordlist" src="https://user-images.githubusercontent.com/50321735/195392551-f43be30a-5dc8-4337-bd49-2c3d65da325c.gif"><br/><br/>
 
 ## Command Injection / Remote Code Execution
-It creates command execution dynamic wordlists with the command you supply. It combines different separators and terminators for both unix and windows environments together.
+It generates dynamic wordlists for command execution based on the supplied command. It combines various separators and terminators for both Unix and Windows environments.
 - **'URL Encoding'** encodes dictionary output.
 
 <img width="1000" alt="Remote Code Execution wordlist" src="https://user-images.githubusercontent.com/50321735/195392183-cea812d2-4301-4bf0-8d2a-43510c144a99.gif"><br/><br/>
