@@ -84,7 +84,10 @@ After clicking 'RUN', the tool will fill user and URL matrix with different colo
 - Orange, because the response returns 'HTTP 200' but different content length, with authentication/authorization concerns
 - Yellow, because the response returns 'HTTP 302' with authentication/authorization concerns
 
-You may also notice, it support only one Http request method and user session at the same time, because it processes bulk requests and it is not possible to provide different header options for each calls. But you may play with 'GET/POST' methods to see response differences.<br/><br/>
+The task is in here is bulk process, and you might wonder about which HTTP request methods will be used. It provides three different options for performing HTTP calls:
+- GET: All requests are sent using the GET method.
+- POST: All requests are sent using the POST method.
+- Dynamic: The request method depends on the proxy history.<br/><br/>
 
 
 ## Copy as JavaScript
