@@ -5,7 +5,7 @@ In summary:
 
 - **Payload Generator**: It dynamically constructs comprehensive wordlists for injection attacks, incorporating various encoding and escaping characters. These wordlists cover critical vulnerabilities such as SQL Injection, Local File Inclusion (LFI), and Remote Code Execution, making them indispensable for robust security testing.
 	- **Local File Inclusion, Path Traversal**
-	- **Command Injection / Remote Code Execution**
+	- **Command Injection, Remote Code Execution**
 	- **SQL Injection**
 - **Auth Matrix**: By constructing a comprehensive access matrix, the tool reveals potential access violations and privilege escalation paths. This feature enhances security posture by addressing authentication and authorization issues. 
 	- You can use **'SiteMap'** generator feature to create URL list. It will populate visible links automatically and the result will totally depend on the user's header.
