@@ -87,7 +87,7 @@ After clicking 'RUN', the tool will fill user and URL matrix with different colo
 - **Orange**, because the response returns 'HTTP 200' but different content length, with authentication/authorization concerns
 - **Yellow**, because the response returns 'HTTP 302' with authentication/authorization concerns
 
-The task at hand involves a bulk process, and you might wonder about which HTTP request methods will be used. It provides three different options for performing HTTP calls:
+The task at hand involves a bulk process, and it is worth to mention which HTTP request methods will be used. The tool provides three different options for performing HTTP calls:
 - **GET**, All requests are sent using the GET method.
 - **POST**, All requests are sent using the POST method.
 - **Dynamic**, The request method depends on the proxy history.<br/><br/>
