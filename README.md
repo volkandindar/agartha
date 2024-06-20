@@ -80,14 +80,14 @@ A little bit more details:
 <img width="1000" alt="User Access Table Details" src="https://github.com/volkandindar/agartha/assets/50321735/4418ad6f-cd24-425e-bd3b-00dfdfda8c4f">
 
 After clicking 'RUN', the tool will fill user and URL matrix with different colors. Besides the user colors, you will see orange, yellow and red cells. The URL address does not belong to the user, and if the cell color is:
-- Red, because the response returns 'HTTP 200' and same content length, with authentication/authorization concerns
-- Orange, because the response returns 'HTTP 200' but different content length, with authentication/authorization concerns
-- Yellow, because the response returns 'HTTP 302' with authentication/authorization concerns
+- **Red**, because the response returns 'HTTP 200' and same content length, with authentication/authorization concerns
+- **Orange**, because the response returns 'HTTP 200' but different content length, with authentication/authorization concerns
+- **Yellow**, because the response returns 'HTTP 302' with authentication/authorization concerns
 
 The task at hand involves a bulk process, and you might wonder about which HTTP request methods will be used. It provides three different options for performing HTTP calls:
-- GET: All requests are sent using the GET method.
-- POST: All requests are sent using the POST method.
-- Dynamic: The request method depends on the proxy history.<br/><br/>
+- **GET**, All requests are sent using the GET method.
+- **POST**, All requests are sent using the POST method.
+- **Dynamic**, The request method depends on the proxy history.<br/><br/>
 
 
 ## Copy as JavaScript
