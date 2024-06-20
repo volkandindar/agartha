@@ -4,7 +4,7 @@ Agartha, specializes in dynamic payload analysis and access control assessment. 
 In summary:
 
 - **Payload Generator**: It creates payloads/wordlists for different attack types.
-	- **Local File Inclusion, Directory Traversal**: It creates file dictionary lists with various encoding and escaping characters.
+	- **Local File Inclusion, Directory Traversal**: It creates file dictionaries with various encoding and escaping characters.
 	- **Command Injection / Remote Code Execution**: It creates command dictionary lists for both unix and windows environments with different combinations.
 	- **SQL Injection**: It creates Stacked Queries, Boolean-Based, Union-Based and Time-Based SQL Injection wordlist for various databases to help finding vulnerable spots.
 - **Authorization Matrix**: It creates an access matrix based on user sessions and URL lists, to determine authorization/authentication related violations. 
