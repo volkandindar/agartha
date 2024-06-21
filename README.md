@@ -93,7 +93,7 @@ The task at hand involves a bulk process, and it is worth to mention which HTTP 
 - **Dynamic**, The request method depends on the proxy history.<br/><br/>
 
 ## 403 Bypass
-HTTP 403 Forbidden status code indicates that the server understands the request but refuses to authorize it. Essentially, it means, ‘I recognize who you are, but you lack permission to access this resource.’ This status often points to issues like ‘insufficient permissions,’ ‘authentication required,’ or ‘IP restrictions’
+HTTP 403 Forbidden status code indicates that the server understands the request but refuses to authorize it. Essentially, it means, ‘I recognize who you are, but you lack permission to access this resource.’ This status often points to issues like ‘insufficient permissions’, ‘authentication required’, ‘IP restrictions’, etc.
 
 The tool addresses the common access forbidden error by employing various techniques, such as URL manipulation and request header modification. These strategies aim to bypass access restrictions and retrieve the desired content.
 
