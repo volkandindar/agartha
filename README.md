@@ -61,7 +61,8 @@ This part focuses on analyzing user session and URL relationships to identify ac
 - And then, you can use **'Add User'** button to add the user sessions.
 - Now, it is ready for execution with only clicking **'Run'** button, and it will fill the table. 
 
-<img width="1000" alt="Authorization Matrix" src="https://github.com/volkandindar/agartha/assets/50321735/d43f5bee-6eb3-4fda-9737-d8cdad293863">
+<img width="1000" alt="Authorization Matrix" src="https://github.com/volkandindar/agartha/assets/50321735/6f89e22c-e29c-413d-96d8-c2a8d7ac39d4">
+
 
 A little bit more details:
 1. What's username for the session you provide. You can add up to 4 different users and each user will have a different color to make it more readable.
@@ -80,7 +81,7 @@ A little bit more details:
 7. Cell titles show Http 'response codes:response lengths' for each user sessions.
 8. Just click the cell you want to examine and Http details will be shown in the bottom.
 
-<img width="1000" alt="User Access Table Details" src="https://github.com/volkandindar/agartha/assets/50321735/4418ad6f-cd24-425e-bd3b-00dfdfda8c4f">
+<img width="1000" alt="User Access Table Details" src="https://github.com/volkandindar/agartha/assets/50321735/a48e60d4-d7f1-4c12-ad02-f1989c175730">
 
 After clicking 'RUN', the tool will fill user and URL matrix with different colors. Besides the user colors, you will see orange, yellow and red cells. The URL address does not belong to the user, and if the cell color is:
 - **Red**, because the response returns 'HTTP 200' and same content length, with authentication/authorization concerns
