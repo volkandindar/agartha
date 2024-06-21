@@ -93,7 +93,7 @@ The task at hand involves a bulk process, and it is worth to mention which HTTP 
 - **Dynamic**, The request method depends on the proxy history.<br/><br/>
 
 ## 403 Bypass
-{TO DO}
+HTTP 403 Forbidden status code indicates that the server understands the request but refuses to authorize it. Essentially, it means, ‘I recognize who you are, but you lack permission to access this resource.’ This status often points to issues like ‘insufficient permissions,’ ‘authentication required,’ or ‘IP restrictions’
 
 Two Usage Cases:
 - In scenarios related to **Authentication Issues**, consider removing all session identifiers. Then you can test whether any sources become accessible publicly. This approach helps identify unauthentication accesses and ensures that sensitive information remains protected.
