@@ -104,16 +104,22 @@ It is worth to mention two different usage cases:
 There are 2 ways you can send HTTP requests to the tool.
 1. You can load requests from proxy history by clicking the ‘Load Requests’ button. Doing so will automatically remove all session identifiers, making it suitable for attack case 1.
 2. You can send individual requests by right-clicking. Session identifiers will be retained, making this approach suitable for attack case 2.
-<br/>
-<img width="1000" alt="Sending individual requests" src="https://github.com/volkandindar/agartha/assets/50321735/e1bcc5a8-80b0-483d-b6ed-49310d171977"><br/>
+
+<img width="1000" alt="Sending individual requests" src="https://github.com/volkandindar/agartha/assets/50321735/e1bcc5a8-80b0-483d-b6ed-49310d171977">
+
 The page we aim to access belongs to admin group, and we keep our session identifiers to check if Privilege Escalation is possible.
-<br/><br/>
-<img width="1000" alt="Attempt details" src="https://github.com/volkandindar/agartha/assets/50321735/fba047aa-52ff-49de-b977-da135618ef3a"><br/><br/>
+
+Just clicking 'RUN' button will execute the task.
+
+The figure below illustrates that a URL may have an access issue, with the ‘Red’ color indicating a warning.
+
+<img width="1000" alt="Attempt details" src="https://github.com/volkandindar/agartha/assets/50321735/fba047aa-52ff-49de-b977-da135618ef3a">
+
 1. URL and Header details
 2. Request attempts and results
 3. HTTP requests and responses
-Note: The number of attempts depends on the specific target URL itself.
 
+Note: The number of attempts depends on the specific target URL itself.
 <br/><br/>
 ## Copy as JavaScript
 The feature allows for converting HTTP requests to JavaScript code, which can be valuable for digging up further XSS issues and bypassing header restrictions.
