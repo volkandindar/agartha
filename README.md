@@ -113,11 +113,12 @@ Just clicking 'RUN' button will execute the task.
 
 The figure below illustrates that a URL may have an access issue, with the ‘Red’ color indicating a warning.
 
-<img width="1000" alt="Attempt details" src="https://github.com/volkandindar/agartha/assets/50321735/fba047aa-52ff-49de-b977-da135618ef3a">
+<img width="1000" alt="Attempt details" src="https://github.com/volkandindar/agartha/assets/50321735/41a49331-a654-4266-8f40-8eba5392330f">
 
-1. URL and Header details
-2. Request attempts and results
-3. HTTP requests and responses
+1. Loading requests from proxy history with selecting target hostname and clicking 'Load Requests' button.
+2. URL and Header details
+3. Request attempts and results
+4. HTTP requests and responses
 
 Note: The number of attempts depends on the specific target URL itself.
 <br/><br/>
