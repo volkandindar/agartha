@@ -90,7 +90,7 @@ After clicking 'RUN', the tool will fill user and URL matrix with different colo
 The task at hand involves a bulk process, and it is worth to mention which HTTP request methods will be used. The tool provides three different options for performing HTTP calls:
 - **GET**, All requests are sent using the GET method.
 - **POST**, All requests are sent using the POST method.
-- **Dynamic**, The request method depends on the proxy history.<br/><br/>
+- **Dynamic**, The request method depends on the proxy history.If no info exists, 'GET' will be default.<br/><br/>
 
 ## 403 Bypass
 HTTP 403 Forbidden status code indicates that the server understands the request but refuses to authorize it. Essentially, it means, ‘I recognize who you are, but you lack permission to access this resource.’ This status often points to issues like ‘insufficient permissions’, ‘authentication required’, ‘IP restrictions’, etc.
