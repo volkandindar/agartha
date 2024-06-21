@@ -114,7 +114,7 @@ Just clicking 'RUN' button will execute the task.
 
 The figure below illustrates that a URL may have an access issue, with the ‘Red’ color indicating a warning.
 
-<img width="1000" alt="Attempt details" src="https://github.com/volkandindar/agartha/assets/50321735/41a49331-a654-4266-8f40-8eba5392330f">
+<img width="1000" alt="Attempt details" src="https://github.com/volkandindar/agartha/assets/50321735/b7c81258-aa11-42dc-87c6-c25b1047056c">
 
 1. Load requests from the proxy history by selecting the target hostname and clicking the ‘Load Requests’ button.
 2. URL and Header details
