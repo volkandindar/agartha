@@ -1,4 +1,4 @@
-# Agartha - LFI, RCE, SQLi, Auth, 403 Bypass, HTTP to JS
+# Agartha - LFI, RCE, SQLi, Auth, HTTP to JS
 Agartha, specializes in dynamic payload analysis and access control assessment. It adeptly identifies vulnerabilities related to injection attacks, user access matrix, and authentication/authorization issues. The dynamic payload generator crafts extensive wordlists for various injection vectors, including SQL Injection, Local File Inclusion  (LFI), and Remote Code Execution. Furthermore, Agartha constructs a comprehensive user access matrix, revealing potential access violations and privilege escalation paths. It also assists in performing HTTP 403 bypass checks, shedding light on authorization weaknesses. Additionally, it can convert HTTP requests to JavaScript code to help digging up XSS issues more.
 
 In summary:
