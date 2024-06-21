@@ -108,7 +108,7 @@ There are 2 ways you can send HTTP requests to the tool.
 <img width="1000" alt="Sending individual requests" src="https://github.com/volkandindar/agartha/assets/50321735/e1bcc5a8-80b0-483d-b6ed-49310d171977">
 
 The page we aim to access belongs to admin group, and we keep our session identifiers to check if Privilege Escalation is possible.
-<br/>
+<br/><br/><br/>
 Just clicking 'RUN' button will execute the task.
 
 The figure below illustrates that a URL may have an access issue, with the ‘Red’ color indicating a warning.
