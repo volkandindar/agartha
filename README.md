@@ -101,6 +101,14 @@ It is worth to mention two different usage cases:
 1. In scenarios related to **Authentication Issues**, consider removing all session identifiers. Then you can test whether any sources become accessible publicly. This approach helps identify unauthentication accesses and ensures that sensitive information remains protected.
 2. For **Privilege Escalation/Authorization** testing, retain session identifiers but limit their use to specific user roles. For instance, you can utilize a regular user’s session while substituting an administrative URL. This controlled approach allows you to assess whether privileged sources are accessible without proper roles.
 
+There are 2 ways you can send HTTP requests to the tool.
+1. You can load requests from proxy history by clicking the ‘Load Requests’ button. Doing so will automatically remove all session identifiers, making it suitable for attack case 1.
+2. You can send individual requests by right-clicking. Session identifiers will be retained, making this approach suitable for attack case 2.
+
+The page we aim to access belongs to admin group, and we keep our session identifiers to check if Privilege Escalation is possible.
+<img width="1000" alt="Sending individual requests" src="https://github.com/volkandindar/agartha/assets/50321735/e1bcc5a8-80b0-483d-b6ed-49310d171977">
+
+
 
 ## Copy as JavaScript
 The feature allows for converting HTTP requests to JavaScript code, which can be valuable for digging up further XSS issues and bypassing header restrictions.
