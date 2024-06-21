@@ -106,11 +106,11 @@ There are 2 ways you can send HTTP requests to the tool.
 1. You can load requests from proxy history by clicking the ‘Load Requests’ button. Doing so will automatically remove all session identifiers, making it suitable for attack case 1.
 2. You can send individual requests by right-clicking. Session identifiers will be retained, making this approach suitable for attack case 2.
 
-<img width="1000" alt="Sending individual requests" src="https://github.com/volkandindar/agartha/assets/50321735/e1bcc5a8-80b0-483d-b6ed-49310d171977">
+<img width="1000" alt="Sending individual requests" src="https://github.com/volkandindar/agartha/assets/50321735/54b567a0-6b69-43f4-b727-f01709f4cc79">
 
 The page we aim to access belongs to a privileged user group, and we retain our session identifiers to verify if Privilege Escalation is feasible.
-<br/><br/><br/>
-Just clicking 'RUN' button will execute the task.
+<br/><br/>
+Simply clicking the 'RUN' button will execute the task.
 
 The figure below illustrates that a URL may have an access issue, with the ‘Red’ color indicating a warning.
 
