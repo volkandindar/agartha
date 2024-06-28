@@ -33,8 +33,8 @@ After all, you will see 'Agartha' tab in the main window and it will be also reg
 
 ## Local File Inclusion / Path Traversal
 It supports both Unix and Windows file syntaxes, enabling dynamic wordlist generation for any desired path. Additionally, it can attempt to bypass Web Application Firewall (WAF) implementations, with various encodings and other techniques.
-- **'Depth'** is representation of how deep the wordlist should be. You can generate wordlists 'till' or 'equal to' this value.
-- **'Waf Bypass'** asks for if you want to include all bypass features; like null bytes, different encoding, etc.
+- **'Depth'** specifies the extent of directory traversal for wordlist generation. You can create wordlists that reach up to or equal to this specified level.
+- **'Waf Bypass'** inquires whether you want to enable all bypass features, such as the use of null bytes, various encoding techniques, and other methods to circumvent web application firewalls.
 
 <img width="1000" alt="Directory Traversal/Local File Inclusion wordlist" src="https://github.com/volkandindar/agartha/assets/50321735/b457e6c2-0829-4959-84aa-9116886b99f7"><br/><br/>
 
@@ -49,7 +49,7 @@ It generates dynamic wordlists for command execution based on the supplied comma
 ## SQL Injection
 It generates payloads for various types of SQL injection attacks, including Stacked Queries, Boolean-Based, Union-Based, and Time-Based. It doesn’t require any user inputs; you simply select the desired SQL attack types and databases, and it generates a wordlist with different combinations.
 - **'URL Encoding'** encodes dictionary output.
-- **'Waf Bypass'** asks for if you want to include all bypass features; like null bytes, different encoding, etc.
+- **'Waf Bypass'** inquires whether you want to enable all bypass features, such as the use of null bytes, various encoding techniques, and other methods to circumvent web application firewalls.
 - **'Union-Based'** ask for how deep the payload should be. The default value is 5.
 - And the rest is related with databases and attack types.
 
