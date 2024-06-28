@@ -16,7 +16,7 @@ Here is a small tutorial how to use.
 
 ## Installation
 You should download 'Jython' file and set your environment first:
-- Burp Menu > Extender > Options > Python Environment > Locate Jython standalone jar file (tested in Jython v2.7.3).
+- Burp Menu > Extender > Options > Python Environment > Locate Jython standalone jar file.
 
 You can install Agartha through official store: 
 - Burp Menu > Extender > BApp Store > Agartha
