@@ -48,7 +48,7 @@ It generates dynamic wordlists for command execution based on the supplied comma
 
 ## SQL Injection
 It generates payloads for various types of SQL injection attacks, including Stacked Queries, Boolean-Based, Union-Based, and Time-Based. It doesn’t require any user inputs; you simply select the desired SQL attack types and databases, and it generates a wordlist with different combinations.
-- **'URL Encoding'** encodes dictionary output.
+- **'URL Encoding'** encodes the output.
 - **'Waf Bypass'** inquires whether you want to enable all bypass features, such as the use of null bytes, various encoding techniques, and other methods to circumvent web application firewalls.
 - **'Union-Based'** requires the specified depth for payload generation. You can create wordlists that reach up to the given value. The default value is 5.
 - And the rest is related with databases and attack types.
