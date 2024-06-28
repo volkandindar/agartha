@@ -57,7 +57,7 @@ It generates payloads for various types of SQL injection attacks, including Stac
 
 ## Authorization Matrix / User Access Table
 This part focuses on analyzing user session and URL relationships to identify access violations. The tool systematically visits all URLs associated with pre-defined user sessions and populates a table with HTTP responses. Essentially, it creates an access matrix, which aids in identifying authentication and authorization issues. Ultimately, this process reveals which users can access specific page contents.
-- You can right click on any request ('Extensions > Agartha > Authorization Matrix') to define **user sessions**.
+- You can right click on any request ('Extensions > Agartha > Auth Matrix') to define **user sessions**.
 - Next, you need to provide **URL addresses** the user (Http header/session owner) can visit. You can use internal 'SiteMap' generator feature or supply any manual list. 
 - And then, you can use **'Add User'** button to add the user sessions.
 - Now, it is ready for execution with only clicking **'Run'** button, and it will fill the table. 
