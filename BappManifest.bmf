@@ -7,7 +7,7 @@ SerialVersion: 3
 MinPlatformVersion: 0
 ProOnly: False
 Author: Volkan Dindar
-ShortDescription: Creates dynamic payloads to reveal injection flaws, generates user access tables to spot authentication/authorization issues, and copy Http requests as JavaScript code.
+ShortDescription: Helps identifying LFI, RCE, SQL injection flaws, authentication and authorization issues, and HTTP 403 access problems, while also converting HTTP requests to JavaScript for enhanced XSS exploitation
 EntryPoint: Agartha.py
 BuildCommand: 
 SupportedProducts: Pro, Community
