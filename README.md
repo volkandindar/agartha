@@ -84,7 +84,7 @@ A little bit more details:
 
 Please note that potential session terminators (such as logoff, sign-out, etc.) and specific file types (such as CSS, images, JavaScript, etc.) will be filtered out from both the 'Spider' and the user's URL list.
 
-<img width="1000" alt="User Access Table Details" src="https://github.com/volkandindar/agartha/assets/50321735/a48e60d4-d7f1-4c12-ad02-f1989c175730">
+<img width="1000" alt="User Access Table Details" src="https://github.com/volkandindar/agartha/assets/50321735/e7ce918e-d40e-44c5-ada7-ee1c0cfa487b">
 
 After clicking 'RUN', the tool will fill user and URL matrix with different colors. Besides the user colors, you will see orange, yellow and red cells. The URL address does not belong to the user, and if the cell color is:
 - **Red**, because the response returns 'HTTP 200' and same content length, with authentication/authorization concerns
