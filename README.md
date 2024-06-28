@@ -51,7 +51,7 @@ It generates payloads for various types of SQL injection attacks, including Stac
 - **'URL Encoding'** encodes the output.
 - **'Waf Bypass'** inquires whether you want to enable all bypass features, such as the use of null bytes, various encoding techniques, and other methods to circumvent web application firewalls.
 - **'Union-Based'** requires the specified depth for payload generation. You can create wordlists that reach up to the given value. The default value is 5.
-- And the rest is related with databases and attack types.
+- The remaining aspects pertain to database types and various attack vectors.
 
 <img width="1000" alt="SQL Injection wordlist" src="https://github.com/volkandindar/agartha/assets/50321735/51a010b6-4d9a-4dc9-a634-b353f6b30b95"><br/><br/>
 
