@@ -42,7 +42,7 @@ It supports both Unix and Windows file syntaxes, enabling dynamic wordlist gener
 
 ## Command Injection / Remote Code Execution
 It generates dynamic wordlists for command execution based on the supplied command. It combines various separators and terminators for both Unix and Windows environments.
-- **'URL Encoding'** encodes dictionary output.
+- **'URL Encoding'** encodes the output.
 
 <img width="1000" alt="Remote Code Execution wordlist" src="https://github.com/volkandindar/agartha/assets/50321735/d28c12c9-c6fb-4509-9299-888f3f048c12"><br/><br/>
 
