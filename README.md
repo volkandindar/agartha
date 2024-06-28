@@ -86,8 +86,8 @@ Please note that potential session terminators (such as logoff, sign-out, etc.) 
 
 <img width="1000" alt="User Access Table Details" src="https://github.com/volkandindar/agartha/assets/50321735/e7ce918e-d40e-44c5-ada7-ee1c0cfa487b">
 
-After clicking 'RUN', the tool will populate the user and URL matrix with different colors. In addition to user-specific colors, you will see red, orange, and yellow cells indicating possible access issues. If the cell color is:
-- **Red** highlights a critical access violation, indicated by the response returning 'HTTP 200' and the same content length.
+After clicking 'RUN', the tool will populate the user and URL matrix with different colors. In addition to user-specific colors, you will see red, orange, and yellow cells indicating possible access issues.
+- **Red** highlights a critical access violation, indicated by the response returning 'HTTP 200' with the same content length.
 - **Orange** signifies a moderate issue that needs attention, marked by the response returning 'HTTP 200' but with a different content length.
 - **Yellow** indicates that the response returns an 'HTTP 302' status, signifying a redirection.
 
