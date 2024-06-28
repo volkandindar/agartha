@@ -3,7 +3,7 @@ Agartha, specializes in dynamic payload analysis and access control assessment. 
 
 In summary:
 
-- **Payload Generator**: It dynamically constructs comprehensive wordlists for injection attacks, incorporating various encoding and escaping characters. These wordlists cover critical vulnerabilities such as SQL Injection, Local File Inclusion (LFI), and Remote Code Execution, making them indispensable for robust security testing.
+- **Payload Generator**: It dynamically constructs comprehensive wordlists for injection attacks, incorporating various encoding and escaping characters to enhance the effectiveness of security testing. These wordlists cover critical vulnerabilities such as SQL Injection, Local File Inclusion (LFI), and Remote Code Execution, making them indispensable for robust security testing.
 	- **Local File Inclusion, Path Traversal** helps identifying vulnerabilities that allow attackers to access files on the server's filesystem.
 	- **Command Injection, Remote Code Execution** aims to detects potential command injection points, enabling robust testing for code execution vulnerabilities.
 	- **SQL Injection** assists to uncover SQL Injection vulnerabilities, including Stacked Queries, Boolean-Based, Union-Based, and Time-Based.
