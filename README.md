@@ -124,16 +124,17 @@ The figure below illustrates that a URL may have an access issue, with the ‘Re
 3. Request attempts and results
 4. HTTP requests and responses
 
-Note: The number of attempts depends on the specific target URL itself.
+Please note that the number of attempts is contingent upon the specific target URL.
 <br/><br/>
-## Copy as JavaScript
-The feature allows for converting HTTP requests to JavaScript code, which can be valuable for digging up further XSS issues and bypassing header restrictions.
 
-To access it, right click any Http request and 'Extensions > Agartha > Copy as JavaScript'.
+## Copy as JavaScript
+The feature enables the conversion of HTTP requests into JavaScript code, which can be particularly useful for going beyond XSS vulnerabilities and bypassing header restrictions.
+
+To use this feature, simply right-click on any HTTP request and select 'Extensions > Agartha > Copy as JavaScript'.
 
 <img width="1000" alt="Copy as JavaScript" src="https://github.com/volkandindar/agartha/assets/50321735/771fd1db-c2ba-4a32-8b17-ef5cc53fa5bd">
 
-It will automatically save it to your clipboard with some remarks. For example:
+It will automatically save to your clipboard, including some additional remarks for your reference. For example:
 ```
 Http request with minimum header paramaters in JavaScript:
 	<script>
@@ -165,6 +166,6 @@ Http request with all header paramaters (except cookies, tokens, etc) in JavaScr
 For redirection, please also add this code before '</script>' tag:
 	xhr.onreadystatechange=function(){if (this.status===302){var location=this.getResponseHeader('Location');return ajax.call(this,location);}};
 ```
-Please note that the JavaScript code will be executed within the original user session, and many header fields will be automatically populated by browsers. In certain cases, the server may require specific header fields to be mandatory; for instance, some requests might fail with an incorrect ‘Content-Type’. Therefore, you may need to adjust the code accordingly.
+Please note that the JavaScript code will execute within the original user session, with many header fields automatically populated by the browser. However, in some cases, the server may require specific mandatory header fields. For example, certain requests might fail if the 'Content-Type' is incorrect. Therefore, you may need to adjust the code to ensure compatibility with the server's requirements.
 <br/><br/>
 [Another tutorial link](https://www.linkedin.com/pulse/agartha-lfi-rce-auth-sqli-http-js-volkan-dindar)
