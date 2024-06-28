@@ -8,7 +8,7 @@ In summary:
 	- **Remote Code Execution, Command Injection** aims to detects potential command injection points, enabling robust testing for code execution vulnerabilities.
 	- **SQL Injection** assists to uncover SQL Injection vulnerabilities, including Stacked Queries, Boolean-Based, Union-Based, and Time-Based.
 - **Auth Matrix**: By constructing a comprehensive access matrix, the tool reveals potential access violations and privilege escalation paths. This feature enhances security posture by addressing authentication and authorization issues. 
-	- You can use web **'Spider'** feature to generate sitemap/URL list. It will populate visible links automatically and the result will totally depend on the user's header.
+	- You can use the web **'Spider'** feature to generate a sitemap/URL list. It will populate visible links automatically and the result will totally depend on the user's header.
 - **403 Bypass**: It aims to tackle common access restrictions, such as HTTP 403 Forbidden responses. It utilizes techniques like URL manipulation and request header modification to bypass implemented limitations.
 - **Copy as JavaScript**: It converts Http requests to JavaScript code for further XSS exploitation and more.<br/><br/>
 
