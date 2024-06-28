@@ -7,7 +7,7 @@ SerialVersion: 3
 MinPlatformVersion: 0
 ProOnly: False
 Author: Volkan Dindar
-ShortDescription: Helps identifying LFI, RCE, SQL injection flaws, authentication and authorization issues, and HTTP 403 access problems, while also converting HTTP requests to JavaScript for enhanced XSS exploitation
+ShortDescription: Helps identifying LFI, RCE, SQL injection flaws, authentication and authorization issues, and HTTP 403 access violations, while also converting HTTP requests to JavaScript for enhanced XSS exploitation.
 EntryPoint: Agartha.py
 BuildCommand: 
 SupportedProducts: Pro, Community
