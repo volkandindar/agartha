@@ -26,9 +26,9 @@ Or for manual installation:
 
 After all, you will see 'Agartha' tab in the main window and it will be also registered the right click, under: 
 - 'Extensions > Agartha - LFI, RCE, SQLi, Auth, HTTP to JS', with three sub-menus:
-	- 'Auth Matrix'
- 	- '403 Bypass'
-	- 'Copy as JavaScript'<br/><br/>
+	- **'Auth Matrix'**
+ 	- **'403 Bypass'**
+	- **'Copy as JavaScript'**<br/><br/>
 
 
 ## Local File Inclusion / Path Traversal
