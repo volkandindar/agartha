@@ -57,44 +57,44 @@ It generates payloads for various types of SQL injection attacks, including Stac
 
 ## Authorization Matrix / User Access Table
 This part focuses on analyzing user session and URL relationships to identify access violations. The tool systematically visits all URLs associated with pre-defined user sessions and populates a table with HTTP responses. Essentially, it creates an access matrix, which aids in identifying authentication and authorization issues. Ultimately, this process reveals which users can access specific page contents.
-- You can right click on any request ('Extensions > Agartha > Auth Matrix') to define **user sessions**.
-- Next, you need to provide **URL addresses** the user (Http header/session owner) can visit. You can use internal 'SiteMap' generator feature or supply any manual list. 
-- And then, you can use **'Add User'** button to add the user sessions.
-- Now, it is ready for execution with only clicking **'Run'** button, and it will fill the table. 
+- You can right-click on any request and navigate to 'Extensions > Agartha > Auth Matrix' to define **user sessions**.
+- Next, you need to provide the **URL addresses** that the user (HTTP header/session owner) can access. You can utilize the web 'Spider' feature for automated crawling or supply a manually curated list of URLs.
+- Afterward, you can use the **'Add User'** button to include the user sessions.
+- Now, it's ready for execution. Simply click the **'Run'** button, and the table will be populated accordingly.
 
 <img width="1000" alt="Authorization Matrix" src="https://github.com/volkandindar/agartha/assets/50321735/6f89e22c-e29c-413d-96d8-c2a8d7ac39d4">
 
 
 A little bit more details:
-1. What's username for the session you provide. You can add up to 4 different users and each user will have a different color to make it more readable.
-	- 'Add User' for adding user sessions to matrix.
-	- You can change Http request method between 'GET', 'POST' or 'Dynamic', which bases on proxy history.
-	- 'Reset' button clear all contents.
-	- 'Run' button execute the task and the result will show user access matrix.
-	- 'Warnings' indicates possible issues in different colors.
-	- 'Spider (SiteMap)' button generates URL list automatically and the result totally depends on the user's header/session. Visible URLs will be populated in next textbox and you can still modify it.
-	- 'Crawl Depth' is defination for how many sub-links (max depth) 'SiteMap' spider should go and detect links.
-2. It is the field for request headers and all URLs will be visited over the session defined in here.
-3. URL addresses that user can visit. You can create this list with manual effort or use **'SiteMap'** generator feature. You need to provide visitable URL lists for each users.
-4. All URLs you supply will be in here and they will be visited with the corresponding user sessions.
-5. No authentication column. All cookies, tokens and possible session parameters will be removed form Http calls.
-6. The rest of columns belong to users you created respectively and each of them has a unique color which indicates the URL owners.  
-7. Cell titles show Http 'response codes:response lengths' for each user sessions.
-8. Just click the cell you want to examine and Http details will be shown in the bottom.
+1. This is the field where you enter the username for the session you provide. You can add up to four different users, with each user being assigned a unique color to enhance readability.
+ 	- The 'Add User' button allows you to include user sessions in the matrix.
+ 	- You can change the HTTP request method to 'GET', 'POST', or 'Dynamic', the latter of which is based on proxy history.
+ 	- The 'Reset' button clears all contents.
+ 	- The 'Run' button executes the task, displaying the results in the user access matrix.
+ 	- The 'Warnings' section highlights potential issues using different colors for easy identification.
+ 	- The 'Spider (SiteMap)' button automatically generates a URL list based on the user's header/session. The visible URLs will be populated in the next textbox, where you can still make modifications as needed.
+ 	- 'Crawl Depth' defines the maximum number of sub-links that the 'Spider' should crawl to detect links.
+2. The field is for specifying request headers, and all URLs will be accessed using the session defined here.
+3. Specify the URL addresses that the user can visit. You can create this list manually or use the **'SiteMap'** generator feature. Ensure that you provide visitable URL lists for each user.
+4. All provided URLs will be listed here and attempted to access using the corresponding user sessions.
+5. The first column represents a scenario with no authentication attempt. All cookies, tokens, and potential session parameters will be removed from the HTTP calls.
+6. The remaining columns correspond to the users previously generated, each marked with a unique color to indicate the respective URL owners. 
+7. The cell titles display the HTTP response 'codes:lengths' for each user session, providing a clear overview of the response details for each access attempt.
+8. Just click on the cell you want to examine, and the HTTP details will be displayed at the bottom.
 
 Please note that potential session terminators (such as logoff, sign-out, etc.) and specific file types (such as CSS, images, JavaScript, etc.) will be filtered out from both the 'Spider' and the user's URL list.
 
 <img width="1000" alt="User Access Table Details" src="https://github.com/volkandindar/agartha/assets/50321735/e7ce918e-d40e-44c5-ada7-ee1c0cfa487b">
 
-After clicking 'RUN', the tool will fill user and URL matrix with different colors. Besides the user colors, you will see orange, yellow and red cells. The URL address does not belong to the user, and if the cell color is:
-- **Red**, because the response returns 'HTTP 200' and same content length, with authentication/authorization concerns
-- **Orange**, because the response returns 'HTTP 200' but different content length, with authentication/authorization concerns
-- **Yellow**, because the response returns 'HTTP 302' with authentication/authorization concerns
+After clicking 'RUN', the tool will populate the user and URL matrix with different colors. In addition to user-specific colors, you will see red, orange, and yellow cells indicating possible access issues. If the cell color is:
+- **Red** highlights a critical access violation, indicated by the response returning 'HTTP 200' and the same content length.
+- **Orange** signifies a moderate issue that needs attention, marked by the response returning 'HTTP 200' but with a different content length.
+- **Yellow** indicates that the response returns an 'HTTP 302' status, signifying a redirection.
 
 The task at hand involves a bulk process, and it is worth to mention which HTTP request methods will be used. The tool provides three different options for performing HTTP calls:
 - **GET**, All requests are sent using the GET method.
 - **POST**, All requests are sent using the POST method.
-- **Dynamic**, The request method depends on the proxy history.If no info exists, the base header method will be default.<br/><br/>
+- **Dynamic**, The request method is determined by the proxy history. If no information is available, the base header method will be used by default.<br/><br/>
 
 ## 403 Bypass
 HTTP 403 Forbidden status code indicates that the server understands the request but refuses to authorize it. Essentially, it means, ‘I recognize who you are, but you lack permission to access this resource.’ This status often points to issues like ‘insufficient permissions’, ‘authentication required’, ‘IP restrictions’, etc.
