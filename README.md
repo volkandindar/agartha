@@ -82,6 +82,8 @@ A little bit more details:
 7. Cell titles show Http 'response codes:response lengths' for each user sessions.
 8. Just click the cell you want to examine and Http details will be shown in the bottom.
 
+Please note that potential session terminators (such as logoff, sign-out, etc.) and specific file types (such as CSS, images, JavaScript, etc.) will be filtered out from both the 'Spider' and the user's URL list.
+
 <img width="1000" alt="User Access Table Details" src="https://github.com/volkandindar/agartha/assets/50321735/a48e60d4-d7f1-4c12-ad02-f1989c175730">
 
 After clicking 'RUN', the tool will fill user and URL matrix with different colors. Besides the user colors, you will see orange, yellow and red cells. The URL address does not belong to the user, and if the cell color is:
@@ -104,7 +106,7 @@ It is worth to mention two different usage cases:
 2. For **Privilege Escalation/Authorization** testing, retain session identifiers but limit their use to specific user roles. For instance, you can utilize a regular user’s session while substituting an administrative URL. This controlled approach allows you to assess whether privileged sources are accessible without proper roles.
 
 There are 2 ways you can send HTTP requests to the tool.
-1. You can load requests from proxy history by clicking the ‘Load Requests’ button. Doing so will automatically remove all session identifiers, making it suitable for attack case 1.
+1. You can load requests from proxy history by clicking the ‘Load Requests’ button. Doing so will automatically remove all session identifiers, making it suitable for attack case 1. Please note that potential session terminators (such as logoff, sign-out, etc.) and specific file types (such as CSS, images, JavaScript, etc.) will be also filtered out.
 2. You can send individual requests by right-clicking. Session identifiers will be retained, making this approach suitable for attack case 2.
 
 <img width="1000" alt="Sending individual requests" src="https://github.com/volkandindar/agartha/assets/50321735/54b567a0-6b69-43f4-b727-f01709f4cc79">
