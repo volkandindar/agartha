@@ -75,7 +75,7 @@ A little bit more details:
  	- The 'Spider (SiteMap)' button automatically generates a URL list based on the user's header/session. The visible URLs will be populated in the next textbox, where you can still make modifications as needed.
  	- 'Crawl Depth' defines the maximum number of sub-links that the 'Spider' should crawl to detect links.
 2. The field is for specifying request headers, and all URLs will be accessed using the session defined here.
-3. Specify the URL addresses that the user can visit. You can create this list manually or use the **'Spider'** generator feature. Ensure that you provide visitable URL lists for each user.
+3. Specify the URL addresses that users can visit. You can create this list manually or utilize the **'Spider'** crawler feature. Make sure to provide a visitable URL list for each user.
 4. All provided URLs will be listed here and attempted to access using the corresponding user sessions.
 5. The first column represents a scenario with no authentication attempt. All cookies, tokens, and potential session parameters will be removed from the HTTP calls.
 6. The remaining columns correspond to the users previously generated, each marked with a unique color to indicate the respective URL owners. 
