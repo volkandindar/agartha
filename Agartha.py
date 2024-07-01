@@ -17,7 +17,7 @@ try:
 except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
 
-VERSION = "1.901"
+VERSION = "1.902"
 
 class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFactory, IBurpExtenderCallbacks, IExtensionHelpers):
     
@@ -1534,7 +1534,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
 
                 # column14, example url:    http://dvwa.local/company/users/admin?id=1
                 #                           http://dvwa.local/company/users/admin.html?id=1
-                _fileExtensions = [".js", ".html", ".htm", ".js%2f", ".html%2f", ".htm%2f"]
+                _fileExtensions = [".js", ".html", ".js%2f", ".html%2f", ";index.html", "%00.html", "%00.js", ";index.html%2f", "%00.html%2f", "%00.js%2f"]
                 for _url in _urls:
                     if len(urlparse.urlparse(_url).path) > 1:
                         _locations = [i for i in range(len(str(_url))) if str(_url).startswith(_searchFor, i)]
@@ -2049,7 +2049,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                 # column14, example url:    http://dvwa.local/company/users/admin?id=1
                 #                           http://dvwa.local/company/users/admin.html?id=1
                 _headerOrg = list(_matrixList[x][1])
-                _fileExtensions = [".js", ".html", ".htm", ".js%2f", ".html%2f", ".htm%2f"]
+                _fileExtensions = [".js", ".html", ".js%2f", ".html%2f", ";index.html", "%00.html", "%00.js", ";index.html%2f", "%00.html%2f", "%00.js%2f"]
                 for _url in _urls:
                     if len(urlparse.urlparse(_url).path) > 1:
                         _locations = [i for i in range(len(str(_url))) if str(_url).startswith(_searchFor, i)]
