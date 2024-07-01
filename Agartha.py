@@ -17,7 +17,7 @@ try:
 except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
 
-VERSION = "1.90"
+VERSION = "1.901"
 
 class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFactory, IBurpExtenderCallbacks, IExtensionHelpers):
     
@@ -1388,7 +1388,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                 #                       http://dvwa.local/;/company/users/admin?id=1
                 #                       http://dvwa.local/company/;/users/admin?id=1
                 #                       http://dvwa.local/company/users/;/admin?id=1
-                _replaceWiths = ["/./", "/../", "/..././", "/;/", "//;//", "/.;/", "/;", "/.;", "/%2e/", "/%2f/", "/%20/", "/%00/", "/%01/", "/%0a/", "/%0d/", "/%09/"]
+                _replaceWiths = ["/./", "/../", "/..././", "/;/", "//;//", "/.;/", "/;", "/.;", "/%2e/", "/%2f/", "/%20/", "/%00/", "/%ff/", "/%01/", "/%0a/", "/%0d/", "/%09/"]
                 _locations = [i for i in range(len(str(_url))) if str(_url).startswith(_searchFor, i)]
                 for _replaceWith in _replaceWiths:
                     for _url in _urls:
@@ -1415,7 +1415,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                 #                       http://dvwa.local/company/users/admin?id=1../
                 #                       http://dvwa.local/company/users/admin?id=1/../
                 #                       http://dvwa.local/company/users/admin?id=1..;/
-                _replaceWiths = [".", "./", "../", "/../", "/./", "/.", "/..", "..", "..;/", ".;/", "/..;", "/.;", "/..;/", "/.;/", "%09", "%09/", "/..%09", "..%09", "/.%09", ".%09", "%00", "%00/", "/..%00", "..%00", "/.%00", ".%00", "%01", "%01/", "/..%01", "..%01", "/.%01", ".%01", "%20", "%20/", "/..%20", "..%20", "/.%20", ".%20", "%0a", "%0a/", "/..%0a", "..%0a", "/.%0a", ".%0a", "%0d", "%0d/", "/..%0d", "..%0d", "/.%0d", ".%0d", "/*", "*"]
+                _replaceWiths = [".", "./", "../", "/../", "/./", "/.", "/..", "..", "..;/", ".;/", "/..;", "/.;", "/..;/", "/.;/", "%09", "%09/", "/..%09", "..%09", "/.%09", ".%09", "%00", "%00/", "/..%00", "..%00", "/.%00", ".%00", "%ff", "%ff/", "/..%ff", "..%ff", "/.%ff", ".%ff", "%01", "%01/", "/..%01", "..%01", "/.%01", ".%01", "%20", "%20/", "/..%20", "..%20", "/.%20", ".%20", "%0a", "%0a/", "/..%0a", "..%0a", "/.%0a", ".%0a", "%0d", "%0d/", "/..%0d", "..%0d", "/.%0d", ".%0d", "/*", "*", "%2f"]
                 _locations = [i for i in range(len(str(_url))) if str(_url).startswith(_searchFor, i)]
                 for _replaceWith in _replaceWiths:
                     for _url in _urls:
@@ -1432,7 +1432,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                 #                       http://dvwa.local/company/users/admin../?id=1
                 #                       http://dvwa.local/company/users/admin/../?id=1
                 #                       http://dvwa.local/company/users/admin..;/?id=1
-                _replaceWiths = [".", "./", "../", "/../", "/./", "/.", "/..", "..", "..;/", ".;/", "/..;", "/.;", "/..;/", "/.;/", "%09", "%09/", "/..%09", "..%09", "/.%09", ".%09", "%00", "%00/", "/..%00", "..%00", "/.%00", ".%00", "%01", "%01/", "/..%01", "..%01", "/.%01", ".%01", "%20", "%20/", "/..%20", "..%20", "/.%20", ".%20", "%0a", "%0a/", "/..%0a", "..%0a", "/.%0a", ".%0a", "%0d", "%0d/", "/..%0d", "..%0d", "/.%0d", ".%0d", "/*", "*"]
+                _replaceWiths = [".", "./", "../", "/../", "/./", "/.", "/..", "..", "..;/", ".;/", "/..;", "/.;", "/..;/", "/.;/", "%09", "%09/", "/..%09", "..%09", "/.%09", ".%09", "%00", "%00/", "/..%00", "..%00", "/.%00", ".%00", "%ff", "%ff/", "/..%ff", "..%ff", "/.%ff", ".%ff", "%01", "%01/", "/..%01", "..%01", "/.%01", ".%01", "%20", "%20/", "/..%20", "..%20", "/.%20", ".%20", "%0a", "%0a/", "/..%0a", "..%0a", "/.%0a", ".%0a", "%0d", "%0d/", "/..%0d", "..%0d", "/.%0d", ".%0d", "/*", "*", "%2f"]
                 _locations = [i for i in range(len(str(_url))) if str(_url).startswith(_searchFor, i)]
                 for _replaceWith in _replaceWiths:
                     for _url in _urls:
@@ -1452,7 +1452,8 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                 #                           http://dvwa.local/%09/company/users/admin/%09/?id=1
                 #                           http://dvwa.local/company/%09/users/admin/%09/?id=1
                 #                           http://dvwa.local/company/users/%09/admin/%09/?id=1
-                _replaceWiths = ["/./", "/%09/", "/%20/", "/%00/", "/%01/", "/%0a/", "/%0d/"]
+
+                _replaceWiths = ["/./", "/%09/", "/%20/", "/%00/", "/%ff/", "/%01/", "/%0a/", "/%0d/"]
                 for _replaceWith in _replaceWiths:
                     for _url in _urls:
                         if _url.count('/') != 3:
@@ -1475,7 +1476,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                 #                           http://dvwa.local/%09/company/users/admin%09?id=1
                 #                           http://dvwa.local/company/%09/users/admin%09?id=1
                 #                           http://dvwa.local/company/users/%09/admin%09?id=1
-                _replaceWiths = ["/./", "/%09/", "/%20/", "/%00/", "/%01/", "/%0a/", "/%0d/"]
+                _replaceWiths = ["/./", "/%09/", "/%20/", "/%00/", "/%ff/", "/%01/", "/%0a/", "/%0d/"]
                 for _replaceWith in _replaceWiths:
                     for _url in _urls:
                         if _url.count('/') != 3:
@@ -1498,7 +1499,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                 #                           http://dvwa.local/%09/company/users/admin?id=1/%09/
                 #                           http://dvwa.local/company/%09/users/admin?id=1/%09/
                 #                           http://dvwa.local/company/users/%09/admin?id=1/%09/
-                _replaceWiths = ["/./", "/%09/", "/%20/", "/%00/", "/%01/", "/%0a/", "/%0d/"]
+                _replaceWiths = ["/./", "/%09/", "/%20/", "/%00/", "/%ff/", "/%01/", "/%0a/", "/%0d/"]
                 for _replaceWith in _replaceWiths:
                     for _url in _urls:
                         if _url.count('/') != 3:
@@ -1517,7 +1518,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                 #                           http://dvwa.local/%09/company/users/admin?id=1%09
                 #                           http://dvwa.local/company/%09/users/admin?id=1%09
                 #                           http://dvwa.local/company/users/%09/admin?id=1%09
-                _replaceWiths = ["/./", "/%09/", "/%20/", "/%00/", "/%01/", "/%0a/", "/%0d/"]
+                _replaceWiths = ["/./", "/%09/", "/%20/", "/%00/", "/%ff/", "/%01/", "/%0a/", "/%0d/"]
                 for _replaceWith in _replaceWiths:
                     for _url in _urls:
                         if _url.count('/') != 3:
@@ -1532,8 +1533,8 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
 
 
                 # column14, example url:    http://dvwa.local/company/users/admin?id=1
-                #                           http://dvwa.local/company/users/admin.css?id=1
-                _fileExtensions = [".js", ".css", ".html", ".json", ".js%2f", ".css%2f", ".html%2f", ".json%2f"]
+                #                           http://dvwa.local/company/users/admin.html?id=1
+                _fileExtensions = [".js", ".html", ".htm", ".js%2f", ".html%2f", ".htm%2f"]
                 for _url in _urls:
                     if len(urlparse.urlparse(_url).path) > 1:
                         _locations = [i for i in range(len(str(_url))) if str(_url).startswith(_searchFor, i)]
@@ -1649,6 +1650,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                                     _rowUrls.append(url)
                                     _columnNum = _columnNum + 1
                 # column19
+
 
                 self.cellNumbers = self.cellNumbers + _columnNum
                 if columnNum < _columnNum:
@@ -1855,7 +1857,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                 #                       http://dvwa.local/company/;/users/admin?id=1
                 #                       http://dvwa.local/company/users/;/admin?id=1
                 _headerOrg = list(_matrixList[x][1])
-                _replaceWiths = ["/./", "/../", "/..././", "/;/", "//;//", "/.;/", "/;", "/.;", "/%2e/", "/%2f/", "/%20/", "/%00/", "/%01/", "/%0a/", "/%0d/", "/%09/"]
+                _replaceWiths = ["/./", "/../", "/..././", "/;/", "//;//", "/.;/", "/;", "/.;", "/%2e/", "/%2f/", "/%20/", "/%00/", "/%ff/", "/%01/", "/%0a/", "/%0d/", "/%09/"]
                 _locations = [i for i in range(len(str(_url))) if str(_url).startswith(_searchFor, i)]
                 for _replaceWith in _replaceWiths:
                     for _url in _urls:
@@ -1893,7 +1895,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                 #                       http://dvwa.local/company/users/admin?id=1/../
                 #                       http://dvwa.local/company/users/admin?id=1..;/
                 _headerOrg = list(_matrixList[x][1])
-                _replaceWiths = [".", "./", "../", "/../", "/./", "/.", "/..", "..", "..;/", ".;/", "/..;", "/.;", "/..;/", "/.;/", "%09", "%09/", "/..%09", "..%09", "/.%09", ".%09", "%00", "%00/", "/..%00", "..%00", "/.%00", ".%00", "%01", "%01/", "/..%01", "..%01", "/.%01", ".%01", "%20", "%20/", "/..%20", "..%20", "/.%20", ".%20", "%0a", "%0a/", "/..%0a", "..%0a", "/.%0a", ".%0a", "%0d", "%0d/", "/..%0d", "..%0d", "/.%0d", ".%0d", "/*", "*"]
+                _replaceWiths = [".", "./", "../", "/../", "/./", "/.", "/..", "..", "..;/", ".;/", "/..;", "/.;", "/..;/", "/.;/", "%09", "%09/", "/..%09", "..%09", "/.%09", ".%09", "%00", "%00/", "/..%00", "..%00", "/.%00", ".%00", "%ff", "%ff/", "/..%ff", "..%ff", "/.%ff", ".%ff", "%01", "%01/", "/..%01", "..%01", "/.%01", ".%01", "%20", "%20/", "/..%20", "..%20", "/.%20", ".%20", "%0a", "%0a/", "/..%0a", "..%0a", "/.%0a", ".%0a", "%0d", "%0d/", "/..%0d", "..%0d", "/.%0d", ".%0d", "/*", "*", "%2f"]
                 _locations = [i for i in range(len(str(_url))) if str(_url).startswith(_searchFor, i)]
                 for _replaceWith in _replaceWiths:
                     for _url in _urls:
@@ -1916,7 +1918,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                 #                       http://dvwa.local/company/users/admin/../?id=1
                 #                       http://dvwa.local/company/users/admin..;/?id=1
                 _headerOrg = list(_matrixList[x][1])
-                _replaceWiths = [".", "./", "../", "/../", "/./", "/.", "/..", "..", "..;/", ".;/", "/..;", "/.;", "/..;/", "/.;/", "%09", "%09/", "/..%09", "..%09", "/.%09", ".%09", "%00", "%00/", "/..%00", "..%00", "/.%00", ".%00", "%01", "%01/", "/..%01", "..%01", "/.%01", ".%01", "%20", "%20/", "/..%20", "..%20", "/.%20", ".%20", "%0a", "%0a/", "/..%0a", "..%0a", "/.%0a", ".%0a", "%0d", "%0d/", "/..%0d", "..%0d", "/.%0d", ".%0d", "/*", "*"]
+                _replaceWiths = [".", "./", "../", "/../", "/./", "/.", "/..", "..", "..;/", ".;/", "/..;", "/.;", "/..;/", "/.;/", "%09", "%09/", "/..%09", "..%09", "/.%09", ".%09", "%00", "%00/", "/..%00", "..%00", "/.%00", ".%00", "%ff", "%ff/", "/..%ff", "..%ff", "/.%ff", ".%ff", "%01", "%01/", "/..%01", "..%01", "/.%01", ".%01", "%20", "%20/", "/..%20", "..%20", "/.%20", ".%20", "%0a", "%0a/", "/..%0a", "..%0a", "/.%0a", ".%0a", "%0d", "%0d/", "/..%0d", "..%0d", "/.%0d", ".%0d", "/*", "*", "%2f"]
                 _locations = [i for i in range(len(str(_url))) if str(_url).startswith(_searchFor, i)]
                 for _replaceWith in _replaceWiths:
                     for _url in _urls:
@@ -1942,7 +1944,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                 #                           http://dvwa.local/company/%09/users/admin/%09/?id=1
                 #                           http://dvwa.local/company/users/%09/admin/%09/?id=1
                 _headerOrg = list(_matrixList[x][1])
-                _replaceWiths = ["/./", "/%09/", "/%20/", "/%00/", "/%01/", "/%0a/", "/%0d/"]
+                _replaceWiths = ["/./", "/%09/", "/%20/", "/%00/", "/%ff/", "/%01/", "/%0a/", "/%0d/"]
                 for _replaceWith in _replaceWiths:
                     for _url in _urls:
                         if _url.count('/') != 3:
@@ -1971,7 +1973,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                 #                           http://dvwa.local/company/%09/users/admin%09?id=1
                 #                           http://dvwa.local/company/users/%09/admin%09?id=1
                 _headerOrg = list(_matrixList[x][1])
-                _replaceWiths = ["/./", "/%09/", "/%20/", "/%00/", "/%01/", "/%0a/", "/%0d/"]
+                _replaceWiths = ["/./", "/%09/", "/%20/", "/%00/", "/%ff/", "/%01/", "/%0a/", "/%0d/"]
                 for _replaceWith in _replaceWiths:
                     for _url in _urls:
                         if _url.count('/') != 3:
@@ -2000,7 +2002,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                 #                           http://dvwa.local/company/%09/users/admin?id=1/%09/
                 #                           http://dvwa.local/company/users/%09/admin?id=1/%09/
                 _headerOrg = list(_matrixList[x][1])
-                _replaceWiths = ["/./", "/%09/", "/%20/", "/%00/", "/%01/", "/%0a/", "/%0d/"]
+                _replaceWiths = ["/./", "/%09/", "/%20/", "/%00/", "/%ff/", "/%01/", "/%0a/", "/%0d/"]
                 for _replaceWith in _replaceWiths:
                     for _url in _urls:
                         if _url.count('/') != 3:
@@ -2025,7 +2027,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                 #                           http://dvwa.local/company/%09/users/admin?id=1%09
                 #                           http://dvwa.local/company/users/%09/admin?id=1%09
                 _headerOrg = list(_matrixList[x][1])
-                _replaceWiths = ["/./", "/%09/", "/%20/", "/%00/", "/%01/", "/%0a/", "/%0d/"]
+                _replaceWiths = ["/./", "/%09/", "/%20/", "/%00/", "/%ff/", "/%01/", "/%0a/", "/%0d/"]
                 for _replaceWith in _replaceWiths:
                     for _url in _urls:
                         if _url.count('/') != 3:
@@ -2045,9 +2047,9 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
 
 
                 # column14, example url:    http://dvwa.local/company/users/admin?id=1
-                #                           http://dvwa.local/company/users/admin.css?id=1
+                #                           http://dvwa.local/company/users/admin.html?id=1
                 _headerOrg = list(_matrixList[x][1])
-                _fileExtensions = [".js", ".css", ".html", ".json", ".js%2f", ".css%2f", ".html%2f", ".json%2f"]
+                _fileExtensions = [".js", ".html", ".htm", ".js%2f", ".html%2f", ".htm%2f"]
                 for _url in _urls:
                     if len(urlparse.urlparse(_url).path) > 1:
                         _locations = [i for i in range(len(str(_url))) if str(_url).startswith(_searchFor, i)]
