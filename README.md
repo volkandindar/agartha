@@ -132,7 +132,7 @@ The feature enables the conversion of HTTP requests into JavaScript code, which 
 
 To use this feature, simply right-click on any HTTP request and select 'Extensions > Agartha > Copy as JavaScript'.
 
-<img width="1000" alt="Copy as JavaScript" src="https://github.com/volkandindar/agartha/assets/50321735/771fd1db-c2ba-4a32-8b17-ef5cc53fa5bd">
+<img width="1000" alt="Copy as JavaScript" src="https://github.com/volkandindar/agartha/assets/50321735/c0149adb-d0ab-4aa3-98a1-34b86bd68d3f">
 
 It will automatically save to your clipboard, including some additional remarks for your reference. For example:
 ```
