@@ -17,7 +17,7 @@ try:
 except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
 
-VERSION = "1.902"
+VERSION = "1.903"
 
 class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFactory, IBurpExtenderCallbacks, IExtensionHelpers):
     
@@ -472,7 +472,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                 return
 
         listSQLi = []
-        prefixes = ["", "\\n", "\\\\n", "\\r\\n", "\\\\r\\\\n", "%0a", "%0d%0a", "%00"]
+        prefixes = ["", "\\n", "\\\\n", "\\r\\n", "\\\\r\\\\n", "%0a", "%0d%0a"]
         escapeChars = ["", "'", "''", "\\'"]
         if not self._cbSqlWafBypass.isSelected():
             prefixes = [""]
