@@ -107,7 +107,7 @@ It is worth to mention two different usage cases:
 
 There are 2 ways you can send HTTP requests to the tool.
 1. You can load requests from proxy history by clicking the ‘Load Requests’ button. Doing so will automatically remove all session identifiers, making it suitable for attack **Case 1**. Please note that potential session terminators (such as logoff, sign-out, etc.) and specific file types (such as CSS, images, JavaScript, etc.) will be also filtered out.
-2. You can send individual requests by right-clicking. Session identifiers will be retained, making this approach suitable for attack **Case 2**.
+2. You can send individual requests by right-clicking. Session identifiers will be retained/untouched, making this approach suitable for attack **Case 2**, and the result will be faster.
 
 <img width="1000" alt="Sending individual requests" src="https://github.com/volkandindar/agartha/assets/50321735/54b567a0-6b69-43f4-b727-f01709f4cc79">
 
