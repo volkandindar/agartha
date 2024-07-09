@@ -102,7 +102,7 @@ HTTP 403 Forbidden status code indicates that the server understands the request
 The tool addresses the common access forbidden error by employing various techniques, such as URL manipulation and request header modification. These strategies aim to bypass access restrictions and retrieve the desired content.
 
 It is worth to mention two different usage cases:
-1. In scenarios related to **Authentication Issues**, consider removing all session identifiers. Then you can test whether any sources become accessible publicly. This approach helps identify unauthentication accesses and ensures that sensitive information remains protected.
+1. In scenarios related to **Authentication Issues**, it is essential to consider removing all session identifiers. After doing so, test whether any sources become publicly accessible. This approach helps identify unauthenticated accesses and ensures that sensitive information remains protected. Please note that this will be a bulk process and may take longer as it involves revisiting each HTTP request from the history. However, this thorough verification of all endpoints is crucial for ensuring the security of the authentication mechanisms.
 2. For **Privilege Escalation/Authorization** testing, retain session identifiers but limit their use to specific user roles. For instance, you can utilize a regular user’s session while substituting an administrative URL. This controlled approach allows you to assess whether privileged sources are accessible without proper roles.
 
 There are 2 ways you can send HTTP requests to the tool.
