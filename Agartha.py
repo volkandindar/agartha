@@ -17,7 +17,7 @@ try:
 except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
 
-VERSION = "1.903"
+VERSION = "1.904"
 
 class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFactory, IBurpExtenderCallbacks, IExtensionHelpers):
     
@@ -2782,7 +2782,7 @@ class UserEnabledRenderer(TableCellRenderer):
         self.tipMessages = tipMessages
         self.focusX = -1
         self.focusY = -1
-        self.colorsUser = [Color(204, 229, 255), Color(204, 255, 204), Color(204, 204, 255), Color(255, 228, 196)]        
+        self.colorsUser = [Color(204, 229, 255), Color(204, 255, 204), Color(204, 204, 255), Color(190,220,210)]
         self.colorsAlert = [Color.white, Color(255, 153, 153), Color(255, 218, 185), Color(255, 255, 204), Color(211, 211, 211)]
 
     def getTableCellRendererComponent(self, table, value, isSelected, hasFocus, row, column):
