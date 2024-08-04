@@ -2,7 +2,7 @@ Uuid: b4915681326648b1a12e4059d71bc909
 ExtensionType: 2
 Name: Agartha - LFI, RCE, SQLi, Auth*, HTTP to JS
 RepoName: agartha
-ScreenVersion: 1.0
+ScreenVersion: 2.0
 SerialVersion: 3
 MinPlatformVersion: 0
 ProOnly: False
