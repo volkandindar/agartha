@@ -2437,7 +2437,8 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         <img width=\"1000\" alt=\"Copy as JavaScript\" src=\"https://github.com/volkandindar/agartha/assets/50321735/c0149adb-d0ab-4aa3-98a1-34b86bd68d3f\">
         
         <p>It will automatically save to your clipboard, including some additional remarks for your reference. For example:</p>
-        <pre><code>Http request with minimum header paramaters in JavaScript:
+        <pre><code>
+        Http request with minimum header paramaters in JavaScript:
             &lt;script&gt;
                 var xhr=new XMLHttpRequest();
                 xhr.open(&#39;GET&#39;,&#39;http://dvwa.local/vulnerabilities/xss_r/?name=XSS&#39;);
