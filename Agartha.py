@@ -2826,7 +2826,7 @@ class UserEnabledRenderer(TableCellRenderer):
         self.focusX = -1
         self.focusY = -1
         self.colorsUser = [Color(204, 229, 255), Color(204, 255, 204), Color(204, 204, 255), Color(190,220,210)]
-        self.colorsAlert = [Color.white, Color(255, 153, 153), Color(255, 218, 185), Color(255, 255, 204), Color(233, 233, 233)]
+        self.colorsAlert = [Color.white, Color(255, 153, 153), Color(255, 218, 185), Color(255, 255, 204), Color(233, 233, 233), Color(255, 204, 204)]
 
     def getTableCellRendererComponent(self, table, value, isSelected, hasFocus, row, column):
         cell = self._defaultCellRender.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
@@ -2880,14 +2880,12 @@ class UserEnabledRenderer(TableCellRenderer):
                                         toolTipMessage = "The URL is not in the user's list, but returns same HTTP response code with URL owner!"
                             else:
                                 if table.getValueAt(row, y).startswith("HTTP 2"):
-                                    cell.setBackground(self.colorsAlert[1])
+                                    cell.setBackground(self.colorsAlert[5])
                                     toolTipMessage = "The URL is not in the user's list, but the response is HTTP 2XX!"
                                 elif table.getValueAt(row, y).startswith("HTTP 3"):
-                                    if not cell.getBackground() == self.colorsAlert[1] and not cell.getBackground() == self.colorsAlert[2]:
-                                        cell.setBackground(self.colorsAlert[3])
+                                    if not cell.getBackground() == self.colorsAlert[5]:
+                                        cell.setBackground(self.colorsAlert[5])
                                         toolTipMessage = "The URL is not in the user's list, but the response is HTTP 3XX!"
-
-
 
                 cell.setToolTipText(toolTipMessage)
 
