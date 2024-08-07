@@ -2826,7 +2826,7 @@ class UserEnabledRenderer(TableCellRenderer):
         self.focusX = -1
         self.focusY = -1
         self.colorsUser = [Color(204, 229, 255), Color(204, 255, 204), Color(204, 204, 255), Color(190,220,210)]
-        self.colorsAlert = [Color.white, Color(255, 153, 153), Color(255, 218, 185), Color(255, 255, 204), Color(211, 211, 211)]
+        self.colorsAlert = [Color.white, Color(255, 153, 153), Color(255, 218, 185), Color(255, 255, 204), Color(233, 233, 233)]
 
     def getTableCellRendererComponent(self, table, value, isSelected, hasFocus, row, column):
         cell = self._defaultCellRender.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
