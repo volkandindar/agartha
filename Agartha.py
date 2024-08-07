@@ -2869,11 +2869,11 @@ class UserEnabledRenderer(TableCellRenderer):
                                 if table.getValueAt(row, y) == table.getValueAt(row, column):
                                     if table.getValueAt(row, y).startswith("HTTP 2"):
                                         cell.setBackground(self.colorsAlert[1])
-                                        toolTipMessage = "The URL is not in the user's list, but the response is same as URL owner"
+                                        toolTipMessage = "The URL is not in the user's list, but the response (HTTP 2XX) is same as URL owner"
                                     elif table.getValueAt(row, y).startswith("HTTP 3"):
                                         if not cell.getBackground() == self.colorsAlert[1] and not cell.getBackground() == self.colorsAlert[2]:
                                             cell.setBackground(self.colorsAlert[3])
-                                            toolTipMessage = "The URL is not in the user's list, but the response is same as URL owner!"
+                                            toolTipMessage = "The URL is not in the user's list, but the response (HTTP 3XX) is same as URL owner!"
                                 elif table.getValueAt(row, y)[:8] == table.getValueAt(row, column)[:8]:
                                     if not cell.getBackground() == self.colorsAlert[1]:    
                                         cell.setBackground(self.colorsAlert[2])
