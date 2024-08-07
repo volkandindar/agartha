@@ -2869,7 +2869,7 @@ class UserEnabledRenderer(TableCellRenderer):
                                 if table.getValueAt(row, y) == table.getValueAt(row, column):
                                     if table.getValueAt(row, y).startswith("HTTP 2"):
                                         cell.setBackground(self.colorsAlert[1])
-                                        toolTipMessage = "The URL is not in the user's list, but the response (HTTP 2XX) is same as URL owner"
+                                        toolTipMessage = "The URL is not in the user's list, but the response (HTTP 2XX) is same as URL owner!"
                                     elif table.getValueAt(row, y).startswith("HTTP 3"):
                                         if not cell.getBackground() == self.colorsAlert[1] and not cell.getBackground() == self.colorsAlert[2]:
                                             cell.setBackground(self.colorsAlert[3])
@@ -2878,6 +2878,16 @@ class UserEnabledRenderer(TableCellRenderer):
                                     if not cell.getBackground() == self.colorsAlert[1]:    
                                         cell.setBackground(self.colorsAlert[2])
                                         toolTipMessage = "The URL is not in the user's list, but returns same HTTP response code with URL owner!"
+                            else:
+                                if table.getValueAt(row, y).startswith("HTTP 2"):
+                                    cell.setBackground(self.colorsAlert[1])
+                                    toolTipMessage = "The URL is not in the user's list, but the response is HTTP 2XX!"
+                                elif table.getValueAt(row, y).startswith("HTTP 3"):
+                                    if not cell.getBackground() == self.colorsAlert[1] and not cell.getBackground() == self.colorsAlert[2]:
+                                        cell.setBackground(self.colorsAlert[3])
+                                        toolTipMessage = "The URL is not in the user's list, but the response is HTTP 3XX!"
+
+
 
                 cell.setToolTipText(toolTipMessage)
 
