@@ -224,7 +224,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
             if _url.count("/") == 2:
                 _url += "/"
             _ext = os.path.splitext(urlparse.urlparse(_url).path)[1]
-            if _url and not any(re.findall(r'(log|sign|time)([-_+%0-9]{0,5})(off|out|in|on)|(error|expire|kill|terminat|delete|remove)', _url, re.IGNORECASE)) and not any(re.findall(r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff|woff2|ttf|otf)$', _ext, re.IGNORECASE)):
+            if _url and not any(re.findall(r'(log|sign)([-_+%0-9]{0,5})(off|out|in|on)|(expire|kill|terminat|delete|remove)', _url, re.IGNORECASE)) and not any(re.findall(r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff|woff2|ttf|otf)$', _ext, re.IGNORECASE)):
                 # ignore logout, signoff, etc. paths
                 if _url not in self.userNamesHttpUrls[self.userCount]:
                     # check first if the url exist in user's url list
@@ -1159,7 +1159,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                     _url = _url.replace(":80/", "/")
 
                 _ext = os.path.splitext(urlparse.urlparse(_url).path)[1]
-                if any(_url in sublist for sublist in self.authenticationMatrix) or not _url or any(re.findall(r'(log|sign|time)([-_+%0-9]{0,5})(off|out|in|on)|(error|expire|kill|terminat|delete|remove)', _url, re.IGNORECASE)) or any(re.findall(r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff|woff2|ttf|otf)$', _ext, re.IGNORECASE)):
+                if any(_url in sublist for sublist in self.authenticationMatrix) or not _url or any(re.findall(r'(log|sign)([-_+%0-9]{0,5})(off|out|in|on)|(expire|kill|terminat|delete|remove)', _url, re.IGNORECASE)) or any(re.findall(r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff|woff2|ttf|otf)$', _ext, re.IGNORECASE)):
                     continue
 
                 self.tableMatrixAuthentication_DM.addRow([_url])
@@ -2749,7 +2749,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                     links = re.findall("(https?://[^\\s\'\"<]+)", msgBody, re.IGNORECASE)
                     for link in links:
                         _ext = os.path.splitext(urlparse.urlparse(link).path)[1]
-                        if link not in _userURLs and link and urlparse.urlparse(_url).hostname == urlparse.urlparse(link).hostname and not any(re.findall(r'(log|sign|time)([-_+%0-9]{0,5})(off|out|in|on)|(error|expire|kill|terminat|delete|remove)', link, re.IGNORECASE)) and "/." not in link and not any(re.findall(r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff|woff2|ttf|otf)$', _ext, re.IGNORECASE)):
+                        if link not in _userURLs and link and urlparse.urlparse(_url).hostname == urlparse.urlparse(link).hostname and not any(re.findall(r'(log|sign)([-_+%0-9]{0,5})(off|out|in|on)|(expire|kill|terminat|delete|remove)', link, re.IGNORECASE)) and "/." not in link and not any(re.findall(r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff|woff2|ttf|otf)$', _ext, re.IGNORECASE)):
                             _userURLs.append(link)
                             userLinks = userLinks + link + "\n"
 
@@ -2792,7 +2792,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
 
                         _ext = os.path.splitext(urlparse.urlparse(link).path)[1]
 
-                        if link not in _userURLs and link and urlparse.urlparse(_url).hostname == urlparse.urlparse(link).hostname and not any(re.findall(r'(log|sign|time)([-_+%0-9]{0,5})(off|out|in|on)|(error|expire|kill|terminat|delete|remove)', link, re.IGNORECASE)) and "/." not in link and not any(re.findall(r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff|woff2|ttf|otf)$', _ext, re.IGNORECASE)):
+                        if link not in _userURLs and link and urlparse.urlparse(_url).hostname == urlparse.urlparse(link).hostname and not any(re.findall(r'(log|sign)([-_+%0-9]{0,5})(off|out|in|on)|(expire|kill|terminat|delete|remove)', link, re.IGNORECASE)) and "/." not in link and not any(re.findall(r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff|woff2|ttf|otf)$', _ext, re.IGNORECASE)):
                             _userURLs.append(link)
                             userLinks = userLinks + link + "\n"
                             self._lblAuthNotification.text = "The crawler has found '" + str(len(_userURLs)) + "' links so far, and it is still in progress: '" + str(_userURLs.index(_url) + 1) + "/" + str(crawledURLs + 1) + "', current folder depth: '" + str(folderDepth) + "'."
