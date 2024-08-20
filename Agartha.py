@@ -216,6 +216,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self.userNamesHttpUrls.append([])
 
         urlList = []
+        _itemAdded = False
         for x in range(0, self.tableMatrix.getRowCount()):
             urlList.append(str(self.tableMatrix.getValueAt(x, 0)))
         for _url in set(self._tbAuthURL.getText().split('\n')):
@@ -231,20 +232,24 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                     if _url not in urlList:
                         # check table if url exists
                         self.tableMatrix_DM.addRow([_url])
+                        _itemAdded = True
         
         self._tbAuthURL.setText(self._tbAuthURL.getText().split('\n')[0]+"\n")
         self._btnAuthRun.setEnabled(True)
         self._btnAuthReset.setEnabled(True)
-        self._lblAuthNotification.text = "'" + self._tbAuthNewUser.text.strip() + "'' added successfully! Possible session terminators, and non-executable file types have been filtered out!"
-        self._lblAuthNotification.setForeground (Color.black)
-        self._cbAuthColoring.setEnabled(True)
-        self._cbAuthGETPOST.setEnabled(True)
-        self.tableMatrix.repaint()
-        self.tableMatrix.setSelectionForeground(Color.red)
-        self._customRenderer = UserEnabledRenderer(self.tableMatrix.getDefaultRenderer(str), self.userNamesHttpUrls, "")
-        self._customTableColumnModel = self.tableMatrix.getColumnModel()
-        for y in range(0,self.tableMatrix.getColumnCount()):
-            self._customTableColumnModel.getColumn (y).setCellRenderer (self._customRenderer)
+        if _itemAdded:
+            self._lblAuthNotification.text = "'" + self._tbAuthNewUser.text.strip() + "' added successfully! Possible session terminators, and non-executable file types have been filtered out!"
+            self._lblAuthNotification.setForeground (Color.black)
+            self._cbAuthColoring.setEnabled(True)
+            self._cbAuthGETPOST.setEnabled(True)
+            self.tableMatrix.repaint()
+            self.tableMatrix.setSelectionForeground(Color.red)
+            self._customRenderer = UserEnabledRenderer(self.tableMatrix.getDefaultRenderer(str), self.userNamesHttpUrls, "")
+            self._customTableColumnModel = self.tableMatrix.getColumnModel()
+            for y in range(0,self.tableMatrix.getColumnCount()):
+                self._customTableColumnModel.getColumn (y).setCellRenderer (self._customRenderer)
+        else:
+            self._lblAuthNotification.text = "No item has been added! User URLs may have possible session terminators, or non-executable file types. Please click 'Reset' button to refresh the screen."
 
         return
 
