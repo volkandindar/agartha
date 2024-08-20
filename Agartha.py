@@ -238,7 +238,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._btnAuthRun.setEnabled(True)
         self._btnAuthReset.setEnabled(True)
         if _itemAdded:
-            self._lblAuthNotification.text = "'" + self._tbAuthNewUser.text.strip() + "' added successfully! Possible session terminators, and non-executable file types have been filtered out!"
+            self._lblAuthNotification.text = "'" + self._tbAuthNewUser.text.strip() + "' added successfully! Possible session terminators (signout, logoff, etc.), dangerous commands (kill, terminate, delete, etc.), and file types (gif, js, etc.) have been filtered out!"
             self._lblAuthNotification.setForeground (Color.black)
             self._cbAuthColoring.setEnabled(True)
             self._cbAuthGETPOST.setEnabled(True)
@@ -249,7 +249,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
             for y in range(0,self.tableMatrix.getColumnCount()):
                 self._customTableColumnModel.getColumn (y).setCellRenderer (self._customRenderer)
         else:
-            self._lblAuthNotification.text = "No item has been added! User URLs may have possible session terminators, or non-executable file types. Please click 'Reset' button to refresh the screen."
+            self._lblAuthNotification.text = "No item has been added! User URLs may only have possible session terminators (signout, logoff, etc.), dangerous commands (kill, terminate, delete, etc.), or file types (gif, js, etc.). Please click 'Reset' button to refresh the screen."
 
         return
 
