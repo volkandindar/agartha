@@ -17,10 +17,11 @@ try:
 except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
 
-VERSION = "2.001"
+VERSION = "2.002"
 #url_regex = r'(log|sign)([-_+%0-9]{0,5})(off|out|in|on)|(expire|kill|terminat|delete|remove)'
 url_regex = r'(log|sign|time)([-_+%0-9]{0,5})(off|out)|(expire|kill|terminat|delete|remove)'
 ext_regex = r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff|woff2|ttf|otf)$'
+
 
 class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFactory, IBurpExtenderCallbacks, IExtensionHelpers):
     
@@ -179,6 +180,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
             self._lblAuthNotification.setForeground (Color.red)
             return
 
+        _validItem = False
         for _url in self._tbAuthURL.getText().split('\n'):
             _url = _url.strip()
             if not self.isURLValid(str(_url)) or _url == self._txtURLDefault:
@@ -186,6 +188,20 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                 self._lblAuthNotification.text = "URLs should start with 'http/s' and not have any spaces. Please check: '" + _url + "'"
                 self._lblAuthNotification.setForeground (Color.red)
                 return
+
+            if _url.count("/") == 2:
+                _url += "/"
+            _ext = os.path.splitext(urlparse.urlparse(_url).path)[1]
+            
+            if _url and not any(re.findall(url_regex, _url, re.IGNORECASE)) and not any(re.findall(ext_regex, _ext, re.IGNORECASE)):
+                _validItem = True
+                break
+        
+        if not _validItem:
+            self._lblAuthNotification.text = "No item has been added! User URLs may only have possible session terminators (signout, logoff, etc.), dangerous commands (kill, terminate, delete, etc.), or file types (gif, js, etc.)."
+            self._btnAuthReset.setEnabled(True)
+            return
+
         self._tbAuthURL.setForeground (Color.black)
 
         if not self._tbAuthHeader.getText().strip() or self._tbAuthHeader.getText().strip() == self._txtHeaderDefault:
@@ -219,7 +235,6 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self.userNamesHttpUrls.append([])
 
         urlList = []
-        _itemAdded = False
         for x in range(0, self.tableMatrix.getRowCount()):
             urlList.append(str(self.tableMatrix.getValueAt(x, 0)))
         for _url in set(self._tbAuthURL.getText().split('\n')):
@@ -235,25 +250,21 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                     if _url not in urlList:
                         # check table if url exists
                         self.tableMatrix_DM.addRow([_url])
-                        _itemAdded = True
         
         self._tbAuthURL.setText(self._tbAuthURL.getText().split('\n')[0]+"\n")
         self._btnAuthRun.setEnabled(True)
         self._btnAuthReset.setEnabled(True)
-        if _itemAdded:
-            self._lblAuthNotification.text = "'" + self._tbAuthNewUser.text.strip() + "' added successfully! Possible session terminators (signout, logoff, etc.), dangerous commands (kill, terminate, delete, etc.), and file types (gif, js, etc.) have been filtered out!"
-            self._lblAuthNotification.setForeground (Color.black)
-            self._cbAuthColoring.setEnabled(True)
-            self._cbAuthGETPOST.setEnabled(True)
-            self.tableMatrix.repaint()
-            self.tableMatrix.setSelectionForeground(Color.red)
-            self._customRenderer = UserEnabledRenderer(self.tableMatrix.getDefaultRenderer(str), self.userNamesHttpUrls, "")
-            self._customTableColumnModel = self.tableMatrix.getColumnModel()
-            for y in range(0,self.tableMatrix.getColumnCount()):
-                self._customTableColumnModel.getColumn (y).setCellRenderer (self._customRenderer)
-        else:
-            self._lblAuthNotification.text = "No item has been added! User URLs may only have possible session terminators (signout, logoff, etc.), dangerous commands (kill, terminate, delete, etc.), or file types (gif, js, etc.). Please click 'Reset' button to refresh the screen."
-
+        self._lblAuthNotification.text = "'" + self._tbAuthNewUser.text.strip() + "' added successfully! Possible session terminators (signout, logoff, etc.), dangerous commands (kill, terminate, delete, etc.), and file types (gif, js, etc.) have been filtered out!"
+        self._lblAuthNotification.setForeground (Color.black)
+        self._cbAuthColoring.setEnabled(True)
+        self._cbAuthGETPOST.setEnabled(True)
+        self.tableMatrix.repaint()
+        self.tableMatrix.setSelectionForeground(Color.red)
+        self._customRenderer = UserEnabledRenderer(self.tableMatrix.getDefaultRenderer(str), self.userNamesHttpUrls, "")
+        self._customTableColumnModel = self.tableMatrix.getColumnModel()
+        for y in range(0,self.tableMatrix.getColumnCount()):
+            self._customTableColumnModel.getColumn (y).setCellRenderer (self._customRenderer)
+        
         return
 
     def _cbAuthColoringFunc(self, ev):
