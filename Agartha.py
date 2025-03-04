@@ -17,7 +17,7 @@ try:
 except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
 
-VERSION = "2.002"
+VERSION = "2.003"
 #url_regex = r'(log|sign)([-_+%0-9]{0,5})(off|out|in|on)|(expire|kill|terminat|delete|remove)'
 url_regex = r'(log|sign|time)([-_+%0-9]{0,5})(off|out)|(expire|kill|terminat|delete|remove)'
 ext_regex = r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff|woff2|ttf|otf)$'
@@ -1157,6 +1157,10 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         return
     
     def historyFetcherThread(self, ev):
+        if self._cbAuthenticationHost.getSelectedIndex() < 0:
+            self._lblAuthenticationNotification.text = "Please select a hostname from the history, or 'Reset' the screen to update the list."
+            return
+
         self._btnAuthenticationFetchHistory.setEnabled(False)
         self._btnAuthenticationReset.setEnabled(False)
         self._cbAuthenticationHost.setEnabled(False)
