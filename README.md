@@ -168,4 +168,10 @@ For redirection, please also add this code before '</script>' tag:
 ```
 Please note that the JavaScript code will execute within the original user session, with many header fields automatically populated by the browser. However, in some cases, the server may require specific mandatory header fields. For example, certain requests might fail if the 'Content-Type' is incorrect. Therefore, you may need to adjust the code to ensure compatibility with the server's requirements.
 <br/><br/>
+
+## Bambdas Generator
+TO DO
+
+<br/><br/>
 [Another tutorial link](https://www.linkedin.com/pulse/agartha-lfi-rce-auth-sqli-http-js-volkan-dindar)
+
