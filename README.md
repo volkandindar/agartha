@@ -10,7 +10,8 @@ In summary:
 - **Auth Matrix**: By constructing a comprehensive access matrix, the tool reveals potential access violations and privilege escalation paths. This feature enhances security posture by addressing authentication and authorization issues. 
 	- You can use the web **'Spider'** feature to generate a sitemap/URL list, and it will crawl visible links from the user's session automatically.
 - **403 Bypass**: It aims to tackle common access restrictions, such as HTTP 403 Forbidden responses. It utilizes techniques like URL manipulation and request header modification to bypass implemented limitations.
-- **Copy as JavaScript**: It converts Http requests to JavaScript code for further XSS exploitation and more.<br/><br/>
+- **Copy as JavaScript**: It converts Http requests to JavaScript code for further XSS exploitation and more.
+- **Bambdas Generator**: TO DO.<br/><br/>
 
 Here is a small tutorial how to use.
 
