@@ -4,44 +4,53 @@ Author: Volkan Dindar
         https://github.com/volkandindar/agartha
 """
 try:
-    import sys, re, urlparse, random, os, urllib, posixpath
-    from burp import (IBurpExtender, ITab, IMessageEditorController, IContextMenuFactory, IBurpExtenderCallbacks, IExtensionHelpers)
-    from java.awt import (BorderLayout, FlowLayout, Color, Font, Dimension, Toolkit)
-    from javax.swing import (JCheckBox, JMenuItem, JTextPane, JTable, JScrollPane, JProgressBar, SwingConstants, JComboBox, JButton, JTextField, JSplitPane, JPanel, JLabel, JRadioButton, ButtonGroup, JTabbedPane, BoxLayout, JEditorPane, JList, DefaultListModel, DefaultListSelectionModel)
+    import sys, re, urlparse, random, os, urllib, posixpath, json
+    from burp import IBurpExtender, ITab, IMessageEditorController, IContextMenuFactory, IBurpExtenderCallbacks, IExtensionHelpers
+    from java.awt import BorderLayout, FlowLayout, Color, Font, Dimension, Toolkit, GridLayout, GridBagLayout, GridBagConstraints, Insets
+    from javax.swing import JCheckBox, JMenuItem, JTextPane, JTable, GroupLayout, JScrollPane, JProgressBar, SwingConstants, JComboBox, JButton, JTextField, JSplitPane, JPanel, JLabel, JRadioButton, ButtonGroup, JTabbedPane, BoxLayout, JEditorPane, JList, DefaultListModel, DefaultListSelectionModel, JTextArea, BorderFactory, SwingUtilities, Timer
     from javax.swing.border import EmptyBorder
-    from javax.swing.table import (DefaultTableModel, TableCellRenderer)
-    from java.util import ArrayList
+    from javax.swing.table import DefaultTableModel, TableCellRenderer
+    from java.util import ArrayList, Calendar, Locale
+    from java.text import SimpleDateFormat
     from threading import Thread
+    from java.lang import Runnable
     from java.awt.datatransfer import StringSelection
     from time import sleep
+    from java.net import URL, HttpURLConnection
+    from java.io import BufferedReader, InputStreamReader
+    from java.lang import Thread as JavaThread
+    from java.awt.event import MouseWheelListener, FocusListener
+    from javax.swing.text import SimpleAttributeSet, StyleConstants, StyleContext
 except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
+    sys.exit(1)
 
-VERSION = "2.004"
+VERSION = "2.1"
 #url_regex = r'(log|sign)([-_+%0-9]{0,5})(off|out|in|on)|(expire|kill|terminat|delete|remove)'
 url_regex = r'(log|sign|time)([-_+%0-9]{0,5})(off|out)|(expire|kill|terminat|delete|remove)'
-ext_regex = r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff|woff2|ttf|otf)$'
-
+ext_regex = r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff2|ttf|otf)$'
 
 class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFactory, IBurpExtenderCallbacks, IExtensionHelpers):
     
     def registerExtenderCallbacks(self, callbacks):
         self._callbacks = callbacks
         self._helpers = callbacks.getHelpers()
-        self._callbacks.setExtensionName("Agartha - LFI, RCE, SQLi, Auth, HTTP to JS")
+        self._callbacks.setExtensionName("Agartha - LFI, RCE, SQLi, Auth, HTTP to JS, Bambdas, BCheck")
         self._MainTabs = JTabbedPane()
         self._tabDictUI()
         self._tabAuthUI()
         self._tabAuthenticationUI()
+        self._tabBambdasUI()
         self._tabHelpUI()
         self._MainTabs.addTab("Payload Generator", None, self._tabDictPanel, None)
         self._MainTabs.addTab("Auth Matrix", None, self._tabAuthSplitpane, None)
         self._MainTabs.addTab("403 Bypass", None, self._tabAuthenticationSplitpane, None)
+        self._MainTabs.addTab("Bambdas Generator", None, self._tabBambdasPanel, None)
         self._MainTabs.addTab("Help", None, self._tabHelpJPanel, None)
         callbacks.addSuiteTab(self)
         callbacks.registerContextMenuFactory(self)
         callbacks.issueAlert("The extension has been loaded.")
-        print "Agartha(v" + VERSION + ") is a security tool for:\n\t\t* Local File Inclusion, Path Traversal\n\t\t* Command Injection, RCE\n\t\t* SQL Injection\n\t\t* Session based User Access Matrix\n\t\t* Authentication/Authorization Violations\n\t\t* HTTP 403 Bypass\n\t\t* Copy as Javascript\n\nFor more information and tutorial, please visit:\n\t\thttps://github.com/volkandindar/agartha\n\nAuthor:\n\t\tVolkan Dindar\n\t\tvolkan.dindar@owasp.org"
+        print "Agartha(v" + VERSION + ") is a security tool, which specializes in:\n\t\t* Path Traversal, Local File Inclusion (LFI) payload generations\n\t\t* Command Injection, Remote Code Execution (RCE) payload generations\n\t\t* SQL Injection (SQLi) payload generations\n\t\t* Auth Matrix, based on user sessions to find authentication/authorization violations\n\t\t* HTTP 403 Bypass, including vertical and horizontal privilege escalations\n\t\t* Copy as Javascript, for further XSS exploitation\n\t\t* Bambdas Script Generation, for better scope management and as a testing companion\n\t\t* BCheck Script Generation, to automate payload injections\n\nFor more information and tutorial, please visit:\n\t\thttps://github.com/volkandindar/agartha\n\nAuthor:\n\t\tVolkan Dindar\n\t\tvolkan.dindar@owasp.org"
         self.reset(self)
         return
 
@@ -82,7 +91,6 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                 self.tableMatrix.setValueAt(self.makeHttpCall(self.tableMatrix.getValueAt(x, 0), self.tableMatrix.getColumnName(y)), x, y)
                 self.progressBar.setValue(self.progressBar.getValue() + i)
                 self._lblAuthNotification.text = "It is still in progress, '" + str(int(self.progressBar.getValue() / 10000))  + "%' has been completed so far."
-
         
         self._customRenderer = UserEnabledRenderer(self.tableMatrix.getDefaultRenderer(str), self.userNamesHttpUrls, "")
         self._customTableColumnModel = self.tableMatrix.getColumnModel()
@@ -284,6 +292,165 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
             self._cbUnionDepth.setEnabled(False)
         return
 
+    def funcGeneratePayloadForBCheck(self, ev):
+        if self.funcGeneratePayload(self):
+            line_count = len([line for line in self._tabDictResultDisplay.getText().split('\n') if line.strip()])
+            if self._rbDictCommandInj.isSelected():
+                bcheckCode= """
+metadata:
+    language: v2-beta
+    name: "Command Injection (RCE) Fuzzing"
+    description: "Command Injection is a security flaw where attackers execute unauthorized commands on a system by exploiting unvalidated user input."
+    author: "Agartha - AutoGenerated BCheck Code"
+    tags: "RCE", "RCE Injection"
+
+define:
+    issueDetail = `Command Injection on Path {latest.request.url}`
+    references = `
+    References:
+    - https://portswigger.net/web-security/os-command-injection
+    - https://owasp.org/www-community/attacks/Command_Injection
+    - https://cheatsheetseries.owasp.org/cheatsheets/OS_Command_Injection_Defense_Cheat_Sheet.html`
+    issueRemediation = `Command Injection (RCE): To remediate Command Injection (RCE) issues, developers should adopt best practices such as using parameterized queries or prepared statements, which ensure user inputs are treated as data rather than executable code. Validating and sanitizing all user inputs to filter out malicious characters and patterns is essential. Running web applications with the least privileges necessary can limit the impact of potential exploits. Implementing robust error handling and avoiding the display of detailed error messages can prevent attackers from gaining insights into the system. Regular security audits and code reviews are crucial to identify and address potential vulnerabilities early on. By integrating these practices into the development lifecycle, organizations can significantly mitigate the risk of Command Injection attacks and enhance their overall security posture.
+     {references}`
+
+run for each:
+    payloads=
+"""
+            elif self._rbDictLFI.isSelected():
+                bcheckCode= """
+metadata:
+    language: v2-beta
+    name: "LFI Injection Fuzzing"
+    description: "Local File Inclusion (LFI) is a security vulnerability where attackers can access and execute files on a server by exploiting improper input validation. This can lead to unauthorized access to sensitive data and system compromise."
+    author: "Agartha - AutoGenerated BCheck Code"
+    tags: "LFI", "LFI Injection"
+
+define:
+    issueDetail = `Local File Inclusion on Path {latest.request.url}`
+    references = `
+    References:
+    - https://portswigger.net/web-security/file-path-traversal
+    - https://owasp.org/www-project-web-security-testing-guide/v42/4-Web_Application_Security_Testing/07-Input_Validation_Testing/11.1-Testing_for_Local_File_Inclusion
+    - https://owasp.org/www-project-web-security-testing-guide/v42/4-Web_Application_Security_Testing/07-Input_Validation_Testing/11.1-Testing_for_Local_File_Inclusion`
+    issueRemediation = `Local File Inclusion (LFI): To remediate LFI issues, developers should validate and sanitize all user inputs, ensuring only expected characters are allowed and rejecting suspicious patterns. Implementing a whitelist of allowed files and directories can prevent unauthorized access. Running web applications with the least privileges necessary can limit the impact of potential exploits. Robust error handling and avoiding the display of detailed error messages can prevent attackers from gaining insights into the system. Regular security audits and code reviews are crucial to identify and address potential vulnerabilities early on. By integrating these practices into the development lifecycle, organizations can significantly mitigate the risk of LFI attacks and enhance their overall security posture.
+     {references}`
+
+run for each:
+    payloads=
+"""
+            elif self._rbDictSQLi.isSelected():
+                bcheckCode= """
+metadata:
+    language: v2-beta
+    name: "SQL Injection Fuzzing"
+    description: "SQL injection is a security vulnerability where attackers insert malicious SQL code into a query, allowing them to manipulate or access the database improperly."
+    author: "Agartha - AutoGenerated BCheck Code"
+    tags: "SQLi", "SQL Injection"
+
+define:
+    issueDetail = `SQL Injection on Path {latest.request.url}`
+    references = `
+    References:
+    - https://portswigger.net/web-security/sql-injection
+    - https://owasp.org/www-community/attacks/SQL_Injection
+    - https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html`
+    issueRemediation = `SQL injection is a critical security vulnerability that allows attackers to manipulate and execute unauthorized SQL queries, potentially compromising the integrity and confidentiality of a database. To remediate SQL injection, developers should adopt best practices such as using parameterized queries or prepared statements, which ensure that user inputs are treated as data rather than executable code. Additionally, employing stored procedures can help encapsulate SQL logic and reduce direct interaction with the database. Input validation and sanitization are essential to filter out malicious characters and patterns. Implementing robust error handling and avoiding the display of detailed error messages can prevent attackers from gaining insights into the database structure. Regular security audits and code reviews are also crucial to identify and address potential vulnerabilities early on. By integrating these practices into the development lifecycle, organizations can significantly mitigate the risk of SQL injection attacks and enhance their overall security posture.
+     {references}`
+
+run for each:
+    payloads=
+"""
+            text = self._tabDictResultDisplay.getText()
+            lines = text.split('\n')
+            formatted_lines = ['\t"{}"'.format(line.replace('"', '\\"')) + ',' for line in lines if line.strip()]
+            bcheckCode += '\n'.join(formatted_lines)
+            bcheckCode = bcheckCode[:-1] + "\n"
+
+            if self._rbDictSQLi.isSelected() or self._rbDictCommandInj.isSelected():
+                bcheckCode += """
+given any insertion point then
+    send payload called payloadReplacing:
+        replacing: {payloads}
+    send payload called payloadAppending:
+        appending: {payloads}
+
+    if {payloadReplacing.response.status_code} is "200" then
+      # For more precise detections
+      # if ("condition1" in {payloadReplacing.response.body} and "condition2" in {payloadReplacing.response.body}) or ("condition3" in {payloadReplacing.response.body} and "condition4" in {payloadReplacing.response.body}) then
+        report issue and continue:
+            severity: medium
+            confidence: tentative
+            detail: `Injected parameter: {payloads}, at {payloadReplacing.request.url.path}`
+            remediation: {issueRemediation}
+      # end if
+    end if
+
+    if {payloadAppending.response.status_code} is "200" then
+      # For more precise detections
+      # if ("condition1" in {payloadAppending.response.body} and "condition2" in {payloadAppending.response.body}) or ("condition3" in {payloadAppending.response.body} and "condition4" in {payloadAppending.response.body}) then
+        report issue and continue:
+            severity: medium
+            confidence: tentative
+            detail: `Injected parameter: {payloads}, at {payloadAppending.request.url.path}`
+            remediation: {issueRemediation}
+      # end if
+    end if
+"""
+            elif self._rbDictLFI:
+                bcheckCode += """
+given request then
+    # replacing url partially
+    send request called payloadReplacingPartially:
+        replacing path: `{regex_replace({regex_replace({base.request.url}, "^.*?\\/.*?\\/.*?\\/", "/")}, "([^/]+)$", "")}{payloads}`
+    if {payloadReplacingPartially.response.status_code} is "200" then
+        # For more precise detections
+        # if ("localhost" in {payloadReplacingPartially.response.body} and "127.0.0.1" in {payloadReplacingPartially.response.body}) or ("localhost" in {payloadReplacingPartially.response.body} and "127.0.0.1" in {payloadReplacingPartially.response.body}) then
+            report issue and continue:
+            severity: medium
+            confidence: tentative
+            detail: `Injected parameter: {payloads}, at {payloadReplacingPartially.request.url.path}`
+            remediation: {issueRemediation}
+        # end if
+    end if
+
+    # replacing query string in URL, if it exists.
+    if ({base.request.url.file} matches ".*[?].*[=].*") then
+        send request called payloadReplacingQueryString:
+            replacing queries: `{regex_replace({base.request.url.query}, "([^&=]+)=([^&]*)", "$1=")}{payloads}`
+        if {payloadReplacingQueryString.response.status_code} is "200" then
+            # For more precise detections
+            # if ("localhost" in {payloadReplacingQueryString.response.body} and "127.0.0.1" in {payloadReplacingQueryString.response.body}) or ("localhost" in {payloadReplacingQueryString.response.body} and "127.0.0.1" in {payloadReplacingQueryString.response.body}) then
+                report issue and continue:
+                severity: medium
+                confidence: tentative
+                detail: `Injected parameter: {payloads}, at {payloadReplacingQueryString.request.url.path}`
+                remediation: {issueRemediation}
+            # end if
+        end if
+    end if
+
+    # replacing the whole url
+    #send request called payloadReplacingFull:
+    #    replacing path: `{regex_replace({base.request.url}, "^.*", "")}/{payloads}`
+    #if {payloadReplacingFull.response.status_code} is "200" then
+    #    # For more precise detections
+    #    # if ("localhost" in {payloadReplacingFull.response.body} and "127.0.0.1" in {payloadReplacingFull.response.body}) or ("localhost" in {payloadReplacingFull.response.body} and "127.0.0.1" in {payloadReplacingFull.response.body}) then
+    #        report issue and continue:
+    #        severity: medium
+    #        confidence: tentative
+    #        detail: `Injected parameter: {payloads}, at {payloadReplacingFull.request.url.path}`
+    #        remediation: {issueRemediation}
+    #    # end if
+    #end if
+"""
+            self._tabDictResultDisplay.setText(bcheckCode)
+            clipboard = Toolkit.getDefaultToolkit().getSystemClipboard()
+            clipboard.setContents(StringSelection(self._tabDictResultDisplay.getText()), None)
+            self._lblStatusLabel.setText('BCheck Code has generated with ' + str(line_count) + ' payloads, and has been copied to your clipboard!')
+        
+        return
+
     def funcGeneratePayload(self, ev):
         self._lblStatusLabel.setForeground (Color.red)
         self._tabDictResultDisplay.setText("")
@@ -296,7 +463,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
             elif self._rbDictCommandInj.isSelected():
                 self._lblStatusLabel.setText("Command input is not valid. " + self._txtDefaultCommandInj)
                 self._txtTargetPath.setText(random.choice(["sleep 120", "timeout 120"]))
-            return 
+            return False
 
         self._lblStatusLabel.setForeground (Color.black)
         self._txtTargetPath.text = self._txtTargetPath.text.strip()
@@ -306,8 +473,8 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         if self._rbDictLFI.isSelected():
             self.funcLFI(self)
         if self._rbDictSQLi.isSelected():
-            self.funcSQLi(self)            
-        return
+            self.funcSQLi(self)
+        return True
        
     def isValid(self):
         # input should not be empty, should contain at least one alphanumeric char and less than 250 length
@@ -372,7 +539,9 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
             listCommandInj = self.encodeURL(listCommandInj)
         
         self._tabDictResultDisplay.setText(''.join(map(str, listCommandInj)))
-        self._lblStatusLabel.setText('Payload list for "' + self._txtTargetPath.text + '" command returns with '+ str(len(listCommandInj)) + ' result.')
+        clipboard = Toolkit.getDefaultToolkit().getSystemClipboard()
+        clipboard.setContents(StringSelection(self._tabDictResultDisplay.getText()), None)
+        self._lblStatusLabel.setText('Payload list for "' + self._txtTargetPath.text + '" command returns with '+ str(len(listCommandInj)) + ' result, and they have been copied to your clipboard!')
         return
 
     def funcLFI(self, ev):
@@ -473,7 +642,9 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         listLFI = list(set(listLFI))
         listLFI.sort(reverse=True)
         self._tabDictResultDisplay.setText(''.join(map(str, listLFI)))
-        self._lblStatusLabel.setText('Payload list for "' + self._txtTargetPath.text + '" path returns with '+ str(len(listLFI)) + ' result. Please make sure payload encoding is disabled, unless you are sure what you are doing.') 
+        clipboard = Toolkit.getDefaultToolkit().getSystemClipboard()
+        clipboard.setContents(StringSelection(self._tabDictResultDisplay.getText()), None)
+        self._lblStatusLabel.setText('Payload list for "' + self._txtTargetPath.text + '" path returns with '+ str(len(listLFI)) + ' result, and they have been copied to your clipboard. Please make sure payload encoding is disabled, unless you are sure what you are doing.') 
         return
 
     def funcSQLi(self, ev):
@@ -735,14 +906,25 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         if self._cbSqlEncoding.isSelected():
             listSQLi = self.encodeURL(listSQLi)
         self._tabDictResultDisplay.setText(''.join(map(str, listSQLi)))
-        self._lblStatusLabel.setText('SQL Injection payload generation is returned with '+ str(len(listSQLi)) + ' records!')
+        clipboard = Toolkit.getDefaultToolkit().getSystemClipboard()
+        clipboard.setContents(StringSelection(self._tabDictResultDisplay.getText()), None)
+        self._lblStatusLabel.setText('SQL Injection payload generation is returned with '+ str(len(listSQLi)) + ' records, and they have been copied to your clipboard!')
         return
 
     def encodeURL(self, payloads):
         urlList = []
+        replacements = {
+            " ": "%20", "\"": "%22", "\\": "%5c", "=": "%3d", "<": "%3c", ";": "%3b",
+            "|": "%7c", "&": "%26", ":": "%3a", "`": "%60",
+            "$": "%24", ",": "%2c"
+        }
         for payload in payloads:
-            urlList.append(payload.replace(" ", "%20").replace("\"", "%22").replace("\\", "%5c").replace("=", "%3d").replace("<", "%3c").replace(";", "%3b").replace("|", "%7c").replace("&", "%26").replace(":", "%3a").replace("`", "%60").replace("#", "%23").replace("\\", "%5c").replace("/", "%2f"))
+            for char, encoded_char in replacements.items():
+                payload = payload.replace(char, encoded_char)
+            urlList.append(payload)
+        
         return urlList
+
 
     def getTabCaption(self):
         return "Agartha"
@@ -768,54 +950,63 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         elif self._MainTabs.getSelectedIndex() == 2:
             return self._httpReqResAuthentication[self.tableMatrixAuthentication.getSelectedRow()][self.tableMatrixAuthentication.getSelectedColumn()].getResponse()
 
+
     def createMenuItems(self, invocation):
-        self.context = invocation
-        menu_list = ArrayList()
-        menu_list.add(JMenuItem("Auth Matrix", actionPerformed=self.agartha_menu))
-        menu_list.add(JMenuItem("403 Bypass", actionPerformed=self.authentication_menu))
-        menu_list.add(JMenuItem("Copy as JavaScript", actionPerformed=self.js_menu))
-        return menu_list
+        try:
+            self.context = invocation
+            menu_list = ArrayList()
+            menu_list.add(JMenuItem("Auth Matrix", actionPerformed=self.agartha_menu))
+            menu_list.add(JMenuItem("403 Bypass", actionPerformed=self.authentication_menu))
+            menu_list.add(JMenuItem("Copy as JavaScript", actionPerformed=self.js_menu))
+            return menu_list
+        except:
+            print("[ERROR] Context Menu Exception: " + str(sys.exc_info()[1]))
+            return ArrayList()
 
     def js_menu(self, event):
         # right click menu
-        clipboard = Toolkit.getDefaultToolkit().getSystemClipboard()
-        http_contexts = self.context.getSelectedMessages()
-        _req = self._helpers.bytesToString(http_contexts[0].getRequest())
-        _url = str(self._helpers.analyzeRequest(http_contexts[0]).getUrl())
-        if _url.startswith("https"):
-            _url = _url.replace(":443/", "/")
-        elif _url.startswith("http"):
-            _url = _url.replace(":80/", "/")
+        try:
+            clipboard = Toolkit.getDefaultToolkit().getSystemClipboard()
+            http_contexts = self.context.getSelectedMessages()
+            _req = self._helpers.bytesToString(http_contexts[0].getRequest())
+            _url = str(self._helpers.analyzeRequest(http_contexts[0]).getUrl())
 
-        method = _req.splitlines()[0].split(" ", 1)[0]
-
-        if "]" in _req.splitlines()[-1][-1:] or "}" in _req.splitlines()[-1][-1:] or ">" in _req.splitlines()[-1][-1:]:
-            jscript = "JSON/XML is not supported yet :/"
-        else:
-            fullHeader = ""
-            for _reqLine in _req.splitlines()[1:-1]:
-                if _reqLine and not any(re.findall(r'(cookie|token|auth|content-length)(.*:)', _reqLine, re.IGNORECASE)):
-                    fullHeader += "xhr.setRequestHeader('" + _reqLine.split(":", 1)[0] + "','" + _reqLine.split(":", 1)[1] + "');"
-
-            if method == "GET":
-                minHeader = "var xhr=new XMLHttpRequest();xhr.open('GET','" + _url + "');xhr.withCredentials=true;"
-                jscript = "Http request with minimum header paramaters in JavaScript:\n\t<script>" + minHeader + "xhr.send();</script>\n\n"
-                jscript += "Http request with all header paramaters (except cookies, tokens, etc) in JavaScript, you may need to remove unnecessary fields:\n\t<script>" + minHeader + fullHeader + "xhr.send();</script>"
+            if _url.startswith("https"):
+                _url = _url.replace(":443/", "/")
+            elif _url.startswith("http"):
+                _url = _url.replace(":80/", "/")
+    
+            method = _req.splitlines()[0].split(" ", 1)[0]
+    
+            if "]" in _req.splitlines()[-1][-1:] or "}" in _req.splitlines()[-1][-1:] or ">" in _req.splitlines()[-1][-1:]:
+                jscript = "JSON/XML is not supported yet :/"
             else:
-                contentType = ""
-                for _reqLine in _req.splitlines():
-                    if any(re.findall(r'Content-type', _reqLine, re.IGNORECASE)):
-                        contentType = "xhr.setRequestHeader('Content-type','" + _reqLine.split(" ", 1)[1] + "');"
-                        break                    
-                
-                sendData = ""
-                if _req.splitlines()[-1]:
-                    sendData = "'" + _req.splitlines()[-1] + "'"
-                
-                minHeader = "var xhr=new XMLHttpRequest();xhr.open('" + method + "','" + _url + "');xhr.withCredentials=true;"
-                jscript = "Http request with minimum header paramaters in JavaScript:\n\t<script>" + minHeader + contentType.strip() + "xhr.send(" + sendData + ");</script>\n\n"
-                jscript += "Http request with all header paramaters (except cookies, tokens, etc) in JavaScript, you may need to remove unnecessary fields:\n\t<script>" + minHeader + fullHeader + "xhr.send(" + sendData + ");</script>"
-            jscript += "\n\nFor redirection, please also add this code before '</script>' tag:\n\txhr.onreadystatechange=function(){if (this.status===302){var location=this.getResponseHeader('Location');return ajax.call(this,location);}};"
+                fullHeader = ""
+                for _reqLine in _req.splitlines()[1:-1]:
+                    if _reqLine and not any(re.findall(r'(cookie|token|auth|content-length)(.*:)', _reqLine, re.IGNORECASE)):
+                        fullHeader += "xhr.setRequestHeader('" + _reqLine.split(":", 1)[0].strip() + "','" + _reqLine.split(":", 1)[1].strip() + "');"
+    
+                if method == "GET":
+                    minHeader = "var xhr=new XMLHttpRequest();xhr.open('GET','" + _url + "');xhr.withCredentials=true;"
+                    jscript = "Http request with minimum header paramaters in JavaScript:\n\t<script>" + minHeader + "xhr.send();</script>\n\n"
+                    jscript += "Http request with all header paramaters (except cookies, tokens, etc) in JavaScript, you may need to remove unnecessary fields:\n\t<script>" + minHeader + fullHeader + "xhr.send();</script>"
+                else:
+                    contentType = ""
+                    for _reqLine in _req.splitlines():
+                        if any(re.findall(r'Content-type', _reqLine, re.IGNORECASE)):
+                            contentType = "xhr.setRequestHeader('Content-type','" + _reqLine.split(" ", 1)[1].strip() + "');"
+                            break                    
+                    
+                    sendData = ""
+                    if _req.splitlines()[-1].strip():
+                        sendData = "'" + _req.splitlines()[-1] + "'"
+                    
+                    minHeader = "var xhr=new XMLHttpRequest();xhr.open('" + method + "','" + _url + "');xhr.withCredentials=true;"
+                    jscript = "Http request with minimum header paramaters in JavaScript:\n\t<script>" + minHeader + contentType.strip() + "xhr.send(" + sendData + ");</script>\n\n"
+                    jscript += "Http request with all header paramaters (except cookies, tokens, etc) in JavaScript, you may need to remove unnecessary fields:\n\t<script>" + minHeader + fullHeader + "xhr.send(" + sendData + ");</script>"
+                jscript += "\n\nFor redirection, please also add this code before '</script>' tag:\n\txhr.onreadystatechange=function(){if (this.status===302){var location=this.getResponseHeader('Location');return ajax.call(this,location);}};"
+        except:
+            jscript = "An error has occurred during the conversion from HTTP to JavaScript: " + str(sys.exc_info()[1])
         
         clipboard.setContents(StringSelection(jscript), None)
 
@@ -1000,15 +1191,23 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._tabAuthSplitpane.setTopComponent(self._tabAuthPanel)
         self._tabAuthSplitpane.setBottomComponent(_tabsReqRes)
 
+    def _cbAuthenticationEnableFilterFunc(self, ev):
+
+        if self._cbAuthenticationEnableFilter.isSelected():
+            self.txAuthenticationEnableKeyWordURL.setVisible(True)
+            self._lblAuthenticationEnableFilter2.setVisible(True)
+            self._cbAuthenticationDaystoShow.setVisible(True)
+            self._cbAuthenticationEnableURLGroup.setVisible(True)
+        else:
+            self.txAuthenticationEnableKeyWordURL.setVisible(False)
+            self._lblAuthenticationEnableFilter2.setVisible(False)
+            self._cbAuthenticationDaystoShow.setVisible(False)
+            self._cbAuthenticationEnableURLGroup.setVisible(False)
+
     def _tabAuthenticationUI(self):
         self._cbAuthenticationHost = JComboBox()
         self._cbAuthenticationHost.setPreferredSize(Dimension(250, 27))
         self._cbAuthenticationHost.setToolTipText("Target hostnames. If you dont see your target in here, please click 'Reset' button first.")
-
-        self._cbAuthenticationType = JComboBox(('Local', 'SSO', 'mTLS'), itemStateChanged=self._cbAuthenticationTypeFunc)
-        self._cbAuthenticationType.setPreferredSize(Dimension(120, 27))
-        self._cbAuthenticationType.setSelectedIndex(0)
-        self._cbAuthenticationType.setEnabled(False)
 
         self._btnAuthenticationFetchHistory = JButton("Load Requests", actionPerformed=self.historyFetcher)
         self._btnAuthenticationFetchHistory.setPreferredSize(Dimension(120, 27))
@@ -1023,6 +1222,30 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._btnAuthenticationRun.setToolTipText("Execute the task!")
         self._btnAuthenticationRun.setEnabled(False)
 
+        self._cbAuthenticationEnableFilter = JCheckBox('Enable Filters', False, itemStateChanged=self._cbAuthenticationEnableFilterFunc)
+        self._cbAuthenticationEnableFilter.setPreferredSize(Dimension(120, 27))
+        self._cbAuthenticationEnableFilter.setToolTipText("You can define some conditions, when you load URLs from the history.")
+
+        self._cbAuthenticationEnableURLGroup = JCheckBox('Enable URL Grouping', True)
+        self._cbAuthenticationEnableURLGroup.setPreferredSize(Dimension(200, 27))
+        self._cbAuthenticationEnableURLGroup.setVisible(False)
+        self._cbAuthenticationEnableURLGroup.setToolTipText("Similar URLs will count as one. (Experimental)")
+
+
+        self._cbAuthenticationDaystoShow = JComboBox(('Process only last day', 'Process only last 3 days', 'Process only last 7 days', 'All'))
+        #self._cbAuthenticationDaystoShow.setPreferredSize(Dimension(120, 27))
+        self._cbAuthenticationDaystoShow.setVisible(False)
+        self._cbAuthenticationDaystoShow.setSelectedIndex(0)
+
+        self._lblAuthenticationEnableFilter2 = JLabel("Keyword in the URL", SwingConstants.LEFT)
+        self._lblAuthenticationEnableFilter2.setPreferredSize(Dimension(120, 27))
+        self._lblAuthenticationEnableFilter2.setVisible(False)
+        self._lblAuthenticationEnableFilter2.setToolTipText("The keyword will be searched in URL.")
+        self.txAuthenticationEnableKeyWordURL = JTextField("")
+        self.txAuthenticationEnableKeyWordURL.setPreferredSize(Dimension(250, 27))
+        self.txAuthenticationEnableKeyWordURL.setVisible(False)
+        self.txAuthenticationEnableKeyWordURL.setToolTipText("The keyword will be searched in URL.")
+
         # panel top
         _tabAuthenticationPanel1 = JPanel(BorderLayout())
         _tabAuthenticationPanel1.setBorder(EmptyBorder(0, 0, 10, 0))
@@ -1034,12 +1257,18 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         _tabAuthenticationPanel1_A.add(self._btnAuthenticationFetchHistory)
         _tabAuthenticationPanel1_A.add(self._btnAuthenticationReset)
         _tabAuthenticationPanel1_A.add(self._btnAuthenticationRun)
-        _tabAuthenticationPanel1_A.add(self._cbAuthenticationType)
+        
+        _tabAuthenticationPanel1_A.add(self._cbAuthenticationEnableFilter)
+        _tabAuthenticationPanel1_A.add(self._cbAuthenticationEnableURLGroup)
+        _tabAuthenticationPanel1_A.add(self._cbAuthenticationDaystoShow)
+
+        _tabAuthenticationPanel1_A.add(self._lblAuthenticationEnableFilter2)
+        _tabAuthenticationPanel1_A.add(self.txAuthenticationEnableKeyWordURL)
 
         self._urlAddresses = DefaultListModel()
         self.tabAuthenticationJlist = JList(self._urlAddresses)
         self.tabAuthenticationJlist.addListSelectionListener(self.listChange)
-        self.tabAuthenticationJlist.setSelectionMode(DefaultListSelectionModel.SINGLE_SELECTION);
+        self.tabAuthenticationJlist.setSelectionMode(DefaultListSelectionModel.SINGLE_SELECTION)
         self.tabAuthenticationJlist.setToolTipText("Queued requests.")
 
         self._tbAuthenticationHeader = JTextPane()
@@ -1081,13 +1310,13 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         # panel center
 
         self._tabAuthenticationPanel = JSplitPane(JSplitPane.VERTICAL_SPLIT)
-        self._tabAuthenticationPanel.setResizeWeight(0.25)
+        self._tabAuthenticationPanel.setResizeWeight(0.3)
         self._tabAuthenticationPanel.setBorder(EmptyBorder(10, 10, 10, 10))
         self._tabAuthenticationPanel.setTopComponent(_tabAuthenticationPanel1)
         self._tabAuthenticationPanel.setBottomComponent(_tabAuthenticationPanel2)
 
         # panel bottom
-        _tabsAuthenticationReqRes = JTabbedPane()        
+        _tabsAuthenticationReqRes = JTabbedPane()
         self._requestViewerAuthentication = self._callbacks.createMessageEditor(self, False)
         self._responseViewerAuthentication = self._callbacks.createMessageEditor(self, False)
         _tabsAuthenticationReqRes.addTab("Request", self._requestViewerAuthentication.getComponent())
@@ -1098,31 +1327,1001 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._tabAuthenticationSplitpane.setResizeWeight(0.7)
         self._tabAuthenticationSplitpane.setTopComponent(self._tabAuthenticationPanel)
         self._tabAuthenticationSplitpane.setBottomComponent(_tabsAuthenticationReqRes)
+
+    def _cbBambdasValuableFunc(self, ev):
+        if self._cbBambdasValuable.isSelected():
+            self._txtBambdasValuable.setEnabled(True)
+        else:
+            self._txtBambdasValuable.setEnabled(False)
+
+    def _cbBambdasFilesDownFunc(self, ev):
+        if self._cbBambdasFilesDownloadable.isSelected():
+            self._txtBambdasFilesDownloadable.setEnabled(True)
+        else:
+            self._txtBambdasFilesDownloadable.setEnabled(False)
+
+    def _cbBambdasSQLiFunc(self, ev):
+        if self._cbBambdasSQLi.isSelected():
+            self._txtBambdasSQLiKeywords.setEnabled(True)
+        else:
+            self._txtBambdasSQLiKeywords.setEnabled(False)
+
+    def _cbBambdasXSSFunc(self, ev):
+        if self._cbBambdasXSS.isSelected():
+            self._txtBambdasXSSKeywords.setEnabled(True)
+        else:
+            self._txtBambdasXSSKeywords.setEnabled(False)
+
+    def _cbBambdasLFIFunc(self, ev):
+        if self._cbBambdasLFI.isSelected():
+            self._txtBambdasLFIKeywords.setEnabled(True)
+        else:
+            self._txtBambdasLFIKeywords.setEnabled(False)
+
+    def _cbBambdasSSRFFunc(self, ev):
+        if self._cbBambdasSSRF.isSelected():
+            self._txtBambdasSSRFKeywords.setEnabled(True)
+        else:
+            self._txtBambdasSSRFKeywords.setEnabled(False)
+
+    def _cbBambdasORedFunc(self, ev):
+        if self._cbBambdasORed.isSelected():
+            self._txtBambdasORedKeywords.setEnabled(True)
+        else:
+            self._txtBambdasORedKeywords.setEnabled(False)
+    
+    def _cbBambdasRCEFunc(self, ev):
+        if self._cbBambdasRCE.isSelected():
+            self._txtBambdasRCEKeywords.setEnabled(True)
+        else:
+            self._txtBambdasRCEKeywords.setEnabled(False)
+
+    def _cbBambdasHTTPMethodsFunc(self, ev):
+        if self._cbBambdasHTTPMethods.isSelected():
+            self._txtBambdasHTTPMethods.setEnabled(True)
+        else:
+            self._txtBambdasHTTPMethods.setEnabled(False)
+    
+    def _cbBambdasVulnJSFunc(self, ev):
+        if self._cbBambdasVulnJS.isSelected():
+            self._txtBambdasVulnJSKeywords.setEnabled(True)
+        else:
+            self._txtBambdasVulnJSKeywords.setEnabled(False)
+
+    def _cbBambdasExtIgnoreFunc(self, ev):
+        if self._cbBambdasExtIgnore.isSelected():
+            self._txtBambdasExtIgnoreKeywords.setEnabled(True)
+        else:
+            self._txtBambdasExtIgnoreKeywords.setEnabled(False)
+
+    def funcBambdasRun(self, ev):
+        bambdas = "/**\n"
+        bambdas += " * Bambdas Script - autogenerated by Agartha\n"
+        bambdas += " **/\n\n"
+
+        bambdas += "//logging.logToOutput(\"smt\");\t\t\t// for troubleshooting\n\n"
+        if self._cbBambdasforWhat.getSelectedIndex() == 0:
+            bambdas += "boolean resetScreen = false;\t\t\t// 'true' clear colors and notes, 'false' execute the script\n\n"
+
+        bambdas += "// URLs in the scope of testing, White-Listed / Wanted URLs\n"
+        allUrls = False
+        if sum(1 for line in self._tbBambdasScopeURLs.text.splitlines() if line.strip() == '/') == 1:
+            # There is a '/' in the list, which suppresses the rest of the URLs.
+            bambdas += "String[] targetPaths = {\"/.*\"};\n"
+            allUrls = True
+        elif self._tbBambdasScopeURLs.text != self._txBambdasScopeURLs and self._tbBambdasScopeURLs.text.strip() != "":
+            targetPaths = "{"
+            for line in self._tbBambdasScopeURLs.text.splitlines():
+                if  line.strip() == "":
+                    pass
+                elif not line.strip().startswith("/"):
+                    self._lblBambdasNotification2.text = "All URLs in White-list should start with '/'"
+                    self._lblBambdasNotification2.setForeground (Color.red)
+                    return
+                else:
+                    targetPaths += "\"" + (line.strip().replace("*",".*") + ".*").replace(".*.*", ".*") + "\", "
+            if targetPaths != "{":
+                targetPaths = targetPaths[:-2]
+            targetPaths += "}"
+            bambdas += "String[] targetPaths = " + targetPaths + ";\n"
+        else:
+            # by default includes all - /
+            bambdas += "String[] targetPaths = {\"/.*\"};\n"
+            allUrls = True
+        bambdas += "// URLs in the scope of testing, White-Listed / Wanted URLs\n\n"
+
+        bambdas += "// Black-Listed / Unwanted URLs\n"
+        if self._tbBambdasBlackListedURLs.text != self._txBambdasBlackListedURLs:
+            targetBlackListUrls = "{"
+            for line in self._tbBambdasBlackListedURLs.text.splitlines():
+                if  line.strip() == "":
+                    pass
+                elif not line.strip().startswith("/"):
+                    self._lblBambdasNotification2.text = "All URLs in Black-list should start with '/'"
+                    self._lblBambdasNotification2.setForeground (Color.red)
+                    return
+                else:
+                    targetBlackListUrls += "\"" + (line.strip().replace("*",".*") + ".*").replace(".*.*", ".*") + "\", "
+            if targetBlackListUrls != "{":
+                targetBlackListUrls = targetBlackListUrls[:-2]
+            targetBlackListUrls += "}"
+            bambdas += "String[] targetBlackListUrls = " + targetBlackListUrls + ";\n"
+            bambdas += "// You can add unwanted URLs to this list to ignore them!\n"
+        else:
+            bambdas += "String[] targetBlackListUrls = {\"/YouCanPutBlackListURLsHere.*\"};\n"
+            bambdas += "// You can add unwanted URLs to this list to ignore them!\n"
+        bambdas += "// Black-Listed / Unwanted URLs\n\n"
+
+        bambdas += "// Tested URLs list\n"
+        bambdas += "String[] targetPathsDone = {\"/YouCanPutDoneURLsHere.*\"};\n"
+        bambdas += "// You can add completed URLs to this list once the security assessment is done!\n"
+        bambdas += "// Tested URLs list\n\n"
+
+        if self._cbBambdasforWhat.getSelectedIndex() == 0:
+            bambdas += "// Reset the screen\n"
+            bambdas += "if (resetScreen) {\n"
+            bambdas += "    requestResponse.annotations().setHighlightColor(HighlightColor.NONE);\n"
+            bambdas += "    requestResponse.annotations().setNotes(\"\");\n"
+            bambdas += "    return true;\n"
+            bambdas += "}\n"
+            bambdas += "// Reset the screen\n\n"
+        
+        if self._cbBambdasScope.isSelected():
+            # bambdas += "// Display only items in scope and has response\n"
+            bambdas += "// Display only items in scope\n"
+            # bambdas += "if (!requestResponse.hasResponse() || !requestResponse.request().isInScope())\n"
+            bambdas += "if (!requestResponse.request().isInScope())\n"
+            bambdas += "    return false;\n"
+            bambdas += "// Display only items in scope\n\n"
+
+        if self._cbBambdasforWhat.getSelectedIndex() == 0:
+            bambdas += "// check for if already processed\n"
+            bambdas += "if ((requestResponse.annotations().highlightColor() != HighlightColor." + self._cbBambdasColorScope.getSelectedItem() + " && requestResponse.annotations().highlightColor() != HighlightColor." + self._cbBambdasColorScopeSecondary.getSelectedItem() + " && requestResponse.annotations().highlightColor() != HighlightColor." + self._cbBambdasColorKeyWords.getSelectedItem() + " && requestResponse.annotations().highlightColor().toString() != \"NONE\") || (!requestResponse.annotations().notes().startsWith(\"Suspicious\") && requestResponse.annotations().notes() !=\"\"))\n"
+            bambdas += "\treturn true;\n" 
+            bambdas += "// check for if already processed\n\n"
+
+        bambdas += "// general vars\n"
+        bambdas += "boolean suspiciousHit = false;\t\t\t//Flag for to detect if suspicious words are hit!\n"
+        bambdas += "String responseBody = requestResponse.response().bodyToString();\n"
+        bambdas += "String requestBody  = requestResponse.request().bodyToString();\n"
+        bambdas += "var request = requestResponse.request();\n"
+        bambdas += "StringBuilder notesBuilder = new StringBuilder();\n"
+        bambdas += "var path = requestResponse.request().path().toLowerCase();\n"
+        bambdas += "var pathExt = request.pathWithoutQuery().toLowerCase();\n"
+        bambdas += "// general vars\n\n"
+
+        if self._cbBambdasExtIgnore.isSelected():
+            filterDenyList = ""
+            for ext in [ext.strip() for ext in self._txtBambdasExtIgnoreKeywords.text.split(',')]:
+                filterDenyList += "|" + ext;
+            if filterDenyList[1:]:
+                bambdas += "// Black-Listed file extensions\n"
+                bambdas += "if (Pattern.compile(\"\\\\.(" + filterDenyList[1:] + ")$\", Pattern.CASE_INSENSITIVE).matcher(pathExt).find())\n"
+                bambdas += "    return false;\n"
+                bambdas += "// Black-Listed file extensions\n\n"
+
+        if (self._cbBambdasSQLi.isSelected() or self._cbBambdasXSS.isSelected() or self._cbBambdasLFI.isSelected() or self._cbBambdasSSRF.isSelected() or self._cbBambdasORed.isSelected() or self._cbBambdasRCE.isSelected() or self._cbBambdasVulnJS.isSelected()):
+            bambdas += "// Suspicious parameters OWASP Top 25\n"
+            bambdas += "Map<String, List<String>> attacksKeyWords = new HashMap<>();\n"
+            bambdas += "String[] paramsArray;\n"
+            bambdas += "List<String> paramsArrayTrimmed = new ArrayList<>();\n\n"
+        
+            if self._cbBambdasSQLi.isSelected():
+                bambdas += "// SQLi suspicious keywords\n"
+                bambdas += "paramsArrayTrimmed = new ArrayList<>();\n"
+                bambdas += "String textSQLi = \"" + self._txtBambdasSQLiKeywords.text.strip() + "\";\n"
+                bambdas += "paramsArray = textSQLi.split(\",\\s*\");\n"
+                bambdas += "for (String paramArray : paramsArray)\n"
+                bambdas += "    if(!paramArray.trim().isEmpty())\n"
+                bambdas += "        paramsArrayTrimmed.add(paramArray.trim());\n"
+                bambdas += "attacksKeyWords.put(\"SQLi\", new ArrayList<>(paramsArrayTrimmed));\n"
+                bambdas += "// SQLi suspicious keywords\n\n"
+
+            if self._cbBambdasXSS.isSelected():
+                bambdas += "// XXS suspicious keywords\n"
+                bambdas += "paramsArrayTrimmed = new ArrayList<>();\n"
+                bambdas += "String textXSS = \"" + self._txtBambdasXSSKeywords.text.strip() + "\";\n"
+                bambdas += "paramsArray = textXSS.split(\",\\s*\");\n"
+                bambdas += "for (String paramArray : paramsArray)\n"
+                bambdas += "    if(!paramArray.trim().isEmpty())\n"
+                bambdas += "        paramsArrayTrimmed.add(paramArray.trim());\n"
+                bambdas += "attacksKeyWords.put(\"XSS\", new ArrayList<>(paramsArrayTrimmed));\n"
+                bambdas += "// XXS suspicious keywords\n\n"
+
+            if self._cbBambdasLFI.isSelected():
+                bambdas += "// LFI suspicious keywords\n"
+                bambdas += "paramsArrayTrimmed = new ArrayList<>();\n"
+                bambdas += "String textLFI = \"" + self._txtBambdasLFIKeywords.text.strip() + "\";\n"
+                bambdas += "paramsArray = textLFI.split(\",\\s*\");\n"
+                bambdas += "for (String paramArray : paramsArray)\n"
+                bambdas += "    if(!paramArray.trim().isEmpty())\n"
+                bambdas += "        paramsArrayTrimmed.add(paramArray.trim());\n"
+                bambdas += "attacksKeyWords.put(\"LFI\", new ArrayList<>(paramsArrayTrimmed));\n"
+                bambdas += "// LFI suspicious keywords\n\n"
+
+            if self._cbBambdasSSRF.isSelected():
+                bambdas += "// SSRF suspicious keywords\n"
+                bambdas += "paramsArrayTrimmed = new ArrayList<>();\n"
+                bambdas += "String textSSRF = \"" + self._txtBambdasSSRFKeywords.text.strip() + "\";\n"
+                bambdas += "paramsArray = textSSRF.split(\",\\s*\");\n"
+                bambdas += "for (String paramArray : paramsArray)\n"
+                bambdas += "    if(!paramArray.trim().isEmpty())\n"
+                bambdas += "        paramsArrayTrimmed.add(paramArray.trim());\n"
+                bambdas += "attacksKeyWords.put(\"SSRF\", new ArrayList<>(paramsArrayTrimmed));\n"
+                bambdas += "// SSRF suspicious keywords\n\n"
+
+            if self._cbBambdasORed.isSelected():
+                bambdas += "// OR suspicious keywords\n"
+                bambdas += "paramsArrayTrimmed = new ArrayList<>();\n"
+                bambdas += "String textOR = \"" + self._txtBambdasORedKeywords.text.strip() + "\";\n"
+                bambdas += "paramsArray = textOR.split(\",\\s*\");\n"
+                bambdas += "for (String paramArray : paramsArray)\n"
+                bambdas += "    if(!paramArray.trim().isEmpty())\n"
+                bambdas += "        paramsArrayTrimmed.add(paramArray.trim());\n"
+                bambdas += "attacksKeyWords.put(\"OpenRedirect\", new ArrayList<>(paramsArrayTrimmed));\n"
+                bambdas += "// OR suspicious keywords\n\n"
+
+            if self._cbBambdasRCE.isSelected():
+                bambdas += "// RCE suspicious keywords\n"
+                bambdas += "paramsArrayTrimmed = new ArrayList<>();\n"
+                bambdas += "String textRCE = \"" + self._txtBambdasRCEKeywords.text.strip() + "\";\n"
+                bambdas += "paramsArray = textRCE.split(\",\\s*\");\n"
+                bambdas += "for (String paramArray : paramsArray)\n"
+                bambdas += "    if(!paramArray.trim().isEmpty())\n"
+                bambdas += "        paramsArrayTrimmed.add(paramArray.trim());\n"
+                bambdas += "attacksKeyWords.put(\"RCE\", new ArrayList<>(paramsArrayTrimmed));\n"
+                bambdas += "// RCE suspicious keywords\n\n"
+
+            if self._cbBambdasVulnJS.isSelected():
+                vulnJSFunc = "{"
+                for vulnJS in [vulnJS.strip() for vulnJS in self._txtBambdasVulnJSKeywords.text.strip().replace(".","\\\\.").replace("(","\\\\(").split(',')]:
+                    if vulnJS:
+                        vulnJSFunc += "\"" + vulnJS + "\", "
+                if vulnJSFunc != "{":
+                    vulnJSFunc = vulnJSFunc[:-2] 
+                vulnJSFunc += "}"
+                bambdas += "// Suspicious Functions JS functions\n"
+                bambdas += "String[] suspiciousFunctions = " + vulnJSFunc + ";\n"
+                bambdas += "// Suspicious Functions JS functions\n\n"
+            bambdas += "// Suspicious parameters OWASP Top 25\n"
+
+        if self._cbBambdasHTTPMethods.isSelected():
+            httpMethods = "{"
+            for httpMtd in [httpMtd.strip() for httpMtd in self._txtBambdasHTTPMethods.text.strip().split(',')]:
+                if httpMtd:
+                    httpMethods += "\"" + httpMtd + "\", "
+            if httpMethods != "{":
+                httpMethods = httpMethods[:-2] 
+            httpMethods += "}"
+            bambdas += "// HTTP methods to ignore\n"
+            bambdas += "String[] httpMethods = " + httpMethods + ";\n"
+            bambdas += "// HTTP methods to ignore\n\n"
+        
+        if self._cbBambdasValuable.isSelected():
+            bambdas += "// Important keywords will be searched\n"
+            highValueWords = "{"
+            for valueWords in [valueWords.strip() for valueWords in self._txtBambdasValuable.text.strip().split(',')]:
+                if valueWords:
+                    highValueWords += "\"" + valueWords + "\", "
+            if highValueWords != "{":
+                highValueWords = highValueWords[:-2] 
+            highValueWords += "}"
+            bambdas += "String[] highValueWords = " + highValueWords + ";\n"
+            bambdas += "// Important keywords will be searched\n\n"
+
+        if self._cbBambdasFilesDownloadable.isSelected():
+            fileExtensions = "{"
+            for ext in [ext.strip() for ext in self._txtBambdasFilesDownloadable.text.strip().split(',')]:
+                if ext:
+                    fileExtensions += "\"" + ext + "\", "
+            if fileExtensions != "{":
+                fileExtensions = fileExtensions[:-2] 
+            fileExtensions += "}"
+            bambdas += "// Downloadable file checks\n"
+            bambdas += "String[] fileExtensions = " + fileExtensions + ";\n"
+            bambdas += "// Downloadable file checks\n\n"
+
+        bambdas += "// Black-Listed / Unwanted URLs\n"
+        bambdas += "for (String targetPath : targetBlackListUrls)\n"
+        bambdas += "    if (targetPath != null && !targetPath.trim().isEmpty() && Pattern.compile(targetPath, Pattern.CASE_INSENSITIVE).matcher(path).find())\n"
+        bambdas += "        return false;\n"
+        bambdas += "// Black-Listed / Unwanted URLs\n"
+
+        if self._cbBambdasHTTPMethods.isSelected():
+            bambdas +="""
+// HTTP methods to ignore
+for (String httpMethod : httpMethods)
+    if (requestResponse.request().method().equalsIgnoreCase(httpMethod))
+        return false;
+// HTTP methods to ignore\n
+"""
+        else:
+            bambdas += "\n"
+        
+        bambdas += "// How many days to display\n"
+        bambdas += " if (!requestResponse.time().isAfter(ZonedDateTime.now().minusDays(" + self._cbBambdasDisplayDays.getSelectedItem().split()[0] + ")))\n"
+        bambdas += "    return false;\n"
+        bambdas += "// How many days to display\n\n"
+
+        bambdas += "// How many days to process\n"
+        bambdas += "if (requestResponse.time().isAfter(ZonedDateTime.now().minusDays(" + self._cbBambdasProcessDays.getSelectedItem().split()[0] + "))){\n"
+        bambdas += "\tList<Pattern> patterns = new ArrayList<>();"
+        if self._cbBambdasValuable.isSelected():
+            bambdas += """
+    for (String highValueWord : highValueWords)
+        patterns.add(Pattern.compile(highValueWord, Pattern.CASE_INSENSITIVE));
+"""
+            if self._cbBambdasSearchinRes.isSelected():
+                bambdas += """
+    // ValuableWord check from response
+    for (Pattern pattern : patterns)
+        if (pattern.matcher(responseBody).find()){
+            suspiciousHit = true;
+            if (notesBuilder.length() > 0)
+                notesBuilder.append(", ");
+            notesBuilder.append(pattern + "(ValuableWord-Res)");
+        }
+    // check from response
+"""
+            if self._cbBambdasSearchinReq.isSelected():
+                bambdas += """
+    // ValuableWord check from request
+    for (Pattern pattern : patterns)
+        if (pattern.matcher(requestBody).find()){
+            suspiciousHit = true;
+            if (notesBuilder.length() > 0)
+                notesBuilder.append(", ");
+            notesBuilder.append(pattern + "(ValuableWord-Req)");
+        }
+    // ValuableWord check from request
+"""
+            if self._cbBambdasSearchinURL.isSelected():
+                bambdas += """
+    // ValuableWord check from url
+    for (Pattern pattern : patterns)
+        if (pattern.matcher(path).find()){
+            suspiciousHit = true;
+            if (notesBuilder.length() > 0)
+                notesBuilder.append(", ");
+            notesBuilder.append(pattern + "(ValuableWord-Url)");
+        }
+    // ValuableWord check from url
+"""
+        if self._cbBambdasFilesDownloadable.isSelected() and self._cbBambdasSearchinRes.isSelected():
+            bambdas += """
+    // LFI-Content
+    patterns = new ArrayList<>();
+    for (String ext : fileExtensions)
+        // patterns.add(Pattern.compile("/[^\\\\s/]+\\\\." + ext, Pattern.CASE_INSENSITIVE));
+        // patterns.add(Pattern.compile("<a\\\\s+href=\\"[^\\"]+\\\\." + ext + "\\"", Pattern.CASE_INSENSITIVE));
+        // patterns.add(Pattern.compile("/[^\\"'\\\\s<>]+\\\\." + ext+ "(?=[\\\\s\\"])", Pattern.CASE_INSENSITIVE));
+        patterns.add(Pattern.compile("[\\\\s/>]?[^\\"'\\\\s<>]+\\\\." + ext + "(?=[\\\\s\\"])", Pattern.CASE_INSENSITIVE));
+
+    ArrayList<String> matchingFiles = new ArrayList<>();
+    // Check from response
+    for (Pattern pattern : patterns) {
+        Matcher matcher = pattern.matcher(responseBody);
+        while (matcher.find()) {
+            suspiciousHit = true;
+            String matchingFile = matcher.group();
+            matchingFiles.add(matchingFile);
+            if (notesBuilder.length() > 0)
+                notesBuilder.append(", ");
+            notesBuilder.append(matchingFile.strip().replace(">", "").replace("\\"", "")).append("(LFI-Content)");
+        }
+    }
+    // Check from response
+    // LFI-Content
+"""
+        if self._cbBambdasSearchHTMLCommnets.isSelected() and self._cbBambdasSearchinRes.isSelected():
+            bambdas += """
+    // Search from HTML comments
+    patterns = new ArrayList<>();
+    patterns.add(Pattern.compile(\"<!--.*?-->\", Pattern.DOTALL));
+    ArrayList<String> matchingComments = new ArrayList<>();
+    // check from response
+    for (Pattern pattern : patterns) {
+        Matcher matcher = pattern.matcher(responseBody);
+        while (matcher.find()) {
+            suspiciousHit = true;
+            String matchingComment = matcher.group();
+            matchingComments.add(matchingComment);
+            if (notesBuilder.length() > 0)
+                notesBuilder.append(\", \");
+            notesBuilder.append(matchingComment).append(\"(HTML-Comment)\");
+        }
+    }
+    // Search from HTML comments
+"""
         
 
-    def _cbAuthenticationTypeFunc(self, ev):
-        currentSelection = -1
-        try:
-            currentSelection = _authType
-        except:
-            pass
+        if self._cbBambdasVulnJS.isSelected() and self._cbBambdasSearchinRes.isSelected():
+            bambdas += """
+    // Suspicious Functions JS functions - Vulnerable JS
+    patterns = new ArrayList<>();
+    for (String suspiciousFunction : suspiciousFunctions)
+        patterns.add(Pattern.compile(suspiciousFunction, Pattern.CASE_INSENSITIVE));
+    // check from response
+    for (Pattern pattern : patterns) {
+        if (pattern.matcher(responseBody).find()){
+                suspiciousHit = true;
+                if (notesBuilder.length() > 0)
+                    notesBuilder.append(", ");
+                notesBuilder.append(pattern.toString().replace("\\\\", "")  + "(VulnJSFunc)");
+            }
+    }
+    // check from response
+    // Suspicious Functions JS functions - Vulnerable JS
+"""
+        if (self._cbBambdasSQLi.isSelected() or self._cbBambdasXSS.isSelected() or self._cbBambdasLFI.isSelected() or self._cbBambdasSSRF.isSelected() or self._cbBambdasORed.isSelected() or self._cbBambdasRCE.isSelected() or self._cbBambdasVulnJS.isSelected()):
+            bambdas += """
+    // Suspicious parameters OWASP Top 25
+    for (Map.Entry<String, List<String>> entry : attacksKeyWords.entrySet()) {
+        String attackType = entry.getKey();                     //Attack type
+        List<String> attackParams = entry.getValue();           //all keywords/parameters
+        boolean htmlContent = false;
+        patterns = new ArrayList<>();
+        if (responseBody.startsWith("<"))
+            // XML content
+            for (String attackParam : attackParams)
+                patterns.add(Pattern.compile("<" + attackParams + ">", Pattern.CASE_INSENSITIVE));
+
+        else if (responseBody.startsWith("{"))
+            // JSON content
+            for (String attackParam : attackParams)
+                patterns.add(Pattern.compile("\\\"" + attackParam + "\\\"", Pattern.CASE_INSENSITIVE));
+
+        else {
+            // HTML content
+            htmlContent = true;
+            for (String attackParam : attackParams)
+                patterns.add(Pattern.compile(attackParam, Pattern.CASE_INSENSITIVE));
+        }
+"""
+            if self._cbBambdasSearchinURL.isSelected() or self._cbBambdasSearchinReq.isSelected():
+                bambdas += """
+        if (htmlContent)
+            // Regular html content
+            for (String attackParam : attackParams)
+            {
+"""
+                if self._cbBambdasSearchinURL.isSelected():
+                    bambdas += """
+                if (request.hasParameter(attackParam, HttpParameterType.URL)){
+                    suspiciousHit = true;
+                    if (notesBuilder.length() > 0)
+                        notesBuilder.append(", ");
+                    notesBuilder.append(attackParam + "(" + attackType + "-Url)");
+                }
+"""
+                if self._cbBambdasSearchinReq.isSelected():
+                    bambdas += """
+                if (request.hasParameter(attackParam, HttpParameterType.BODY)){
+                    suspiciousHit = true;
+                    if (notesBuilder.length() > 0)
+                        notesBuilder.append(", ");
+                    notesBuilder.append(attackParam + "(" + attackType + "-Req)");
+                }
+"""
+                bambdas += "\t\t\t}\n"
+                
+                if self._cbBambdasSearchinReq.isSelected():
+                    bambdas += """
+        else
+            // Either json or xml
+            for (Pattern pattern : patterns)
+                if (pattern.matcher(requestBody).find()){
+                    suspiciousHit = true;
+                    if (notesBuilder.length() > 0)
+                        notesBuilder.append(", ");
+                    notesBuilder.append(pattern.toString().replace("\\\\", "") + "(" + attackType + "-Req)");
+                }
+"""
+            bambdas +="\t}\n"
+        bambdas +="\t// Suspicious parameters OWASP Top 25\n\n"
+
+        if self._cbBambdasforWhat.getSelectedIndex() == 0:
+            bambdas +="\t// Highlights suspicious calls\n"
+            bambdas += "\tif (suspiciousHit) {\n"
+            if self._cbBambdasColorKeyWords.getSelectedIndex() != 0:
+                bambdas += "\t\trequestResponse.annotations().setHighlightColor(HighlightColor."+ self._cbBambdasColorKeyWords.getSelectedItem() + ");\n"
+            bambdas += """
+        if (notesBuilder.length() > 0)
+            requestResponse.annotations().setNotes("Suspicious: " + notesBuilder.toString());
+    }
+    // Highlights suspicious calls
+"""
+        if self._cbBambdasforWhat.getSelectedIndex() == 0:
+            if self._cbBambdasColorScope.getSelectedIndex() != 0:
+                bambdas += """
+    // Highlights URLs in the scope
+    for (String targetPath : targetPaths)
+        if (Pattern.compile(targetPath, Pattern.CASE_INSENSITIVE).matcher(path).find() && targetPath != null && !targetPath.trim().isEmpty())
+"""
+                bambdas += "\t\t\trequestResponse.annotations().setHighlightColor(HighlightColor."+ self._cbBambdasColorScope.getSelectedItem() + ");"
+                bambdas += """
+    // Highlights URLs in the scope
+"""
+        if self._cbBambdasforWhat.getSelectedIndex() == 0:
+            if self._cbBambdasColorScopeSecondary.getSelectedIndex() != 0:
+                bambdas += """
+    // Highlights tested URLs
+    for (String targetPath : targetPathsDone)
+        if (Pattern.compile(targetPath, Pattern.CASE_INSENSITIVE).matcher(path).find() && targetPath != null && !targetPath.trim().isEmpty())
+"""
+                bambdas += "\t\t\trequestResponse.annotations().setHighlightColor(HighlightColor."+ self._cbBambdasColorScopeSecondary.getSelectedItem() + ");"
+                bambdas += """
+    // Highlights tested URLs
+"""
+        bambdas += """
+    return true;
+// How many days to process
+}
+else
+    return false;
+"""
+        if sum(1 for line in self._tbBambdasScopeURLs.text.splitlines() if line.strip() == '/') == 1:
+            allUrls = True
         
-        if currentSelection == -1:
-            if self._cbAuthenticationType.getSelectedIndex() == 0:
-                self._lblAuthenticationNotification.text = "You can load http requests over right click or fetch from proxy history."
-            elif self._cbAuthenticationType.getSelectedIndex() == 1:
-                self._lblAuthenticationNotification.text = "You can load http requests over right click or fetch from proxy history. Please make sure to enable SSO option with a valid credential before 'RUN' the task."
-            elif self._cbAuthenticationType.getSelectedIndex() == 2:
-                self._lblAuthenticationNotification.text = "You can load http requests over right click or fetch from proxy history. Please make sure to disable client-side TLS certificate before 'RUN' the task."
+        if sum(1 for line in self._tbBambdasBlackListedURLs.text.splitlines() if line.strip() == '/') == 1:
+            self._lblBambdasNotification2.text = "You can not include '/' path (everything) to blacklist URLs!"
+            self._lblBambdasNotification2.setForeground (Color.red)
+            return
+
+        self._lblBambdasNotification2.setForeground (Color.black)
+        if allUrls:
+            self._lblBambdasNotification2.text = "Script generated and copied to clipboard. All endpoints included. Contains '" + str(sum(1 for line in self._tbBambdasBlackListedURLs.text.splitlines() if line.strip().startswith('/'))) + "' blacklisted URLs."
         else:
-            if currentSelection == self._cbAuthenticationType.getSelectedIndex():
-                self._lblAuthenticationNotification.text = self.currentText
-            elif self._cbAuthenticationType.getSelectedIndex() == 0:
-                self._lblAuthenticationNotification.text = "Results shown below belongs to another authentication method. Please re-'RUN' the task for update."
-            elif self._cbAuthenticationType.getSelectedIndex() == 1:
-                self._lblAuthenticationNotification.text = "Results shown below belongs to another authentication method. Please make sure to enable SSO option and then re-'RUN' the task for update."
-            elif self._cbAuthenticationType.getSelectedIndex() == 2:
-                self._lblAuthenticationNotification.text = "Results shown below belongs to another authentication method. Please make sure to disable client-side TLS certificate and then re-'RUN' the task for update."
+            self._lblBambdasNotification2.text = "Script generated and copied to clipboard. Includes '" + str(sum(1 for line in self._tbBambdasScopeURLs.text.splitlines() if line.strip().startswith('/'))) + "' endpoints and '" + str(sum(1 for line in self._tbBambdasBlackListedURLs.text.splitlines() if line.strip().startswith('/'))) + "' blacklisted URLs."
+
+        self.updateBambdasScriptText(bambdas)
+
+        clipboard = Toolkit.getDefaultToolkit().getSystemClipboard()
+        clipboard.setContents(StringSelection(bambdas), None)
+
+        return
+
+    def updateBambdasScriptText(self, javaCode):
+        
+        doc = self._tbBambdasScript.getStyledDocument()
+        doc.remove(0, doc.getLength())
+
+        # Set font to monospaced
+        self._tbBambdasScript.setFont(Font("Courier New", Font.PLAIN, self._tbBambdasScript.getFont().getSize() + 2))
+
+        # Define styles
+        style_default = StyleContext.getDefaultStyleContext().getStyle(StyleContext.DEFAULT_STYLE)
+
+        style_comment = doc.addStyle("comment", style_default)
+        StyleConstants.setForeground(style_comment, Color(0, 150, 0))
+
+        style_string = doc.addStyle("string", style_default)
+        StyleConstants.setForeground(style_string, Color(0, 102, 204))
+
+        style_annotation = doc.addStyle("annotation", style_default)
+        StyleConstants.setForeground(style_annotation, Color(160, 100, 100))
+
+        style_keyword = doc.addStyle("keyword", style_default)
+        StyleConstants.setForeground(style_keyword, Color(153, 0, 153))
+
+        style_normal = doc.addStyle("normal", style_default)
+        StyleConstants.setForeground(style_normal, Color.BLACK)
+
+        # Define regex patterns in priority order
+        patterns = [
+            (r'/\*[\s\S]*?\*/', style_comment),  # Multi-line comments
+            (r'//.*', style_comment),            # Single-line comments
+            (r'"(?:\\.|[^"\\])*"', style_string),# Strings
+            (r'@\w+', style_annotation),         # Annotations
+            (r'\b(?:if|else|for|String|return|true|false)\b', style_keyword), # Selected keywords
+        ]
+
+        while javaCode:
+            match_obj = None
+            match_start = len(javaCode)
+            match_end = len(javaCode)
+            match_style = style_normal
+
+            # Find earliest match
+            for pattern, style in patterns:
+                m = re.search(pattern, javaCode)
+                if m and m.start() < match_start:
+                    match_obj = m
+                    match_start = m.start()
+                    match_end = m.end()
+                    match_style = style
+
+            if match_obj:
+                # Insert text before match (normal style)
+                if match_start > 0:
+                    doc.insertString(doc.getLength(), javaCode[:match_start], style_normal)
+
+                # Insert matched text (styled)
+                doc.insertString(doc.getLength(), javaCode[match_start:match_end], match_style)
+
+                # Move past matched text
+                javaCode = javaCode[match_end:]
+            else:
+                # No more matches, insert rest as normal
+                doc.insertString(doc.getLength(), javaCode, style_normal)
+                break
+
+        # Scroll to top after inserting text
+        self._tbBambdasScript.setCaretPosition(0)
+
+
+    def funcBambdasUIReset(self, ev):
+        self._lblBambdasNotification2.setForeground (Color.black)
+        self._lblBambdasNotification2.text = "Click 'Run' to generate Bambdas Script!"
+        self._cbBambdasColorScope.setSelectedIndex(7)
+        self._cbBambdasforWhat.setSelectedIndex(0)
+        self._cbBambdasColorScopeSecondary.setSelectedIndex(9)
+        self._cbBambdasColorKeyWords.setSelectedIndex(0)
+        self._cbBambdasDisplayDays.setSelectedIndex(3)
+        self._cbBambdasProcessDays.setSelectedIndex(2)
+        self._tbBambdasScopeURLs.setText(self._txBambdasScopeURLs)
+        self._tbBambdasBlackListedURLs.setText(self._txBambdasBlackListedURLs)
+        self._tbBambdasScopeURLs.setForeground(Color.GRAY)
+        self._tbBambdasBlackListedURLs.setForeground(Color.GRAY)
+        self.updateBambdasScriptText("/* Bambdas Script will be in here automatically */")
+        self._cbBambdasSearchinURL.setSelected(True)
+        self._cbBambdasScope.setSelected(False)
+        self._cbBambdasSearchHTMLCommnets.setSelected(False)
+        self._cbBambdasSearchinReq.setSelected(True)
+        self._cbBambdasSearchinRes.setSelected(True)
+        self._cbBambdasHTTPMethods.setSelected(True)
+        self._cbBambdasValuable.setSelected(False)
+        self._cbBambdasFilesDownloadable.setSelected(False)
+        self._cbBambdasSQLi.setSelected(False)
+        self._cbBambdasXSS.setSelected(False)
+        self._cbBambdasLFI.setSelected(False)
+        self._cbBambdasSSRF.setSelected(False)
+        self._cbBambdasORed.setSelected(False)
+        self._cbBambdasRCE.setSelected(False)
+        self._cbBambdasVulnJS.setSelected(False)
+        self._cbBambdasExtIgnore.setSelected(True)
+        self._cbBambdasDisplayDays.setEnabled(True)
+        self._cbBambdasProcessDays.setEnabled(True)
+        self._txtBambdasValuable.setEnabled(False)
+        self._txtBambdasSQLiKeywords.setEnabled(False)
+        self._txtBambdasXSSKeywords.setEnabled(False)
+        self._txtBambdasLFIKeywords.setEnabled(False)
+        self._txtBambdasSSRFKeywords.setEnabled(False)
+        self._txtBambdasORedKeywords.setEnabled(False)
+        self._txtBambdasRCEKeywords.setEnabled(False)
+        self._txtBambdasVulnJSKeywords.setEnabled(False)
+        return
+
+    def _tabBambdasUI(self):
+        self._btnBambdasRun = JButton("Run", actionPerformed=self.funcBambdasRun)
+        self._btnBambdasRun.setToolTipText("Generate the Bambdas Script.")
+        self._btnBambdasReset = JButton("Reset", actionPerformed=self.funcBambdasUIReset)
+        self._btnBambdasReset.setToolTipText("Reset the screen content.")
+
+        self._lblBambdasforWhat = JLabel("Bambdas Script for")
+        self._lblBambdasforWhat.setToolTipText("Bambdas Script for what!")
+        self._cbBambdasforWhat = JComboBox(('View Filter', 'Capture Filter'))
+        self._cbBambdasforWhat.setEnabled(False)
+        
+        self._lblBambdasScope = JLabel("Process only in scope items")
+        self._cbBambdasScope = JCheckBox('', False)
+        self._lblBambdasScope.setToolTipText("You can display either only project-scoped items, or everything")
+        self._cbBambdasScope.setToolTipText("You can display either only project-scoped items, or everything")
+        
+        self._txtBambdasSearchHTMLCommnets = JTextField("The search will occur between the '<!--' and '-->' tags.", 100)
+        self._txtBambdasSearchHTMLCommnets.setEnabled(False)
+        self._cbBambdasSearchHTMLCommnets = JCheckBox('Search from HTML comments', False)
+        self._txtBambdasSearchHTMLCommnets.setToolTipText("Search from HTML comments")
+        self._cbBambdasSearchHTMLCommnets.setToolTipText("Search from HTML comments")
+
+        self._lblBambdasNotification1 = JLabel(" ")
+        self._lblBambdasNotification2 = JLabel("Click 'Run' to generate Bambdas Script!")
+
+        self._lblBambdasColorScope = JLabel("Color in Scope")
+        self._cbBambdasColorScope = JComboBox(('NONE', 'BLUE', 'CYAN', 'GRAY', 'GREEN', 'MAGENTA', 'ORANGE', 'PINK', 'RED', 'YELLOW'))
+        self._cbBambdasColorScope.setSelectedIndex(7)
+        self._lblBambdasColorScope.setToolTipText("Which color to highlight 'White-list' URLs?")
+        self._cbBambdasColorScope.setToolTipText("Which color to highlight 'White-list' URLs?")
+        
+        self._lblBambdasColorScopeSecondary = JLabel("Secondary color for done items!")
+        self._cbBambdasColorScopeSecondary = JComboBox(('NONE', 'BLUE', 'CYAN', 'GRAY', 'GREEN', 'MAGENTA', 'ORANGE', 'PINK', 'RED', 'YELLOW'))
+        self._cbBambdasColorScopeSecondary.setSelectedIndex(9)
+        self._cbBambdasColorScopeSecondary.setToolTipText("Which color to highlight for done URLs?")
+        self._lblBambdasColorScopeSecondary.setToolTipText("Which color to highlight for done URLs?")
+
+        self._lblBambdasColorKeyWords = JLabel("Color keywords")
+        self._cbBambdasColorKeyWords = JComboBox(('NONE', 'BLUE', 'CYAN', 'GRAY', 'GREEN', 'MAGENTA', 'ORANGE', 'PINK', 'RED', 'YELLOW'))
+        self._lblBambdasColorKeyWords.setToolTipText("Any color if keywords match")
+        self._cbBambdasColorKeyWords.setToolTipText("Any color if keywords match")
+    
+        self._lblBambdasSearchScope = JLabel("Search parameters only")
+        self._lblBambdasSearchScope.setToolTipText("Where are keywords seached?")
+        self._cbBambdasSearchinURL = JCheckBox('in URL', True)
+        self._cbBambdasSearchinURL.setToolTipText("Keywords will be searched in URLs")
+        self._cbBambdasSearchinReq = JCheckBox('in Requests', True)
+        self._cbBambdasSearchinReq.setToolTipText("Keywords will be searched in Requests")
+        self._cbBambdasSearchinRes = JCheckBox('in Responses', True)
+        self._cbBambdasSearchinRes.setToolTipText("Keywords will be searched in Responses")
+
+        self._lblBambdasDisplayDays = JLabel("Display last how many days")
+        self._cbBambdasDisplayDays = JComboBox(('1 Day', '2 Days', '3 Days', '7 Days', '30 Days', '365 Days'))
+        self._cbBambdasDisplayDays.setSelectedIndex(3)
+        self._lblBambdasDisplayDays.setToolTipText("How many days to display")
+        self._cbBambdasDisplayDays.setToolTipText("How many days to display")
+        self._lblBambdasProcessDays = JLabel("Process last how many days")
+        self._cbBambdasProcessDays = JComboBox(('1 Day', '2 Days', '3 Days', '7 Days', '30 Days', '365 Days'))
+        self._cbBambdasProcessDays.setSelectedIndex(2)
+        self._lblBambdasProcessDays.setToolTipText("How many days to process?")
+        self._cbBambdasProcessDays.setToolTipText("How many days to process?")
+
+        self._cbBambdasHTTPMethods = JCheckBox('Ignore Some HTTP Methods', True, itemStateChanged=self._cbBambdasHTTPMethodsFunc)
+        self._txtBambdasHTTPMethods = JTextField("HEAD, OPTIONS", 100)
+        self._cbBambdasHTTPMethods.setToolTipText("Which HTTP methods will be ignored?")
+        self._txtBambdasHTTPMethods.setToolTipText("Which HTTP methods will be ignored?")
+        self._txtBambdasHTTPMethods.setEnabled(True)
+
+        self._cbBambdasValuable = JCheckBox('Valuable keywords', False, itemStateChanged=self._cbBambdasValuableFunc)
+        self._txtBambdasValuable = JTextField("debug, admin, config, secret, token, password, hash, credential", 100)
+        self._txtBambdasValuable.setToolTipText("Important keywords to filter")
+        self._cbBambdasValuable.setToolTipText("Important keywords to filter")
+        self._txtBambdasValuable.setEnabled(False)
+        
+        self._cbBambdasFilesDownloadable = JCheckBox('Downloadable File extensions', False, itemStateChanged=self._cbBambdasFilesDownFunc)
+        self._txtBambdasFilesDownloadable = JTextField("back, backup, bak, bin, cache, conf, config, csv, doc, docx, gz, inc, ini, jar, log, old, pdf, ppt, pptx, rar, readme, tar, txt, xls, xlsx, zip, 7z", 100)
+        self._txtBambdasFilesDownloadable.setToolTipText("Common file extensions to download")
+        self._cbBambdasFilesDownloadable.setToolTipText("Common file extensions to download")
+        self._txtBambdasFilesDownloadable.setEnabled(False)
+
+        self._cbBambdasSQLi = JCheckBox('Possible SQLi keywords', False, itemStateChanged=self._cbBambdasSQLiFunc)
+        self._txtBambdasSQLiKeywords = JTextField("category, id, item, message, name, news, page, password, q, query, report, s, search, thread, user, username, view", 100)
+        self._txtBambdasSQLiKeywords.setToolTipText("Suspicious SQLi parameters")
+        self._cbBambdasSQLi.setToolTipText("Suspicious SQLi parameters")
+        self._txtBambdasSQLiKeywords.setEnabled(False)
+        
+        self._cbBambdasXSS = JCheckBox('Possible XSS keywords', False, itemStateChanged=self._cbBambdasXSSFunc)
+        self._txtBambdasXSSKeywords = JTextField("comment, content, description, id, key, keyword, keywords, l, lang, message, name, p, page, q, query, s, search, username", 100)
+        self._txtBambdasXSSKeywords.setToolTipText("Suspicious XSS parameters")
+        self._cbBambdasXSS.setToolTipText("Suspicious XSS parameters")
+        self._txtBambdasXSSKeywords.setEnabled(False)
+        
+        self._cbBambdasLFI = JCheckBox('Possible LFI keywords', False, itemStateChanged=self._cbBambdasLFIFunc)
+        self._txtBambdasLFIKeywords = JTextField("conf, content, detail, dir, doc, document, download, file, folder, inc, include, locate, page, path, show, template, url, view, read, load", 100)
+        self._txtBambdasLFIKeywords.setToolTipText("Suspicious LFI parameters")
+        self._cbBambdasLFI.setToolTipText("Suspicious LFI parameters")
+        self._txtBambdasLFIKeywords.setEnabled(False)
+    
+        self._cbBambdasSSRF = JCheckBox('Possible SSRF keywords', False, itemStateChanged=self._cbBambdasSSRFFunc)
+        self._txtBambdasSSRFKeywords = JTextField("callback, dest, destination, host, next, out, path, redirect, return, site, target, to, uri, url, view", 100)
+        self._txtBambdasSSRFKeywords.setToolTipText("Suspicious SSRF parameters")
+        self._cbBambdasSSRF.setToolTipText("Suspicious SSRF parameters")
+        self._txtBambdasSSRFKeywords.setEnabled(False)
+    
+        self._cbBambdasORed = JCheckBox('Possible Open Redirect keywords', False, itemStateChanged=self._cbBambdasORedFunc)
+        self._txtBambdasORedKeywords = JTextField("dest, destination, go, next, out, redir, redirect, redirect_uri, redirect_url, return, return_path, return_to, returnTo, returnUrl, target, to, uri, url", 100)
+        self._cbBambdasORed.setToolTipText("Suspicious Open Redirect parameters")
+        self._txtBambdasORedKeywords.setToolTipText("Suspicious Open Redirect parameters")
+        self._txtBambdasORedKeywords.setEnabled(False)
+    
+        self._cbBambdasRCE = JCheckBox('Possible RCE keywords', False, itemStateChanged=self._cbBambdasRCEFunc)
+        self._txtBambdasRCEKeywords = JTextField("arg, cmd, code, command, exe, exec, execute, ping, print, process, run", 100)
+        self._txtBambdasRCEKeywords.setToolTipText("Suspicious RCE parameters")
+        self._cbBambdasRCE.setToolTipText("Suspicious RCE parameters")
+        self._txtBambdasRCEKeywords.setEnabled(False)
+    
+        self._cbBambdasVulnJS = JCheckBox('Vulnerable JS Functions', False, itemStateChanged=self._cbBambdasVulnJSFunc)
+        self._txtBambdasVulnJSKeywords = JTextField("eval(, setTimeout(, setInterval(, document.write(, innerHTML, document.createElement(, document.execCommand(, document.domain, window.location.href, document.cookie, document.URL, document.referrer, window.open(, document.body.innerHTML, element.setAttribute(, element.outerHTML, XMLHttpRequest(, fetch(, navigator.sendBeacon(", 100)
+        self._txtBambdasVulnJSKeywords.setToolTipText("Vulnerable JavaScript Functions")
+        self._cbBambdasVulnJS.setToolTipText("Vulnerable JavaScript Functions")
+        self._txtBambdasVulnJSKeywords.setEnabled(False)
+    
+        self._cbBambdasExtIgnore = JCheckBox('File extensions to ignore', True, itemStateChanged=self._cbBambdasExtIgnoreFunc)
+        self._txtBambdasExtIgnoreKeywords = JTextField("js, gif, jpg, png, svg, css, ico, woff2", 100)
+        self._txtBambdasExtIgnoreKeywords.setToolTipText("Which file extensions will be ignored?")
+        self._cbBambdasExtIgnore.setToolTipText("Which file extensions will be ignored?")
+
+        __tabBambdasPanelTop_Left = JPanel()
+        layout = GroupLayout(__tabBambdasPanelTop_Left)
+        __tabBambdasPanelTop_Left.setLayout(layout)
+        layout.setAutoCreateGaps(True)
+        layout.setAutoCreateContainerGaps(True)
+    
+        layout.setHorizontalGroup(
+            layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addComponent(self._btnBambdasRun)
+                    .addComponent(self._lblBambdasforWhat)
+                    .addComponent(self._lblBambdasScope)
+                    .addComponent(self._cbBambdasExtIgnore)
+                    .addComponent(self._lblBambdasColorScope)
+                    .addComponent(self._lblBambdasColorScopeSecondary)
+                    .addComponent(self._lblBambdasColorKeyWords)
+                    .addComponent(self._lblBambdasDisplayDays)
+                    .addComponent(self._lblBambdasProcessDays)
+                    .addComponent(self._lblBambdasSearchScope)
+                    .addComponent(self._cbBambdasSearchHTMLCommnets)
+                    .addComponent(self._cbBambdasHTTPMethods)
+                    .addComponent(self._cbBambdasFilesDownloadable)
+                    .addComponent(self._cbBambdasValuable)
+                    .addComponent(self._cbBambdasVulnJS)
+                    .addComponent(self._cbBambdasSQLi)
+                    .addComponent(self._cbBambdasXSS)
+                    .addComponent(self._cbBambdasLFI)
+                    .addComponent(self._cbBambdasSSRF)
+                    .addComponent(self._cbBambdasORed)
+                    .addComponent(self._cbBambdasRCE)
+                    .addComponent(self._cbBambdasExtIgnore)
+                    .addComponent(self._lblBambdasNotification1))
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addComponent(self._btnBambdasReset)
+                    .addComponent(self._cbBambdasforWhat, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(self._cbBambdasScope)
+                    .addComponent(self._txtBambdasExtIgnoreKeywords)
+                    .addComponent(self._cbBambdasColorScope, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(self._cbBambdasColorScopeSecondary, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(self._cbBambdasColorKeyWords, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(self._cbBambdasDisplayDays, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(self._cbBambdasProcessDays, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(self._cbBambdasSearchinURL)
+                        .addGap(10)
+                        .addComponent(self._cbBambdasSearchinReq)
+                        .addGap(10)
+                        .addComponent(self._cbBambdasSearchinRes))
+                    .addComponent(self._txtBambdasSearchHTMLCommnets)
+                    .addComponent(self._txtBambdasHTTPMethods)
+                    .addComponent(self._txtBambdasFilesDownloadable)
+                    .addComponent(self._txtBambdasValuable)
+                    .addComponent(self._txtBambdasVulnJSKeywords)
+                    .addComponent(self._txtBambdasSQLiKeywords)
+                    .addComponent(self._txtBambdasXSSKeywords)
+                    .addComponent(self._txtBambdasLFIKeywords)
+                    .addComponent(self._txtBambdasSSRFKeywords)
+                    .addComponent(self._txtBambdasORedKeywords)
+                    .addComponent(self._txtBambdasRCEKeywords)
+                    .addComponent(self._lblBambdasNotification2))
+        )
+    
+        layout.setVerticalGroup(
+            layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(self._btnBambdasRun)
+                    .addComponent(self._btnBambdasReset))
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(self._lblBambdasforWhat)
+                    .addComponent(self._cbBambdasforWhat))
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(self._lblBambdasScope)
+                    .addComponent(self._cbBambdasScope))
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(self._cbBambdasExtIgnore)
+                    .addComponent(self._txtBambdasExtIgnoreKeywords))
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(self._lblBambdasColorScope)
+                    .addComponent(self._cbBambdasColorScope))
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(self._lblBambdasColorScopeSecondary)
+                    .addComponent(self._cbBambdasColorScopeSecondary))
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(self._lblBambdasColorKeyWords)
+                    .addComponent(self._cbBambdasColorKeyWords))
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(self._lblBambdasDisplayDays)
+                    .addComponent(self._cbBambdasDisplayDays))
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(self._lblBambdasProcessDays)
+                    .addComponent(self._cbBambdasProcessDays))
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(self._lblBambdasSearchScope)
+                    .addComponent(self._cbBambdasSearchinURL)
+                    .addComponent(self._cbBambdasSearchinReq)
+                    .addComponent(self._cbBambdasSearchinRes))
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(self._cbBambdasSearchHTMLCommnets)
+                    .addComponent(self._txtBambdasSearchHTMLCommnets))
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(self._cbBambdasHTTPMethods)
+                    .addComponent(self._txtBambdasHTTPMethods))
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(self._cbBambdasFilesDownloadable)
+                    .addComponent(self._txtBambdasFilesDownloadable))
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(self._cbBambdasValuable)
+                    .addComponent(self._txtBambdasValuable))
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(self._cbBambdasVulnJS)
+                    .addComponent(self._txtBambdasVulnJSKeywords))
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(self._cbBambdasSQLi)
+                    .addComponent(self._txtBambdasSQLiKeywords))
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(self._cbBambdasXSS)
+                    .addComponent(self._txtBambdasXSSKeywords))
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(self._cbBambdasLFI)
+                    .addComponent(self._txtBambdasLFIKeywords))
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(self._cbBambdasSSRF)
+                    .addComponent(self._txtBambdasSSRFKeywords))
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(self._cbBambdasORed)
+                    .addComponent(self._txtBambdasORedKeywords))
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(self._cbBambdasRCE)
+                    .addComponent(self._txtBambdasRCEKeywords))
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(self._lblBambdasNotification1)
+                    .addComponent(self._lblBambdasNotification2))
+        )
+
+        self._tbBambdasScopeURLs = JTextPane()
+        self._tbBambdasScopeURLs.setToolTipText("Please provide all link in the scope")
+        self._txBambdasScopeURLs  = "Please provide all URLs to highlights in history section. Here are some examples:\n\t- /\n\t+ Root paths include all URLS\n\n\t- /portal/users\n\t+ Includes specificly this path, and rest, for example:\n\t\t+ /portal/users?id=1\n\t\t+ /portal/users/?id=1\n\t\t+ /portal/users/dashboard\n\n\t- /admin/*/users/*/class\n\t+ Asterisk stands for ID, UUID, etc, and rest of path will be included\n\nNote: Leave it as it is to include all URLs."
+        placeholderText1 = self._txBambdasScopeURLs
+        self._tbBambdasScopeURLs.setText(placeholderText1)
+        self._tbBambdasScopeURLs.setForeground(Color.GRAY)
+        listener1 = MyFocusListener(self._tbBambdasScopeURLs, placeholderText1)
+        self._tbBambdasScopeURLs.addFocusListener(listener1)
+
+        self._tbBambdasBlackListedURLs = JTextPane()
+        self._tbBambdasBlackListedURLs.setToolTipText("Please provide all URLs to blacklist")
+        self._txBambdasBlackListedURLs = "Blacklist urls will be in here, same URL defination roles are applicable, for example: \n\t-/health-check\n\t+ Includes specificly this path, and rest, for example:\n\t\t+ /health-check\n\t\t+ /health-check/Monitor\n\t\t+ /health-check/?Level=Info\n\nNote: Leave it as it is to add nothing to this list."
+        placeholderText2 = self._txBambdasBlackListedURLs
+        self._tbBambdasBlackListedURLs.setText(placeholderText2)
+        self._tbBambdasBlackListedURLs.setForeground(Color.GRAY)
+        listener2 = MyFocusListener(self._tbBambdasBlackListedURLs, placeholderText2)
+        self._tbBambdasBlackListedURLs.addFocusListener(listener2)
+
+        _lbBambdasScopeURLs = JLabel("Defination of testing scope", SwingConstants.LEFT)
+        _lbBambdasScopeURLs.setFont(_lbBambdasScopeURLs.getFont().deriveFont(Font.BOLD))
+        _lbBambdasBlackListedURLs = JLabel("Black-Listed / Unwanted URLs", SwingConstants.LEFT)
+        _lbBambdasBlackListedURLs.setFont(_lbBambdasScopeURLs.getFont().deriveFont(Font.BOLD))
+
+        __tabBambdasPanelTop_Right = JPanel()
+        __tabBambdasPanelTop_Right.setLayout(BoxLayout(__tabBambdasPanelTop_Right, BoxLayout.Y_AXIS))
+        __tabBambdasPanelTop_Right.add(_lbBambdasScopeURLs)
+
+        scrollBambdasScopeURLs = JScrollPane(self._tbBambdasScopeURLs)
+        scrollBambdasScopeURLs.setPreferredSize(Dimension(400, 100))  # Set preferred size
+        __tabBambdasPanelTop_Right.add(scrollBambdasScopeURLs)
+
+        __tabBambdasPanelTop_Right.add(_lbBambdasBlackListedURLs)
+
+        scrollBambdasBlackListedURLs = JScrollPane(self._tbBambdasBlackListedURLs)
+        scrollBambdasBlackListedURLs.setPreferredSize(Dimension(400, 100))  # Set preferred size
+        __tabBambdasPanelTop_Right.add(scrollBambdasBlackListedURLs)
+
+
+        _tabBambdasPanelTop = JSplitPane(JSplitPane.HORIZONTAL_SPLIT)
+ 
+        _tabBambdasPanelTop.setResizeWeight(0.5)
+        _tabBambdasPanelTop.setLeftComponent(__tabBambdasPanelTop_Left)
+        _tabBambdasPanelTop.setRightComponent(__tabBambdasPanelTop_Right)
+        _tabBambdasPanelBottom = JPanel(BorderLayout())
+        self._tbBambdasScript = JTextPane()
+        self._tbBambdasScript.setContentType("text")
+        self._tbBambdasScript.setToolTipText("Bambdas Script content")
+        self._tbBambdasScript.setEditable(True)
+        self._txBambdasScript = "/* Bambdas Script will be in here automatically */"
+        self.updateBambdasScriptText("/* Bambdas Script will be in here automatically */")
+        scroll_pane = JScrollPane(self._tbBambdasScript)
+
+        # Add custom MouseWheelListener to slow down scrolling
+        class SlowScrollMouseWheelListener(MouseWheelListener):
+            def mouseWheelMoved(inner_self, e):
+                scrollBar = scroll_pane.getVerticalScrollBar()
+                amount = e.getUnitsToScroll() * 5  # Adjust the multiplier for scroll speed
+                scrollBar.setValue(scrollBar.getValue() + amount)
+                e.consume()  # Prevent default fast scroll
+
+        self._tbBambdasScript.addMouseWheelListener(SlowScrollMouseWheelListener())
+
+        _tabBambdasPanelBottom.add(scroll_pane, BorderLayout.CENTER)
+        self._tabBambdasPanel = JSplitPane(JSplitPane.VERTICAL_SPLIT)
+        self._tabBambdasPanel.setResizeWeight(0.1)
+        self._tabBambdasPanel.setBorder(EmptyBorder(10, 10, 10, 10))
+        self._tabBambdasPanel.setTopComponent(_tabBambdasPanelTop)
+        self._tabBambdasPanel.setBottomComponent(_tabBambdasPanelBottom)
+
         return
 
     def listChange(self, ev):
@@ -1160,14 +2359,54 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         if self._cbAuthenticationHost.getSelectedIndex() < 0:
             self._lblAuthenticationNotification.text = "Please select a hostname from the history, or 'Reset' the screen to update the list."
             return
+        
+        self.url_filter = URLFilter()
 
+        urlVerification = False
+        ignoredURLs = 0
         self._btnAuthenticationFetchHistory.setEnabled(False)
         self._btnAuthenticationReset.setEnabled(False)
         self._cbAuthenticationHost.setEnabled(False)
         self._btnAuthenticationRun.setEnabled(False)
+        self._cbAuthenticationEnableFilter.setEnabled(False)
+        self._cbAuthenticationDaystoShow.setEnabled(False)
+        self._cbAuthenticationEnableURLGroup.setEnabled(False)
+        self._lblAuthenticationEnableFilter2.setEnabled(False)
+        self.txAuthenticationEnableKeyWordURL.setEnabled(False)
         histories = self._callbacks.getProxyHistory()[::-1]
         self._lblAuthenticationNotification.text = "Please wait while porxy history records are beeing analyzed."
         for history in histories:
+            
+            if self._cbAuthenticationEnableFilter.isSelected() and self._cbAuthenticationDaystoShow.getSelectedIndex() != 3:
+
+                if history.getResponse() is None:
+                    continue
+                _headerResponse = self._helpers.analyzeResponse(self._helpers.bytesToString(history.getResponse())).getHeaders()
+                response_date = None
+                for header in _headerResponse:
+                    if header.startswith("Date:"):
+                        response_date = SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.ENGLISH).parse(header.split("Date:")[1].strip())
+                        break
+
+                calendar = Calendar.getInstance()
+                if response_date is None:
+                    continue
+                elif self._cbAuthenticationDaystoShow.getSelectedIndex() == 0:
+                    calendar.add(Calendar.DATE, -1)
+                    days_ago = calendar.getTime()
+                    if response_date.before(days_ago):
+                        continue
+                elif self._cbAuthenticationDaystoShow.getSelectedIndex() == 1:
+                    calendar.add(Calendar.DATE, -3)
+                    days_ago = calendar.getTime()
+                    if response_date.before(days_ago):
+                        continue
+                elif self._cbAuthenticationDaystoShow.getSelectedIndex() == 2:
+                    calendar.add(Calendar.DATE, -7)
+                    days_ago = calendar.getTime()
+                    if response_date.before(days_ago):
+                        continue
+
             if self._cbAuthenticationHost.getSelectedItem() == str(self._helpers.analyzeRequest(history).getUrl().getHost()):
                 # 0 is url
                 _url = str(self._helpers.analyzeRequest(history).getUrl())
@@ -1180,32 +2419,59 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                 if any(_url in sublist for sublist in self.authenticationMatrix) or not _url or any(re.findall(url_regex, _url, re.IGNORECASE)) or any(re.findall(ext_regex, _ext, re.IGNORECASE)):
                     continue
 
-                self.tableMatrixAuthentication_DM.addRow([_url])
-                # 1 is header
-                _header = self._helpers.analyzeRequest(history).getHeaders()
-                headerRemoves = []
-                for header in _header:
-                    if any(re.findall(r'(cookie|token|auth|content-length)(.*:)', header, re.IGNORECASE)):
-                        headerRemoves.append(header)
-                for header in headerRemoves:
-                    _header.remove(header)
+                if self._cbAuthenticationEnableFilter.isSelected() and self.txAuthenticationEnableKeyWordURL.getText().strip():
+                    if self.txAuthenticationEnableKeyWordURL.getText().strip() not in _url:
+                        continue
 
-                # 2 is body
-                _body = self._helpers.bytesToString(history.getRequest()[self._helpers.analyzeRequest(history).getBodyOffset():])
+                should_process = True
+                if self._cbAuthenticationEnableFilter.isSelected() and self._cbAuthenticationEnableURLGroup.isSelected():
+                    should_process = self.url_filter.should_process(_url)
+
+                if should_process:
+                    urlVerification = True
+                    self.tableMatrixAuthentication_DM.addRow([_url])
+                    # 1 is header
+                    _header = self._helpers.analyzeRequest(history).getHeaders()
+                    headerRemoves = []
+                    for header in _header:
+                        if any(re.findall(r'(cookie|token|auth|content-length)(.*:)', header, re.IGNORECASE)):
+                            headerRemoves.append(header)
+                    for header in headerRemoves:
+                        _header.remove(header)
+
+                    # 2 is body
+                    _body = self._helpers.bytesToString(history.getRequest()[self._helpers.analyzeRequest(history).getBodyOffset():])
                 
-                self._urlAddresses.addElement(_url)
-                self.authenticationMatrix.append([_url, _header, _body])
+                    self._urlAddresses.addElement(_url)
+                    self.authenticationMatrix.append([_url, _header, _body])
+                else:
+                    ignoredURLs += 1
 
-        self._lblAuthenticationNotification.text = "'" + str(self._cbAuthenticationHost.getSelectedItem()) + "' and '" + str(len(self.authenticationMatrix)) + "' requests have been loaded from proxy history with removing session identifiers and ignoring suspicious URLs (delete, remove, kill, terminate, log-out, etc.). You can load more requests or click 'RUN' to execute the task."
-        self._cbAuthenticationHost.removeItemAt(self._cbAuthenticationHost.getSelectedIndex())
         self._btnAuthenticationRun.setEnabled(True)
         self._btnAuthenticationFetchHistory.setEnabled(True)
         self._btnAuthenticationReset.setEnabled(True)
         self._cbAuthenticationHost.setEnabled(True)
+        self._cbAuthenticationEnableFilter.setEnabled(True)
+        self._cbAuthenticationDaystoShow.setEnabled(True)
+        self._cbAuthenticationEnableURLGroup.setEnabled(True)
+        self._lblAuthenticationEnableFilter2.setEnabled(True)
+        self.txAuthenticationEnableKeyWordURL.setEnabled(True)
+
+        if not urlVerification:
+            self._lblAuthenticationNotification.text = "No matching criteria found, and no records were added. Please review target hostname and filters."
+            return
+        ignoredURLsTxt = ""
+        if ignoredURLs > 0:
+            ignoredURLsTxt = str(ignoredURLs) + " similar URLs were ignored."
+
+        self._lblAuthenticationNotification.text = "'" + str(self._cbAuthenticationHost.getSelectedItem()) + "' and '" + str(len(self.authenticationMatrix)) + "' requests loaded (session identifiers removed and URLs with actions like delete, remove, kill, terminate, log-out skipped)." + ignoredURLsTxt + " Load more or click 'RUN' to proceed."
+
+        self._cbAuthenticationHost.removeItemAt(self._cbAuthenticationHost.getSelectedIndex())
         self.tabAuthenticationJlist.setSelectedIndex(0)
         if self._cbAuthenticationHost.getItemCount() == 0:
             self._btnAuthenticationFetchHistory.setEnabled(False)
         return
+
 
     def resetAuthentication(self, ev):
         self.authenticationMatrix = []
@@ -1224,14 +2490,20 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._btnAuthenticationRun.setEnabled(False)
         self.tabAuthenticationJlist.getModel().removeAllElements()
         self._tbAuthenticationHeader.setText("")
-        self._tabAuthenticationPanel.setDividerLocation(0.25)
+        self._tabAuthenticationPanel.setDividerLocation(0.3)
         self._tabAuthenticationSplitpane.setDividerLocation(0.7)
         self._tabAuthenticationSplitpaneHttp.setDividerLocation(0.5)
         self.currentText = "You can load http requests over right click or fetch from proxy history."
         self.historyFetchHostname(self)
-        self._cbAuthenticationTypeFunc(self)
         self.tableMatrixAuthentication.getColumnModel().getColumn(0).setPreferredWidth(400)
-        self._cbAuthenticationType.setSelectedIndex(0)
+        self.txAuthenticationEnableKeyWordURL.setVisible(False)
+        self.txAuthenticationEnableKeyWordURL.setText("")
+        self._lblAuthenticationEnableFilter2.setVisible(False)
+        self._cbAuthenticationDaystoShow.setVisible(False)
+        self._cbAuthenticationDaystoShow.setSelectedIndex(0)
+        self._cbAuthenticationEnableURLGroup.setVisible(False)
+        self._cbAuthenticationEnableURLGroup.setSelected(True)
+        self._cbAuthenticationEnableFilter.setSelected(False)
         return
 
     
@@ -1265,6 +2537,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
             _request = self._helpers.buildHttpMessage(_header, _body)
             _httpService = self._helpers.buildHttpService(urlparse.urlparse(_url).hostname, _portNum, urlparse.urlparse(_url).scheme)
             _response = self._callbacks.makeHttpRequest(_httpService, _request)
+            _msgBody = self._helpers.bytesToString(_response.getResponse()[self._helpers.analyzeResponse(self._helpers.bytesToString(_response.getResponse())).getBodyOffset():])
             _status = str(self._helpers.analyzeResponse(self._helpers.bytesToString(_response.getResponse())).getStatusCode())
             
             if (_column == 32 or _column == 33 or _column == 34) and _status == '200':
@@ -1282,81 +2555,14 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                     if msgBody == _msgBody:
                         _status = _status + "-"
 
-            if self._cbAuthenticationType.getSelectedIndex() == 1:
-                self._httpCalls.append([_status, _response, _url])
-                if _status.startswith("2"):
-                    if not self.tableMatrixAuthentication_DM.getValueAt(_row, _column):
-                        self.tableMatrixAuthentication_DM.setValueAt(str(self._httpCalls[0][0]), _row, _column)
-                    return self._httpCalls[0][1]
-                elif _status.startswith("3"):
-                    _msgBody = self._helpers.bytesToString(_response.getResponse()[self._helpers.analyzeResponse(self._helpers.bytesToString(_response.getResponse())).getBodyOffset():])
-                    _msgHeader = self._helpers.analyzeResponse(self._helpers.bytesToString(_response.getResponse())).getHeaders()
-                    # redirection from header
-                    _location = ""
-                    _cookies = "Cookie: "
-                    for line in _msgHeader:
-                        if 'Location' in line:
-                            _location =line.split(':', 1)[1].strip()
-                            _location = self.urlFinder(_location, str(self.tableMatrixAuthentication_DM.getValueAt(_row, 0)))
-                            if 'localhost' == urlparse.urlparse(_location).hostname:
-                                self.tableMatrixAuthentication_DM.setValueAt(str(self._httpCalls[0][0]), _row, _column)
-                                return self._httpCalls[0][1]
-                            elif urlparse.urlparse(self._httpCalls[0][2]).hostname != urlparse.urlparse(_location).hostname:
-                                # Location hostname changes and the new host is most probably SSO server
-                                if not self.tableMatrixAuthentication_DM.getValueAt(_row, _column):
-                                    self.tableMatrixAuthentication_DM.setValueAt(str(self._httpCalls[0][0]) + "*", _row, _column)
-                                return self._httpCalls[0][1]
-                        elif 'Set-Cookie' in line:
-                            if not line.split(' ', 2)[1].strip() in _cookies:
-                                _cookies = _cookies + line.split(' ', 2)[1].strip()
-                    
-                    # redirection from body
-                    _redirection = re.findall("<a\\s+[^>]*?href=[\'|\"](.*?)[\'\"].*?>", _msgBody, re.IGNORECASE)
-                    if _redirection:
-                        _redirection = _redirection[0]
-                        _redirection = self.urlFinder(_redirection, str(self.tableMatrixAuthentication_DM.getValueAt(_row, 0)))
-                        if 'localhost' == urlparse.urlparse(_redirection).hostname:
-                            self.tableMatrixAuthentication_DM.setValueAt(str(self._httpCalls[0][0]), _row, _column)
-                            return self._httpCalls[0][1]
-                        elif urlparse.urlparse(self._httpCalls[0][2]).hostname != urlparse.urlparse(_redirection).hostname:
-                            # hostname changes and the new host is most probably SSO server
-                            if not self.tableMatrixAuthentication_DM.getValueAt(_row, _column):
-                                self.tableMatrixAuthentication_DM.setValueAt(str(self._httpCalls[0][0]) + "*", _row, _column)
-                            return self._httpCalls[0][1]
-                    
-                    if len(_cookies) > 10: 
-                        _header.insert(3, _cookies)
+            if not _msgBody:
+                _status = _status + "(EmptyBody)"
+            
+            if not self.tableMatrixAuthentication_DM.getValueAt(_row, _column):
+                self.tableMatrixAuthentication_DM.setValueAt(_status, _row, _column)
+            
+            return _response
 
-                    if _location:
-                        _url = _location
-                        _headerOrg = list(_header)
-                        _header = list(_headerOrg[1:])
-                        _header.insert(0, "GET /" + _url.split("/", 3)[3] + " " + str(_headerOrg[0]).split(" ", 2)[2])
-                        self.authenticationMatrixCalls(_url, _header, "", _portNum, _row, _column, 0)
-                        if not self.tableMatrixAuthentication_DM.getValueAt(_row, _column):
-                            self.tableMatrixAuthentication_DM.setValueAt(str(self._httpCalls[0][0]), _row, _column)
-                        return self._httpCalls[0][1]
-                    elif _redirection:
-                        _url = _redirection
-                        _headerOrg = list(_header)
-                        _header = list(_headerOrg[1:])
-                        _header.insert(0, "GET /" + _url.split("/", 3)[3] + " " + _headerOrg[0].split(" ", 2)[2])
-                        self.authenticationMatrixCalls(_url, _header, "", _portNum, _row, _column, 0)
-                        if not self.tableMatrixAuthentication_DM.getValueAt(_row, _column):
-                            self.tableMatrixAuthentication_DM.setValueAt(str(self._httpCalls[0][0]), _row, _column)
-                        return self._httpCalls[0][1]
-                    else:
-                        if not self.tableMatrixAuthentication_DM.getValueAt(_row, _column):
-                            self.tableMatrixAuthentication_DM.setValueAt(str(self._httpCalls[0][0]), _row, _column)
-                        return self._httpCalls[0][1]
-                else:
-                    if not self.tableMatrixAuthentication_DM.getValueAt(_row, _column):
-                        self.tableMatrixAuthentication_DM.setValueAt(str(self._httpCalls[0][0]), _row, _column)
-                    return self._httpCalls[0][1]
-            else:
-                if not self.tableMatrixAuthentication_DM.getValueAt(_row, _column):
-                    self.tableMatrixAuthentication_DM.setValueAt(_status, _row, _column)
-                return _response
         except:
             print str(sys.exc_info()[1])
             self._lblAuthenticationNotification.text = "An error has occurred, but still in progress!"
@@ -1411,7 +2617,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                 #                       http://dvwa.local/;/company/users/admin?id=1
                 #                       http://dvwa.local/company/;/users/admin?id=1
                 #                       http://dvwa.local/company/users/;/admin?id=1
-                _replaceWiths = ["/./", "/../", "/..././", "/;/", "//;//", "/.;/", "/;", "/.;", "/%2e/", "/%2f/", "/%20/", "/%00/", "/%ff/", "/%01/", "/%0a/", "/%0d/", "/%09/"]
+                _replaceWiths = ["/./", "/../", "/..././", "/;/", "//;//", "/.;/", "/;", "/.;", "/%2e/", "/%2f/", "/%20/", "/%3b/", "/%00/", "/%ff/", "/%01/", "/%0a/", "/%0d/", "/%09/"]
                 _locations = [i for i in range(len(str(_url))) if str(_url).startswith(_searchFor, i)]
                 for _replaceWith in _replaceWiths:
                     for _url in _urls:
@@ -1476,7 +2682,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                 #                           http://dvwa.local/company/%09/users/admin/%09/?id=1
                 #                           http://dvwa.local/company/users/%09/admin/%09/?id=1
 
-                _replaceWiths = ["/./", "/%09/", "/%20/", "/%00/", "/%ff/", "/%01/", "/%0a/", "/%0d/"]
+                _replaceWiths = ["/./", "/%09/", "/%20/", "/%3b/", "/%00/", "/%ff/", "/%01/", "/%0a/", "/%0d/"]
                 for _replaceWith in _replaceWiths:
                     for _url in _urls:
                         if _url.count('/') != 3:
@@ -1499,7 +2705,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                 #                           http://dvwa.local/%09/company/users/admin%09?id=1
                 #                           http://dvwa.local/company/%09/users/admin%09?id=1
                 #                           http://dvwa.local/company/users/%09/admin%09?id=1
-                _replaceWiths = ["/./", "/%09/", "/%20/", "/%00/", "/%ff/", "/%01/", "/%0a/", "/%0d/"]
+                _replaceWiths = ["/./", "/%09/", "/%20/", "/%3b/", "/%00/", "/%ff/", "/%01/", "/%0a/", "/%0d/"]
                 for _replaceWith in _replaceWiths:
                     for _url in _urls:
                         if _url.count('/') != 3:
@@ -1522,7 +2728,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                 #                           http://dvwa.local/%09/company/users/admin?id=1/%09/
                 #                           http://dvwa.local/company/%09/users/admin?id=1/%09/
                 #                           http://dvwa.local/company/users/%09/admin?id=1/%09/
-                _replaceWiths = ["/./", "/%09/", "/%20/", "/%00/", "/%ff/", "/%01/", "/%0a/", "/%0d/"]
+                _replaceWiths = ["/./", "/%09/", "/%20/", "/%3b/", "/%00/", "/%ff/", "/%01/", "/%0a/", "/%0d/"]
                 for _replaceWith in _replaceWiths:
                     for _url in _urls:
                         if _url.count('/') != 3:
@@ -1541,7 +2747,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                 #                           http://dvwa.local/%09/company/users/admin?id=1%09
                 #                           http://dvwa.local/company/%09/users/admin?id=1%09
                 #                           http://dvwa.local/company/users/%09/admin?id=1%09
-                _replaceWiths = ["/./", "/%09/", "/%20/", "/%00/", "/%ff/", "/%01/", "/%0a/", "/%0d/"]
+                _replaceWiths = ["/./", "/%09/", "/%20/", "/%3b/", "/%00/", "/%ff/", "/%01/", "/%0a/", "/%0d/"]
                 for _replaceWith in _replaceWiths:
                     for _url in _urls:
                         if _url.count('/') != 3:
@@ -1557,7 +2763,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
 
                 # column14, example url:    http://dvwa.local/company/users/admin?id=1
                 #                           http://dvwa.local/company/users/admin.html?id=1
-                _fileExtensions = [".js", ".html", ".js%2f", ".html%2f", ";index.html", "%00.html", "%00.js"]
+                _fileExtensions = [".js", ";.js", ".html", ";.html", ".js%2f", ";.js%2f", ".html%2f", ";.html%2f", ";index.html", "%00.html", ";%00.html", "%00.js", ";%00.js"]
                 for _url in _urls:
                     if len(urlparse.urlparse(_url).path) > 1:
                         _locations = [i for i in range(len(str(_url))) if str(_url).startswith(_searchFor, i)]
@@ -1731,8 +2937,14 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._btnAuthenticationReset.setEnabled(False)
         self._cbAuthenticationHost.setEnabled(False)
         self._btnAuthenticationRun.setEnabled(False)
+        self._cbAuthenticationEnableFilter.setEnabled(False)
+        self._cbAuthenticationDaystoShow.setEnabled(False)
+        self._cbAuthenticationEnableURLGroup.setEnabled(False)
+        self._lblAuthenticationEnableFilter2.setEnabled(False)
+        self._cbAuthenticationDaystoShow.setVisible(False)
+        self.txAuthenticationEnableKeyWordURL.setEnabled(False)
         global _authType
-        _authType = self._cbAuthenticationType.getSelectedIndex()
+        _authType = 0
 
         for x in range(0, self.tableMatrixAuthentication_DM.getRowCount()):
             for y in range(1, self.tableMatrixAuthentication_DM.getColumnCount()):
@@ -1880,7 +3092,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                 #                       http://dvwa.local/company/;/users/admin?id=1
                 #                       http://dvwa.local/company/users/;/admin?id=1
                 _headerOrg = list(_matrixList[x][1])
-                _replaceWiths = ["/./", "/../", "/..././", "/;/", "//;//", "/.;/", "/;", "/.;", "/%2e/", "/%2f/", "/%20/", "/%00/", "/%ff/", "/%01/", "/%0a/", "/%0d/", "/%09/"]
+                _replaceWiths = ["/./", "/../", "/..././", "/;/", "//;//", "/.;/", "/;", "/.;", "/%2e/", "/%2f/", "/%20/", "/%3b/", "/%00/", "/%ff/", "/%01/", "/%0a/", "/%0d/", "/%09/"]
                 _locations = [i for i in range(len(str(_url))) if str(_url).startswith(_searchFor, i)]
                 for _replaceWith in _replaceWiths:
                     for _url in _urls:
@@ -1967,7 +3179,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                 #                           http://dvwa.local/company/%09/users/admin/%09/?id=1
                 #                           http://dvwa.local/company/users/%09/admin/%09/?id=1
                 _headerOrg = list(_matrixList[x][1])
-                _replaceWiths = ["/./", "/%09/", "/%20/", "/%00/", "/%ff/", "/%01/", "/%0a/", "/%0d/"]
+                _replaceWiths = ["/./", "/%09/", "/%20/", "/%3b/", "/%00/", "/%ff/", "/%01/", "/%0a/", "/%0d/"]
                 for _replaceWith in _replaceWiths:
                     for _url in _urls:
                         if _url.count('/') != 3:
@@ -1996,7 +3208,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                 #                           http://dvwa.local/company/%09/users/admin%09?id=1
                 #                           http://dvwa.local/company/users/%09/admin%09?id=1
                 _headerOrg = list(_matrixList[x][1])
-                _replaceWiths = ["/./", "/%09/", "/%20/", "/%00/", "/%ff/", "/%01/", "/%0a/", "/%0d/"]
+                _replaceWiths = ["/./", "/%09/", "/%20/", "/%3b/", "/%00/", "/%ff/", "/%01/", "/%0a/", "/%0d/"]
                 for _replaceWith in _replaceWiths:
                     for _url in _urls:
                         if _url.count('/') != 3:
@@ -2025,7 +3237,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                 #                           http://dvwa.local/company/%09/users/admin?id=1/%09/
                 #                           http://dvwa.local/company/users/%09/admin?id=1/%09/
                 _headerOrg = list(_matrixList[x][1])
-                _replaceWiths = ["/./", "/%09/", "/%20/", "/%00/", "/%ff/", "/%01/", "/%0a/", "/%0d/"]
+                _replaceWiths = ["/./", "/%09/", "/%20/", "/%3b/", "/%00/", "/%ff/", "/%01/", "/%0a/", "/%0d/"]
                 for _replaceWith in _replaceWiths:
                     for _url in _urls:
                         if _url.count('/') != 3:
@@ -2050,7 +3262,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                 #                           http://dvwa.local/company/%09/users/admin?id=1%09
                 #                           http://dvwa.local/company/users/%09/admin?id=1%09
                 _headerOrg = list(_matrixList[x][1])
-                _replaceWiths = ["/./", "/%09/", "/%20/", "/%00/", "/%ff/", "/%01/", "/%0a/", "/%0d/"]
+                _replaceWiths = ["/./", "/%09/", "/%20/", "/%3b/", "/%00/", "/%ff/", "/%01/", "/%0a/", "/%0d/"]
                 for _replaceWith in _replaceWiths:
                     for _url in _urls:
                         if _url.count('/') != 3:
@@ -2072,7 +3284,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                 # column14, example url:    http://dvwa.local/company/users/admin?id=1
                 #                           http://dvwa.local/company/users/admin.html?id=1
                 _headerOrg = list(_matrixList[x][1])
-                _fileExtensions = [".js", ".html", ".js%2f", ".html%2f", ";index.html", "%00.html", "%00.js"]
+                _fileExtensions = [".js", ";.js", ".html", ";.html", ".js%2f", ";.js%2f", ".html%2f", ";.html%2f", ";index.html", "%00.html", ";%00.html", "%00.js", ";%00.js"]
                 for _url in _urls:
                     if len(urlparse.urlparse(_url).path) > 1:
                         _locations = [i for i in range(len(str(_url))) if str(_url).startswith(_searchFor, i)]
@@ -2235,15 +3447,11 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
 
 
             self.currentText = "The table has been populated. Blank is default color, which indicates no issue has been found. Http response codes are shown below, you can click any of them for more details."
-            if _authType == 1:
-                self.currentText = self.currentText + " ' * ' sign at the end shows SSO interaction."
             if self.errorNumbers != 0:
                 successRate = 100 - 100 * float(self.errorNumbers) / float(self.cellNumbers)
                 if successRate > 69:
                     self.currentText = "Successful connection rate is " + str(int(successRate)) + "%"
                     self.currentText = self.currentText + ". The table has been populated. Blank is default color, which indicates no issue has been found. Http response codes are shown below, you can click any of them for more details."
-                    if _authType == 1:
-                        self.currentText = self.currentText + " ' * ' sign at the end shows SSO interaction."
                 else:
                     self.currentText = "Successful connection rate is very low, please check your network connection!"
             
@@ -2252,6 +3460,12 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
             self._btnAuthenticationReset.setEnabled(True)
             self._cbAuthenticationHost.setEnabled(True)
             self._btnAuthenticationRun.setEnabled(True)
+            self._cbAuthenticationEnableFilter.setEnabled(True)
+            self._cbAuthenticationDaystoShow.setEnabled(True)
+            self._cbAuthenticationEnableURLGroup.setEnabled(True)
+            self._lblAuthenticationEnableFilter2.setEnabled(True)
+            self._cbAuthenticationDaystoShow.setVisible(False)
+            self.txAuthenticationEnableKeyWordURL.setEnabled(True)
             self._customRendererAuthentication =  UserEnabledRenderer(self.tableMatrixAuthentication.getDefaultRenderer(str), self._httpReqResAuthentication, self._httpReqResAuthenticationTipMessage)
             self._customTableColumnModelAuthentication = self.tableMatrixAuthentication.getColumnModel()
 
@@ -2314,8 +3528,8 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._tabHelpJPanel.setBorder(EmptyBorder(10, 10, 10, 10))
         self.editorPaneInfo = JEditorPane()
         self.editorPaneInfo.setEditable(False)
-        self.editorPaneInfo.setContentType("text/html");
-        htmlString ="<html><body><table width=1000 border=0 cellspacing=0><tr><td><h3>Author:\t\t\tVolkan Dindar<br/>Github:\t\t\thttps://github.com/volkandindar/agartha</h3>"
+        self.editorPaneInfo.setContentType("text/html")
+        htmlString = "<html><body><table width=1000 border=0 cellspacing=0><tr><td><h3>Author:\t\t\tVolkan Dindar<br/>Github:\t\t\thttps://github.com/volkandindar/agartha</h3>"
         htmlString += """
         <h1>Agartha - LFI, RCE, SQLi, Auth, HTTP to JS</h1>
         <p>Agartha, specializes in advance payload generation and access control assessment. It adeptly identifies vulnerabilities related to injection attacks, and authentication/authorization issues. The dynamic payload generator crafts extensive wordlists for various injection vectors, including SQL Injection, Local File Inclusion (LFI), and Remote Code Execution(RCE). Furthermore, the extension constructs a comprehensive user access matrix, revealing potential access violations and privilege escalation paths. It also assists in performing HTTP 403 bypass checks, shedding light on auth misconfigurations. Additionally, it can convert HTTP requests to JavaScript code to help digging up XSS issues more.</p>
@@ -2333,171 +3547,23 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         </li>
         <li><strong>403 Bypass</strong>: It aims to tackle common access restrictions, such as HTTP 403 Forbidden responses. It utilizes techniques like URL manipulation and request header modification to bypass implemented limitations.</li>
         <li><strong>Copy as JavaScript</strong>: It converts Http requests to JavaScript code for further XSS exploitation and more.<br/><br/></li>
-        </ul>
-        <p>Here is a small tutorial how to use.</p>
-        <h2>Installation</h2>
-        <p>You should download &#39;Jython&#39; file and set your environment first:</p>
-        <ul>
-        <li>Burp Menu &gt; Extender &gt; Options &gt; Python Environment &gt; Locate Jython standalone jar file.</li>
-        </ul>
-        <p>You can install Agartha through official store: </p>
-        <ul>
-        <li>Burp Menu &gt; Extender &gt; BApp Store &gt; Agartha</li>
-        </ul>
-        <p>Or for manual installation:</p>
-        <ul>
-        <li>Burp Menu &gt; Extender &gt; Extensions &gt; Add &gt; Extension Type: Python &gt; Extension file(.py): Select &#39;Agartha.py&#39; file</li>
-        </ul>
-        <p>After all, you will see &#39;Agartha&#39; tab in the main window and it will be also registered the right click, under: </p>
-        <ul>
-        <li>&#39;Extensions &gt; Agartha - LFI, RCE, SQLi, Auth, HTTP to JS&#39;, with three sub-menus:<ul>
-        <li><strong>&#39;Auth Matrix&#39;</strong></li>
-        <li><strong>&#39;403 Bypass&#39;</strong></li>
-        <li><strong>&#39;Copy as JavaScript&#39;</strong><br/><br/></li>
-        </ul>
-        </li>
-        </ul>
-        <h2>Local File Inclusion / Path Traversal</h2>
-        <p>It supports both Unix and Windows file syntaxes, enabling dynamic wordlist generation for any desired path. Additionally, it can attempt to bypass Web Application Firewall (WAF) implementations, with various encodings and other techniques.</p>
-        <ul>
-        <li><strong>&#39;Depth&#39;</strong> specifies the extent of directory traversal for wordlist generation. You can create wordlists that reach up to or equal to this specified level. The default value is 5.</li>
-        <li><strong>&#39;Waf Bypass&#39;</strong> inquires whether you want to enable all bypass features, such as the use of null bytes, various encoding techniques, and other methods to circumvent web application firewalls.</li>
-        </ul>
-        <p><img width=\"1000\" alt=\"Directory Traversal/Local File Inclusion wordlist\" src=\"https://github.com/user-attachments/assets/f60c5ec7-9bd7-40d3-aa8c-ec3b0212fdbb\"><br/><br/></p>
-        <h2>Remote Code Execution / Command Injection</h2>
-        <p>It generates dynamic wordlists for command execution based on the supplied command. It combines various separators and terminators for both Unix and Windows environments.</p>
-        <ul>
-        <li><strong>&#39;URL Encoding&#39;</strong> encodes the output.</li>
-        </ul>
-        <p><img width=\"1000\" alt=\"Remote Code Execution wordlist\" src=\"https://github.com/user-attachments/assets/0a074ff9-5eb1-4839-beba-5fe26792de1b\"><br/><br/></p>
-        <h2>SQL Injection</h2>
-        <p>It generates payloads for various types of SQL injection attacks, including Stacked Queries, Boolean-Based, Union-Based, and Time-Based. It doesn't require any user inputs; you simply select the desired SQL attack types and databases, and it generates a wordlist with different combinations.</p>
-        <ul>
-        <li><strong>&#39;URL Encoding&#39;</strong> encodes the output.</li>
-        <li><strong>&#39;Waf Bypass&#39;</strong> inquires whether you want to enable all bypass features, such as the use of null bytes, various encoding techniques, and other methods to circumvent web application firewalls.</li>
-        <li><strong>&#39;Union-Based&#39;</strong> requires the specified depth for payload generation. You can create wordlists that reach up to the given value. The default value is 5.</li>
-        <li>The remaining aspects pertain to database types and various attack vectors.</li>
-        </ul>
-        <p><img width=\"1000\" alt=\"SQL Injection wordlist\" src=\"https://github.com/user-attachments/assets/0393253b-195e-410b-bb5d-a687761fb743\"><br/><br/></p>
-        <h2>Authorization Matrix / User Access Table</h2>
-        <p>This part focuses on analyzing user session and URL relationships to identify access violations. The tool systematically visits all URLs associated with pre-defined user sessions and populates a table with HTTP responses. Essentially, it creates an access matrix, which aids in identifying authentication and authorization issues. Ultimately, this process reveals which users can access specific page contents.</p>
-        <ul>
-        <li>You can right-click on any request and navigate to &#39;Extensions &gt; Agartha &gt; Auth Matrix&#39; to define <strong>user sessions</strong>.</li>
-        <li>Next, you need to provide the <strong>URL addresses</strong> that the user (HTTP header/session owner) can access. You can utilize the web &#39;Spider&#39; feature for automated crawling or supply a manually curated list of URLs.</li>
-        <li>Afterward, you can use the <strong>&#39;Add User&#39;</strong> button to include the user sessions.</li>
-        <li>Now, it&#39;s ready for execution. Simply click the <strong>&#39;Run&#39;</strong> button, and the table will be populated accordingly.</li>
-        </ul>
-        <img width=\"1000\" alt=\"Authorization Matrix\" src=\"https://github.com/user-attachments/assets/62255976-d633-4a6e-b0a5-716d060a3451\">
+        </ul>        """
+        htmlString += "</td></tr></table></body></html>"
         
-        
-        <p>A little bit more details:</p>
-        <ol>
-        <li>This is the field where you enter the username for the session you provide. You can add up to four different users, with each user being assigned a unique color to enhance readability.<ul>
-        <li>The &#39;Add User&#39; button allows you to include user sessions in the matrix.</li>
-        <li>You can change the HTTP request method to &#39;GET&#39;, &#39;POST&#39;, or &#39;Dynamic&#39;, the latter of which is based on proxy history.</li>
-        <li>The &#39;Reset&#39; button clears all contents.</li>
-        <li>The &#39;Run&#39; button executes the task, displaying the results in the user access matrix.</li>
-        <li>The &#39;Warnings&#39; section highlights potential issues using different colors for easy identification.</li>
-        <li>The &#39;Spider (SiteMap)&#39; button automatically generates a URL list based on the user&#39;s header/session. The visible URLs will be populated in the next textbox, where you can still make modifications as needed.</li>
-        <li>&#39;Crawl Depth&#39; defines the maximum number of sub-links that the &#39;Spider&#39; should crawl to detect links.</li>
-        </ul>
-        </li>
-        <li>The field is for specifying request headers, and all URLs will be accessed using the session defined here.</li>
-        <li>Specify the URL addresses that users can visit. You can create this list manually or utilize the <strong>&#39;Spider&#39;</strong> crawler feature. Make sure to provide a visitable URL list for each user.</li>
-        <li>All provided URLs will be listed here and attempted to access using the corresponding user sessions.</li>
-        <li>The first column represents a scenario with no authentication attempt. All cookies, tokens, and potential session parameters will be removed from the HTTP calls.</li>
-        <li>The remaining columns correspond to the users previously generated, each marked with a unique color to indicate the respective URL owners. </li>
-        <li>The cell titles display the HTTP response &#39;codes:lengths&#39; for each user session, providing a clear overview of the response details for each access attempt.</li>
-        <li>Just click on the cell you want to examine, and the HTTP details will be displayed at the bottom.</li>
-        </ol>
-        <p>Please note that potential session terminators (such as logoff, sign-out, etc.) and specific file types (such as CSS, images, JavaScript, etc.) will be filtered out from both the &#39;Spider&#39; and the user&#39;s URL list.</p>
-        <img width=\"1000\" alt=\"User Access Table Details\" src=\"https://github.com/volkandindar/agartha/assets/50321735/e7ce918e-d40e-44c5-ada7-ee1c0cfa487b\">
-        
-        <p>After clicking &#39;RUN&#39;, the tool will populate the user and URL matrix with different colors. In addition to user-specific colors, you will see red, orange, and yellow cells indicating possible access issues.</p>
-        <ul>
-        <li><strong>Red</strong> highlights a critical access violation, indicated by the response returning &#39;HTTP 200&#39; with the same content length.</li>
-        <li><strong>Orange</strong> signifies a moderate issue that needs attention, marked by the response returning &#39;HTTP 200&#39; but with a different content length.</li>
-        <li><strong>Yellow</strong> indicates that the response returns an &#39;HTTP 302&#39; status, signifying a redirection.</li>
-        </ul>
-        <p>The task at hand involves a bulk process, and it is worth to mention which HTTP request methods will be used. The tool provides three different options for performing HTTP calls:</p>
-        <ul>
-        <li><strong>GET</strong>, All requests are sent using the GET method.</li>
-        <li><strong>POST</strong>, All requests are sent using the POST method.</li>
-        <li><strong>Dynamic</strong>, The request method is determined by the proxy history. If no information is available, the base header method will be used by default.<br/><br/></li>
-        </ul>
-        <h2>403 Bypass</h2>
-        <p>HTTP 403 Forbidden status code indicates that the server understands the request but refuses to authorize it. Essentially, it means, 'I recognize who you are, but you lack permission to access this resource.' This status often points to issues like 'insufficient permissions', 'authentication required', 'IP restrictions', etc.</p>
-        <p>The tool addresses the common access forbidden error by employing various techniques, such as URL manipulation and request header modification. These strategies aim to bypass access restrictions and retrieve the desired content.</p>
-        <p>It is worth to mention two different usage cases:</p>
-        <ol>
-        <li>In scenarios related to <strong>Authentication Issues</strong>, it is essential to consider removing all session identifiers. After doing so, test whether any sources become publicly accessible. This approach helps identify unauthenticated accesses and ensures that sensitive information remains protected. </li>
-        <li>For <strong>Privilege Escalation and Authorization</strong> testing, retain session identifiers but limit their use to specific user roles. For instance, you can utilize a regular user's session while substituting an administrative URL. This focused approach allows for more precise and efficient testing, ensuring that privileged sources are not accessible without the appropriate roles.</li>
-        </ol>
-        <p>There are 2 ways you can send HTTP requests to the tool.</p>
-        <ol>
-        <li>You can load requests from proxy history by clicking the 'Load Requests' button. Doing so will automatically remove all session identifiers, making it suitable for attack <strong>Case 1</strong>. Any potential session terminators (such as logoff, sign-out, etc.) and specific file types (such as CSS, images, JavaScript, etc.) will be also filtered out. Please note that this will be a bulk process and may take longer as it involves revisiting each HTTP request from the history. However, this comprehensive verification of all endpoints is essential for ensuring the security of the authentication mechanisms</li>
-        <li>You can send individual requests by right-clicking. Session identifiers will be retained/untouched, making this approach suitable for attack <strong>Case 2</strong>. This controlled approach allows you to assess whether privileged sources are accessible without proper roles. It will be more specific and faster, as users will select which URLs to test rather than copying everything from history.</li>
-        </ol>
-        <img width=\"1000\" alt=\"Sending individual requests\" src=\"https://github.com/volkandindar/agartha/assets/50321735/54b567a0-6b69-43f4-b727-f01709f4cc79\">
-        
-        <p>The page we aim to access belongs to a privileged user group, and we retain our session identifiers to verify if Privilege Escalation is feasible.
-        <br/><br/>
-        Simply clicking the &#39;RUN&#39; button will execute the task.</p>
-        <p>The figure below illustrates that a URL may have an access issue, with the 'Red' color indicating a warning.</p>
-        <img width=\"1000\" alt=\"Attempt details\" src=\"https://github.com/volkandindar/agartha/assets/50321735/b7c81258-aa11-42dc-87c6-c25b1047056c\">
-        
-        <ol>
-        <li>Load requests from the proxy history by selecting the target hostname and clicking the 'Load Requests' button.</li>
-        <li>URL and Header details</li>
-        <li>Request attempts and results</li>
-        <li>HTTP requests and responses</li>
-        </ol>
-        <p>Please note that the number of attempts is contingent upon the specific target URL.
-        <br/><br/></p>
-        <h2>Copy as JavaScript</h2>
-        <p>The feature enables the conversion of HTTP requests into JavaScript code, which can be particularly useful for going beyond XSS vulnerabilities and bypassing header restrictions.</p>
-        <p>To use this feature, simply right-click on any HTTP request and select &#39;Extensions &gt; Agartha &gt; Copy as JavaScript&#39;.</p>
-        <img width=\"1000\" alt=\"Copy as JavaScript\" src=\"https://github.com/volkandindar/agartha/assets/50321735/c0149adb-d0ab-4aa3-98a1-34b86bd68d3f\">
-        
-        <p>It will automatically save to your clipboard, including some additional remarks for your reference. For example:</p>
-        <pre><code>
-        Http request with minimum header paramaters in JavaScript:
-            &lt;script&gt;
-                var xhr=new XMLHttpRequest();
-                xhr.open(&#39;GET&#39;,&#39;http://dvwa.local/vulnerabilities/xss_r/?name=XSS&#39;);
-                xhr.withCredentials=true;
-                xhr.send();
-            &lt;/script&gt;
-        
-        Http request with all header paramaters (except cookies, tokens, etc) in JavaScript, you may need to remove unnecessary fields:
-            &lt;script&gt;
-                var xhr=new XMLHttpRequest();
-                xhr.open(&#39;GET&#39;,&#39;http://dvwa.local/vulnerabilities/xss_r/?name=XSS&#39;);
-                xhr.withCredentials=true;
-                xhr.setRequestHeader(&#39;Host&#39;,&#39; dvwa.local&#39;);
-                xhr.setRequestHeader(&#39;User-Agent&#39;,&#39; Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:127.0) Gecko/20100101 Firefox/127.0&#39;);
-                xhr.setRequestHeader(&#39;Accept&#39;,&#39; text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8&#39;);
-                xhr.setRequestHeader(&#39;Accept-Language&#39;,&#39; en-US,en;q=0.5&#39;);
-                xhr.setRequestHeader(&#39;Accept-Encoding&#39;,&#39; gzip, deflate, br&#39;);
-                xhr.setRequestHeader(&#39;DNT&#39;,&#39; 1&#39;);
-                xhr.setRequestHeader(&#39;Sec-GPC&#39;,&#39; 1&#39;);
-                xhr.setRequestHeader(&#39;Connection&#39;,&#39; keep-alive&#39;);
-                xhr.setRequestHeader(&#39;Referer&#39;,&#39; http://dvwa.local/vulnerabilities/xss_r/&#39;);
-                xhr.setRequestHeader(&#39;Upgrade-Insecure-Requests&#39;,&#39; 1&#39;);
-                xhr.setRequestHeader(&#39;Priority&#39;,&#39; u=1&#39;);
-                xhr.send();
-            &lt;/script&gt;
-        
-        For redirection, please also add this code before &#39;&lt;/script&gt;&#39; tag:
-            xhr.onreadystatechange=function(){if (this.status===302){var location=this.getResponseHeader(&#39;Location&#39;);return ajax.call(this,location);}};
-        </code></pre>
-        <p>Please note that the JavaScript code will execute within the original user session, with many header fields automatically populated by the browser. However, in some cases, the server may require specific mandatory header fields. For example, certain requests might fail if the &#39;Content-Type&#39; is incorrect. Therefore, you may need to adjust the code to ensure compatibility with the server&#39;s requirements.</p>
-        """
-        htmlString +="</td></tr></table></body></html>"
-        self.editorPaneInfo.setText(htmlString);
-        self.editorScrollPaneInfo = JScrollPane(self.editorPaneInfo);
-        self.editorScrollPaneInfo.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        self._tabHelpJPanel.add(self.editorScrollPaneInfo, BorderLayout.CENTER);
+        self.editorPaneInfo.setText(htmlString)
+        self.editorScrollPaneInfo = JScrollPane(self.editorPaneInfo)
+        self.editorScrollPaneInfo.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS)
+
+        #  Custom MouseWheelListener to slow down scroll
+        class SlowScrollMouseWheelListener(MouseWheelListener):
+            def mouseWheelMoved(inner_self, e):
+                scrollBar = self.editorScrollPaneInfo.getVerticalScrollBar()
+                amount = e.getUnitsToScroll() * 5  # scale this value (3 is slower than default 15+)
+                scrollBar.setValue(scrollBar.getValue() + amount)
+                e.consume()  # prevent default fast scroll
+
+        self.editorPaneInfo.addMouseWheelListener(SlowScrollMouseWheelListener())
+        self._tabHelpJPanel.add(self.editorScrollPaneInfo, BorderLayout.CENTER)
 
     def _tabDictUI(self):
         # top panel
@@ -2527,10 +3593,12 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         _lblDepth.setToolTipText("Generate payloads only for a specific depth.")
         _btnGenerateDict = JButton("Generate the Payload", actionPerformed=self.funcGeneratePayload)
         _btnGenerateDict.setToolTipText("Click to generate payloads.")
+        _btnGenerateDictForBCheck = JButton("Generate payloads for BCheck", actionPerformed=self.funcGeneratePayloadForBCheck)
+        _btnGenerateDictForBCheck.setToolTipText("Generate payloads for BCheck.")
         self._lblStatusLabel = JLabel()
         self._lblStatusLabel.setText("Please provide a path for payload generation!")
         self._txtTargetPath = JTextField(self._txtDefaultLFI, 30)
-        self._rbDictLFI = JRadioButton('LFI / PT', True, itemStateChanged=self.funcRBSelection);
+        self._rbDictLFI = JRadioButton('LFI / PT', True, itemStateChanged=self.funcRBSelection)
         self._rbDictLFI.setToolTipText("Payload generation for Local File Inclusion, Path Traversal.")
         self._rbDictCommandInj = JRadioButton('Command Inj / RCE', itemStateChanged=self.funcRBSelection)
         self._rbDictCommandInj.setToolTipText("Payload generation for Command Injection, Remote Code Execution.")
@@ -2564,7 +3632,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._cbDictCommandInjOpt.setVisible(False)
         self._cbStackedSQL = JCheckBox('Stacked Queries', False)
         self._cbStackedSQL.setToolTipText("Stacked Query SQL Injection")
-        self._cbTimeBased = JCheckBox('Time-Based', True)
+        self._cbTimeBased = JCheckBox('Time-Based', False)
         self._cbTimeBased.setToolTipText("Time-Based SQL Injection")
         self._cbUnionBased = JCheckBox('Union-Based', False, itemStateChanged=self._cbUnionBasedFunc)
         self._cbUnionBased.setToolTipText("Union-Based SQL Injection")
@@ -2589,6 +3657,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         _tabDictPanel_1 = JPanel(FlowLayout(FlowLayout.LEADING, 10, 10))
         _tabDictPanel_1.add(self._txtTargetPath, BorderLayout.PAGE_START)
         _tabDictPanel_1.add(_btnGenerateDict, BorderLayout.PAGE_START)
+        _tabDictPanel_1.add(_btnGenerateDictForBCheck, BorderLayout.PAGE_START)
         _tabDictPanel_1.add(_rbPanel, BorderLayout.PAGE_START)
         self._tabDictPanel_LFI = JPanel(FlowLayout(FlowLayout.LEADING, 10, 0))
         self._tabDictPanel_LFI.add(_lblDepth, BorderLayout.PAGE_START)
@@ -2906,7 +3975,7 @@ class UserEnabledRenderer(TableCellRenderer):
                 if hasFocus:
                     self.focusX = row
                     self.focusY = column
-                    cell.setFont(cell.getFont().deriveFont(Font.BOLD | Font.ITALIC));
+                    cell.setFont(cell.getFont().deriveFont(Font.BOLD | Font.ITALIC))
                     table.repaint()
                 elif self.focusX == row and column == 0:
                     cell.setFont(cell.getFont().deriveFont(Font.BOLD | Font.ITALIC))
@@ -2945,37 +4014,7 @@ class UserEnabledRenderer(TableCellRenderer):
                             if str(table.getValueAt(row, column)).startswith("2"):
                                 cell.setBackground(self.colorsAlert[1])
                                 UserEnabledRenderer._colorsRed = True
-                                toolTipMessage = "The response returns Http 2XX, even though all session identifiers have been removed!\n" + self.tipMessages[row][column]
-                        elif _authType == 1:
-                            # SSO
-                            if str(table.getValueAt(row, column)).startswith("2"):
-                                cell.setBackground(self.colorsAlert[1])
-                                UserEnabledRenderer._colorsRed = True
-                                toolTipMessage = "The response returns Http 2XX, even though SSO is required!\n" + self.tipMessages[row][column]
-                            elif str(table.getValueAt(row, column)).startswith("3") and not str(table.getValueAt(row, column)).endswith("*"):
-                                # 302 and 301
-                                cell.setBackground(self.colorsAlert[2])
-                                UserEnabledRenderer._colorsOrange = True
-                                toolTipMessage = "Http 3XX requests are not being redirected to an SSO server!\n" + self.tipMessages[row][column]
-                            elif "403" in str(table.getValueAt(row, column)):
-                                cell.setBackground(self.colorsAlert[3])
-                                UserEnabledRenderer._colorsYellow = True
-                                toolTipMessage = "Http 403 might be replied directly by the target system!\n" + self.tipMessages[row][column]
-                        elif _authType == 2:
-                            # mTLS
-                            if str(table.getValueAt(row, column)).startswith('2'):
-                                cell.setBackground(self.colorsAlert[1])
-                                UserEnabledRenderer._colorsRed = True
-                                toolTipMessage = "The server returns Http 2XX without client-side certificate.\n" + self.tipMessages[row][column]
-                            elif str(table.getValueAt(row, column)).startswith('3'):
-                                cell.setBackground(self.colorsAlert[2])
-                                UserEnabledRenderer._colorsOrange = True
-                                toolTipMessage = "The server gives responses without client-side certificate.\n" + self.tipMessages[row][column]
-                            elif str(table.getValueAt(row, column)).startswith('4') or str(table.getValueAt(row, column)).startswith('5'):
-                                cell.setBackground(self.colorsAlert[3])
-                                UserEnabledRenderer._colorsYellow = True
-                                toolTipMessage = "The server gives responses without client-side certificate.\n" + self.tipMessages[row][column]
-                    
+                                toolTipMessage = "The response returns HTTP 2XX, even though all session identifiers have been removed!\n" + self.tipMessages[row][column]
                     else:
                         if column == 32:
                           toolTipMessage = "'X-Original-URL' parameter has been added to the header."
@@ -2992,36 +4031,12 @@ class UserEnabledRenderer(TableCellRenderer):
 
                         if not str(table.getValueAt(row, 1)).startswith("2"):
                             if str(table.getValueAt(row, column)).startswith("2") and not str(table.getValueAt(row, column)).endswith("-"):
-                                cell.setBackground(self.colorsAlert[1])
-                                UserEnabledRenderer._colorsRed = True
-                                toolTipMessage = "The bypass attempt returns Http 2XX!\n" + self.tipMessages[row][column]
-
-                        if _authType == 1:
-                            # SSO
-                            if str(table.getValueAt(row, column)).startswith('2'):
-                                cell.setBackground(self.colorsAlert[1])
-                                UserEnabledRenderer._colorsRed = True
-                                toolTipMessage = "The response returns Http 2XX, even though SSO is required!\n" + self.tipMessages[row][column]
-                            elif str(table.getValueAt(row, column)).startswith("3") and not str(table.getValueAt(row, column)).endswith("*"):
-                                # 302 and 301
-                                cell.setBackground(self.colorsAlert[2])
-                                UserEnabledRenderer._colorsOrange = True
-                                toolTipMessage = "Http 3XX requests are not being redirected to an SSO server!\n" + self.tipMessages[row][column]
-
-                        if _authType == 2:
-                            # mTLS
-                            if str(table.getValueAt(row, column)).startswith('2'):
-                                cell.setBackground(self.colorsAlert[1])
-                                UserEnabledRenderer._colorsRed = True
-                                toolTipMessage = "The server returns Http 2XX without client-side certificate.\n" + self.tipMessages[row][column]
-                            elif str(table.getValueAt(row, column)).startswith('3'):
-                                cell.setBackground(self.colorsAlert[2])
-                                UserEnabledRenderer._colorsOrange = True
-                                toolTipMessage = "The server gives responses without client-side certificate.\n" + self.tipMessages[row][column]
-                            elif str(table.getValueAt(row, column)).startswith('4') or str(table.getValueAt(row, column)).startswith('5'):
-                                cell.setBackground(self.colorsAlert[3])
-                                UserEnabledRenderer._colorsYellow = True
-                                toolTipMessage = "The server gives responses without client-side certificate.\n" + self.tipMessages[row][column]
+                                if str(table.getValueAt(row, column)).endswith("(EmptyBody)"):
+                                    toolTipMessage = "The bypass attempt returns HTTP 2XX, but no response body!\n" + self.tipMessages[row][column]
+                                else:
+                                    cell.setBackground(self.colorsAlert[1])
+                                    UserEnabledRenderer._colorsRed = True
+                                    toolTipMessage = "The bypass attempt returns HTTP 2XX!\n" + self.tipMessages[row][column]
 
                     cell.setToolTipText(toolTipMessage)
 
@@ -3030,7 +4045,7 @@ class UserEnabledRenderer(TableCellRenderer):
                         self.focusY = column
                         if not cell.getBackground() == self.colorsAlert[1] and not cell.getBackground() == self.colorsAlert[2] and not cell.getBackground() == self.colorsAlert[3]:
                             cell.setBackground(Color(219,219,219))
-                        cell.setFont(cell.getFont().deriveFont(Font.BOLD | Font.ITALIC));
+                        cell.setFont(cell.getFont().deriveFont(Font.BOLD | Font.ITALIC))
                         table.repaint()
                     elif self.focusX == row and column == 0:
                         cell.setFont(cell.getFont().deriveFont(Font.BOLD | Font.ITALIC))
@@ -3046,3 +4061,74 @@ class CustomDefaultTableModel(DefaultTableModel):
 
     def isCellEditable(self, row, col):
         return False
+
+
+
+
+
+
+class URLFilter:
+    def __init__(self):
+        self.patterns_seen = set()
+
+    def _normalize_url(self, full_url):
+        parsed = urlparse.urlparse(full_url)
+        path = parsed.path.strip("/")
+        norm_parts = path.split("/")
+
+        normalized_path_parts = []
+        uuid_like = re.compile(
+            r"^[a-f0-9]{8}-[a-f0-9]{4}-[1-5][a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$", re.IGNORECASE
+        )
+
+        for part in norm_parts:
+            if uuid_like.match(part):
+                normalized_path_parts.append("{id}")
+            elif part.isdigit() and int(part) >= 10000:
+                normalized_path_parts.append("{id}")
+            elif re.match(r"^[a-zA-Z0-9]+$", part) and sum(c.isdigit() for c in part) >= 3:
+                normalized_path_parts.append("{id}")
+            else:
+                normalized_path_parts.append(part)
+
+        normalized = "/" + "/".join(normalized_path_parts)
+
+        if parsed.query:
+            query_params = parsed.query.split("&")
+            norm_query_parts = []
+            for param in query_params:
+                if "=" in param:
+                    key, value = param.split("=", 1)
+                    if uuid_like.match(value) or (value.isdigit() and int(value) >= 10000) or (re.match(r"^[a-zA-Z0-9]+$", value) and sum(c.isdigit() for c in value) >= 3):
+                        value = "{id}"
+                    norm_query_parts.append(key + "=" + value)
+                else:
+                    norm_query_parts.append(param)
+            norm_query_parts.sort()
+            normalized += "?" + "&".join(norm_query_parts)
+
+        return normalized
+
+    def should_process(self, url):
+        norm = self._normalize_url(url)
+        if norm in self.patterns_seen:
+            return False
+        else:
+            self.patterns_seen.add(norm)
+            return True
+
+
+class MyFocusListener(FocusListener):
+    def __init__(self, textPane, placeholder):
+        self.textPane = textPane
+        self.placeholder = placeholder
+
+    def focusGained(self, event):
+        if self.textPane.getText() == self.placeholder:
+            self.textPane.setText("")
+            self.textPane.setForeground(Color.BLACK)
+
+    def focusLost(self, event):
+        if self.textPane.getText().strip() == "":
+            self.textPane.setText(self.placeholder)
+            self.textPane.setForeground(Color.GRAY)
