@@ -25,7 +25,7 @@ except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
     sys.exit(1)
 
-VERSION = "2.1"
+VERSION = "2.11"
 #url_regex = r'(log|sign)([-_+%0-9]{0,5})(off|out|in|on)|(expire|kill|terminat|delete|remove)'
 url_regex = r'(log|sign|time)([-_+%0-9]{0,5})(off|out)|(expire|kill|terminat|delete|remove)'
 ext_regex = r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff2|ttf|otf)$'
@@ -2943,8 +2943,6 @@ else
         self._lblAuthenticationEnableFilter2.setEnabled(False)
         self._cbAuthenticationDaystoShow.setVisible(False)
         self.txAuthenticationEnableKeyWordURL.setEnabled(False)
-        global _authType
-        _authType = 0
 
         for x in range(0, self.tableMatrixAuthentication_DM.getRowCount()):
             for y in range(1, self.tableMatrixAuthentication_DM.getColumnCount()):
@@ -4010,23 +4008,22 @@ class UserEnabledRenderer(TableCellRenderer):
                                         UserEnabledRenderer._colorsYellow = True
                                         break
                     elif column == 1:
-                        if _authType == 0:
-                            if str(table.getValueAt(row, column)).startswith("2"):
-                                cell.setBackground(self.colorsAlert[1])
-                                UserEnabledRenderer._colorsRed = True
-                                toolTipMessage = "The response returns HTTP 2XX, even though all session identifiers have been removed!\n" + self.tipMessages[row][column]
+                        if str(table.getValueAt(row, column)).startswith("2"):
+                            cell.setBackground(self.colorsAlert[1])
+                            UserEnabledRenderer._colorsRed = True
+                            toolTipMessage = "The response returns HTTP 2XX, even though all session identifiers have been removed!\n" + self.tipMessages[row][column]
                     else:
                         if column == 32:
                           toolTipMessage = "'X-Original-URL' parameter has been added to the header."
-                          if str(table.getValueAt(row, column)).endswith("-") and _authType == 0:
+                          if str(table.getValueAt(row, column)).endswith("-"):
                               toolTipMessage = self.tipMessages[row][column] + ". '-' shows it returns same response with '/' root path."
                         elif column == 33:
                           toolTipMessage = "'X-Rewrite-URL' parameter has been added to the header."
-                          if str(table.getValueAt(row, column)).endswith("-") and _authType == 0:
+                          if str(table.getValueAt(row, column)).endswith("-"):
                               toolTipMessage = self.tipMessages[row][column] + ". '-' shows it returns same response with '/' root path."
                         elif column == 34:
                           toolTipMessage = "'X-Override-URL' parameter has been added to the header."
-                          if str(table.getValueAt(row, column)).endswith("-") and _authType == 0:
+                          if str(table.getValueAt(row, column)).endswith("-"):
                               toolTipMessage = self.tipMessages[row][column] + ". '-' shows it returns same response with '/' root path."
 
                         if not str(table.getValueAt(row, 1)).startswith("2"):
