@@ -25,7 +25,7 @@ except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
     sys.exit(1)
 
-VERSION = "2.11"
+VERSION = "2.12"
 #url_regex = r'(log|sign)([-_+%0-9]{0,5})(off|out|in|on)|(expire|kill|terminat|delete|remove)'
 url_regex = r'(log|sign|time)([-_+%0-9]{0,5})(off|out)|(expire|kill|terminat|delete|remove)'
 ext_regex = r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff2|ttf|otf)$'
@@ -1196,12 +1196,16 @@ given request then
         if self._cbAuthenticationEnableFilter.isSelected():
             self.txAuthenticationEnableKeyWordURL.setVisible(True)
             self._lblAuthenticationEnableFilter2.setVisible(True)
+            self._lblAuthenticationDaystoShow.setVisible(True)
             self._cbAuthenticationDaystoShow.setVisible(True)
+            self._lblAuthenticationEnableURLGroup.setVisible(True)
             self._cbAuthenticationEnableURLGroup.setVisible(True)
         else:
             self.txAuthenticationEnableKeyWordURL.setVisible(False)
             self._lblAuthenticationEnableFilter2.setVisible(False)
+            self._lblAuthenticationDaystoShow.setVisible(False)
             self._cbAuthenticationDaystoShow.setVisible(False)
+            self._lblAuthenticationEnableURLGroup.setVisible(False)
             self._cbAuthenticationEnableURLGroup.setVisible(False)
 
     def _tabAuthenticationUI(self):
@@ -1226,14 +1230,23 @@ given request then
         self._cbAuthenticationEnableFilter.setPreferredSize(Dimension(120, 27))
         self._cbAuthenticationEnableFilter.setToolTipText("You can define some conditions, when you load URLs from the history.")
 
-        self._cbAuthenticationEnableURLGroup = JCheckBox('Enable URL Grouping', True)
-        self._cbAuthenticationEnableURLGroup.setPreferredSize(Dimension(200, 27))
+        self._lblAuthenticationEnableURLGroup = JLabel("URL Grouping", SwingConstants.LEFT)
+        self._lblAuthenticationEnableURLGroup.setPreferredSize(Dimension(120, 27))
+        self._lblAuthenticationEnableURLGroup.setVisible(False)
+        self._lblAuthenticationEnableURLGroup.setToolTipText("Similar URLs will count as one. (Experimental)")
+
+        self._cbAuthenticationEnableURLGroup = JCheckBox('Enable', True)
+        self._cbAuthenticationEnableURLGroup.setPreferredSize(Dimension(250, 27))
         self._cbAuthenticationEnableURLGroup.setVisible(False)
         self._cbAuthenticationEnableURLGroup.setToolTipText("Similar URLs will count as one. (Experimental)")
 
+        self._lblAuthenticationDaystoShow = JLabel("How many days", SwingConstants.LEFT)
+        self._lblAuthenticationDaystoShow.setPreferredSize(Dimension(120, 27))
+        self._lblAuthenticationDaystoShow.setVisible(False)
+        self._lblAuthenticationDaystoShow.setToolTipText("How many days will be processed!")
 
         self._cbAuthenticationDaystoShow = JComboBox(('Process only last day', 'Process only last 3 days', 'Process only last 7 days', 'All'))
-        #self._cbAuthenticationDaystoShow.setPreferredSize(Dimension(120, 27))
+        self._cbAuthenticationDaystoShow.setPreferredSize(Dimension(250, 27))
         self._cbAuthenticationDaystoShow.setVisible(False)
         self._cbAuthenticationDaystoShow.setSelectedIndex(0)
 
@@ -1259,7 +1272,9 @@ given request then
         _tabAuthenticationPanel1_A.add(self._btnAuthenticationRun)
         
         _tabAuthenticationPanel1_A.add(self._cbAuthenticationEnableFilter)
+        _tabAuthenticationPanel1_A.add(self._lblAuthenticationEnableURLGroup)
         _tabAuthenticationPanel1_A.add(self._cbAuthenticationEnableURLGroup)
+        _tabAuthenticationPanel1_A.add(self._lblAuthenticationDaystoShow)
         _tabAuthenticationPanel1_A.add(self._cbAuthenticationDaystoShow)
 
         _tabAuthenticationPanel1_A.add(self._lblAuthenticationEnableFilter2)
@@ -2369,7 +2384,9 @@ else
         self._cbAuthenticationHost.setEnabled(False)
         self._btnAuthenticationRun.setEnabled(False)
         self._cbAuthenticationEnableFilter.setEnabled(False)
+        self._lblAuthenticationDaystoShow.setEnabled(False)
         self._cbAuthenticationDaystoShow.setEnabled(False)
+        self._lblAuthenticationEnableURLGroup.setEnabled(False)
         self._cbAuthenticationEnableURLGroup.setEnabled(False)
         self._lblAuthenticationEnableFilter2.setEnabled(False)
         self.txAuthenticationEnableKeyWordURL.setEnabled(False)
@@ -2452,7 +2469,9 @@ else
         self._btnAuthenticationReset.setEnabled(True)
         self._cbAuthenticationHost.setEnabled(True)
         self._cbAuthenticationEnableFilter.setEnabled(True)
+        self._lblAuthenticationDaystoShow.setEnabled(True)
         self._cbAuthenticationDaystoShow.setEnabled(True)
+        self._lblAuthenticationEnableURLGroup.setEnabled(True)
         self._cbAuthenticationEnableURLGroup.setEnabled(True)
         self._lblAuthenticationEnableFilter2.setEnabled(True)
         self.txAuthenticationEnableKeyWordURL.setEnabled(True)
@@ -2499,8 +2518,10 @@ else
         self.txAuthenticationEnableKeyWordURL.setVisible(False)
         self.txAuthenticationEnableKeyWordURL.setText("")
         self._lblAuthenticationEnableFilter2.setVisible(False)
+        self._lblAuthenticationDaystoShow.setVisible(False)
         self._cbAuthenticationDaystoShow.setVisible(False)
         self._cbAuthenticationDaystoShow.setSelectedIndex(0)
+        self._lblAuthenticationEnableURLGroup.setVisible(False)
         self._cbAuthenticationEnableURLGroup.setVisible(False)
         self._cbAuthenticationEnableURLGroup.setSelected(True)
         self._cbAuthenticationEnableFilter.setSelected(False)
@@ -2938,9 +2959,12 @@ else
         self._cbAuthenticationHost.setEnabled(False)
         self._btnAuthenticationRun.setEnabled(False)
         self._cbAuthenticationEnableFilter.setEnabled(False)
+        self._lblAuthenticationDaystoShow.setEnabled(False)
         self._cbAuthenticationDaystoShow.setEnabled(False)
+        self._lblAuthenticationEnableURLGroup.setEnabled(False)
         self._cbAuthenticationEnableURLGroup.setEnabled(False)
         self._lblAuthenticationEnableFilter2.setEnabled(False)
+        self._lblAuthenticationDaystoShow.setVisible(False)
         self._cbAuthenticationDaystoShow.setVisible(False)
         self.txAuthenticationEnableKeyWordURL.setEnabled(False)
 
@@ -3459,9 +3483,12 @@ else
             self._cbAuthenticationHost.setEnabled(True)
             self._btnAuthenticationRun.setEnabled(True)
             self._cbAuthenticationEnableFilter.setEnabled(True)
+            self._lblAuthenticationDaystoShow.setEnabled(True)
             self._cbAuthenticationDaystoShow.setEnabled(True)
+            self._lblAuthenticationEnableURLGroup.setEnabled(True)
             self._cbAuthenticationEnableURLGroup.setEnabled(True)
             self._lblAuthenticationEnableFilter2.setEnabled(True)
+            self._lblAuthenticationDaystoShow.setVisible(False)
             self._cbAuthenticationDaystoShow.setVisible(False)
             self.txAuthenticationEnableKeyWordURL.setEnabled(True)
             self._customRendererAuthentication =  UserEnabledRenderer(self.tableMatrixAuthentication.getDefaultRenderer(str), self._httpReqResAuthentication, self._httpReqResAuthenticationTipMessage)
