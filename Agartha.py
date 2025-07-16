@@ -25,7 +25,7 @@ except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
     sys.exit(1)
 
-VERSION = "2.12"
+VERSION = "2.13"
 #url_regex = r'(log|sign)([-_+%0-9]{0,5})(off|out|in|on)|(expire|kill|terminat|delete|remove)'
 url_regex = r'(log|sign|time)([-_+%0-9]{0,5})(off|out)|(expire|kill|terminat|delete|remove)'
 ext_regex = r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff2|ttf|otf)$'
@@ -1230,12 +1230,11 @@ given request then
         self._cbAuthenticationEnableFilter.setPreferredSize(Dimension(120, 27))
         self._cbAuthenticationEnableFilter.setToolTipText("You can define some conditions, when you load URLs from the history.")
 
-        self._lblAuthenticationEnableURLGroup = JLabel("URL Grouping", SwingConstants.LEFT)
+        self._lblAuthenticationEnableURLGroup = JLabel("", SwingConstants.LEFT)
         self._lblAuthenticationEnableURLGroup.setPreferredSize(Dimension(120, 27))
         self._lblAuthenticationEnableURLGroup.setVisible(False)
-        self._lblAuthenticationEnableURLGroup.setToolTipText("Similar URLs will count as one. (Experimental)")
 
-        self._cbAuthenticationEnableURLGroup = JCheckBox('Enable', True)
+        self._cbAuthenticationEnableURLGroup = JCheckBox('Enable URL Grouping', True)
         self._cbAuthenticationEnableURLGroup.setPreferredSize(Dimension(250, 27))
         self._cbAuthenticationEnableURLGroup.setVisible(False)
         self._cbAuthenticationEnableURLGroup.setToolTipText("Similar URLs will count as one. (Experimental)")
@@ -1248,16 +1247,16 @@ given request then
         self._cbAuthenticationDaystoShow = JComboBox(('Process only last day', 'Process only last 3 days', 'Process only last 7 days', 'All'))
         self._cbAuthenticationDaystoShow.setPreferredSize(Dimension(250, 27))
         self._cbAuthenticationDaystoShow.setVisible(False)
-        self._cbAuthenticationDaystoShow.setSelectedIndex(0)
+        self._cbAuthenticationDaystoShow.setSelectedIndex(2)
 
         self._lblAuthenticationEnableFilter2 = JLabel("Keyword in the URL", SwingConstants.LEFT)
         self._lblAuthenticationEnableFilter2.setPreferredSize(Dimension(120, 27))
         self._lblAuthenticationEnableFilter2.setVisible(False)
-        self._lblAuthenticationEnableFilter2.setToolTipText("The keyword will be searched in URL.")
+        self._lblAuthenticationEnableFilter2.setToolTipText("Search keywords in URL, separated by commas. Example: /admin/, user")
         self.txAuthenticationEnableKeyWordURL = JTextField("")
         self.txAuthenticationEnableKeyWordURL.setPreferredSize(Dimension(250, 27))
         self.txAuthenticationEnableKeyWordURL.setVisible(False)
-        self.txAuthenticationEnableKeyWordURL.setToolTipText("The keyword will be searched in URL.")
+        self.txAuthenticationEnableKeyWordURL.setToolTipText("Search keywords in URL, separated by commas. Example: /admin/, user")
 
         # panel top
         _tabAuthenticationPanel1 = JPanel(BorderLayout())
@@ -2437,7 +2436,8 @@ else
                     continue
 
                 if self._cbAuthenticationEnableFilter.isSelected() and self.txAuthenticationEnableKeyWordURL.getText().strip():
-                    if self.txAuthenticationEnableKeyWordURL.getText().strip() not in _url:
+                    keywords = [kw.strip() for kw in self.txAuthenticationEnableKeyWordURL.getText().split(',')]
+                    if not any(keyword in _url for keyword in keywords):
                         continue
 
                 should_process = True
@@ -2520,13 +2520,13 @@ else
         self._lblAuthenticationEnableFilter2.setVisible(False)
         self._lblAuthenticationDaystoShow.setVisible(False)
         self._cbAuthenticationDaystoShow.setVisible(False)
-        self._cbAuthenticationDaystoShow.setSelectedIndex(0)
+        self._cbAuthenticationDaystoShow.setSelectedIndex(2)
         self._lblAuthenticationEnableURLGroup.setVisible(False)
         self._cbAuthenticationEnableURLGroup.setVisible(False)
         self._cbAuthenticationEnableURLGroup.setSelected(True)
         self._cbAuthenticationEnableFilter.setSelected(False)
+        self._lblAuthenticationNotification.text = self.currentText
         return
-
     
     def authenticationMatrixFunc(self, ev):
         # run authentication bypass
