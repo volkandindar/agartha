@@ -25,7 +25,7 @@ except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
     sys.exit(1)
 
-VERSION = "2.13"
+VERSION = "2.14"
 #url_regex = r'(log|sign)([-_+%0-9]{0,5})(off|out|in|on)|(expire|kill|terminat|delete|remove)'
 url_regex = r'(log|sign|time)([-_+%0-9]{0,5})(off|out)|(expire|kill|terminat|delete|remove)'
 ext_regex = r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff2|ttf|otf)$'
@@ -1496,12 +1496,11 @@ given request then
 
         bambdas += "// general vars\n"
         bambdas += "boolean suspiciousHit = false;\t\t\t//Flag for to detect if suspicious words are hit!\n"
+        bambdas += "StringBuilder notesBuilder = new StringBuilder();\n"
         bambdas += "String responseBody = requestResponse.response().bodyToString();\n"
         bambdas += "String requestBody  = requestResponse.request().bodyToString();\n"
-        bambdas += "var request = requestResponse.request();\n"
-        bambdas += "StringBuilder notesBuilder = new StringBuilder();\n"
         bambdas += "var path = requestResponse.request().path().toLowerCase();\n"
-        bambdas += "var pathExt = request.pathWithoutQuery().toLowerCase();\n"
+        bambdas += "var pathExt = requestResponse.request().pathWithoutQuery().toLowerCase();\n"
         bambdas += "// general vars\n\n"
 
         if self._cbBambdasExtIgnore.isSelected():
