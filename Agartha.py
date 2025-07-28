@@ -25,7 +25,7 @@ except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
     sys.exit(1)
 
-VERSION = "2.14"
+VERSION = "2.15"
 #url_regex = r'(log|sign)([-_+%0-9]{0,5})(off|out|in|on)|(expire|kill|terminat|delete|remove)'
 url_regex = r'(log|sign|time)([-_+%0-9]{0,5})(off|out)|(expire|kill|terminat|delete|remove)'
 ext_regex = r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff2|ttf|otf)$'
@@ -1898,9 +1898,6 @@ else
         
         doc = self._tbBambdasScript.getStyledDocument()
         doc.remove(0, doc.getLength())
-
-        # Set font to monospaced
-        self._tbBambdasScript.setFont(Font("Courier New", Font.PLAIN, self._tbBambdasScript.getFont().getSize() + 2))
 
         # Define styles
         style_default = StyleContext.getDefaultStyleContext().getStyle(StyleContext.DEFAULT_STYLE)
