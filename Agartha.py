@@ -25,7 +25,7 @@ except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
     sys.exit(1)
 
-VERSION = "2.15"
+VERSION = "2.16"
 #url_regex = r'(log|sign)([-_+%0-9]{0,5})(off|out|in|on)|(expire|kill|terminat|delete|remove)'
 url_regex = r'(log|sign|time)([-_+%0-9]{0,5})(off|out)|(expire|kill|terminat|delete|remove)'
 ext_regex = r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff2|ttf|otf)$'
@@ -1481,12 +1481,13 @@ given request then
             bambdas += "// Reset the screen\n\n"
         
         if self._cbBambdasScope.isSelected():
-            # bambdas += "// Display only items in scope and has response\n"
-            bambdas += "// Display only items in scope\n"
-            # bambdas += "if (!requestResponse.hasResponse() || !requestResponse.request().isInScope())\n"
-            bambdas += "if (!requestResponse.request().isInScope())\n"
-            bambdas += "    return false;\n"
-            bambdas += "// Display only items in scope\n\n"
+            bambdas += "// Display only items that are in scope and have a response.\n"
+            bambdas += "if (!requestResponse.hasResponse() || !requestResponse.request().isInScope())\n"
+        else:
+            bambdas += "// Display only items that have a response\n"
+            bambdas += "if (!requestResponse.hasResponse())\n"
+        bambdas += "    return false;\n"
+        bambdas += "// Display items\n\n"
 
         if self._cbBambdasforWhat.getSelectedIndex() == 0:
             bambdas += "// check for if already processed\n"
