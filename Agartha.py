@@ -25,7 +25,7 @@ except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
     sys.exit(1)
 
-VERSION = "2.16"
+VERSION = "2.17"
 #url_regex = r'(log|sign)([-_+%0-9]{0,5})(off|out|in|on)|(expire|kill|terminat|delete|remove)'
 url_regex = r'(log|sign|time)([-_+%0-9]{0,5})(off|out)|(expire|kill|terminat|delete|remove)'
 ext_regex = r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff2|ttf|otf)$'
@@ -1390,6 +1390,59 @@ given request then
         else:
             self._txtBambdasRCEKeywords.setEnabled(False)
 
+    def _cbBambdasSearchinURLFunc(self, ev):
+        if self._cbBambdasSearchinURL.isSelected():
+            self._cbBambdasSQLi.setEnabled(True)
+            self._cbBambdasXSS.setEnabled(True)
+            self._cbBambdasLFI.setEnabled(True)
+            self._cbBambdasSSRF.setEnabled(True)
+            self._cbBambdasORed.setEnabled(True)
+            self._cbBambdasRCE.setEnabled(True)
+            self._cbBambdasValuable.setEnabled(True)
+        else:
+            if not self._cbBambdasSearchinReq.isSelected():
+                self._cbBambdasSQLi.setEnabled(False)
+                self._cbBambdasXSS.setEnabled(False)
+                self._cbBambdasLFI.setEnabled(False)
+                self._cbBambdasSSRF.setEnabled(False)
+                self._cbBambdasORed.setEnabled(False)
+                self._cbBambdasRCE.setEnabled(False)
+                if not self._cbBambdasSearchinRes.isSelected() and not self._cbBambdasSearchinReq.isSelected():
+                    self._cbBambdasValuable.setEnabled(False)
+
+    def _cbBambdasSearchinReqFunc(self, ev):
+        if self._cbBambdasSearchinReq.isSelected():
+            self._cbBambdasSQLi.setEnabled(True)
+            self._cbBambdasXSS.setEnabled(True)
+            self._cbBambdasLFI.setEnabled(True)
+            self._cbBambdasSSRF.setEnabled(True)
+            self._cbBambdasORed.setEnabled(True)
+            self._cbBambdasRCE.setEnabled(True)
+            self._cbBambdasValuable.setEnabled(True)
+        else:
+            if not self._cbBambdasSearchinURL.isSelected():
+                self._cbBambdasSQLi.setEnabled(False)
+                self._cbBambdasXSS.setEnabled(False)
+                self._cbBambdasLFI.setEnabled(False)
+                self._cbBambdasSSRF.setEnabled(False)
+                self._cbBambdasORed.setEnabled(False)
+                self._cbBambdasRCE.setEnabled(False)
+                if not self._cbBambdasSearchinRes.isSelected() and not self._cbBambdasSearchinURL.isSelected():
+                    self._cbBambdasValuable.setEnabled(False)
+
+    def _cbBambdasSearchinResFunc(self, ev):
+        if self._cbBambdasSearchinRes.isSelected():
+            self._cbBambdasSearchHTMLCommnets.setEnabled(True)
+            self._cbBambdasFilesDownloadable.setEnabled(True)
+            self._cbBambdasValuable.setEnabled(True)
+            self._cbBambdasVulnJS.setEnabled(True)
+        else:
+            self._cbBambdasSearchHTMLCommnets.setEnabled(False)
+            self._cbBambdasFilesDownloadable.setEnabled(False)
+            self._cbBambdasVulnJS.setEnabled(False)
+            if not self._cbBambdasSearchinReq.isSelected() and not self._cbBambdasSearchinURL.isSelected():
+                self._cbBambdasValuable.setEnabled(False)
+
     def _cbBambdasHTTPMethodsFunc(self, ev):
         if self._cbBambdasHTTPMethods.isSelected():
             self._txtBambdasHTTPMethods.setEnabled(True)
@@ -1498,8 +1551,10 @@ given request then
         bambdas += "// general vars\n"
         bambdas += "boolean suspiciousHit = false;\t\t\t//Flag for to detect if suspicious words are hit!\n"
         bambdas += "StringBuilder notesBuilder = new StringBuilder();\n"
-        bambdas += "String responseBody = requestResponse.response().bodyToString();\n"
-        bambdas += "String requestBody  = requestResponse.request().bodyToString();\n"
+        if self._cbBambdasSearchinRes.isSelected() and (self._cbBambdasSearchHTMLCommnets.isSelected() or self._cbBambdasFilesDownloadable.isSelected() or self._cbBambdasValuable.isSelected() or self._cbBambdasVulnJS.isSelected()):
+            bambdas += "String responseBody = requestResponse.response().bodyToString();\n"
+        if self._cbBambdasSearchinReq.isSelected() and (self._cbBambdasSQLi.isSelected() or self._cbBambdasXSS.isSelected() or self._cbBambdasLFI.isSelected() or self._cbBambdasSSRF.isSelected() or self._cbBambdasORed.isSelected() or self._cbBambdasRCE.isSelected() or self._cbBambdasValuable.isSelected()):
+            bambdas += "String requestBody  = requestResponse.request().bodyToString();\n"
         bambdas += "var path = requestResponse.request().path().toLowerCase();\n"
         bambdas += "var pathExt = requestResponse.request().pathWithoutQuery().toLowerCase();\n"
         bambdas += "// general vars\n\n"
@@ -2047,11 +2102,11 @@ else
     
         self._lblBambdasSearchScope = JLabel("Search parameters only")
         self._lblBambdasSearchScope.setToolTipText("Where are keywords seached?")
-        self._cbBambdasSearchinURL = JCheckBox('in URL', True)
+        self._cbBambdasSearchinURL = JCheckBox('in URL', True, itemStateChanged=self._cbBambdasSearchinURLFunc)
         self._cbBambdasSearchinURL.setToolTipText("Keywords will be searched in URLs")
-        self._cbBambdasSearchinReq = JCheckBox('in Requests', True)
+        self._cbBambdasSearchinReq = JCheckBox('in Requests', True, itemStateChanged=self._cbBambdasSearchinReqFunc)
         self._cbBambdasSearchinReq.setToolTipText("Keywords will be searched in Requests")
-        self._cbBambdasSearchinRes = JCheckBox('in Responses', True)
+        self._cbBambdasSearchinRes = JCheckBox('in Responses', True, itemStateChanged=self._cbBambdasSearchinResFunc)
         self._cbBambdasSearchinRes.setToolTipText("Keywords will be searched in Responses")
 
         self._lblBambdasDisplayDays = JLabel("Display last how many days")
@@ -2065,7 +2120,7 @@ else
         self._lblBambdasProcessDays.setToolTipText("How many days to process?")
         self._cbBambdasProcessDays.setToolTipText("How many days to process?")
 
-        self._cbBambdasHTTPMethods = JCheckBox('Ignore Some HTTP Methods', True, itemStateChanged=self._cbBambdasHTTPMethodsFunc)
+        self._cbBambdasHTTPMethods = JCheckBox('HTTP Methods to ignore.', True, itemStateChanged=self._cbBambdasHTTPMethodsFunc)
         self._txtBambdasHTTPMethods = JTextField("HEAD, OPTIONS", 100)
         self._cbBambdasHTTPMethods.setToolTipText("Which HTTP methods will be ignored?")
         self._txtBambdasHTTPMethods.setToolTipText("Which HTTP methods will be ignored?")
@@ -2149,11 +2204,11 @@ else
                     .addComponent(self._lblBambdasDisplayDays)
                     .addComponent(self._lblBambdasProcessDays)
                     .addComponent(self._lblBambdasSearchScope)
-                    .addComponent(self._cbBambdasSearchHTMLCommnets)
                     .addComponent(self._cbBambdasHTTPMethods)
+                    .addComponent(self._cbBambdasSearchHTMLCommnets)
                     .addComponent(self._cbBambdasFilesDownloadable)
-                    .addComponent(self._cbBambdasValuable)
                     .addComponent(self._cbBambdasVulnJS)
+                    .addComponent(self._cbBambdasValuable)
                     .addComponent(self._cbBambdasSQLi)
                     .addComponent(self._cbBambdasXSS)
                     .addComponent(self._cbBambdasLFI)
@@ -2178,11 +2233,11 @@ else
                         .addComponent(self._cbBambdasSearchinReq)
                         .addGap(10)
                         .addComponent(self._cbBambdasSearchinRes))
-                    .addComponent(self._txtBambdasSearchHTMLCommnets)
                     .addComponent(self._txtBambdasHTTPMethods)
+                    .addComponent(self._txtBambdasSearchHTMLCommnets)
                     .addComponent(self._txtBambdasFilesDownloadable)
-                    .addComponent(self._txtBambdasValuable)
                     .addComponent(self._txtBambdasVulnJSKeywords)
+                    .addComponent(self._txtBambdasValuable)
                     .addComponent(self._txtBambdasSQLiKeywords)
                     .addComponent(self._txtBambdasXSSKeywords)
                     .addComponent(self._txtBambdasLFIKeywords)
@@ -2227,20 +2282,20 @@ else
                     .addComponent(self._cbBambdasSearchinReq)
                     .addComponent(self._cbBambdasSearchinRes))
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                    .addComponent(self._cbBambdasSearchHTMLCommnets)
-                    .addComponent(self._txtBambdasSearchHTMLCommnets))
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(self._cbBambdasHTTPMethods)
                     .addComponent(self._txtBambdasHTTPMethods))
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(self._cbBambdasSearchHTMLCommnets)
+                    .addComponent(self._txtBambdasSearchHTMLCommnets))
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(self._cbBambdasFilesDownloadable)
                     .addComponent(self._txtBambdasFilesDownloadable))
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                    .addComponent(self._cbBambdasValuable)
-                    .addComponent(self._txtBambdasValuable))
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(self._cbBambdasVulnJS)
                     .addComponent(self._txtBambdasVulnJSKeywords))
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(self._cbBambdasValuable)
+                    .addComponent(self._txtBambdasValuable))
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(self._cbBambdasSQLi)
                     .addComponent(self._txtBambdasSQLiKeywords))
