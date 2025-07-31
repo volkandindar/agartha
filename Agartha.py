@@ -25,7 +25,7 @@ except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
     sys.exit(1)
 
-VERSION = "2.17"
+VERSION = "2.19"
 #url_regex = r'(log|sign)([-_+%0-9]{0,5})(off|out|in|on)|(expire|kill|terminat|delete|remove)'
 url_regex = r'(log|sign|time)([-_+%0-9]{0,5})(off|out)|(expire|kill|terminat|delete|remove)'
 ext_regex = r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff2|ttf|otf)$'
@@ -1393,55 +1393,109 @@ given request then
     def _cbBambdasSearchinURLFunc(self, ev):
         if self._cbBambdasSearchinURL.isSelected():
             self._cbBambdasSQLi.setEnabled(True)
+            if self._cbBambdasSQLi.isSelected():
+                self._txtBambdasSQLiKeywords.setEnabled(True)
             self._cbBambdasXSS.setEnabled(True)
+            if self._cbBambdasXSS.isSelected():
+                self._txtBambdasXSSKeywords.setEnabled(True)
             self._cbBambdasLFI.setEnabled(True)
+            if self._cbBambdasLFI.isSelected():
+                self._txtBambdasLFIKeywords.setEnabled(True)
             self._cbBambdasSSRF.setEnabled(True)
+            if self._cbBambdasSSRF.isSelected():
+                self._txtBambdasSSRFKeywords.setEnabled(True)
             self._cbBambdasORed.setEnabled(True)
+            if self._cbBambdasORed.isSelected():
+                self._txtBambdasORedKeywords.setEnabled(True)
             self._cbBambdasRCE.setEnabled(True)
+            if self._cbBambdasRCE.isSelected():
+                self._txtBambdasRCEKeywords.setEnabled(True)
             self._cbBambdasValuable.setEnabled(True)
+            if self._cbBambdasValuable.isSelected():
+                self._txtBambdasValuable.setEnabled(True)
         else:
             if not self._cbBambdasSearchinReq.isSelected():
                 self._cbBambdasSQLi.setEnabled(False)
+                self._txtBambdasSQLiKeywords.setEnabled(False)
                 self._cbBambdasXSS.setEnabled(False)
+                self._txtBambdasXSSKeywords.setEnabled(False)
                 self._cbBambdasLFI.setEnabled(False)
+                self._txtBambdasLFIKeywords.setEnabled(False)
                 self._cbBambdasSSRF.setEnabled(False)
+                self._txtBambdasSSRFKeywords.setEnabled(False)
                 self._cbBambdasORed.setEnabled(False)
+                self._txtBambdasORedKeywords.setEnabled(False)
                 self._cbBambdasRCE.setEnabled(False)
+                self._txtBambdasRCEKeywords.setEnabled(False)
                 if not self._cbBambdasSearchinRes.isSelected() and not self._cbBambdasSearchinReq.isSelected():
                     self._cbBambdasValuable.setEnabled(False)
+                    self._txtBambdasValuable.setEnabled(False)
 
     def _cbBambdasSearchinReqFunc(self, ev):
         if self._cbBambdasSearchinReq.isSelected():
             self._cbBambdasSQLi.setEnabled(True)
+            if self._cbBambdasSQLi.isSelected():
+                self._txtBambdasSQLiKeywords.setEnabled(True)
             self._cbBambdasXSS.setEnabled(True)
+            if self._cbBambdasXSS.isSelected():
+                self._txtBambdasXSSKeywords.setEnabled(True)
             self._cbBambdasLFI.setEnabled(True)
+            if self._cbBambdasLFI.isSelected():
+                self._txtBambdasLFIKeywords.setEnabled(True)
             self._cbBambdasSSRF.setEnabled(True)
+            if self._cbBambdasSSRF.isSelected():
+                self._txtBambdasSSRFKeywords.setEnabled(True)
             self._cbBambdasORed.setEnabled(True)
+            if self._cbBambdasORed.isSelected():
+                self._txtBambdasORedKeywords.setEnabled(True)
             self._cbBambdasRCE.setEnabled(True)
+            if self._cbBambdasRCE.isSelected():
+                self._txtBambdasRCEKeywords.setEnabled(True)
             self._cbBambdasValuable.setEnabled(True)
+            if self._cbBambdasValuable.isSelected():
+                self._txtBambdasValuable.setEnabled(True)
         else:
             if not self._cbBambdasSearchinURL.isSelected():
                 self._cbBambdasSQLi.setEnabled(False)
+                self._txtBambdasSQLiKeywords.setEnabled(False)
                 self._cbBambdasXSS.setEnabled(False)
+                self._txtBambdasXSSKeywords.setEnabled(False)
                 self._cbBambdasLFI.setEnabled(False)
+                self._txtBambdasLFIKeywords.setEnabled(False)
                 self._cbBambdasSSRF.setEnabled(False)
+                self._txtBambdasSSRFKeywords.setEnabled(False)
                 self._cbBambdasORed.setEnabled(False)
+                self._txtBambdasORedKeywords.setEnabled(False)
                 self._cbBambdasRCE.setEnabled(False)
+                self._txtBambdasRCEKeywords.setEnabled(False)
                 if not self._cbBambdasSearchinRes.isSelected() and not self._cbBambdasSearchinURL.isSelected():
                     self._cbBambdasValuable.setEnabled(False)
+                    self._txtBambdasValuable.setEnabled(False)
 
     def _cbBambdasSearchinResFunc(self, ev):
         if self._cbBambdasSearchinRes.isSelected():
             self._cbBambdasSearchHTMLCommnets.setEnabled(True)
+            if self._cbBambdasSearchHTMLCommnets.isSelected():
+                self._txtBambdasSearchHTMLCommnets.setEnabled(True)
             self._cbBambdasFilesDownloadable.setEnabled(True)
+            if self._cbBambdasFilesDownloadable.isSelected():
+                self._txtBambdasFilesDownloadable.setEnabled(True)
             self._cbBambdasValuable.setEnabled(True)
+            if self._cbBambdasValuable.isSelected():
+                self._txtBambdasValuable.setEnabled(True)
             self._cbBambdasVulnJS.setEnabled(True)
+            if self._cbBambdasVulnJS.isSelected():
+                self._txtBambdasVulnJSKeywords.setEnabled(True)
         else:
             self._cbBambdasSearchHTMLCommnets.setEnabled(False)
+            self._txtBambdasSearchHTMLCommnets.setEnabled(False)
             self._cbBambdasFilesDownloadable.setEnabled(False)
+            self._txtBambdasFilesDownloadable.setEnabled(False)
             self._cbBambdasVulnJS.setEnabled(False)
+            self._txtBambdasVulnJSKeywords.setEnabled(False)
             if not self._cbBambdasSearchinReq.isSelected() and not self._cbBambdasSearchinURL.isSelected():
                 self._cbBambdasValuable.setEnabled(False)
+                self._txtBambdasValuable.setEnabled(False)
 
     def _cbBambdasHTTPMethodsFunc(self, ev):
         if self._cbBambdasHTTPMethods.isSelected():
@@ -1802,7 +1856,6 @@ for (String httpMethod : httpMethods)
     }
     // Search from HTML comments
 """
-        
 
         if self._cbBambdasVulnJS.isSelected() and self._cbBambdasSearchinRes.isSelected():
             bambdas += """
@@ -1822,7 +1875,7 @@ for (String httpMethod : httpMethods)
     // check from response
     // Suspicious Functions JS functions - Vulnerable JS
 """
-        if (self._cbBambdasSQLi.isSelected() or self._cbBambdasXSS.isSelected() or self._cbBambdasLFI.isSelected() or self._cbBambdasSSRF.isSelected() or self._cbBambdasORed.isSelected() or self._cbBambdasRCE.isSelected() or self._cbBambdasVulnJS.isSelected()):
+        if (self._cbBambdasSQLi.isSelected() or self._cbBambdasXSS.isSelected() or self._cbBambdasLFI.isSelected() or self._cbBambdasSSRF.isSelected() or self._cbBambdasORed.isSelected() or self._cbBambdasRCE.isSelected()):
             bambdas += """
     // Suspicious parameters OWASP Top 25
     for (Map.Entry<String, List<String>> entry : attacksKeyWords.entrySet()) {
@@ -1830,12 +1883,14 @@ for (String httpMethod : httpMethods)
         List<String> attackParams = entry.getValue();           //all keywords/parameters
         boolean htmlContent = false;
         patterns = new ArrayList<>();
-        if (responseBody.startsWith("<"))
+        // if (responseBody.startsWith("<"))
+        if (requestBody.startsWith("<"))
             // XML content
             for (String attackParam : attackParams)
                 patterns.add(Pattern.compile("<" + attackParams + ">", Pattern.CASE_INSENSITIVE));
 
-        else if (responseBody.startsWith("{"))
+        // else if (responseBody.startsWith("{"))
+        else if (requestBody.startsWith("{"))
             // JSON content
             for (String attackParam : attackParams)
                 patterns.add(Pattern.compile("\\\"" + attackParam + "\\\"", Pattern.CASE_INSENSITIVE));
@@ -1856,7 +1911,7 @@ for (String httpMethod : httpMethods)
 """
                 if self._cbBambdasSearchinURL.isSelected():
                     bambdas += """
-                if (request.hasParameter(attackParam, HttpParameterType.URL)){
+                if (requestResponse.request().hasParameter(attackParam, HttpParameterType.URL)){
                     suspiciousHit = true;
                     if (notesBuilder.length() > 0)
                         notesBuilder.append(", ");
@@ -1865,7 +1920,7 @@ for (String httpMethod : httpMethods)
 """
                 if self._cbBambdasSearchinReq.isSelected():
                     bambdas += """
-                if (request.hasParameter(attackParam, HttpParameterType.BODY)){
+                if (requestResponse.request().hasParameter(attackParam, HttpParameterType.BODY)){
                     suspiciousHit = true;
                     if (notesBuilder.length() > 0)
                         notesBuilder.append(", ");
@@ -2030,33 +2085,65 @@ else
         self._tbBambdasScopeURLs.setForeground(Color.GRAY)
         self._tbBambdasBlackListedURLs.setForeground(Color.GRAY)
         self.updateBambdasScriptText("/* Bambdas Script will be in here automatically */")
-        self._cbBambdasSearchinURL.setSelected(True)
         self._cbBambdasScope.setSelected(False)
-        self._cbBambdasSearchHTMLCommnets.setSelected(False)
-        self._cbBambdasSearchinReq.setSelected(True)
-        self._cbBambdasSearchinRes.setSelected(True)
-        self._cbBambdasHTTPMethods.setSelected(True)
-        self._cbBambdasValuable.setSelected(False)
-        self._cbBambdasFilesDownloadable.setSelected(False)
-        self._cbBambdasSQLi.setSelected(False)
-        self._cbBambdasXSS.setSelected(False)
-        self._cbBambdasLFI.setSelected(False)
-        self._cbBambdasSSRF.setSelected(False)
-        self._cbBambdasORed.setSelected(False)
-        self._cbBambdasRCE.setSelected(False)
-        self._cbBambdasVulnJS.setSelected(False)
         self._cbBambdasExtIgnore.setSelected(True)
         self._cbBambdasDisplayDays.setEnabled(True)
         self._cbBambdasProcessDays.setEnabled(True)
+        self._cbBambdasSearchinReq.setSelected(False)
+        self._cbBambdasSearchinRes.setSelected(False)
+        self._cbBambdasSearchinURL.setSelected(False)
+        
+        self._cbBambdasSearchHTMLCommnets.setSelected(False)
+        
+        self._txtBambdasExtIgnoreKeywords.text = "js, gif, jpg, png, svg, css, ico, woff2"
+        self._txtBambdasExtIgnoreKeywords.setEnabled(True)
+        self._cbBambdasExtIgnore.setSelected(True)
+
+        self._txtBambdasHTTPMethods.text = "HEAD, OPTIONS"
+        self._txtBambdasHTTPMethods.setEnabled(True)
+        self._cbBambdasHTTPMethods.setSelected(True)
+        
+        self._txtBambdasValuable.text = "debug, admin, config, secret, token, password, hash, credential"
         self._txtBambdasValuable.setEnabled(False)
+        self._cbBambdasValuable.setSelected(False)
+
+        self._txtBambdasFilesDownloadable.text = "back, backup, bak, bin, cache, conf, config, csv, doc, docx, gz, inc, ini, jar, log, old, pdf, ppt, pptx, rar, readme, tar, txt, xls, xlsx, zip, 7z"
+        self._txtBambdasFilesDownloadable.setEnabled(False)
+        self._cbBambdasFilesDownloadable.setSelected(False)
+
+        self._txtBambdasSQLiKeywords.text = "category, id, item, message, name, news, page, password, q, query, report, s, search, thread, user, username, view"
         self._txtBambdasSQLiKeywords.setEnabled(False)
+        self._cbBambdasSQLi.setSelected(False)
+
+        self._txtBambdasXSSKeywords.text = "comment, content, description, id, key, keyword, keywords, l, lang, message, name, p, page, q, query, s, search, username"
         self._txtBambdasXSSKeywords.setEnabled(False)
+        self._cbBambdasXSS.setSelected(False)
+
+        self._txtBambdasLFIKeywords.text = "conf, content, detail, dir, doc, document, download, file, folder, inc, include, locate, page, path, show, template, url, view, read, load"
         self._txtBambdasLFIKeywords.setEnabled(False)
+        self._cbBambdasLFI.setSelected(False)
+
+        self._txtBambdasSSRFKeywords.text = "callback, dest, destination, host, next, out, path, redirect, return, site, target, to, uri, url, view"
         self._txtBambdasSSRFKeywords.setEnabled(False)
+        self._cbBambdasSSRF.setSelected(False)
+
+        self._txtBambdasORedKeywords.text = "dest, destination, go, next, out, redir, redirect, redirect_uri, redirect_url, return, return_path, return_to, returnTo, returnUrl, target, to, uri, url"
         self._txtBambdasORedKeywords.setEnabled(False)
+        self._cbBambdasORed.setSelected(False)
+
+        self._txtBambdasRCEKeywords.text = "arg, cmd, code, command, exe, exec, execute, ping, print, process, run"
         self._txtBambdasRCEKeywords.setEnabled(False)
+        self._cbBambdasRCE.setSelected(False)
+
+        self._txtBambdasVulnJSKeywords.text = "eval(, setTimeout(, setInterval(, document.write(, innerHTML, document.createElement(, document.execCommand(, document.domain, window.location.href, document.cookie, document.URL, document.referrer, window.open(, document.body.innerHTML, element.setAttribute(, element.outerHTML, XMLHttpRequest(, fetch(, navigator.sendBeacon("
         self._txtBambdasVulnJSKeywords.setEnabled(False)
+        self._cbBambdasVulnJS.setSelected(False)
+
+        self._cbBambdasSearchinReqFunc(self)
+        self._cbBambdasSearchinResFunc(self)
+        self._cbBambdasSearchinURLFunc(self)
         return
+
 
     def _tabBambdasUI(self):
         self._btnBambdasRun = JButton("Run", actionPerformed=self.funcBambdasRun)
@@ -2077,6 +2164,7 @@ else
         self._txtBambdasSearchHTMLCommnets = JTextField("The search will occur between the '<!--' and '-->' tags.", 100)
         self._txtBambdasSearchHTMLCommnets.setEnabled(False)
         self._cbBambdasSearchHTMLCommnets = JCheckBox('Search from HTML comments', False)
+        # self._cbBambdasSearchHTMLCommnets.setEnabled(False)
         self._txtBambdasSearchHTMLCommnets.setToolTipText("Search from HTML comments")
         self._cbBambdasSearchHTMLCommnets.setToolTipText("Search from HTML comments")
 
@@ -2085,13 +2173,13 @@ else
 
         self._lblBambdasColorScope = JLabel("Color in Scope")
         self._cbBambdasColorScope = JComboBox(('NONE', 'BLUE', 'CYAN', 'GRAY', 'GREEN', 'MAGENTA', 'ORANGE', 'PINK', 'RED', 'YELLOW'))
-        self._cbBambdasColorScope.setSelectedIndex(7)
+        # self._cbBambdasColorScope.setSelectedIndex(7)
         self._lblBambdasColorScope.setToolTipText("Which color to highlight 'White-list' URLs?")
         self._cbBambdasColorScope.setToolTipText("Which color to highlight 'White-list' URLs?")
         
         self._lblBambdasColorScopeSecondary = JLabel("Secondary color for done items!")
         self._cbBambdasColorScopeSecondary = JComboBox(('NONE', 'BLUE', 'CYAN', 'GRAY', 'GREEN', 'MAGENTA', 'ORANGE', 'PINK', 'RED', 'YELLOW'))
-        self._cbBambdasColorScopeSecondary.setSelectedIndex(9)
+        # self._cbBambdasColorScopeSecondary.setSelectedIndex(9)
         self._cbBambdasColorScopeSecondary.setToolTipText("Which color to highlight for done URLs?")
         self._lblBambdasColorScopeSecondary.setToolTipText("Which color to highlight for done URLs?")
 
@@ -2102,86 +2190,95 @@ else
     
         self._lblBambdasSearchScope = JLabel("Search parameters only")
         self._lblBambdasSearchScope.setToolTipText("Where are keywords seached?")
-        self._cbBambdasSearchinURL = JCheckBox('in URL', True, itemStateChanged=self._cbBambdasSearchinURLFunc)
+        self._cbBambdasSearchinURL = JCheckBox('in URL', False, itemStateChanged=self._cbBambdasSearchinURLFunc)
         self._cbBambdasSearchinURL.setToolTipText("Keywords will be searched in URLs")
-        self._cbBambdasSearchinReq = JCheckBox('in Requests', True, itemStateChanged=self._cbBambdasSearchinReqFunc)
+        self._cbBambdasSearchinReq = JCheckBox('in Requests', False, itemStateChanged=self._cbBambdasSearchinReqFunc)
         self._cbBambdasSearchinReq.setToolTipText("Keywords will be searched in Requests")
-        self._cbBambdasSearchinRes = JCheckBox('in Responses', True, itemStateChanged=self._cbBambdasSearchinResFunc)
+        self._cbBambdasSearchinRes = JCheckBox('in Responses', False, itemStateChanged=self._cbBambdasSearchinResFunc)
         self._cbBambdasSearchinRes.setToolTipText("Keywords will be searched in Responses")
 
         self._lblBambdasDisplayDays = JLabel("Display last how many days")
         self._cbBambdasDisplayDays = JComboBox(('1 Day', '2 Days', '3 Days', '7 Days', '30 Days', '365 Days'))
-        self._cbBambdasDisplayDays.setSelectedIndex(3)
+        # self._cbBambdasDisplayDays.setSelectedIndex(3)
         self._lblBambdasDisplayDays.setToolTipText("How many days to display")
         self._cbBambdasDisplayDays.setToolTipText("How many days to display")
         self._lblBambdasProcessDays = JLabel("Process last how many days")
         self._cbBambdasProcessDays = JComboBox(('1 Day', '2 Days', '3 Days', '7 Days', '30 Days', '365 Days'))
-        self._cbBambdasProcessDays.setSelectedIndex(2)
+        # self._cbBambdasProcessDays.setSelectedIndex(2)
         self._lblBambdasProcessDays.setToolTipText("How many days to process?")
         self._cbBambdasProcessDays.setToolTipText("How many days to process?")
 
         self._cbBambdasHTTPMethods = JCheckBox('HTTP Methods to ignore.', True, itemStateChanged=self._cbBambdasHTTPMethodsFunc)
-        self._txtBambdasHTTPMethods = JTextField("HEAD, OPTIONS", 100)
+        self._txtBambdasHTTPMethods = JTextField("", 100)
         self._cbBambdasHTTPMethods.setToolTipText("Which HTTP methods will be ignored?")
         self._txtBambdasHTTPMethods.setToolTipText("Which HTTP methods will be ignored?")
-        self._txtBambdasHTTPMethods.setEnabled(True)
+        # self._txtBambdasHTTPMethods.setEnabled(True)
 
         self._cbBambdasValuable = JCheckBox('Valuable keywords', False, itemStateChanged=self._cbBambdasValuableFunc)
-        self._txtBambdasValuable = JTextField("debug, admin, config, secret, token, password, hash, credential", 100)
+        self._txtBambdasValuable = JTextField("", 100)
         self._txtBambdasValuable.setToolTipText("Important keywords to filter")
         self._cbBambdasValuable.setToolTipText("Important keywords to filter")
-        self._txtBambdasValuable.setEnabled(False)
+        # self._txtBambdasValuable.setEnabled(False)
+        # self._cbBambdasValuable.setEnabled(False)
         
         self._cbBambdasFilesDownloadable = JCheckBox('Downloadable File extensions', False, itemStateChanged=self._cbBambdasFilesDownFunc)
-        self._txtBambdasFilesDownloadable = JTextField("back, backup, bak, bin, cache, conf, config, csv, doc, docx, gz, inc, ini, jar, log, old, pdf, ppt, pptx, rar, readme, tar, txt, xls, xlsx, zip, 7z", 100)
+        self._txtBambdasFilesDownloadable = JTextField("", 100)
         self._txtBambdasFilesDownloadable.setToolTipText("Common file extensions to download")
         self._cbBambdasFilesDownloadable.setToolTipText("Common file extensions to download")
-        self._txtBambdasFilesDownloadable.setEnabled(False)
+        # self._txtBambdasFilesDownloadable.setEnabled(False)
+        # self._cbBambdasFilesDownloadable.setEnabled(False)
 
         self._cbBambdasSQLi = JCheckBox('Possible SQLi keywords', False, itemStateChanged=self._cbBambdasSQLiFunc)
-        self._txtBambdasSQLiKeywords = JTextField("category, id, item, message, name, news, page, password, q, query, report, s, search, thread, user, username, view", 100)
+        self._txtBambdasSQLiKeywords = JTextField("", 100)
         self._txtBambdasSQLiKeywords.setToolTipText("Suspicious SQLi parameters")
         self._cbBambdasSQLi.setToolTipText("Suspicious SQLi parameters")
-        self._txtBambdasSQLiKeywords.setEnabled(False)
+        # self._txtBambdasSQLiKeywords.setEnabled(False)
+        # self._cbBambdasSQLi.setEnabled(False)
         
         self._cbBambdasXSS = JCheckBox('Possible XSS keywords', False, itemStateChanged=self._cbBambdasXSSFunc)
-        self._txtBambdasXSSKeywords = JTextField("comment, content, description, id, key, keyword, keywords, l, lang, message, name, p, page, q, query, s, search, username", 100)
+        self._txtBambdasXSSKeywords = JTextField("", 100)
         self._txtBambdasXSSKeywords.setToolTipText("Suspicious XSS parameters")
         self._cbBambdasXSS.setToolTipText("Suspicious XSS parameters")
-        self._txtBambdasXSSKeywords.setEnabled(False)
+        # self._txtBambdasXSSKeywords.setEnabled(False)
+        # self._cbBambdasXSS.setEnabled(False)
         
         self._cbBambdasLFI = JCheckBox('Possible LFI keywords', False, itemStateChanged=self._cbBambdasLFIFunc)
-        self._txtBambdasLFIKeywords = JTextField("conf, content, detail, dir, doc, document, download, file, folder, inc, include, locate, page, path, show, template, url, view, read, load", 100)
+        self._txtBambdasLFIKeywords = JTextField("", 100)
         self._txtBambdasLFIKeywords.setToolTipText("Suspicious LFI parameters")
         self._cbBambdasLFI.setToolTipText("Suspicious LFI parameters")
-        self._txtBambdasLFIKeywords.setEnabled(False)
+        # self._txtBambdasLFIKeywords.setEnabled(False)
+        # self._cbBambdasLFI.setEnabled(False)
     
         self._cbBambdasSSRF = JCheckBox('Possible SSRF keywords', False, itemStateChanged=self._cbBambdasSSRFFunc)
-        self._txtBambdasSSRFKeywords = JTextField("callback, dest, destination, host, next, out, path, redirect, return, site, target, to, uri, url, view", 100)
+        self._txtBambdasSSRFKeywords = JTextField("", 100)
         self._txtBambdasSSRFKeywords.setToolTipText("Suspicious SSRF parameters")
         self._cbBambdasSSRF.setToolTipText("Suspicious SSRF parameters")
-        self._txtBambdasSSRFKeywords.setEnabled(False)
+        # self._txtBambdasSSRFKeywords.setEnabled(False)
+        # self._cbBambdasSSRF.setEnabled(False)
     
         self._cbBambdasORed = JCheckBox('Possible Open Redirect keywords', False, itemStateChanged=self._cbBambdasORedFunc)
-        self._txtBambdasORedKeywords = JTextField("dest, destination, go, next, out, redir, redirect, redirect_uri, redirect_url, return, return_path, return_to, returnTo, returnUrl, target, to, uri, url", 100)
+        self._txtBambdasORedKeywords = JTextField("", 100)
         self._cbBambdasORed.setToolTipText("Suspicious Open Redirect parameters")
         self._txtBambdasORedKeywords.setToolTipText("Suspicious Open Redirect parameters")
-        self._txtBambdasORedKeywords.setEnabled(False)
+        # self._txtBambdasORedKeywords.setEnabled(False)
+        # self._cbBambdasORed.setEnabled(False)
     
         self._cbBambdasRCE = JCheckBox('Possible RCE keywords', False, itemStateChanged=self._cbBambdasRCEFunc)
-        self._txtBambdasRCEKeywords = JTextField("arg, cmd, code, command, exe, exec, execute, ping, print, process, run", 100)
+        self._txtBambdasRCEKeywords = JTextField("", 100)
         self._txtBambdasRCEKeywords.setToolTipText("Suspicious RCE parameters")
         self._cbBambdasRCE.setToolTipText("Suspicious RCE parameters")
-        self._txtBambdasRCEKeywords.setEnabled(False)
+        # self._txtBambdasRCEKeywords.setEnabled(False)
+        # self._cbBambdasRCE.setEnabled(False)
     
         self._cbBambdasVulnJS = JCheckBox('Vulnerable JS Functions', False, itemStateChanged=self._cbBambdasVulnJSFunc)
-        self._txtBambdasVulnJSKeywords = JTextField("eval(, setTimeout(, setInterval(, document.write(, innerHTML, document.createElement(, document.execCommand(, document.domain, window.location.href, document.cookie, document.URL, document.referrer, window.open(, document.body.innerHTML, element.setAttribute(, element.outerHTML, XMLHttpRequest(, fetch(, navigator.sendBeacon(", 100)
+        self._txtBambdasVulnJSKeywords = JTextField("", 100)
         self._txtBambdasVulnJSKeywords.setToolTipText("Vulnerable JavaScript Functions")
         self._cbBambdasVulnJS.setToolTipText("Vulnerable JavaScript Functions")
-        self._txtBambdasVulnJSKeywords.setEnabled(False)
+        # self._txtBambdasVulnJSKeywords.setEnabled(False)
+        # self._cbBambdasVulnJS.setEnabled(False)
     
         self._cbBambdasExtIgnore = JCheckBox('File extensions to ignore', True, itemStateChanged=self._cbBambdasExtIgnoreFunc)
-        self._txtBambdasExtIgnoreKeywords = JTextField("js, gif, jpg, png, svg, css, ico, woff2", 100)
+        self._txtBambdasExtIgnoreKeywords = JTextField("", 100)
         self._txtBambdasExtIgnoreKeywords.setToolTipText("Which file extensions will be ignored?")
         self._cbBambdasExtIgnore.setToolTipText("Which file extensions will be ignored?")
 
@@ -2388,6 +2485,7 @@ else
         self._tabBambdasPanel.setTopComponent(_tabBambdasPanelTop)
         self._tabBambdasPanel.setBottomComponent(_tabBambdasPanelBottom)
 
+        self.funcBambdasUIReset(self)
         return
 
     def listChange(self, ev):
