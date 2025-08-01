@@ -25,7 +25,7 @@ except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
     sys.exit(1)
 
-VERSION = "2.21"
+VERSION = "2.22"
 #url_regex = r'(log|sign)([-_+%0-9]{0,5})(off|out|in|on)|(expire|kill|terminat|delete|remove)'
 url_regex = r'(log|sign|time)([-_+%0-9]{0,5})(off|out)|(expire|kill|terminat|delete|remove)'
 ext_regex = r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff2|ttf|otf)$'
@@ -1721,7 +1721,7 @@ given request then
             bambdas += "String[] highValueWords = " + highValueWords + ";\n"
             bambdas += "// Important keywords will be searched\n\n"
 
-        if self._cbBambdasSearchinReq.isSelected():
+        if self._cbBambdasSearchinRes.isSelected():
             if self._cbBambdasVulnJS.isSelected():
                 vulnJSFunc = "{"
                 for vulnJS in [vulnJS.strip() for vulnJS in self._txtBambdasVulnJSKeywords.text.strip().replace(".","\\\\.").replace("(","\\\\(").split(',')]:
