@@ -1522,7 +1522,9 @@ given request then
 
         bambdas += "//logging.logToOutput(\"smt\");\t\t\t// for troubleshooting\n\n"
         if self._cbBambdasforWhat.getSelectedIndex() == 0:
-            bambdas += "boolean resetScreen = false;\t\t\t// 'true' clear colors and notes, 'false' execute the script\n\n"
+            bambdas += "// 'true' clear colors and notes, 'false' execute the script\n"
+            bambdas += "boolean resetScreen = false;\n"
+            bambdas += "// 'true' clear colors and notes, 'false' execute the script\n\n"
 
         bambdas += "// URLs in the scope of testing, White-Listed / Wanted URLs\n"
         allUrls = False
@@ -1603,7 +1605,7 @@ given request then
             bambdas += "// check for if already processed\n\n"
 
         bambdas += "// general vars\n"
-        bambdas += "boolean suspiciousHit = false;\t\t\t//Flag for to detect if suspicious words are hit!\n"
+        bambdas += "boolean suspiciousHit = false;\n"
         bambdas += "StringBuilder notesBuilder = new StringBuilder();\n"
         if self._cbBambdasSearchinRes.isSelected() and (self._cbBambdasSearchHTMLCommnets.isSelected() or self._cbBambdasFilesDownloadable.isSelected() or self._cbBambdasValuable.isSelected() or self._cbBambdasVulnJS.isSelected()):
             bambdas += "String responseBody = requestResponse.response().bodyToString();\n"
