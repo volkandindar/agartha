@@ -25,7 +25,7 @@ except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
     sys.exit(1)
 
-VERSION = "2.20"
+VERSION = "2.21"
 #url_regex = r'(log|sign)([-_+%0-9]{0,5})(off|out|in|on)|(expire|kill|terminat|delete|remove)'
 url_regex = r'(log|sign|time)([-_+%0-9]{0,5})(off|out)|(expire|kill|terminat|delete|remove)'
 ext_regex = r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff2|ttf|otf)$'
@@ -1623,7 +1623,7 @@ given request then
                 bambdas += "    return false;\n"
                 bambdas += "// Black-Listed file extensions\n\n"
 
-        if (self._cbBambdasSQLi.isSelected() or self._cbBambdasXSS.isSelected() or self._cbBambdasLFI.isSelected() or self._cbBambdasSSRF.isSelected() or self._cbBambdasORed.isSelected() or self._cbBambdasRCE.isSelected() or self._cbBambdasVulnJS.isSelected()):
+        if (self._cbBambdasSearchinReq.isSelected() or self._cbBambdasSearchinURL.isSelected()) and (self._cbBambdasSQLi.isSelected() or self._cbBambdasXSS.isSelected() or self._cbBambdasLFI.isSelected() or self._cbBambdasSSRF.isSelected() or self._cbBambdasORed.isSelected() or self._cbBambdasRCE.isSelected()):
             bambdas += "// Suspicious parameters OWASP Top 25\n"
             bambdas += "Map<String, List<String>> attacksKeyWords = new HashMap<>();\n"
             bambdas += "String[] paramsArray;\n"
@@ -1695,17 +1695,6 @@ given request then
                 bambdas += "attacksKeyWords.put(\"RCE\", new ArrayList<>(paramsArrayTrimmed));\n"
                 bambdas += "// RCE suspicious keywords\n\n"
 
-            if self._cbBambdasVulnJS.isSelected():
-                vulnJSFunc = "{"
-                for vulnJS in [vulnJS.strip() for vulnJS in self._txtBambdasVulnJSKeywords.text.strip().replace(".","\\\\.").replace("(","\\\\(").split(',')]:
-                    if vulnJS:
-                        vulnJSFunc += "\"" + vulnJS + "\", "
-                if vulnJSFunc != "{":
-                    vulnJSFunc = vulnJSFunc[:-2] 
-                vulnJSFunc += "}"
-                bambdas += "// Suspicious Functions JS functions\n"
-                bambdas += "String[] suspiciousFunctions = " + vulnJSFunc + ";\n"
-                bambdas += "// Suspicious Functions JS functions\n\n"
             bambdas += "// Suspicious parameters OWASP Top 25\n"
 
         if self._cbBambdasHTTPMethods.isSelected():
@@ -1720,7 +1709,7 @@ given request then
             bambdas += "String[] httpMethods = " + httpMethods + ";\n"
             bambdas += "// HTTP methods to ignore\n\n"
         
-        if self._cbBambdasValuable.isSelected():
+        if self._cbBambdasValuable.isSelected() and (self._cbBambdasSearchinReq.isSelected() or self._cbBambdasSearchinRes.isSelected() or self._cbBambdasSearchinURL.isSelected()):
             bambdas += "// Important keywords will be searched\n"
             highValueWords = "{"
             for valueWords in [valueWords.strip() for valueWords in self._txtBambdasValuable.text.strip().split(',')]:
@@ -1732,17 +1721,30 @@ given request then
             bambdas += "String[] highValueWords = " + highValueWords + ";\n"
             bambdas += "// Important keywords will be searched\n\n"
 
-        if self._cbBambdasFilesDownloadable.isSelected():
-            fileExtensions = "{"
-            for ext in [ext.strip() for ext in self._txtBambdasFilesDownloadable.text.strip().split(',')]:
-                if ext:
-                    fileExtensions += "\"" + ext + "\", "
-            if fileExtensions != "{":
-                fileExtensions = fileExtensions[:-2] 
-            fileExtensions += "}"
-            bambdas += "// Downloadable file checks\n"
-            bambdas += "String[] fileExtensions = " + fileExtensions + ";\n"
-            bambdas += "// Downloadable file checks\n\n"
+        if self._cbBambdasSearchinReq.isSelected():
+            if self._cbBambdasVulnJS.isSelected():
+                vulnJSFunc = "{"
+                for vulnJS in [vulnJS.strip() for vulnJS in self._txtBambdasVulnJSKeywords.text.strip().replace(".","\\\\.").replace("(","\\\\(").split(',')]:
+                    if vulnJS:
+                        vulnJSFunc += "\"" + vulnJS + "\", "
+                if vulnJSFunc != "{":
+                    vulnJSFunc = vulnJSFunc[:-2] 
+                vulnJSFunc += "}"
+                bambdas += "// Suspicious Functions JS functions\n"
+                bambdas += "String[] suspiciousFunctions = " + vulnJSFunc + ";\n"
+                bambdas += "// Suspicious Functions JS functions\n\n"
+
+            if self._cbBambdasFilesDownloadable.isSelected():
+                fileExtensions = "{"
+                for ext in [ext.strip() for ext in self._txtBambdasFilesDownloadable.text.strip().split(',')]:
+                    if ext:
+                        fileExtensions += "\"" + ext + "\", "
+                if fileExtensions != "{":
+                    fileExtensions = fileExtensions[:-2] 
+                fileExtensions += "}"
+                bambdas += "// Downloadable file checks\n"
+                bambdas += "String[] fileExtensions = " + fileExtensions + ";\n"
+                bambdas += "// Downloadable file checks\n\n"
 
         bambdas += "// Black-Listed / Unwanted URLs\n"
         bambdas += "for (String targetPath : targetBlackListUrls)\n"
