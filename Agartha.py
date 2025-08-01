@@ -25,7 +25,7 @@ except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
     sys.exit(1)
 
-VERSION = "2.19"
+VERSION = "2.20"
 #url_regex = r'(log|sign)([-_+%0-9]{0,5})(off|out|in|on)|(expire|kill|terminat|delete|remove)'
 url_regex = r'(log|sign|time)([-_+%0-9]{0,5})(off|out)|(expire|kill|terminat|delete|remove)'
 ext_regex = r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff2|ttf|otf)$'
@@ -1607,7 +1607,7 @@ given request then
         bambdas += "StringBuilder notesBuilder = new StringBuilder();\n"
         if self._cbBambdasSearchinRes.isSelected() and (self._cbBambdasSearchHTMLCommnets.isSelected() or self._cbBambdasFilesDownloadable.isSelected() or self._cbBambdasValuable.isSelected() or self._cbBambdasVulnJS.isSelected()):
             bambdas += "String responseBody = requestResponse.response().bodyToString();\n"
-        if self._cbBambdasSearchinReq.isSelected() and (self._cbBambdasSQLi.isSelected() or self._cbBambdasXSS.isSelected() or self._cbBambdasLFI.isSelected() or self._cbBambdasSSRF.isSelected() or self._cbBambdasORed.isSelected() or self._cbBambdasRCE.isSelected() or self._cbBambdasValuable.isSelected()):
+        if (self._cbBambdasSearchinReq.isSelected() or self._cbBambdasSearchinURL.isSelected()) and (self._cbBambdasSQLi.isSelected() or self._cbBambdasXSS.isSelected() or self._cbBambdasLFI.isSelected() or self._cbBambdasSSRF.isSelected() or self._cbBambdasORed.isSelected() or self._cbBambdasRCE.isSelected() or self._cbBambdasValuable.isSelected()):
             bambdas += "String requestBody  = requestResponse.request().bodyToString();\n"
         bambdas += "var path = requestResponse.request().path().toLowerCase();\n"
         bambdas += "var pathExt = requestResponse.request().pathWithoutQuery().toLowerCase();\n"
@@ -1768,8 +1768,9 @@ for (String httpMethod : httpMethods)
 
         bambdas += "// How many days to process\n"
         bambdas += "if (requestResponse.time().isAfter(ZonedDateTime.now().minusDays(" + self._cbBambdasProcessDays.getSelectedItem().split()[0] + "))){\n"
-        bambdas += "\tList<Pattern> patterns = new ArrayList<>();"
+        
         if self._cbBambdasValuable.isSelected():
+            bambdas += "\tList<Pattern> patterns = new ArrayList<>();"
             bambdas += """
     for (String highValueWord : highValueWords)
         patterns.add(Pattern.compile(highValueWord, Pattern.CASE_INSENSITIVE));
@@ -1810,8 +1811,12 @@ for (String httpMethod : httpMethods)
         }
     // ValuableWord check from url
 """
-        if self._cbBambdasFilesDownloadable.isSelected() and self._cbBambdasSearchinRes.isSelected():
-            bambdas += """
+        if self._cbBambdasSearchinRes.isSelected():
+            if not self._cbBambdasValuable.isSelected():
+                bambdas += "\tList<Pattern> patterns = new ArrayList<>();"
+
+            if self._cbBambdasFilesDownloadable.isSelected():
+                bambdas += """
     // LFI-Content
     patterns = new ArrayList<>();
     for (String ext : fileExtensions)
@@ -1836,8 +1841,8 @@ for (String httpMethod : httpMethods)
     // Check from response
     // LFI-Content
 """
-        if self._cbBambdasSearchHTMLCommnets.isSelected() and self._cbBambdasSearchinRes.isSelected():
-            bambdas += """
+            if self._cbBambdasSearchHTMLCommnets.isSelected():
+                bambdas += """
     // Search from HTML comments
     patterns = new ArrayList<>();
     patterns.add(Pattern.compile(\"<!--.*?-->\", Pattern.DOTALL));
@@ -1857,8 +1862,8 @@ for (String httpMethod : httpMethods)
     // Search from HTML comments
 """
 
-        if self._cbBambdasVulnJS.isSelected() and self._cbBambdasSearchinRes.isSelected():
-            bambdas += """
+            if self._cbBambdasVulnJS.isSelected():
+                bambdas += """
     // Suspicious Functions JS functions - Vulnerable JS
     patterns = new ArrayList<>();
     for (String suspiciousFunction : suspiciousFunctions)
@@ -1875,7 +1880,10 @@ for (String httpMethod : httpMethods)
     // check from response
     // Suspicious Functions JS functions - Vulnerable JS
 """
-        if (self._cbBambdasSQLi.isSelected() or self._cbBambdasXSS.isSelected() or self._cbBambdasLFI.isSelected() or self._cbBambdasSSRF.isSelected() or self._cbBambdasORed.isSelected() or self._cbBambdasRCE.isSelected()):
+        if (self._cbBambdasSearchinURL.isSelected() or self._cbBambdasSearchinReq.isSelected()) and (self._cbBambdasSQLi.isSelected() or self._cbBambdasXSS.isSelected() or self._cbBambdasLFI.isSelected() or self._cbBambdasSSRF.isSelected() or self._cbBambdasORed.isSelected() or self._cbBambdasRCE.isSelected()):
+            if not self._cbBambdasValuable.isSelected() and not self._cbBambdasSearchinRes.isSelected():
+                bambdas += "\tList<Pattern> patterns = new ArrayList<>();"
+
             bambdas += """
     // Suspicious parameters OWASP Top 25
     for (Map.Entry<String, List<String>> entry : attacksKeyWords.entrySet()) {
@@ -1901,16 +1909,14 @@ for (String httpMethod : httpMethods)
             for (String attackParam : attackParams)
                 patterns.add(Pattern.compile(attackParam, Pattern.CASE_INSENSITIVE));
         }
-"""
-            if self._cbBambdasSearchinURL.isSelected() or self._cbBambdasSearchinReq.isSelected():
-                bambdas += """
+
         if (htmlContent)
             // Regular html content
             for (String attackParam : attackParams)
             {
 """
-                if self._cbBambdasSearchinURL.isSelected():
-                    bambdas += """
+            if self._cbBambdasSearchinURL.isSelected():
+                bambdas += """
                 if (requestResponse.request().hasParameter(attackParam, HttpParameterType.URL)){
                     suspiciousHit = true;
                     if (notesBuilder.length() > 0)
@@ -1918,8 +1924,8 @@ for (String httpMethod : httpMethods)
                     notesBuilder.append(attackParam + "(" + attackType + "-Url)");
                 }
 """
-                if self._cbBambdasSearchinReq.isSelected():
-                    bambdas += """
+            if self._cbBambdasSearchinReq.isSelected():
+                bambdas += """
                 if (requestResponse.request().hasParameter(attackParam, HttpParameterType.BODY)){
                     suspiciousHit = true;
                     if (notesBuilder.length() > 0)
@@ -1927,10 +1933,10 @@ for (String httpMethod : httpMethods)
                     notesBuilder.append(attackParam + "(" + attackType + "-Req)");
                 }
 """
-                bambdas += "\t\t\t}\n"
+            bambdas += "\t\t\t}\n"
                 
-                if self._cbBambdasSearchinReq.isSelected():
-                    bambdas += """
+            if self._cbBambdasSearchinReq.isSelected():
+                bambdas += """
         else
             // Either json or xml
             for (Pattern pattern : patterns)
@@ -1942,10 +1948,10 @@ for (String httpMethod : httpMethods)
                 }
 """
             bambdas +="\t}\n"
-        bambdas +="\t// Suspicious parameters OWASP Top 25\n\n"
+            bambdas +="\t// Suspicious parameters OWASP Top 25\n\n"
 
         if self._cbBambdasforWhat.getSelectedIndex() == 0:
-            bambdas +="\t// Highlights suspicious calls\n"
+            bambdas +="\n\t// Highlights suspicious calls\n"
             bambdas += "\tif (suspiciousHit) {\n"
             if self._cbBambdasColorKeyWords.getSelectedIndex() != 0:
                 bambdas += "\t\trequestResponse.annotations().setHighlightColor(HighlightColor."+ self._cbBambdasColorKeyWords.getSelectedItem() + ");\n"
