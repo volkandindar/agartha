@@ -25,7 +25,7 @@ except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
     sys.exit(1)
 
-VERSION = "2.23"
+VERSION = "2.24"
 #url_regex = r'(log|sign)([-_+%0-9]{0,5})(off|out|in|on)|(expire|kill|terminat|delete|remove)'
 url_regex = r'(log|sign|time)([-_+%0-9]{0,5})(off|out)|(expire|kill|terminat|delete|remove)'
 ext_regex = r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff2|ttf|otf)$'
@@ -2011,10 +2011,12 @@ for (String httpMethod : httpMethods)
                 bambdas += """
     // Highlights URLs in the scope
     for (String targetPath : targetPaths)
-        if (Pattern.compile(targetPath, Pattern.CASE_INSENSITIVE).matcher(path).find() && targetPath != null && !targetPath.trim().isEmpty())
+        if (Pattern.compile(targetPath, Pattern.CASE_INSENSITIVE).matcher(path).find() && targetPath != null && !targetPath.trim().isEmpty()){
 """
                 bambdas += "\t\t\trequestResponse.annotations().setHighlightColor(HighlightColor."+ self._cbBambdasColorScope.getSelectedItem() + ");"
                 bambdas += """
+            break;
+        }
     // Highlights URLs in the scope
 """
         if self._cbBambdasforWhat.getSelectedIndex() == 0:
@@ -2022,15 +2024,14 @@ for (String httpMethod : httpMethods)
                 bambdas += """
     // Highlights tested URLs
     for (String targetPath : targetPathsDone)
-        if (Pattern.compile(targetPath, Pattern.CASE_INSENSITIVE).matcher(path).find() && targetPath != null && !targetPath.trim().isEmpty())
+        if (Pattern.compile(targetPath, Pattern.CASE_INSENSITIVE).matcher(path).find() && targetPath != null && !targetPath.trim().isEmpty()){
 """
                 bambdas += "\t\t\trequestResponse.annotations().setHighlightColor(HighlightColor."+ self._cbBambdasColorScopeSecondary.getSelectedItem() + ");"
                 bambdas += """
+            break;
+        }
     // Highlights tested URLs
 """
-
-
-
         if self._tbBambdasBlackListedURLs.getText() == '/':
             bambdas += """
     // Root black-listed has been selected, all other URLs will be ignored
