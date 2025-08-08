@@ -195,7 +195,11 @@ Please note that the JavaScript code will execute within the original user sessi
 ## Bambdas Code Generator
 Bambdas are lightweight scripts that run directly within Burp Suite, allowing users to quickly customize and automate various tasks. They can be used to define custom match-and-replace rules, add dynamic table columns, apply filters, and tailor the interface to better suit specific testing workflows. With Bambdas, you can extend Burp's functionality without the need for full-scale extension development.
 
-<img width="1000" alt="Bambdas Code Generator" src="https://github.com/user-attachments/assets/f727e2cc-d5ee-42c6-98bc-e831bbbea235">
+<img width="1000" alt="Bambdas Code Generator" src="https://github.com/user-attachments/assets/bcb2b315-957b-4e11-bbf2-68a7dddcd007">
+
+Explanations:
+<img width="1000" alt="Bambdas Code Generator" src="https://github.com/user-attachments/assets/d5543a09-6123-4a37-bea6-1197c1da0de8">
+
 
 <br/><br/>
 [Another tutorial link](https://www.linkedin.com/pulse/agartha-lfi-rce-auth-sqli-http-js-volkan-dindar)
