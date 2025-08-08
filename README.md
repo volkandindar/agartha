@@ -11,7 +11,7 @@ In summary:
 	- You can use the web **'Spider'** feature to generate a sitemap/URL list, and it will crawl visible links from the user's session automatically.
 - **403 Bypass**: It aims to tackle common access restrictions, such as HTTP 403 Forbidden responses. It utilizes techniques like URL manipulation and request header modification to bypass implemented limitations.
 - **Copy as JavaScript**: It converts Http requests to JavaScript code for further XSS exploitation and more.
-- **Bambdas Generator**: TO DO.<br/><br/>
+- **Bambdas Script Generator**: It now supports the automatic generation of Bambdas-compatible scripts based on user input, enabling users to create advanced testing scenarios without the need to write scripts manually.<br/><br/>
 
 Here is a small tutorial how to use.
 
