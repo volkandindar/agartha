@@ -75,7 +75,7 @@ Your payloads are now integrated into a BCheck. You can either manually send/sca
 
 <img width="1000" alt="BCheck Code Generator" src="https://github.com/user-attachments/assets/0ff1ecf5-1a84-444b-bc6e-7e2d7153dc5d">
 
-Fine-tuning advises: The generated code serves as a template and may require some adjustments, as behavior can vary between different application servers.
+Fine-tuning advises: The generated code serves as a template and may require some adjustments, as behavior can vary between different applications and servers.
 
 Refining filters—such as specifying HTTP response codes or keywords within responses—can help reduce false positives and make the results more precise and less noisy.<br/><br/>
 
