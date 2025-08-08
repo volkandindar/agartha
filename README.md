@@ -77,8 +77,7 @@ Your payloads are now integrated into a BCheck. You can either manually send/sca
 
 Fine-tuning advises: The generated code serves as a template and may require some adjustments, as behavior can vary between different application servers.
 
-Refining filters—such as specifying HTTP response codes or keywords within responses—can help reduce false positives and make the results more precise and less noisy.
-
+Refining filters—such as specifying HTTP response codes or keywords within responses—can help reduce false positives and make the results more precise and less noisy.<br/><br/>
 
 ## Authorization Matrix / User Access Table
 This part focuses on analyzing user session and URL relationships to identify access violations. The tool systematically visits all URLs associated with pre-defined user sessions and populates a table with HTTP responses. Essentially, it creates an access matrix, which aids in identifying authentication and authorization issues. Ultimately, this process reveals which users can access specific page contents.
