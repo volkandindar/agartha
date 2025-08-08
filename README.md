@@ -204,7 +204,10 @@ Explanations, A little bit more details:
 2. ikinci grup
  	- birinci aciklama
  	- ikinci aciklama
-<img width="1000" alt="Bambdas Code Generator" src="https://github.com/user-attachments/assets/4dc7902c-bf7f-4976-8df2-6ba2fc9611e4">
+
+
+<img width="1000" alt="Bambdas Code Generator" src="https://github.com/user-attachments/assets/e0dcceb7-e757-4316-8a6d-7a312026e7b7">
+
 
 <br/><br/>
 [Another tutorial link](https://www.linkedin.com/pulse/agartha-lfi-rce-auth-sqli-http-js-volkan-dindar)
