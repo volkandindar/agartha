@@ -60,6 +60,9 @@ It generates payloads for various types of SQL injection attacks, including Stac
 BCheck is Burp Suite's framework for creating and importing custom scan checks. These user-defined checks run alongside Burp Scanner’s built-in routines, allowing you to tailor scans to specific vulnerabilities or testing needs. By using BChecks, you can extend Burp’s scanning capabilities and streamline your workflow for more targeted and efficient assessments.
 Now you can generate the code automatically:
 
+<img width="1000" alt="BCheck Code Generator" src="https://github.com/user-attachments/assets/6d54f9a0-7350-4b1f-baeb-449d88f21f76"><br/><br/>
+
+
 ## Authorization Matrix / User Access Table
 This part focuses on analyzing user session and URL relationships to identify access violations. The tool systematically visits all URLs associated with pre-defined user sessions and populates a table with HTTP responses. Essentially, it creates an access matrix, which aids in identifying authentication and authorization issues. Ultimately, this process reveals which users can access specific page contents.
 - You can right-click on any request and navigate to 'Extensions > Agartha > Auth Matrix' to define **user sessions**.
