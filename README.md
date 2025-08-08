@@ -61,6 +61,8 @@ BCheck is Burp Suite's framework for creating and importing custom scan checks. 
 Now you can generate the code automatically:
 
 <img width="1000" alt="BCheck Code Generator" src="https://github.com/user-attachments/assets/6d54f9a0-7350-4b1f-baeb-449d88f21f76"><br/><br/>
+You can click the Payload generation button in the blue box above to create a classic wordlist, which can be used manually in Burp's Intruder or Repeater.
+Now, you also have the option to generate the same payloads formatted in BCheck syntax, ready to be used in automated scans.
 
 
 ## Authorization Matrix / User Access Table
