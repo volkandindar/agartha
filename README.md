@@ -65,6 +65,10 @@ Now you can generate the code automatically:
 - You can click the Payload generation button in the blue box above to create a classic wordlist, which can be used manually in Burp's Intruder or Repeater.
 - Now, you also have the option to generate the same payloads formatted in BCheck syntax, ready to be used in automated scans.
 
+<img width="1000" alt="BCheck Code Generator" src="https://github.com/user-attachments/assets/c38b5816-2a24-4f13-b3f3-a7c62b3ca236">
+
+
+
 
 ## Authorization Matrix / User Access Table
 This part focuses on analyzing user session and URL relationships to identify access violations. The tool systematically visits all URLs associated with pre-defined user sessions and populates a table with HTTP responses. Essentially, it creates an access matrix, which aids in identifying authentication and authorization issues. Ultimately, this process reveals which users can access specific page contents.
