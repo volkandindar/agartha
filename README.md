@@ -197,11 +197,14 @@ Bambdas are lightweight scripts that run directly within Burp Suite, allowing us
 
 <img width="1000" alt="Bambdas Code Generator" src="https://github.com/user-attachments/assets/bcb2b315-957b-4e11-bbf2-68a7dddcd007">
 
-Explanations:
+Explanations, A little bit more details:
+1. ilk grup
+  - birinci aciklama
+  - ikinci aciklama
+2. ikinci grup
+  - birinci aciklama
+  - ikinci aciklama
 <img width="1000" alt="Bambdas Code Generator" src="https://github.com/user-attachments/assets/4dc7902c-bf7f-4976-8df2-6ba2fc9611e4">
-
-
-
 
 <br/><br/>
 [Another tutorial link](https://www.linkedin.com/pulse/agartha-lfi-rce-auth-sqli-http-js-volkan-dindar)
