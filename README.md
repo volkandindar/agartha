@@ -3,7 +3,7 @@ Agartha, specializes in advance payload generation and access control assessment
 
 In summary:
 
-- **Payload Generator**: It dynamically constructs comprehensive wordlists for injection attacks, incorporating various encoding and escaping characters to enhance the effectiveness of security testing. These wordlists cover critical vulnerabilities such as SQL Injection, Local File Inclusion (LFI), and Remote Code Execution, making them indispensable for robust security testing.
+- **Payload Generator**: It dynamically constructs comprehensive wordlists for injection attacks, incorporating various encoding and escaping characters to enhance the effectiveness of security testing. These wordlists cover critical vulnerability classes like SQL Injection (SQLi), Local File Inclusion (LFI), Remote Code Execution (RCE), and now also support BCheck syntax for seamless integration with Burp's BCheck framework.
 	- **Local File Inclusion, Path Traversal:** It helps identifying vulnerabilities that allow attackers to access files on the server's filesystem.
 	- **Remote Code Execution, Command Injection:** It aims to detects potential command injection points, enabling robust testing for code execution vulnerabilities.
 	- **SQL Injection:** It assists to uncover SQL Injection vulnerabilities, including Stacked Queries, Boolean-Based, Union-Based, and Time-Based.
