@@ -198,7 +198,9 @@ Bambdas are lightweight scripts that run directly within Burp Suite, allowing us
 <img width="1000" alt="Bambdas Code Generator" src="https://github.com/user-attachments/assets/bcb2b315-957b-4e11-bbf2-68a7dddcd007">
 
 Explanations:
-<img width="1000" alt="Bambdas Code Generator" src="https://github.com/user-attachments/assets/d5543a09-6123-4a37-bea6-1197c1da0de8">
+<img width="1000" alt="Bambdas Code Generator" src="https://github.com/user-attachments/assets/4dc7902c-bf7f-4976-8df2-6ba2fc9611e4">
+
+
 
 
 <br/><br/>
