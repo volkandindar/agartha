@@ -60,7 +60,8 @@ It generates payloads for various types of SQL injection attacks, including Stac
 BCheck is Burp Suite's framework for creating and importing custom scan checks. These user-defined checks run alongside Burp Scanner’s built-in routines, allowing you to tailor scans to specific vulnerabilities or testing needs. By using BChecks, you can extend Burp’s scanning capabilities and streamline your workflow for more targeted and efficient assessments.
 Now you can generate the code automatically:
 
-<img width="1000" alt="BCheck Code Generator" src="https://github.com/user-attachments/assets/6d54f9a0-7350-4b1f-baeb-449d88f21f76"><br/><br/>
+<img width="1000" alt="BCheck Code Generator" src="https://github.com/user-attachments/assets/6d54f9a0-7350-4b1f-baeb-449d88f21f76">
+
 - You can click the Payload generation button in the blue box above to create a classic wordlist, which can be used manually in Burp's Intruder or Repeater.
 - Now, you also have the option to generate the same payloads formatted in BCheck syntax, ready to be used in automated scans.
 
@@ -73,7 +74,6 @@ This part focuses on analyzing user session and URL relationships to identify ac
 - Now, it's ready for execution. Simply click the **'Run'** button, and the table will be populated accordingly.
 
 <img width="1000" alt="Authorization Matrix" src="https://github.com/volkandindar/agartha/assets/50321735/6f89e22c-e29c-413d-96d8-c2a8d7ac39d4">
-
 
 A little bit more details:
 1. This is the field where you enter the username for the session you provide. You can add up to four different users, with each user being assigned a unique color to enhance readability.
