@@ -192,8 +192,11 @@ For redirection, please also add this code before '</script>' tag:
 Please note that the JavaScript code will execute within the original user session, with many header fields automatically populated by the browser. However, in some cases, the server may require specific mandatory header fields. For example, certain requests might fail if the 'Content-Type' is incorrect. Therefore, you may need to adjust the code to ensure compatibility with the server's requirements.
 <br/><br/>
 
-## Bambdas Generator
+## Bambdas Code Generator
 Bambdas are lightweight scripts that run directly within Burp Suite, allowing users to quickly customize and automate various tasks. They can be used to define custom match-and-replace rules, add dynamic table columns, apply filters, and tailor the interface to better suit specific testing workflows. With Bambdas, you can extend Burp's functionality without the need for full-scale extension development.
+
+
+<img width="1000" alt="Bambdas Code Generator" src="https://github.com/user-attachments/assets/117eace7-3aa2-4834-976c-99fae1a859b5">
 
 
 <br/><br/>
