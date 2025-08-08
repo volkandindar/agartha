@@ -59,8 +59,6 @@ It generates payloads for various types of SQL injection attacks, including Stac
 ## BCheck Code Generator
 TO DO
 
-<br/><br/>
-
 ## Authorization Matrix / User Access Table
 This part focuses on analyzing user session and URL relationships to identify access violations. The tool systematically visits all URLs associated with pre-defined user sessions and populates a table with HTTP responses. Essentially, it creates an access matrix, which aids in identifying authentication and authorization issues. Ultimately, this process reveals which users can access specific page contents.
 - You can right-click on any request and navigate to 'Extensions > Agartha > Auth Matrix' to define **user sessions**.
