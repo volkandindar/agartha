@@ -198,9 +198,14 @@ Bambdas are lightweight scripts that run directly within Burp Suite, allowing us
 <img width="1000" alt="Bambdas Code Generator" src="https://github.com/user-attachments/assets/eec48dd2-39d3-47dc-ae23-ea58ab1f83c1">
 
 Explanations, A little bit more details:
-1. ilk grup
- 	- birinci aciklama
- 	- ikinci aciklama
+1. Regarding script creation GUI, you can select general settings here. For example:
+ 	- Processing only in-scope addresses or all domain addresses.
+ 	- Hiding specific file extensions.
+ 	- Colors for URLs defined in the scope section.
+   	- Colors for URLs that have already been tested.
+   	- Colors for filters defined in Group 2.
+   	- Number of past days to display.
+ 	- Number of past days to be processed by the script.
 2. ikinci grup
  	- birinci aciklama
  	- ikinci aciklama
