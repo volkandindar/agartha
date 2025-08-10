@@ -212,8 +212,15 @@ Explanations, A little bit more details:
  	- "Search HTML comments", "Downloadable file extensions", and "Vulnerable JS Functions" are generally searched within HTTP responses.
  	- "Valuable keywords" searches can be applied to URLs, requests, and responses.
    	- "SQLi-suspect identifiers, XSS-suspect identifiers, LFI-suspect identifiers, SSRF-suspect identifiers, Open Redirect-suspect identifiers, and RCE-suspect identifiers" can be searched in URLs or requests. Unlike "Valuable keywords", which searches free-text, these options detect parameters specifically.
-3. 
-4. 
+3. The options in the third section are mainly for defining scope, already tested URLs, and URLs you want to hide.
+ 	- You can define the URLs to be tested in the "Definition of testing scope" section. If you enter /, the entire application will be considered in scope; if you add a specific path like /users, only that directory and its contents will be in scope. The "Color for testing scope" option applies to this section.
+   	- The "Already Tested URLs" section contains the list of URLs that have already been tested. The "Color for tested items" option applies here.
+ 	- The "Black-Listed URLs" section contains URLs you wish to hide from the proxy history.
+4. wsd
+ 	- 1
+   	- 1
+ 	- 1
+   	- 1
 
 <img width="1000" alt="Bambdas Code Generator" src="https://github.com/user-attachments/assets/1213ba90-a52e-417c-b32c-32743a7672da">
 
