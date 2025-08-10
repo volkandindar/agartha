@@ -140,7 +140,7 @@ Simply clicking the 'RUN' button will execute the task.
 
 The figure below illustrates that a URL may have an access issue, with the ‘Red’ color indicating a warning.
 
-<img width="1000" alt="Attempt details" src="https://github.com/user-attachments/assets/72618739-e84b-4c18-8bb0-3f6eb565e60d">
+<img width="1000" alt="Attempt details" src="https://github.com/user-attachments/assets/37fd6e3f-2348-48ce-a323-d7294a7a424b">
 
 1. Load requests from the proxy history by selecting the target hostname and clicking the ‘Load Requests’ button.
 2. URL and Header details
