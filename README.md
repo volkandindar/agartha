@@ -107,7 +107,7 @@ A little bit more details:
 
 Please note that potential session terminators (such as logoff, sign-out, etc.) and specific file types (such as CSS, images, JavaScript, etc.) will be filtered out from both the 'Spider' and the user's URL list.
 
-<img width="1000" alt="User Access Table Details" src="https://github.com/volkandindar/agartha/assets/50321735/e7ce918e-d40e-44c5-ada7-ee1c0cfa487b">
+<img width="1000" alt="User Access Table Details" src="https://github.com/user-attachments/assets/addabcc7-7dab-482b-91aa-4856b9e16126">
 
 After clicking 'RUN', the tool will populate the user and URL matrix with different colors. In addition to user-specific colors, you will see red, orange, and yellow cells indicating possible access issues.
 - **Red** highlights a critical access violation, indicated by the response returning 'HTTP 200' with the same content length.
