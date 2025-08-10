@@ -216,6 +216,22 @@ Explanations, A little bit more details:
  	- You can define the URLs to be tested in the "Definition of testing scope" section. If you enter /, the entire application will be considered in scope; if you add a specific path like /users, only that directory and its contents will be in scope. The "Color for testing scope" option applies to this section.
    	- The "Already Tested URLs" section contains the list of URLs that have already been tested. The "Color for tested items" option applies here.
  	- The "Black-Listed URLs" section contains URLs you wish to hide from the proxy history.
+
+**Examples of scope definitions**:
+- /
+ 	- Root path — includes everything.
+- /portal/users
+ 	- Includes specifically this path and its subpaths, for example:
+ 	 	- /portal/users?id=1
+ 	 	- /portal/users/?id=1
+ 	 	- /portal/users/dashboard
+- /admin/*/users/*/class
+ 	- The asterisk (*) acts as a placeholder for IDs, UUIDs, etc., and the rest of the path will be included.
+- /health-check
+ 	- Includes specifically this path and its subpaths, for example:
+ 	 	- /health-check
+ 	 	- /health-check/Monitor
+ 	 	- /health-check/?Level=Info
 4. wsd
  	- 1
    	- 1
