@@ -239,7 +239,7 @@ Explanations, A little bit more details:
 
 **Please note**: Enabling all options, especially for large projects, can result in significant system resource usage and increased processing time. If the script you have created does not complete within a reasonable time, it may be beneficial to revise it.
 
-<img width="1000" alt="Bambdas Code Generator" src="https://github.com/user-attachments/assets/4114abb8-0137-452c-8752-8f6271863f68">
+<img width="1000" alt="Bambdas Code Generator" src="https://github.com/user-attachments/assets/2e13f4e2-46ea-4970-b403-95bc03aeb8b1">
 
 **Option precedence**: The highest priority is Color for tested items, followed by Color for testing scope, and finally Color for parameters/keywords.
 
