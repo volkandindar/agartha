@@ -143,7 +143,7 @@ The figure below illustrates that a URL may have an access issue, with the ‘Re
 <img width="1000" alt="Attempt details" src="https://github.com/user-attachments/assets/37fd6e3f-2348-48ce-a323-d7294a7a424b">
 
 1. Load requests from the proxy history by selecting the target hostname and clicking the ‘Load Requests’ button.
- 	- **Enable Filters**: Since processing all URLs in the HTTP history can be a bulk task, this section provides options to apply matching criteria.
+ 	- **Enable Filters**: Since processing all URLs in the HTTP history is a bulk task, this section provides options to apply matching criteria.
  	 	- The Enable URL grouping feature (experimental) aims to eliminate similar endpoints that differ only by unique IDs, counting them as a single entry.
  	 	- You can choose to load only URLs from the past n days.
  	 	- You can also specify certain keywords to control which URLs are loaded.
