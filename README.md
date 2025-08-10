@@ -246,7 +246,7 @@ Explanations, A little bit more details:
 The figure above illustrates the following:
 - **Pink** indicates the testing scope (Group 3).
 - **Yellow** represents the tested scope (Group 3).
-- **Cyan** highlights matches for the search criteria (Group 2). In addition, you can see the reason in the 'Notes' section of each HTTP call.
+- **Cyan** highlights matches for the search criteria (Group 2). In addition, Yyou can see which criterion matched in the 'Notes' section of each HTTP call.
 
 
 <br/><br/>
