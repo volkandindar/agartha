@@ -241,7 +241,7 @@ Explanations, A little bit more details:
 
 <img width="1000" alt="Bambdas Code Generator" src="https://github.com/user-attachments/assets/2e13f4e2-46ea-4970-b403-95bc03aeb8b1">
 
-**Option precedence**: The highest priority is Color for tested items, followed by Color for testing scope, and finally Color for parameters/keywords.
+**Option precedence**: The highest priority is 'Color for tested items', followed by 'Color for testing scope', and finally 'Color for parameters/keywords'.
 
 The figure above illustrates the following:
 - **Pink** indicates the testing scope (Group 3).
