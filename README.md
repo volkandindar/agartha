@@ -206,10 +206,14 @@ Explanations, A little bit more details:
    	- Colors for filters defined mostly in Group 2.
    	- Number of past days to display.
  	- Number of past days to be processed by the script.
-2. ikinci grup
- 	- birinci aciklama
- 	- ikinci aciklama
-
+2. The options in the second section are mainly related to processing HTTP requests and responses:
+ 	- Provides options to specify whether the search criteria should be applied to the URL, the request, or the response. Selecting any of these will activate the corresponding options below. For example, if you want to search for 'Vulnerable JavaScript Functions', this will only be possible in HTTP responses.
+ 	- Option to hide specific HTTP methods.
+ 	- "Search HTML comments", "Downloadable file extensions", and "Vulnerable JS Functions" are generally searched within HTTP responses.
+ 	- "Valuable keywords" searches can be applied to URLs, requests, and responses.
+   	- "SQLi-suspect identifiers, XSS-suspect identifiers, LFI-suspect identifiers, SSRF-suspect identifiers, Open Redirect-suspect identifiers, and RCE-suspect identifiers" can be searched in URLs or requests. Unlike "Valuable keywords", which searches free-text, these options detect parameters specifically.
+3. 
+4. 
 
 <img width="1000" alt="Bambdas Code Generator" src="https://github.com/user-attachments/assets/1213ba90-a52e-417c-b32c-32743a7672da">
 
