@@ -238,7 +238,7 @@ Explanations, A little bit more details:
  	- 1
    	- 1
 
-<img width="1000" alt="Bambdas Code Generator" src="https://github.com/user-attachments/assets/1213ba90-a52e-417c-b32c-32743a7672da">
+<img width="1000" alt="Bambdas Code Generator" src="https://github.com/user-attachments/assets/4114abb8-0137-452c-8752-8f6271863f68">
 
 <br/><br/>
 [Another tutorial link](https://www.linkedin.com/pulse/agartha-lfi-rce-auth-sqli-http-js-volkan-dindar)
