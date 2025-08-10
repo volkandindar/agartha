@@ -243,9 +243,10 @@ Explanations, A little bit more details:
 **Option precedence**: The highest priority is Color for tested items, followed by Color for testing scope, and finally Color for parameters/keywords.
 
 The figure above illustrates the following:
-	- Pink indicates the testing scope (Group 3).
- 	- Yellow represents the tested scope (Group 3).
- 	- Cyan highlights matches for the search criteria (Group 2).
+- **Pink** indicates the testing scope (Group 3).
+- **Yellow** represents the tested scope (Group 3).
+- **Cyan** highlights matches for the search criteria (Group 2).
+
 
 <br/><br/>
 [Another tutorial link](https://www.linkedin.com/pulse/agartha-lfi-rce-auth-sqli-http-js-volkan-dindar)
