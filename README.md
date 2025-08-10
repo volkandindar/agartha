@@ -200,10 +200,10 @@ Bambdas are lightweight scripts that run directly within Burp Suite, allowing us
 Explanations, A little bit more details:
 1. Regarding script creation GUI, you can select general settings here. For example:
  	- Processing only in-scope addresses or all domain addresses.
- 	- Hiding specific file extensions.
- 	- Colors for URLs defined in the scope section.
-   	- Colors for URLs that have already been tested.
-   	- Colors for filters defined in Group 2.
+ 	- Hiding specific file extensions or not.
+ 	- Colors for URLs defined in the scope section, located in the first part of Group 3.
+   	- Colors for URLs that have already been tested, located in the second part of Group 3.
+   	- Colors for filters defined mostly in Group 2.
    	- Number of past days to display.
  	- Number of past days to be processed by the script.
 2. ikinci grup
