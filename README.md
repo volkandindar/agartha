@@ -39,8 +39,6 @@ It supports both Unix and Windows file syntaxes, enabling dynamic wordlist gener
 
 <img width="1000" alt="Directory Traversal/Local File Inclusion wordlist" src="https://github.com/volkandindar/agartha/assets/50321735/b457e6c2-0829-4959-84aa-9116886b99f7"><br/><br/>
 
-
-
 ## Remote Code Execution / Command Injection
 It generates dynamic wordlists for command execution based on the supplied command. It combines various separators and terminators for both Unix and Windows environments.
 - **'URL Encoding'** encodes the output.
