@@ -217,7 +217,7 @@ Explanations, A little bit more details:
    	- The "Already Tested URLs" section contains the list of URLs that have already been tested. The "Color for tested items" option applies here.
  	- The "Black-Listed URLs" section contains URLs you wish to hide from the proxy history.
 
-**Examples of scope definitions**:
+**Examples of definitions**: 
 - /
  	- Root path — includes everything.
 - /portal/users
