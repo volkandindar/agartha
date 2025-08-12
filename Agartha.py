@@ -25,7 +25,7 @@ except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
     sys.exit(1)
 
-VERSION = "2.25"
+VERSION = "2.26"
 #url_regex = r'(log|sign)([-_+%0-9]{0,5})(off|out|in|on)|(expire|kill|terminat|delete|remove)'
 url_regex = r'(log|sign|time)([-_+%0-9]{0,5})(off|out)|(expire|kill|terminat|delete|remove)'
 ext_regex = r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff2|ttf|otf)$'
@@ -299,7 +299,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                 bcheckCode= """
 metadata:
     language: v2-beta
-    name: "Command Injection (RCE) Fuzzing"
+    name: "Command Injection (RCE) Fuzzing - Agartha"
     description: "Command Injection is a security flaw where attackers execute unauthorized commands on a system by exploiting unvalidated user input."
     author: "Agartha - Auto-Generated BCheck Code"
     tags: "RCE", "RCE Injection"
@@ -321,7 +321,7 @@ run for each:
                 bcheckCode= """
 metadata:
     language: v2-beta
-    name: "LFI Injection Fuzzing"
+    name: "LFI Injection Fuzzing - Agartha"
     description: "Local File Inclusion (LFI) is a security vulnerability where attackers can access and execute files on a server by exploiting improper input validation. This can lead to unauthorized access to sensitive data and system compromise."
     author: "Agartha - Auto-Generated BCheck Code"
     tags: "LFI", "LFI Injection"
@@ -343,7 +343,7 @@ run for each:
                 bcheckCode= """
 metadata:
     language: v2-beta
-    name: "SQL Injection Fuzzing"
+    name: "SQL Injection Fuzzing - Agartha"
     description: "SQL injection is a security vulnerability where attackers insert malicious SQL code into a query, allowing them to manipulate or access the database improperly."
     author: "Agartha - Auto-Generated BCheck Code"
     tags: "SQLi", "SQL Injection"
