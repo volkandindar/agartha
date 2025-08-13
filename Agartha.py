@@ -25,7 +25,7 @@ except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
     sys.exit(1)
 
-VERSION = "2.26"
+VERSION = "2.27"
 #url_regex = r'(log|sign)([-_+%0-9]{0,5})(off|out|in|on)|(expire|kill|terminat|delete|remove)'
 url_regex = r'(log|sign|time)([-_+%0-9]{0,5})(off|out)|(expire|kill|terminat|delete|remove)'
 ext_regex = r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff2|ttf|otf)$'
@@ -308,9 +308,9 @@ define:
     issueDetail = `Command Injection on Path {latest.request.url}`
     references = `
     References:
-    - https://portswigger.net/web-security/os-command-injection
-    - https://owasp.org/www-community/attacks/Command_Injection
-    - https://cheatsheetseries.owasp.org/cheatsheets/OS_Command_Injection_Defense_Cheat_Sheet.html`
+    https://portswigger.net/web-security/os-command-injection
+    https://owasp.org/www-community/attacks/Command_Injection
+    https://cheatsheetseries.owasp.org/cheatsheets/OS_Command_Injection_Defense_Cheat_Sheet.html`
     issueRemediation = `Command Injection (RCE): To remediate Command Injection (RCE) issues, developers should adopt best practices such as using parameterized queries or prepared statements, which ensure user inputs are treated as data rather than executable code. Validating and sanitizing all user inputs to filter out malicious characters and patterns is essential. Running web applications with the least privileges necessary can limit the impact of potential exploits. Implementing robust error handling and avoiding the display of detailed error messages can prevent attackers from gaining insights into the system. Regular security audits and code reviews are crucial to identify and address potential vulnerabilities early on. By integrating these practices into the development lifecycle, organizations can significantly mitigate the risk of Command Injection attacks and enhance their overall security posture.
      {references}`
 
@@ -330,9 +330,8 @@ define:
     issueDetail = `Local File Inclusion on Path {latest.request.url}`
     references = `
     References:
-    - https://portswigger.net/web-security/file-path-traversal
-    - https://owasp.org/www-project-web-security-testing-guide/v42/4-Web_Application_Security_Testing/07-Input_Validation_Testing/11.1-Testing_for_Local_File_Inclusion
-    - https://owasp.org/www-project-web-security-testing-guide/v42/4-Web_Application_Security_Testing/07-Input_Validation_Testing/11.1-Testing_for_Local_File_Inclusion`
+    https://portswigger.net/web-security/file-path-traversal
+    https://owasp.org/www-project-web-security-testing-guide/v42/4-Web_Application_Security_Testing/07-Input_Validation_Testing/11.1-Testing_for_Local_File_Inclusion`
     issueRemediation = `Local File Inclusion (LFI): To remediate LFI issues, developers should validate and sanitize all user inputs, ensuring only expected characters are allowed and rejecting suspicious patterns. Implementing a whitelist of allowed files and directories can prevent unauthorized access. Running web applications with the least privileges necessary can limit the impact of potential exploits. Robust error handling and avoiding the display of detailed error messages can prevent attackers from gaining insights into the system. Regular security audits and code reviews are crucial to identify and address potential vulnerabilities early on. By integrating these practices into the development lifecycle, organizations can significantly mitigate the risk of LFI attacks and enhance their overall security posture.
      {references}`
 
@@ -352,9 +351,9 @@ define:
     issueDetail = `SQL Injection on Path {latest.request.url}`
     references = `
     References:
-    - https://portswigger.net/web-security/sql-injection
-    - https://owasp.org/www-community/attacks/SQL_Injection
-    - https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html`
+    https://portswigger.net/web-security/sql-injection
+    https://owasp.org/www-community/attacks/SQL_Injection
+    https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html`
     issueRemediation = `SQL injection is a critical security vulnerability that allows attackers to manipulate and execute unauthorized SQL queries, potentially compromising the integrity and confidentiality of a database. To remediate SQL injection, developers should adopt best practices such as using parameterized queries or prepared statements, which ensure that user inputs are treated as data rather than executable code. Additionally, employing stored procedures can help encapsulate SQL logic and reduce direct interaction with the database. Input validation and sanitization are essential to filter out malicious characters and patterns. Implementing robust error handling and avoiding the display of detailed error messages can prevent attackers from gaining insights into the database structure. Regular security audits and code reviews are also crucial to identify and address potential vulnerabilities early on. By integrating these practices into the development lifecycle, organizations can significantly mitigate the risk of SQL injection attacks and enhance their overall security posture.
      {references}`
 
