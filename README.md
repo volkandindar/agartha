@@ -261,7 +261,7 @@ If you update or modify a script that has already been created, there are a few 
  	1. If you want the modified script to be active from that point onward, no additional steps are required—simply click Apply.
  	2. If you want the modified script to process the entire proxy history, you must either re-enable Bambda Mode, or toggle the boolean resetScreen parameter inside the script:
 		```
-		// 'true' clears colors and notes  
+		// 'true' clears colors/notes and the script does not work
 		// 'false' executes the script  
 		boolean resetScreen = false; // or true
 		
