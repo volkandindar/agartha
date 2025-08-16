@@ -58,7 +58,7 @@ It generates payloads for various types of SQL injection attacks, including Stac
 BCheck is Burp Suite's framework for creating and importing custom scan checks. These user-defined checks run alongside Burp Scanner’s built-in routines, allowing you to tailor scans to specific vulnerabilities or testing needs. By using BChecks, you can extend Burp’s scanning capabilities and streamline your workflow for more targeted and efficient assessments.
 Now you can generate the code automatically:
 
-<img width="1000" alt="BCheck Code Generator" src="https://github.com/user-attachments/assets/6d54f9a0-7350-4b1f-baeb-449d88f21f76">
+<img width="1000" alt="BCheck Code Generator" src="https://github.com/user-attachments/assets/2da25e94-b8d6-441a-baef-1b829f877051">
 
 - You can click the “**Generate the Payloads**” button in the blue box above to create a classic wordlist, which can be used manually in Burp's Intruder or Repeater.
 - Now, you also have the option to click the “**Generate payloads for BCheck**” button in the red box to generate the same payloads formatted in BCheck syntax, ready to be used in automated scans.
