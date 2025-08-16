@@ -254,7 +254,9 @@ The figure above illustrates the following:
 
 If you update or modify a script that has already been created, there are a few important points to keep in mind:
 - If your script is set as Permanent (application-wide), you will need to reload it by following these steps:
+
 	Bambda Mode > Load
+
 - If your script is set as Temporary (project-based), you generally have two options:
  	1. If you want the modified script to be active from that point onward, no additional steps are required—simply click Apply.
  	2. If you want the modified script to process the entire history, you must either re-enable Bambda Mode, or toggle the boolean resetScreen parameter inside the script:
