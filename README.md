@@ -252,7 +252,7 @@ The figure above illustrates the following:
 - **Yellow** represents the tested scope (the second part of group 3).
 - **Cyan** highlights matches for the search criteria (Group 2). In addition, you can see which criterion matched in the 'Notes' section of each HTTP call.
 
-If you update or modify a script that has already been created, there are a few important points to keep in mind:
+If you later update or modify a script that has already been created, there are a few important points to keep in mind:
 - If you set your script as Permanent (application-wide), you will need to reload it by following these steps:
 
 		Bambda Mode > Load
