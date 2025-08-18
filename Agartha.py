@@ -26,7 +26,7 @@ except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
     sys.exit(1)
 
-VERSION = "2.39"
+VERSION = "2.40"
 #url_regex = r'(log|sign)([-_+%0-9]{0,5})(off|out|in|on)|(expire|kill|terminat|delete|remove)'
 url_regex = r'(log|sign|time)([-_+%0-9]{0,5})(off|out)|(expire|kill|terminat|delete|remove)'
 ext_regex = r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff2|ttf|otf)$'
@@ -1708,7 +1708,7 @@ given request then
                 bambdas += "// Black-Listed file extensions\n\n"
 
         if (self._cbBambdasSearchinReq.isSelected() or self._cbBambdasSearchinURL.isSelected()) and (self._cbBambdasSQLi.isSelected() or self._cbBambdasXSS.isSelected() or self._cbBambdasLFI.isSelected() or self._cbBambdasSSRF.isSelected() or self._cbBambdasORed.isSelected() or self._cbBambdasRCE.isSelected()):
-            bambdas += "// Suspicious parameters OWASP Top 25\n"
+            bambdas += "// Suspicious parameters\n"
             bambdas += "Map<String, List<String>> attacksKeyWords = new HashMap<>();\n"
             bambdas += "String[] paramsArray;\n"
             bambdas += "List<String> paramsArrayTrimmed = new ArrayList<>();\n\n"
@@ -1779,7 +1779,7 @@ given request then
                 bambdas += "attacksKeyWords.put(\"RCE\", new ArrayList<>(paramsArrayTrimmed));\n"
                 bambdas += "// RCE suspicious keywords\n\n"
 
-            bambdas += "// Suspicious parameters OWASP Top 25\n"
+            bambdas += "// Suspicious parameters\n"
 
         if self._cbBambdasHTTPMethods.isSelected():
             httpMethods = "{"
@@ -1972,7 +1972,7 @@ for (String httpMethod : httpMethods)
                 bambdas += "\tList<Pattern> patterns = new ArrayList<>();"
 
             bambdas += """
-    // Suspicious parameters OWASP Top 25
+    // Suspicious parameters
     for (Map.Entry<String, List<String>> entry : attacksKeyWords.entrySet()) {
         String attackType = entry.getKey();                     //Attack type
         List<String> attackParams = entry.getValue();           //all keywords/parameters
@@ -2035,7 +2035,7 @@ for (String httpMethod : httpMethods)
                 }
 """
             bambdas +="\t}\n"
-            bambdas +="\t// Suspicious parameters OWASP Top 25\n\n"
+            bambdas +="\t// Suspicious parameters\n\n"
 
         if self._cbBambdasforWhat.getSelectedIndex() == 0:
             bambdas +="\n\t// Highlights suspicious calls\n"
