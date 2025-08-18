@@ -26,7 +26,7 @@ except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
     sys.exit(1)
 
-VERSION = "2.37"
+VERSION = "2.39"
 #url_regex = r'(log|sign)([-_+%0-9]{0,5})(off|out|in|on)|(expire|kill|terminat|delete|remove)'
 url_regex = r'(log|sign|time)([-_+%0-9]{0,5})(off|out)|(expire|kill|terminat|delete|remove)'
 ext_regex = r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff2|ttf|otf)$'
@@ -1475,8 +1475,6 @@ given request then
     def _cbBambdasSearchinResFunc(self, ev):
         if self._cbBambdasSearchinRes.isSelected():
             self._cbBambdasSearchHTMLCommnets.setEnabled(True)
-            if self._cbBambdasSearchHTMLCommnets.isSelected():
-                self._txtBambdasSearchHTMLCommnets.setEnabled(True)
             self._cbBambdasFilesDownloadable.setEnabled(True)
             if self._cbBambdasFilesDownloadable.isSelected():
                 self._txtBambdasFilesDownloadable.setEnabled(True)
@@ -1488,7 +1486,6 @@ given request then
                 self._txtBambdasVulnJSKeywords.setEnabled(True)
         else:
             self._cbBambdasSearchHTMLCommnets.setEnabled(False)
-            self._txtBambdasSearchHTMLCommnets.setEnabled(False)
             self._cbBambdasFilesDownloadable.setEnabled(False)
             self._txtBambdasFilesDownloadable.setEnabled(False)
             self._cbBambdasVulnJS.setEnabled(False)
