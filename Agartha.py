@@ -1998,7 +1998,7 @@ for (String httpMethod : httpMethods)
         }
 
         if (htmlContent)
-            // Regular html content
+            // html content
             for (String attackParam : attackParams)
             {
 """
@@ -2025,7 +2025,7 @@ for (String httpMethod : httpMethods)
             if self._cbBambdasSearchinReq.isSelected():
                 bambdas += """
         else
-            // Either json or xml
+            // json or xml content
             for (Pattern pattern : patterns)
                 if (pattern.matcher(requestBody).find()){
                     suspiciousHit = true;
