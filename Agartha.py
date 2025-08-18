@@ -26,7 +26,7 @@ except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
     sys.exit(1)
 
-VERSION = "2.40"
+VERSION = "2.41"
 #url_regex = r'(log|sign)([-_+%0-9]{0,5})(off|out|in|on)|(expire|kill|terminat|delete|remove)'
 url_regex = r'(log|sign|time)([-_+%0-9]{0,5})(off|out)|(expire|kill|terminat|delete|remove)'
 ext_regex = r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff2|ttf|otf)$'
@@ -1513,6 +1513,11 @@ given request then
             self._txtBambdasExtIgnoreKeywords.setEnabled(False)
 
     def funcBambdasRun(self, ev):
+
+        if self._cbBambdasDisplayDays.getSelectedItem() < self._cbBambdasProcessDays.getSelectedItem():
+            self._lblBambdasNotification2.text = "The display period must not be shorter than the processing period."
+            self._lblBambdasNotification2.setForeground(Color.red)
+            return
         
         for line in self._tbBambdasScopeURLs.getText().splitlines():
             if line.strip().startswith("/*") or line.strip() == "/":
@@ -2276,12 +2281,13 @@ else
 
 
     def _tabBambdasUI(self):
-        self._btnBambdasRun = JButton("Run", actionPerformed=self.funcBambdasRun)
+        self._btnBambdasRun = JButton("               Run              ", actionPerformed=self.funcBambdasRun)
         self._btnBambdasRun.setToolTipText("Generate the Bambdas Script.")
-        self._btnBambdasReset = JButton("Reset", actionPerformed=self.funcBambdasUIReset)
+        self._btnBambdasReset = JButton("               Reset              ", actionPerformed=self.funcBambdasUIReset)
         self._btnBambdasReset.setToolTipText("Reset the screen content.")
 
         self._lblBambdasforWhat = JLabel("Bambdas Script for")
+        self._lblBambdasforWhat.setVisible(False)
         self._lblBambdasforWhat.setToolTipText("Bambdas Script for what!")
         self._cbBambdasforWhat = JComboBox(('View filter - HTTP history', 'Capture Filter'))
         self._cbBambdasforWhat.setEnabled(False)
