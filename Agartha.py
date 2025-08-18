@@ -26,7 +26,7 @@ except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
     sys.exit(1)
 
-VERSION = "2.35"
+VERSION = "2.36"
 #url_regex = r'(log|sign)([-_+%0-9]{0,5})(off|out|in|on)|(expire|kill|terminat|delete|remove)'
 url_regex = r'(log|sign|time)([-_+%0-9]{0,5})(off|out)|(expire|kill|terminat|delete|remove)'
 ext_regex = r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff2|ttf|otf)$'
@@ -2128,8 +2128,6 @@ else
                 self._lblBambdasNotification2.text = "The script has been generated and copied to the clipboard. It includes '" + str(sum(1 for line in self._tbBambdasScopeURLs.text.splitlines() if line.strip().startswith('/'))) + "' scoped, and '" + str(sum(1 for line in self._tbBambdasScopeDoneURLs.text.splitlines() if line.strip().startswith('/'))) + "' tested endpoints - the rest are hidden."
             else:
                 self._lblBambdasNotification2.text = "The script has been generated and copied to the clipboard. It includes '" + str(sum(1 for line in self._tbBambdasScopeURLs.text.splitlines() if line.strip().startswith('/'))) + "' scoped, '" + str(sum(1 for line in self._tbBambdasScopeDoneURLs.text.splitlines() if line.strip().startswith('/'))) + "' tested, and '" + str(sum(1 for line in self._tbBambdasBlackListedURLs.text.splitlines() if line.strip().startswith('/'))) + "' blacklisted endpoints."
-
-        print str(self._lblBambdasNotification2.text)
 
         self.updateBambdasScriptText(bambdas)
 
