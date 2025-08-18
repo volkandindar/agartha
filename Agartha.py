@@ -26,7 +26,7 @@ except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
     sys.exit(1)
 
-VERSION = "2.31"
+VERSION = "2.32"
 #url_regex = r'(log|sign)([-_+%0-9]{0,5})(off|out|in|on)|(expire|kill|terminat|delete|remove)'
 url_regex = r'(log|sign|time)([-_+%0-9]{0,5})(off|out)|(expire|kill|terminat|delete|remove)'
 ext_regex = r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff2|ttf|otf)$'
@@ -51,7 +51,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         callbacks.addSuiteTab(self)
         callbacks.registerContextMenuFactory(self)
         callbacks.issueAlert("The extension has been loaded.")
-        print "Agartha(v" + VERSION + ") is a security tool, which specializes in:\n\t\t* Path Traversal, Local File Inclusion (LFI) payload generations\n\t\t* Command Injection, Remote Code Execution (RCE) payload generations\n\t\t* SQL Injection (SQLi) payload generations\n\t\t* Auth Matrix, based on user sessions to find authentication/authorization violations\n\t\t* HTTP 403 Bypass, including vertical and horizontal privilege escalations\n\t\t* Copy as Javascript, for further XSS exploitation\n\t\t* Bambdas Script Generation, for better scope management and as a testing companion\n\t\t* BCheck Script Generation, to automate payload injections\n\nFor more information and tutorial, please visit:\n\t\thttps://github.com/volkandindar/agartha\n\nAuthor:\n\t\tVolkan Dindar\n\t\tvolkan.dindar@owasp.org"
+        print "Agartha(v" + VERSION + ") is a security tool, which specializes in:\n\t\t* Path Traversal, Local File Inclusion (LFI) payload generations\n\t\t* Command Injection, Remote Code Execution (RCE) payload generations\n\t\t* SQL Injection (SQLi) payload generations\n\t\t* Auth Matrix, based on user sessions to find authentication/authorization violations\n\t\t* HTTP 403 Bypass, including vertical and horizontal privilege escalations\n\t\t* Copy as Javascript, for further XSS exploitation\n\t\t* Bambdas Script Generation simplifies testing scope management and aids in vulnerability discovery.\n\t\t* BCheck Script Generation, to automate payload injections\n\nFor more information and tutorial, please visit:\n\t\thttps://github.com/volkandindar/agartha\n\nAuthor:\n\t\tVolkan Dindar\n\t\tvolkan.dindar@owasp.org"
         self.reset(self)
         return
 
