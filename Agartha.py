@@ -26,7 +26,7 @@ except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
     sys.exit(1)
 
-VERSION = "2.43"
+VERSION = "2.44"
 #url_regex = r'(log|sign)([-_+%0-9]{0,5})(off|out|in|on)|(expire|kill|terminat|delete|remove)'
 url_regex = r'(log|sign|time)([-_+%0-9]{0,5})(off|out)|(expire|kill|terminat|delete|remove)'
 ext_regex = r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff2|ttf|otf)$'
@@ -2312,7 +2312,7 @@ else
         self._lblBambdasColorScope.setToolTipText("Select the highlight color for testing scope.")
         self._cbBambdasColorScope.setToolTipText("Select the highlight color for testing scope.")
         
-        self._lblBambdasColorScopeSecondary = JLabel("Color for tested items")
+        self._lblBambdasColorScopeSecondary = JLabel("Color for tested URLs")
         self._cbBambdasColorScopeSecondary = JComboBox(('NONE', 'BLUE', 'CYAN', 'GRAY', 'GREEN', 'MAGENTA', 'ORANGE', 'PINK', 'RED', 'YELLOW'))
         self._cbBambdasColorScopeSecondary.setToolTipText("Select the highlight color for tested endpoints")
         self._lblBambdasColorScopeSecondary.setToolTipText("Select the highlight color for tested endpoints")
@@ -2327,9 +2327,9 @@ else
         self._cbBambdasSearchinURL = JCheckBox('in URL', False, itemStateChanged=self._cbBambdasSearchinURLFunc)
         self._cbBambdasSearchinURL.setToolTipText("Search for keywords in URLs.")
         self._cbBambdasSearchinReq = JCheckBox('in Requests', False, itemStateChanged=self._cbBambdasSearchinReqFunc)
-        self._cbBambdasSearchinReq.setToolTipText("Search for keywords in request bodies")
+        self._cbBambdasSearchinReq.setToolTipText("Search for keywords in requests.")
         self._cbBambdasSearchinRes = JCheckBox('in Responses', False, itemStateChanged=self._cbBambdasSearchinResFunc)
-        self._cbBambdasSearchinRes.setToolTipText("Search for keywords in responses")
+        self._cbBambdasSearchinRes.setToolTipText("Search for keywords in responses.")
 
         self._lblBambdasDisplayDays = JLabel("Display window (days)")
         self._cbBambdasDisplayDays = JComboBox(('1 Day', '2 Days', '3 Days', '7 Days', '30 Days', '365 Days'))
