@@ -26,7 +26,7 @@ except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
     sys.exit(1)
 
-VERSION = "2.42"
+VERSION = "2.43"
 #url_regex = r'(log|sign)([-_+%0-9]{0,5})(off|out|in|on)|(expire|kill|terminat|delete|remove)'
 url_regex = r'(log|sign|time)([-_+%0-9]{0,5})(off|out)|(expire|kill|terminat|delete|remove)'
 ext_regex = r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff2|ttf|otf)$'
@@ -2342,8 +2342,8 @@ else
 
         self._cbBambdasHTTPMethods = JCheckBox('HTTP methods to ignore.', True, itemStateChanged=self._cbBambdasHTTPMethodsFunc)
         self._txtBambdasHTTPMethods = JTextField("", 100)
-        self._cbBambdasHTTPMethods.setToolTipText("List HTTP methods to exclude from processing (comma-separated).")
-        self._txtBambdasHTTPMethods.setToolTipText("Enter HTTP methods to exclude (e.g., HEAD, OPTIONS).")
+        self._txtBambdasHTTPMethods.setToolTipText("Enter HTTP methods to exclude (comma-separated).")
+        self._cbBambdasHTTPMethods.setToolTipText("List HTTP methods to exclude from processing (e.g., HEAD, OPTIONS).")
 
         self._cbBambdasValuable = JCheckBox('Valuable keywords', False, itemStateChanged=self._cbBambdasValuableFunc)
         self._txtBambdasValuable = JTextField("", 100)
@@ -2377,8 +2377,8 @@ else
     
         self._cbBambdasORed = JCheckBox('Open Redirect-suspect identifiers', False, itemStateChanged=self._cbBambdasORedFunc)
         self._txtBambdasORedKeywords = JTextField("", 100)
-        self._cbBambdasORed.setToolTipText("Keywords/parameter names that may indicate Open Redirect injection (comma-separated).")
-        self._txtBambdasORedKeywords.setToolTipText("Flag items containing potential Redirect-suspect indicators.")
+        self._txtBambdasORedKeywords.setToolTipText("Keywords/parameter names that may indicate Open Redirect injection (comma-separated).")
+        self._cbBambdasORed.setToolTipText("Flag items containing potential Open Redirect indicators.")
     
         self._cbBambdasRCE = JCheckBox('RCE-suspect identifiers', False, itemStateChanged=self._cbBambdasRCEFunc)
         self._txtBambdasRCEKeywords = JTextField("", 100)
@@ -2392,7 +2392,7 @@ else
     
         self._cbBambdasExtIgnore = JCheckBox('File extensions to ignore', True, itemStateChanged=self._cbBambdasExtIgnoreFunc)
         self._txtBambdasExtIgnoreKeywords = JTextField("", 100)
-        self._txtBambdasExtIgnoreKeywords.setToolTipText("File extensions to exclude from processing.")
+        self._txtBambdasExtIgnoreKeywords.setToolTipText("File extensions to exclude from processing (comma-separated).")
         self._cbBambdasExtIgnore.setToolTipText("Exclude items with these file extensions.")
 
         __tabBambdasPanelTop_Left = JPanel()
