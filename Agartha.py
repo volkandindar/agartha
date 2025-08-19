@@ -26,7 +26,7 @@ except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
     sys.exit(1)
 
-VERSION = "2.44"
+VERSION = "2.45"
 #url_regex = r'(log|sign)([-_+%0-9]{0,5})(off|out|in|on)|(expire|kill|terminat|delete|remove)'
 url_regex = r'(log|sign|time)([-_+%0-9]{0,5})(off|out)|(expire|kill|terminat|delete|remove)'
 ext_regex = r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff2|ttf|otf)$'
@@ -2347,7 +2347,7 @@ else
 
         self._cbBambdasValuable = JCheckBox('Valuable keywords', False, itemStateChanged=self._cbBambdasValuableFunc)
         self._txtBambdasValuable = JTextField("", 100)
-        self._txtBambdasValuable.setToolTipText("Keywords that mark requests or responses as important (comma-separated).")
+        self._txtBambdasValuable.setToolTipText("Keywords that mark as important (comma-separated).")
         self._cbBambdasValuable.setToolTipText("Flag items containing high-value keywords.")
         
         self._cbBambdasFilesDownloadable = JCheckBox('Downloadable file extensions', False, itemStateChanged=self._cbBambdasFilesDownFunc)
