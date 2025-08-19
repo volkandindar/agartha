@@ -3940,7 +3940,7 @@ else
         _cbDictDepthPanel = JPanel(FlowLayout(FlowLayout.LEADING, 10, 0))
         _cbDictDepthPanel.add(self._cbDictDepth)
         self._cbDictCommandInjEncoding = JCheckBox('URL Encoding', False)
-        self._cbDictCommandInjEncoding.setToolTipText("Apply encoding to generated payloads.")
+        self._cbDictCommandInjEncoding.setToolTipText("Encode the payload output.")
         self._cbDictCommandInjOpt = JPanel(FlowLayout(FlowLayout.LEADING, 10, 0))
         self._cbDictCommandInjOpt.add(self._cbDictCommandInjEncoding)
         self._cbDictCommandInjOpt.setVisible(False)
