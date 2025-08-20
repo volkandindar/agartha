@@ -1966,7 +1966,7 @@ for (String httpMethod : httpMethods)
                 suspiciousHit = true;
                 if (notesBuilder.length() > 0)
                     notesBuilder.append(", ");
-                notesBuilder.append(pattern.toString().replace("\\\\", "")  + " (VulnJSFunc)");
+                notesBuilder.append(pattern.toString().replace("\\\\", "")  + " - (VulnJSFunc)");
             }
     }
     // check from response
