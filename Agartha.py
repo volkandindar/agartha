@@ -26,7 +26,7 @@ except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
     sys.exit(1)
 
-VERSION = "2.64"
+VERSION = "2.65"
 #url_regex = r'(log|sign)([-_+%0-9]{0,5})(off|out|in|on)|(expire|kill|terminat|delete|remove)'
 url_regex = r'(log|sign|time)([-_+%0-9]{0,5})(off|out)|(expire|kill|terminat|delete|remove)'
 ext_regex = r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff2|ttf|otf)$'
@@ -2064,11 +2064,9 @@ for (String httpMethod : httpMethods)
     }
 """
         bambdas += """
-    return true;
 // End processing window
 }
-else
-    return true;
+return true;
 """
         allUrls = False
         allUrlsBlacklisted = False
