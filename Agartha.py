@@ -1899,7 +1899,7 @@ for (String httpMethod : httpMethods)
             suspiciousHit = true;
             if (notesBuilder.length() > 0)
                 notesBuilder.append(", ");
-            notesBuilder.append(pattern + " (ValuableWord-Url)");
+            notesBuilder.append(pattern + " (ValuableWord-URL)");
         }
     // ValuableWord check from url
 """
@@ -2013,7 +2013,7 @@ for (String httpMethod : httpMethods)
                     suspiciousHit = true;
                     if (notesBuilder.length() > 0)
                         notesBuilder.append(", ");
-                    notesBuilder.append(attackParam + " (" + attackType + "-Url param)");
+                    notesBuilder.append(attackParam + " (" + attackType + "-URL param)");
                 }
 """
             if self._cbBambdasSearchinReq.isSelected():
