@@ -2013,7 +2013,7 @@ for (String httpMethod : httpMethods)
                     suspiciousHit = true;
                     if (notesBuilder.length() > 0)
                         notesBuilder.append(", ");
-                    notesBuilder.append(attackParam + " (" + attackType + "-Url)");
+                    notesBuilder.append(attackParam + " (" + attackType + "-Url param)");
                 }
 """
             if self._cbBambdasSearchinReq.isSelected():
@@ -2022,7 +2022,7 @@ for (String httpMethod : httpMethods)
                     suspiciousHit = true;
                     if (notesBuilder.length() > 0)
                         notesBuilder.append(", ");
-                    notesBuilder.append(attackParam + " (" + attackType + "-Req)");
+                    notesBuilder.append(attackParam + " (" + attackType + "-Req param)");
                 }
 """
             bambdas += "\t\t\t}\n"
@@ -2036,7 +2036,7 @@ for (String httpMethod : httpMethods)
                     suspiciousHit = true;
                     if (notesBuilder.length() > 0)
                         notesBuilder.append(", ");
-                    notesBuilder.append(pattern.toString().replace("\\\\", "") + " (" + attackType + "-Req)");
+                    notesBuilder.append(pattern.toString().replace("\\\\", "") + " (" + attackType + "-Req param)");
                 }
 """
             bambdas +="\t}\n"
