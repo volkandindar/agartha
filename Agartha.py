@@ -1843,7 +1843,7 @@ for (String httpMethod : httpMethods)
 """
             if self._cbBambdasSearchinRes.isSelected():
                 bambdas += """
-    // High-value keyword — from response body
+    // High-value keyword - from response body
     for (Pattern pattern : patterns)
         if (pattern.matcher(responseBody).find()){
             suspiciousHit = true;
@@ -1854,7 +1854,7 @@ for (String httpMethod : httpMethods)
 """
             if self._cbBambdasSearchinReq.isSelected():
                 bambdas += """
-    // High-value keyword — from request body
+    // High-value keyword - from request body
     for (Pattern pattern : patterns)
         if (pattern.matcher(requestBody).find()){
             suspiciousHit = true;
@@ -1865,7 +1865,7 @@ for (String httpMethod : httpMethods)
 """
             if self._cbBambdasSearchinURL.isSelected():
                 bambdas += """
-    // High-value keyword — from URL
+    // High-value keyword - from URL
     for (Pattern pattern : patterns)
         if (pattern.matcher(path).find()){
             suspiciousHit = true;
