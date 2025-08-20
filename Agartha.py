@@ -1814,7 +1814,7 @@ given request then
                 bambdas += "String[] fileExtensions = " + fileExtensions + ";\n"
                 bambdas += "// Potentially downloadable file extensions\n\n"
 
-        if self._tbBambdasBlackListedURLs.getText() != '/':
+        if self._tbBambdasBlackListedURLs.getText() != '/' and self._tbBambdasBlackListedURLs.getText().strip() and self._tbBambdasBlackListedURLs.getText() != self._txBambdasBlackListedURLs:
             bambdas += "// Apply blacklist to skip unwanted URLs\n"
             bambdas += "for (String targetPath : targetBlackListUrls)\n"
             bambdas += "    if (targetPath != null && !targetPath.trim().isEmpty() && Pattern.compile(targetPath, Pattern.CASE_INSENSITIVE).matcher(path).find())\n"
