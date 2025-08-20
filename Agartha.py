@@ -26,7 +26,7 @@ except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
     sys.exit(1)
 
-VERSION = "2.45"
+VERSION = "2.46"
 #url_regex = r'(log|sign)([-_+%0-9]{0,5})(off|out|in|on)|(expire|kill|terminat|delete|remove)'
 url_regex = r'(log|sign|time)([-_+%0-9]{0,5})(off|out)|(expire|kill|terminat|delete|remove)'
 ext_regex = r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff2|ttf|otf)$'
@@ -1656,8 +1656,8 @@ given request then
             targetPaths += "}"
             bambdas += "String[] targetPathsDone = " + targetPaths + ";\n"
         else:
-            # by default includes all - /
-            bambdas += "String[] targetPathsDone = {\"/.*\"};\n"
+            # by default includes nothing - /
+            bambdas += "String[] targetPathsDone = {\"/YouCanPutTestedURLsHere.*\"};\n"
         
         bambdas += "// You can add completed URLs to this list once the security assessment is done!\n"
         bambdas += "// Tested URLs list\n\n"
