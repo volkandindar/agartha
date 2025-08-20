@@ -260,7 +260,7 @@ If you later update or modify a script that has already been created, there are 
 
 		Bambda Script mode > Load
 
-  <img width="800" alt="Bambdas Code Generator" src="https://github.com/user-attachments/assets/819a2a11-e0b3-450c-95bc-391615b7bcc3">
+  <img width="800" alt="Bambdas Code Generator" src="https://github.com/user-attachments/assets/0209b389-423c-4918-bae1-226ed35a36df">
 
 - If you use your script as Temporary (project-based), you generally have two options:
  	1. If you want the modified script to be active from that point onward, no additional steps are required—simply click Apply.
