@@ -258,7 +258,9 @@ The figure above illustrates the following:
 If you later update or modify a script that has already been created, there are a few important points to keep in mind:
 - If you set your script as Permanent (application-wide), you will need to reload it by following these steps:
 
-		Bambda Mode > Load
+		Bambda Script mode > Load
+
+  <img width="800" alt="Bambdas Code Generator" src="https://github.com/user-attachments/assets/819a2a11-e0b3-450c-95bc-391615b7bcc3">
 
 - If you use your script as Temporary (project-based), you generally have two options:
  	1. If you want the modified script to be active from that point onward, no additional steps are required—simply click Apply.
