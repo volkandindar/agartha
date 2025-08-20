@@ -26,7 +26,7 @@ except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
     sys.exit(1)
 
-VERSION = "2.47"
+VERSION = "2.48"
 #url_regex = r'(log|sign)([-_+%0-9]{0,5})(off|out|in|on)|(expire|kill|terminat|delete|remove)'
 url_regex = r'(log|sign|time)([-_+%0-9]{0,5})(off|out)|(expire|kill|terminat|delete|remove)'
 ext_regex = r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff2|ttf|otf)$'
@@ -2352,8 +2352,8 @@ else
         
         self._cbBambdasFilesDownloadable = JCheckBox('Downloadable file extensions', False, itemStateChanged=self._cbBambdasFilesDownFunc)
         self._txtBambdasFilesDownloadable = JTextField("", 100)
-        self._txtBambdasFilesDownloadable.setToolTipText("Common file extensions flagged as potentially downloadable (comma-separated).")
-        self._cbBambdasFilesDownloadable.setToolTipText("Common file extensions flagged as potentially downloadable")
+        self._txtBambdasFilesDownloadable.setToolTipText("Mark items with these extensions as suspicious, potentially downloadable (comma-separated).")
+        self._cbBambdasFilesDownloadable.setToolTipText("Flag responses containing files suspected to be downloadable")
 
         self._cbBambdasSQLi = JCheckBox('SQLi-suspect identifiers', False, itemStateChanged=self._cbBambdasSQLiFunc)
         self._txtBambdasSQLiKeywords = JTextField("", 100)
