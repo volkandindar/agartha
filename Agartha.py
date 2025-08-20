@@ -26,7 +26,7 @@ except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
     sys.exit(1)
 
-VERSION = "2.62"
+VERSION = "2.63"
 #url_regex = r'(log|sign)([-_+%0-9]{0,5})(off|out|in|on)|(expire|kill|terminat|delete|remove)'
 url_regex = r'(log|sign|time)([-_+%0-9]{0,5})(off|out)|(expire|kill|terminat|delete|remove)'
 ext_regex = r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff2|ttf|otf)$'
@@ -1615,7 +1615,7 @@ given request then
             bambdas += "String[] targetPaths = {\"/.*\"};\n"
         bambdas += "// Define the URLs you want to actively assess here.\n\n"
 
-        if self._tbBambdasBlackListedURLs.getText() != '/':
+        if self._tbBambdasBlackListedURLs.getText() != '/' and self._tbBambdasBlackListedURLs.getText().strip() and self._tbBambdasBlackListedURLs.getText() != self._txBambdasBlackListedURLs:
             bambdas += "// Black-Listed / Unwanted URLs\n"
             if self._tbBambdasBlackListedURLs.text != self._txBambdasBlackListedURLs:
                 targetBlackListUrls = "{"
@@ -1677,8 +1677,7 @@ given request then
         bambdas += "    return false;\n\n"
 
         bambdas += "// General vars\n"
-        if (self._cbBambdasSearchinURL.isSelected() or self._cbBambdasSearchinReq.isSelected() or self._cbBambdasSearchinRes.isSelected()) and (self._cbBambdasSQLi.isSelected() or self._cbBambdasXSS.isSelected() or self._cbBambdasLFI.isSelected() or self._cbBambdasSSRF.isSelected() or self._cbBambdasORed.isSelected() or self._cbBambdasRCE.isSelected() or self._cbBambdasSearchHTMLCommnets.isSelected() or self._cbBambdasFilesDownloadable.isSelected() or self._cbBambdasVulnJS.isSelected() or self._cbBambdasValuable.isSelected()):
-            bambdas += "boolean suspiciousHit = false;\n"
+        bambdas += "boolean suspiciousHit = false;\n"
         bambdas += "StringBuilder notesBuilder = new StringBuilder();\n"
         if self._cbBambdasSearchinRes.isSelected() and (self._cbBambdasSearchHTMLComments.isSelected() or self._cbBambdasFilesDownloadable.isSelected() or self._cbBambdasValuable.isSelected() or self._cbBambdasVulnJS.isSelected()):
             bambdas += "String responseBody = requestResponse.response().bodyToString();\n"
