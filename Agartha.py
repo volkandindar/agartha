@@ -26,7 +26,7 @@ except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
     sys.exit(1)
 
-VERSION = "2.60"
+VERSION = "2.61"
 #url_regex = r'(log|sign)([-_+%0-9]{0,5})(off|out|in|on)|(expire|kill|terminat|delete|remove)'
 url_regex = r'(log|sign|time)([-_+%0-9]{0,5})(off|out)|(expire|kill|terminat|delete|remove)'
 ext_regex = r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff2|ttf|otf)$'
@@ -1638,26 +1638,27 @@ given request then
                 bambdas += "// Add patterns here to ignore noise (health checks, static banners, monitor, etc.).\n"
             bambdas += "\n"
 
-        bambdas += "// Already-tested URLs (mark as completed).\n"
-        if self._tbBambdasScopeDoneURLs.text != self._txBambdasScopeDoneURLs and self._tbBambdasScopeDoneURLs.text.strip() != "":
-            targetPaths = "{"
-            for line in self._tbBambdasScopeDoneURLs.text.splitlines():
-                if  line.strip() == "":
-                    pass
-                elif not line.strip().startswith("/"):
-                    self._lblBambdasNotification2.text = "All URLs in Already Tested URLs should start with '/'"
-                    self._lblBambdasNotification2.setForeground(Color.red)
-                    return
-                else:
-                    targetPaths += "\"" + (line.strip().replace("*",".*") + ".*").replace(".*.*", ".*") + "\", "
-            if targetPaths != "{":
-                targetPaths = targetPaths[:-2]
-            targetPaths += "}"
-            bambdas += "String[] targetPathsDone = " + targetPaths + ";\n"
-        else:
-            # by default includes nothing - /
-            bambdas += "String[] targetPathsDone = {\"/YouCanPutTestedURLsHere.*\"};\n"
-        bambdas += "// Move stable/assessed endpoints here to avoid re-triage.\n\n"
+        if self._tbBambdasBlackListedURLs.getText() == '/' or self._cbBambdasColorScopeSecondary.getSelectedIndex() != 0:
+            bambdas += "// Already-tested URLs (mark as completed).\n"
+            if self._tbBambdasScopeDoneURLs.text != self._txBambdasScopeDoneURLs and self._tbBambdasScopeDoneURLs.text.strip() != "":
+                targetPaths = "{"
+                for line in self._tbBambdasScopeDoneURLs.text.splitlines():
+                    if  line.strip() == "":
+                        pass
+                    elif not line.strip().startswith("/"):
+                        self._lblBambdasNotification2.text = "All URLs in Already Tested URLs should start with '/'"
+                        self._lblBambdasNotification2.setForeground(Color.red)
+                        return
+                    else:
+                        targetPaths += "\"" + (line.strip().replace("*",".*") + ".*").replace(".*.*", ".*") + "\", "
+                if targetPaths != "{":
+                    targetPaths = targetPaths[:-2]
+                targetPaths += "}"
+                bambdas += "String[] targetPathsDone = " + targetPaths + ";\n"
+            else:
+                # by default includes nothing - /
+                bambdas += "String[] targetPathsDone = {\"/YouCanPutTestedURLsHere.*\"};\n"
+            bambdas += "// Move stable/assessed endpoints here to avoid re-triage.\n\n"
 
         bambdas += "// Reset mode: clear all highlights and notes, then exit.\n"
         bambdas += "if (resetScreen) {\n"
