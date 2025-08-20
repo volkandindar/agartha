@@ -26,7 +26,7 @@ except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
     sys.exit(1)
 
-VERSION = "2.46"
+VERSION = "2.47"
 #url_regex = r'(log|sign)([-_+%0-9]{0,5})(off|out|in|on)|(expire|kill|terminat|delete|remove)'
 url_regex = r'(log|sign|time)([-_+%0-9]{0,5})(off|out)|(expire|kill|terminat|delete|remove)'
 ext_regex = r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff2|ttf|otf)$'
@@ -1875,7 +1875,7 @@ for (String httpMethod : httpMethods)
             suspiciousHit = true;
             if (notesBuilder.length() > 0)
                 notesBuilder.append(", ");
-            notesBuilder.append(pattern + "(ValuableWord-Res)");
+            notesBuilder.append(pattern + " (ValuableWord-Res)");
         }
     // check from response
 """
@@ -1887,7 +1887,7 @@ for (String httpMethod : httpMethods)
             suspiciousHit = true;
             if (notesBuilder.length() > 0)
                 notesBuilder.append(", ");
-            notesBuilder.append(pattern + "(ValuableWord-Req)");
+            notesBuilder.append(pattern + " (ValuableWord-Req)");
         }
     // ValuableWord check from request
 """
@@ -1899,7 +1899,7 @@ for (String httpMethod : httpMethods)
             suspiciousHit = true;
             if (notesBuilder.length() > 0)
                 notesBuilder.append(", ");
-            notesBuilder.append(pattern + "(ValuableWord-Url)");
+            notesBuilder.append(pattern + " (ValuableWord-Url)");
         }
     // ValuableWord check from url
 """
@@ -1927,7 +1927,7 @@ for (String httpMethod : httpMethods)
             matchingFiles.add(matchingFile);
             if (notesBuilder.length() > 0)
                 notesBuilder.append(", ");
-            notesBuilder.append(matchingFile.strip().replace(">", "").replace("\\"", "")).append("(LFI-Content)");
+            notesBuilder.append(matchingFile.strip().replace(">", "").replace("\\"", "")).append(" (Potential-FileDownload)");
         }
     }
     // Check from response
@@ -1948,7 +1948,7 @@ for (String httpMethod : httpMethods)
             matchingComments.add(matchingComment);
             if (notesBuilder.length() > 0)
                 notesBuilder.append(\", \");
-            notesBuilder.append(matchingComment).append(\"(HTML-Comment)\");
+            notesBuilder.append(matchingComment).append(\" (HTML-Comment)\");
         }
     }
     // Search HTML comments
@@ -1966,7 +1966,7 @@ for (String httpMethod : httpMethods)
                 suspiciousHit = true;
                 if (notesBuilder.length() > 0)
                     notesBuilder.append(", ");
-                notesBuilder.append(pattern.toString().replace("\\\\", "")  + "(VulnJSFunc)");
+                notesBuilder.append(pattern.toString().replace("\\\\", "")  + " (VulnJSFunc)");
             }
     }
     // check from response
@@ -2013,7 +2013,7 @@ for (String httpMethod : httpMethods)
                     suspiciousHit = true;
                     if (notesBuilder.length() > 0)
                         notesBuilder.append(", ");
-                    notesBuilder.append(attackParam + "(" + attackType + "-Url)");
+                    notesBuilder.append(attackParam + " (" + attackType + "-Url)");
                 }
 """
             if self._cbBambdasSearchinReq.isSelected():
@@ -2022,7 +2022,7 @@ for (String httpMethod : httpMethods)
                     suspiciousHit = true;
                     if (notesBuilder.length() > 0)
                         notesBuilder.append(", ");
-                    notesBuilder.append(attackParam + "(" + attackType + "-Req)");
+                    notesBuilder.append(attackParam + " (" + attackType + "-Req)");
                 }
 """
             bambdas += "\t\t\t}\n"
@@ -2036,7 +2036,7 @@ for (String httpMethod : httpMethods)
                     suspiciousHit = true;
                     if (notesBuilder.length() > 0)
                         notesBuilder.append(", ");
-                    notesBuilder.append(pattern.toString().replace("\\\\", "") + "(" + attackType + "-Req)");
+                    notesBuilder.append(pattern.toString().replace("\\\\", "") + " (" + attackType + "-Req)");
                 }
 """
             bambdas +="\t}\n"
