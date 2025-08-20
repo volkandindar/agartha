@@ -269,6 +269,7 @@ If you later update or modify a script that has already been created, there are 
 		boolean resetScreen = false; // or true
 		
 		```
+		<img width="1000" alt="Bambdas Code Generator" src="https://github.com/user-attachments/assets/ebb64ddb-9720-4ccd-9a27-988110cfaaa6">
 
 <br/><br/>
 [Another tutorial link](https://www.linkedin.com/pulse/agartha-lfi-rce-auth-sqli-http-js-volkan-dindar)
