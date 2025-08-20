@@ -26,7 +26,7 @@ except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
     sys.exit(1)
 
-VERSION = "2.61"
+VERSION = "2.62"
 #url_regex = r'(log|sign)([-_+%0-9]{0,5})(off|out|in|on)|(expire|kill|terminat|delete|remove)'
 url_regex = r'(log|sign|time)([-_+%0-9]{0,5})(off|out)|(expire|kill|terminat|delete|remove)'
 ext_regex = r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff2|ttf|otf)$'
@@ -1474,7 +1474,7 @@ given request then
 
     def _cbBambdasSearchinResFunc(self, ev):
         if self._cbBambdasSearchinRes.isSelected():
-            self._cbBambdasSearchHTMLCommnets.setEnabled(True)
+            self._cbBambdasSearchHTMLComments.setEnabled(True)
             self._cbBambdasFilesDownloadable.setEnabled(True)
             if self._cbBambdasFilesDownloadable.isSelected():
                 self._txtBambdasFilesDownloadable.setEnabled(True)
@@ -1485,7 +1485,7 @@ given request then
             if self._cbBambdasVulnJS.isSelected():
                 self._txtBambdasVulnJSKeywords.setEnabled(True)
         else:
-            self._cbBambdasSearchHTMLCommnets.setEnabled(False)
+            self._cbBambdasSearchHTMLComments.setEnabled(False)
             self._cbBambdasFilesDownloadable.setEnabled(False)
             self._txtBambdasFilesDownloadable.setEnabled(False)
             self._cbBambdasVulnJS.setEnabled(False)
@@ -1676,11 +1676,11 @@ given request then
             bambdas += "if (!requestResponse.hasResponse())\n"
         bambdas += "    return false;\n\n"
 
-
         bambdas += "// General vars\n"
-        bambdas += "boolean suspiciousHit = false;\n"
+        if (self._cbBambdasSearchinURL.isSelected() or self._cbBambdasSearchinReq.isSelected() or self._cbBambdasSearchinRes.isSelected()) and (self._cbBambdasSQLi.isSelected() or self._cbBambdasXSS.isSelected() or self._cbBambdasLFI.isSelected() or self._cbBambdasSSRF.isSelected() or self._cbBambdasORed.isSelected() or self._cbBambdasRCE.isSelected() or self._cbBambdasSearchHTMLCommnets.isSelected() or self._cbBambdasFilesDownloadable.isSelected() or self._cbBambdasVulnJS.isSelected() or self._cbBambdasValuable.isSelected()):
+            bambdas += "boolean suspiciousHit = false;\n"
         bambdas += "StringBuilder notesBuilder = new StringBuilder();\n"
-        if self._cbBambdasSearchinRes.isSelected() and (self._cbBambdasSearchHTMLCommnets.isSelected() or self._cbBambdasFilesDownloadable.isSelected() or self._cbBambdasValuable.isSelected() or self._cbBambdasVulnJS.isSelected()):
+        if self._cbBambdasSearchinRes.isSelected() and (self._cbBambdasSearchHTMLComments.isSelected() or self._cbBambdasFilesDownloadable.isSelected() or self._cbBambdasValuable.isSelected() or self._cbBambdasVulnJS.isSelected()):
             bambdas += "String responseBody = requestResponse.response().bodyToString();\n"
         if (self._cbBambdasSearchinReq.isSelected() or self._cbBambdasSearchinURL.isSelected()) and (self._cbBambdasSQLi.isSelected() or self._cbBambdasXSS.isSelected() or self._cbBambdasLFI.isSelected() or self._cbBambdasSSRF.isSelected() or self._cbBambdasORed.isSelected() or self._cbBambdasRCE.isSelected() or self._cbBambdasValuable.isSelected()):
             bambdas += "String requestBody  = requestResponse.request().bodyToString();\n"
@@ -1904,7 +1904,7 @@ for (String httpMethod : httpMethods)
         }
     }
 """
-            if self._cbBambdasSearchHTMLCommnets.isSelected():
+            if self._cbBambdasSearchHTMLComments.isSelected():
                 bambdas += """
     // HTML comments in response
     patterns = new ArrayList<>();
@@ -2004,12 +2004,12 @@ for (String httpMethod : httpMethods)
 """
             bambdas +="\t}\n"
             bambdas +="\t// End parameter-based indicators\n\n"
-
-        bambdas +="\n\t// Apply highlight and add a consolidated \"Suspicious:\" note if any hit was found\n"
-        bambdas += "\tif (suspiciousHit) {\n"
-        if self._cbBambdasColorKeyWords.getSelectedIndex() != 0:
-            bambdas += "\t\trequestResponse.annotations().setHighlightColor(HighlightColor."+ self._cbBambdasColorKeyWords.getSelectedItem() + ");\n"
-        bambdas += """
+        if (self._cbBambdasSearchinURL.isSelected() or self._cbBambdasSearchinReq.isSelected() or self._cbBambdasSearchinRes.isSelected()) and (self._cbBambdasSQLi.isSelected() or self._cbBambdasXSS.isSelected() or self._cbBambdasLFI.isSelected() or self._cbBambdasSSRF.isSelected() or self._cbBambdasORed.isSelected() or self._cbBambdasRCE.isSelected() or self._cbBambdasSearchHTMLCommnets.isSelected() or self._cbBambdasFilesDownloadable.isSelected() or self._cbBambdasVulnJS.isSelected() or self._cbBambdasValuable.isSelected()):
+            bambdas +="\n\t// Apply highlight and add a consolidated \"Suspicious:\" note if any hit was found\n"
+            bambdas += "\tif (suspiciousHit) {\n"
+            if self._cbBambdasColorKeyWords.getSelectedIndex() != 0:
+                bambdas += "\t\trequestResponse.annotations().setHighlightColor(HighlightColor."+ self._cbBambdasColorKeyWords.getSelectedItem() + ");\n"
+            bambdas += """
         if (notesBuilder.length() > 0)
             requestResponse.annotations().setNotes("Suspicious: " + notesBuilder.toString());
     }
@@ -2184,7 +2184,7 @@ else
         self._cbBambdasSearchinRes.setSelected(False)
         self._cbBambdasSearchinURL.setSelected(False)
         
-        self._cbBambdasSearchHTMLCommnets.setSelected(False)
+        self._cbBambdasSearchHTMLComments.setSelected(False)
         
         self._txtBambdasExtIgnoreKeywords.text = "js, gif, jpg, png, svg, css, ico, woff2"
         self._txtBambdasExtIgnoreKeywords.setEnabled(True)
@@ -2255,10 +2255,10 @@ else
         
         self._txtBambdasSearchHTMLCommnets = JTextField("The search will occur between the '<!--' and '-->' tags.", 100)
         self._txtBambdasSearchHTMLCommnets.setEnabled(False)
-        self._cbBambdasSearchHTMLCommnets = JCheckBox('Search HTML comments', False)
-        # self._cbBambdasSearchHTMLCommnets.setEnabled(False)
+        self._cbBambdasSearchHTMLComments = JCheckBox('Search HTML comments', False)
+        # self._cbBambdasSearchHTMLComments.setEnabled(False)
         self._txtBambdasSearchHTMLCommnets.setToolTipText("Search HTML comments")
-        self._cbBambdasSearchHTMLCommnets.setToolTipText("Search HTML comments")
+        self._cbBambdasSearchHTMLComments.setToolTipText("Search HTML comments")
 
         self._lblBambdasNotification1 = JLabel(" ")
         self._lblBambdasNotification2 = JLabel("Click 'Run' to generate Bambdas Script!")
@@ -2371,7 +2371,7 @@ else
                     .addComponent(self._lblBambdasProcessDays)
                     .addComponent(self._lblBambdasSearchScope)
                     .addComponent(self._cbBambdasHTTPMethods)
-                    .addComponent(self._cbBambdasSearchHTMLCommnets)
+                    .addComponent(self._cbBambdasSearchHTMLComments)
                     .addComponent(self._cbBambdasFilesDownloadable)
                     .addComponent(self._cbBambdasVulnJS)
                     .addComponent(self._cbBambdasValuable)
@@ -2451,7 +2451,7 @@ else
                     .addComponent(self._cbBambdasHTTPMethods)
                     .addComponent(self._txtBambdasHTTPMethods))
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                    .addComponent(self._cbBambdasSearchHTMLCommnets)
+                    .addComponent(self._cbBambdasSearchHTMLComments)
                     .addComponent(self._txtBambdasSearchHTMLCommnets))
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(self._cbBambdasFilesDownloadable)
