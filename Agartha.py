@@ -2152,7 +2152,7 @@ if (!suspiciousHit) {
         self._cbBambdasColorScopeSecondary.setSelectedIndex(9)
         self._cbBambdasColorKeyWords.setSelectedIndex(0)
         self._cbBambdasDisplayDays.setSelectedIndex(3)
-        self._cbBambdasProcessDays.setSelectedIndex(2)
+        self._cbBambdasProcessDays.setSelectedIndex(3)
         self._tbBambdasScopeURLs.setText(self._txBambdasScopeURLs)
         self._tbBambdasScopeDoneURLs.setText(self._txBambdasScopeDoneURLs)
         self._tbBambdasBlackListedURLs.setText(self._txBambdasBlackListedURLs)
