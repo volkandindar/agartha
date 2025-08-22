@@ -26,7 +26,7 @@ except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
     sys.exit(1)
 
-VERSION = "2.71"
+VERSION = "2.72"
 #url_regex = r'(log|sign)([-_+%0-9]{0,5})(off|out|in|on)|(expire|kill|terminat|delete|remove)'
 url_regex = r'(log|sign|time)([-_+%0-9]{0,5})(off|out)|(expire|kill|terminat|delete|remove)'
 ext_regex = r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff2|ttf|otf)$'
@@ -1949,7 +1949,7 @@ for (String httpMethod : httpMethods)
             // xml body
             for (String attackParam : attackParams)
                 patterns.add(Pattern.compile("<" + attackParams + ">", Pattern.CASE_INSENSITIVE));
-        else if (requestBody.startsWith("{"))
+        else if (requestBody.startsWith("[{") || requestBody.startsWith("{"))
             // json body
             for (String attackParam : attackParams)
                 patterns.add(Pattern.compile("\\\"" + attackParam + "\\\"", Pattern.CASE_INSENSITIVE));
