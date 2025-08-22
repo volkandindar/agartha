@@ -26,7 +26,7 @@ except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
     sys.exit(1)
 
-VERSION = "2.65"
+VERSION = "2.66"
 #url_regex = r'(log|sign)([-_+%0-9]{0,5})(off|out|in|on)|(expire|kill|terminat|delete|remove)'
 url_regex = r'(log|sign|time)([-_+%0-9]{0,5})(off|out)|(expire|kill|terminat|delete|remove)'
 ext_regex = r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff2|ttf|otf)$'
@@ -1668,6 +1668,10 @@ given request then
         bambdas += "}\n"
         bambdas += "// Reset mode: clear all highlights and notes, then exit.\n\n"
         
+        bambdas += "// Display window (days): ignore items older than the selected number of days\n"
+        bambdas += " if (!requestResponse.time().isAfter(ZonedDateTime.now().minusDays(" + self._cbBambdasDisplayDays.getSelectedItem().split()[0] + ")))\n"
+        bambdas += "    return false;\n\n"
+
         if self._cbBambdasScope.isSelected():
             bambdas += "// Display only items that are in scope and have a response.\n"
             bambdas += "if (!requestResponse.hasResponse() || !requestResponse.request().isInScope())\n"
@@ -1831,10 +1835,6 @@ for (String httpMethod : httpMethods)
 """
         else:
             bambdas += "\n"
-        
-        bambdas += "// Display window (days): ignore items older than the selected number of days\n"
-        bambdas += " if (!requestResponse.time().isAfter(ZonedDateTime.now().minusDays(" + self._cbBambdasDisplayDays.getSelectedItem().split()[0] + ")))\n"
-        bambdas += "    return false;\n\n"
         
         bambdas += "// Processing window (days): only analyze items newer than this threshold\n"
         bambdas += "if (requestResponse.time().isAfter(ZonedDateTime.now().minusDays(" + self._cbBambdasProcessDays.getSelectedItem().split()[0] + "))){\n"
