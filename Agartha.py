@@ -26,7 +26,7 @@ except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
     sys.exit(1)
 
-VERSION = "2.68"
+VERSION = "2.69"
 #url_regex = r'(log|sign)([-_+%0-9]{0,5})(off|out|in|on)|(expire|kill|terminat|delete|remove)'
 url_regex = r'(log|sign|time)([-_+%0-9]{0,5})(off|out)|(expire|kill|terminat|delete|remove)'
 ext_regex = r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff2|ttf|otf)$'
@@ -1729,75 +1729,75 @@ for (String httpMethod : httpMethods)
         bambdas += "if (requestResponse.time().isAfter(ZonedDateTime.now().minusDays(" + self._cbBambdasProcessDays.getSelectedItem().split()[0] + "))){\n"
 
         if (self._cbBambdasSearchinReq.isSelected() or self._cbBambdasSearchinURL.isSelected()) and (self._cbBambdasSQLi.isSelected() or self._cbBambdasXSS.isSelected() or self._cbBambdasLFI.isSelected() or self._cbBambdasSSRF.isSelected() or self._cbBambdasORed.isSelected() or self._cbBambdasRCE.isSelected()):
-            bambdas += "// Suspicious parameter registry per attack type\n"
-            bambdas += "Map<String, List<String>> attacksKeyWords = new HashMap<>();\n"
-            bambdas += "String[] paramsArray;\n"
-            bambdas += "List<String> paramsArrayTrimmed = new ArrayList<>();\n\n"
+            bambdas += "\t// Suspicious parameter registry per attack type\n"
+            bambdas += "\n\tMap<String, List<String>> attacksKeyWords = new HashMap<>();\n"
+            bambdas += "\tString[] paramsArray;\n"
+            bambdas += "\tList<String> paramsArrayTrimmed = new ArrayList<>();\n\n"
         
             if self._cbBambdasSQLi.isSelected():
-                bambdas += "// SQLi indicator parameter names\n"
-                bambdas += "paramsArrayTrimmed = new ArrayList<>();\n"
-                bambdas += "String textSQLi = \"" + self._txtBambdasSQLiKeywords.text.strip() + "\";\n"
-                bambdas += "paramsArray = textSQLi.split(\",\\s*\");\n"
-                bambdas += "for (String paramArray : paramsArray)\n"
-                bambdas += "    if(!paramArray.trim().isEmpty())\n"
-                bambdas += "        paramsArrayTrimmed.add(paramArray.trim());\n"
-                bambdas += "attacksKeyWords.put(\"SQLi\", new ArrayList<>(paramsArrayTrimmed));\n\n"
+                bambdas += "\t// SQLi indicator parameter names\n"
+                bambdas += "\tparamsArrayTrimmed = new ArrayList<>();\n"
+                bambdas += "\tString textSQLi = \"" + self._txtBambdasSQLiKeywords.text.strip() + "\";\n"
+                bambdas += "\tparamsArray = textSQLi.split(\",\\s*\");\n"
+                bambdas += "\tfor (String paramArray : paramsArray)\n"
+                bambdas += "\t\tif(!paramArray.trim().isEmpty())\n"
+                bambdas += "\t\t\tparamsArrayTrimmed.add(paramArray.trim());\n"
+                bambdas += "\tattacksKeyWords.put(\"SQLi\", new ArrayList<>(paramsArrayTrimmed));\n\n"
 
             if self._cbBambdasXSS.isSelected():
-                bambdas += "// XSS indicator parameter names\n"
-                bambdas += "paramsArrayTrimmed = new ArrayList<>();\n"
-                bambdas += "String textXSS = \"" + self._txtBambdasXSSKeywords.text.strip() + "\";\n"
-                bambdas += "paramsArray = textXSS.split(\",\\s*\");\n"
-                bambdas += "for (String paramArray : paramsArray)\n"
-                bambdas += "    if(!paramArray.trim().isEmpty())\n"
-                bambdas += "        paramsArrayTrimmed.add(paramArray.trim());\n"
-                bambdas += "attacksKeyWords.put(\"XSS\", new ArrayList<>(paramsArrayTrimmed));\n\n"
+                bambdas += "\t// XSS indicator parameter names\n"
+                bambdas += "\tparamsArrayTrimmed = new ArrayList<>();\n"
+                bambdas += "\tString textXSS = \"" + self._txtBambdasXSSKeywords.text.strip() + "\";\n"
+                bambdas += "\tparamsArray = textXSS.split(\",\\s*\");\n"
+                bambdas += "\tfor (String paramArray : paramsArray)\n"
+                bambdas += "\t\tif(!paramArray.trim().isEmpty())\n"
+                bambdas += "\t\t\tparamsArrayTrimmed.add(paramArray.trim());\n"
+                bambdas += "\tattacksKeyWords.put(\"XSS\", new ArrayList<>(paramsArrayTrimmed));\n\n"
 
             if self._cbBambdasLFI.isSelected():
-                bambdas += "// LFI indicator parameter names (file/path handling)\n"
-                bambdas += "paramsArrayTrimmed = new ArrayList<>();\n"
-                bambdas += "String textLFI = \"" + self._txtBambdasLFIKeywords.text.strip() + "\";\n"
-                bambdas += "paramsArray = textLFI.split(\",\\s*\");\n"
-                bambdas += "for (String paramArray : paramsArray)\n"
-                bambdas += "    if(!paramArray.trim().isEmpty())\n"
-                bambdas += "        paramsArrayTrimmed.add(paramArray.trim());\n"
-                bambdas += "attacksKeyWords.put(\"LFI\", new ArrayList<>(paramsArrayTrimmed));\n\n"
+                bambdas += "\t// LFI indicator parameter names (file/path handling)\n"
+                bambdas += "\tparamsArrayTrimmed = new ArrayList<>();\n"
+                bambdas += "\tString textLFI = \"" + self._txtBambdasLFIKeywords.text.strip() + "\";\n"
+                bambdas += "\tparamsArray = textLFI.split(\",\\s*\");\n"
+                bambdas += "\tfor (String paramArray : paramsArray)\n"
+                bambdas += "\t\tif(!paramArray.trim().isEmpty())\n"
+                bambdas += "\t\t\tparamsArrayTrimmed.add(paramArray.trim());\n"
+                bambdas += "\tattacksKeyWords.put(\"LFI\", new ArrayList<>(paramsArrayTrimmed));\n\n"
 
             if self._cbBambdasSSRF.isSelected():
-                bambdas += "// SSRF indicator parameter names (URLs/redirects)\n"
-                bambdas += "paramsArrayTrimmed = new ArrayList<>();\n"
-                bambdas += "String textSSRF = \"" + self._txtBambdasSSRFKeywords.text.strip() + "\";\n"
-                bambdas += "paramsArray = textSSRF.split(\",\\s*\");\n"
-                bambdas += "for (String paramArray : paramsArray)\n"
-                bambdas += "    if(!paramArray.trim().isEmpty())\n"
-                bambdas += "        paramsArrayTrimmed.add(paramArray.trim());\n"
-                bambdas += "attacksKeyWords.put(\"SSRF\", new ArrayList<>(paramsArrayTrimmed));\n\n"
+                bambdas += "\t// SSRF indicator parameter names (URLs/redirects)\n"
+                bambdas += "\tparamsArrayTrimmed = new ArrayList<>();\n"
+                bambdas += "\tString textSSRF = \"" + self._txtBambdasSSRFKeywords.text.strip() + "\";\n"
+                bambdas += "\tparamsArray = textSSRF.split(\",\\s*\");\n"
+                bambdas += "\tfor (String paramArray : paramsArray)\n"
+                bambdas += "\t\tif(!paramArray.trim().isEmpty())\n"
+                bambdas += "\t\t\tparamsArrayTrimmed.add(paramArray.trim());\n"
+                bambdas += "\tattacksKeyWords.put(\"SSRF\", new ArrayList<>(paramsArrayTrimmed));\n\n"
 
             if self._cbBambdasORed.isSelected():
-                bambdas += "// Open Redirect indicator parameter names\n"
-                bambdas += "paramsArrayTrimmed = new ArrayList<>();\n"
-                bambdas += "String textOR = \"" + self._txtBambdasORedKeywords.text.strip() + "\";\n"
-                bambdas += "paramsArray = textOR.split(\",\\s*\");\n"
-                bambdas += "for (String paramArray : paramsArray)\n"
-                bambdas += "    if(!paramArray.trim().isEmpty())\n"
-                bambdas += "        paramsArrayTrimmed.add(paramArray.trim());\n"
-                bambdas += "attacksKeyWords.put(\"OpenRedirect\", new ArrayList<>(paramsArrayTrimmed));\n\n"
+                bambdas += "\t// Open Redirect indicator parameter names\n"
+                bambdas += "\tparamsArrayTrimmed = new ArrayList<>();\n"
+                bambdas += "\tString textOR = \"" + self._txtBambdasORedKeywords.text.strip() + "\";\n"
+                bambdas += "\tparamsArray = textOR.split(\",\\s*\");\n"
+                bambdas += "\tfor (String paramArray : paramsArray)\n"
+                bambdas += "\t\tif(!paramArray.trim().isEmpty())\n"
+                bambdas += "\t\t\tparamsArrayTrimmed.add(paramArray.trim());\n"
+                bambdas += "\tattacksKeyWords.put(\"OpenRedirect\", new ArrayList<>(paramsArrayTrimmed));\n\n"
 
             if self._cbBambdasRCE.isSelected():
-                bambdas += "// RCE - command-execution indicator parameter names\n"
-                bambdas += "paramsArrayTrimmed = new ArrayList<>();\n"
-                bambdas += "String textRCE = \"" + self._txtBambdasRCEKeywords.text.strip() + "\";\n"
-                bambdas += "paramsArray = textRCE.split(\",\\s*\");\n"
-                bambdas += "for (String paramArray : paramsArray)\n"
-                bambdas += "    if(!paramArray.trim().isEmpty())\n"
-                bambdas += "        paramsArrayTrimmed.add(paramArray.trim());\n"
-                bambdas += "attacksKeyWords.put(\"RCE\", new ArrayList<>(paramsArrayTrimmed));\n\n"
+                bambdas += "\t// RCE - command-execution indicator parameter names\n"
+                bambdas += "\tparamsArrayTrimmed = new ArrayList<>();\n"
+                bambdas += "\tString textRCE = \"" + self._txtBambdasRCEKeywords.text.strip() + "\";\n"
+                bambdas += "\tparamsArray = textRCE.split(\",\\s*\");\n"
+                bambdas += "\tfor (String paramArray : paramsArray)\n"
+                bambdas += "\t\tif(!paramArray.trim().isEmpty())\n"
+                bambdas += "\t\t\tparamsArrayTrimmed.add(paramArray.trim());\n"
+                bambdas += "\tattacksKeyWords.put(\"RCE\", new ArrayList<>(paramsArrayTrimmed));\n\n"
 
-            bambdas += "// End suspicious parameter registry\n\n"
+            bambdas += "\t// End suspicious parameter registry\n\n"
         
         if self._cbBambdasValuable.isSelected() and (self._cbBambdasSearchinReq.isSelected() or self._cbBambdasSearchinRes.isSelected() or self._cbBambdasSearchinURL.isSelected()):
-            bambdas += "// High-value keywords to search\n"
+            bambdas += "\t// High-value keywords to search\n"
             highValueWords = "{"
             for valueWords in [valueWords.strip() for valueWords in self._txtBambdasValuable.text.strip().split(',')]:
                 if valueWords:
@@ -1805,8 +1805,8 @@ for (String httpMethod : httpMethods)
             if highValueWords != "{":
                 highValueWords = highValueWords[:-2] 
             highValueWords += "}"
-            bambdas += "String[] highValueWords = " + highValueWords + ";\n"
-            bambdas += "// High-value keywords to search\n\n"
+            bambdas += "\tString[] highValueWords = " + highValueWords + ";\n"
+            bambdas += "\t// High-value keywords to search\n\n"
 
         if self._cbBambdasSearchinRes.isSelected():
             if self._cbBambdasVulnJS.isSelected():
@@ -1817,9 +1817,9 @@ for (String httpMethod : httpMethods)
                 if vulnJSFunc != "{":
                     vulnJSFunc = vulnJSFunc[:-2] 
                 vulnJSFunc += "}"
-                bambdas += "// Potentially risky JavaScript functions to look for in responses\n"
-                bambdas += "String[] suspiciousFunctions = " + vulnJSFunc + ";\n"
-                bambdas += "// Potentially risky JavaScript functions to look for in responses\n\n"
+                bambdas += "\t// Potentially risky JavaScript functions to look for in responses\n"
+                bambdas += "\tString[] suspiciousFunctions = " + vulnJSFunc + ";\n"
+                bambdas += "\t// Potentially risky JavaScript functions to look for in responses\n\n"
 
             if self._cbBambdasFilesDownloadable.isSelected():
                 fileExtensions = "{"
@@ -1829,198 +1829,201 @@ for (String httpMethod : httpMethods)
                 if fileExtensions != "{":
                     fileExtensions = fileExtensions[:-2] 
                 fileExtensions += "}"
-                bambdas += "// Potentially downloadable file extensions\n"
-                bambdas += "String[] fileExtensions = " + fileExtensions + ";\n"
-                bambdas += "// Potentially downloadable file extensions\n\n"
+                bambdas += "\t// Potentially downloadable file extensions\n"
+                bambdas += "\tString[] fileExtensions = " + fileExtensions + ";\n"
+                bambdas += "\t// Potentially downloadable file extensions\n\n"
                 
         if self._cbBambdasValuable.isSelected() and (self._cbBambdasSearchinReq.isSelected() or self._cbBambdasSearchinRes.isSelected() or self._cbBambdasSearchinURL.isSelected()):
-            bambdas += "List<Pattern> patterns = new ArrayList<>();"
             bambdas += """
-for (String highValueWord : highValueWords)
-    patterns.add(Pattern.compile(highValueWord, Pattern.CASE_INSENSITIVE));
+    List<Pattern> patterns = new ArrayList<>();
+    for (String highValueWord : highValueWords)
+        patterns.add(Pattern.compile(highValueWord, Pattern.CASE_INSENSITIVE));
 """
             if self._cbBambdasSearchinRes.isSelected():
                 bambdas += """
-// High-value keyword - from response body
-for (Pattern pattern : patterns)
-    if (pattern.matcher(responseBody).find()){
-        suspiciousHit = true;
-        if (notesBuilder.length() > 0)
-            notesBuilder.append(", ");
-        notesBuilder.append(pattern + " (ValuableWord-Res)");
-    }
-"""
-            if self._cbBambdasSearchinReq.isSelected():
-                bambdas += """
-// High-value keyword - from request body
-for (Pattern pattern : patterns)
-    if (pattern.matcher(requestBody).find()){
-        suspiciousHit = true;
-        if (notesBuilder.length() > 0)
-            notesBuilder.append(", ");
-        notesBuilder.append(pattern + " (ValuableWord-Req)");
-    }
-"""
-            if self._cbBambdasSearchinURL.isSelected():
-                bambdas += """
-// High-value keyword - from URL
-for (Pattern pattern : patterns)
-    if (pattern.matcher(path).find()){
-        suspiciousHit = true;
-        if (notesBuilder.length() > 0)
-            notesBuilder.append(", ");
-        notesBuilder.append(pattern + " (ValuableWord-URL)");
-    }
-"""
-        if self._cbBambdasSearchinRes.isSelected():
-            if not self._cbBambdasValuable.isSelected():
-                bambdas += "List<Pattern> patterns = new ArrayList<>();"
-
-            if self._cbBambdasFilesDownloadable.isSelected():
-                bambdas += """
-// Potential downloads referenced in the response (by extension match)
-patterns = new ArrayList<>();
-for (String ext : fileExtensions)
-    patterns.add(Pattern.compile("[\\\\s/>]?[^\\"'\\\\s<>]+\\\\." + ext + "(?=[\\\\s\\"])", Pattern.CASE_INSENSITIVE));
-
-ArrayList<String> matchingFiles = new ArrayList<>();
-// Scan response for suspected downloadable files
-for (Pattern pattern : patterns) {
-    Matcher matcher = pattern.matcher(responseBody);
-    while (matcher.find()) {
-        suspiciousHit = true;
-        String matchingFile = matcher.group();
-        matchingFiles.add(matchingFile);
-        if (notesBuilder.length() > 0)
-            notesBuilder.append(", ");
-        notesBuilder.append(matchingFile.strip().replace(">", "").replace("\\"", "")).append(" (Potential-FileDownload)");
-    }
-}
-"""
-            if self._cbBambdasSearchHTMLComments.isSelected():
-                bambdas += """
-// HTML comments in response
-patterns = new ArrayList<>();
-patterns.add(Pattern.compile(\"<!--.*?-->\", Pattern.DOTALL));
-ArrayList<String> matchingComments = new ArrayList<>();
-for (Pattern pattern : patterns) {
-    Matcher matcher = pattern.matcher(responseBody);
-    while (matcher.find()) {
-        suspiciousHit = true;
-        String matchingComment = matcher.group();
-        matchingComments.add(matchingComment);
-        if (notesBuilder.length() > 0)
-            notesBuilder.append(\", \");
-        notesBuilder.append(matchingComment).append(\" (HTML-Comment)\");
-    }
-}
-"""
-
-            if self._cbBambdasVulnJS.isSelected():
-                bambdas += """
-// Potentially risky JavaScript functions observed in the response
-patterns = new ArrayList<>();
-for (String suspiciousFunction : suspiciousFunctions)
-    patterns.add(Pattern.compile(suspiciousFunction, Pattern.CASE_INSENSITIVE));
-for (Pattern pattern : patterns) {
-    if (pattern.matcher(responseBody).find()){
+    // High-value keyword - from response body
+    for (Pattern pattern : patterns)
+        if (pattern.matcher(responseBody).find()){
             suspiciousHit = true;
             if (notesBuilder.length() > 0)
                 notesBuilder.append(", ");
-            notesBuilder.append(pattern.toString().replace("\\\\", "")  + " - (VulnJSFunc)");
+            notesBuilder.append(pattern + " (ValuableWord-Res)");
         }
-}
-"""
-        if (self._cbBambdasSearchinURL.isSelected() or self._cbBambdasSearchinReq.isSelected()) and (self._cbBambdasSQLi.isSelected() or self._cbBambdasXSS.isSelected() or self._cbBambdasLFI.isSelected() or self._cbBambdasSSRF.isSelected() or self._cbBambdasORed.isSelected() or self._cbBambdasRCE.isSelected()):
-            if not self._cbBambdasValuable.isSelected() and not self._cbBambdasSearchinRes.isSelected():
-                bambdas += "List<Pattern> patterns = new ArrayList<>();"
-
-            bambdas += """
-// Parameter-based indicators across URL/query and request body
-for (Map.Entry<String, List<String>> entry : attacksKeyWords.entrySet()) {
-    String attackType = entry.getKey();
-    List<String> attackParams = entry.getValue();
-    boolean htmlContent = false;
-    patterns = new ArrayList<>();
-    if (requestBody.startsWith("<"))
-        // xml body
-        for (String attackParam : attackParams)
-            patterns.add(Pattern.compile("<" + attackParams + ">", Pattern.CASE_INSENSITIVE));
-    else if (requestBody.startsWith("{"))
-        // json body
-        for (String attackParam : attackParams)
-            patterns.add(Pattern.compile("\\\"" + attackParam + "\\\"", Pattern.CASE_INSENSITIVE));
-
-else {
-    // regular html
-    htmlContent = true;
-    for (String attackParam : attackParams)
-        patterns.add(Pattern.compile(attackParam, Pattern.CASE_INSENSITIVE));
-}
-
-if (htmlContent)
-    // regular html
-    for (String attackParam : attackParams)
-    {
-"""
-        if self._cbBambdasSearchinURL.isSelected():
-            bambdas += """
-            if (requestResponse.request().hasParameter(attackParam, HttpParameterType.URL)){
-                suspiciousHit = true;
-                if (notesBuilder.length() > 0)
-                    notesBuilder.append(", ");
-                notesBuilder.append(attackParam + " (" + attackType + "-URL param)");
-            }
 """
             if self._cbBambdasSearchinReq.isSelected():
                 bambdas += """
-            if (requestResponse.request().hasParameter(attackParam, HttpParameterType.BODY)){
-                suspiciousHit = true;
-                if (notesBuilder.length() > 0)
-                    notesBuilder.append(", ");
-                notesBuilder.append(attackParam + " (" + attackType + "-Req param)");
-            }
-"""
-            bambdas += "\t\t\t}\n"
-                
-            if self._cbBambdasSearchinReq.isSelected():
-                bambdas += """
-else
-    // xml or json
+    // High-value keyword - from request body
     for (Pattern pattern : patterns)
         if (pattern.matcher(requestBody).find()){
             suspiciousHit = true;
             if (notesBuilder.length() > 0)
                 notesBuilder.append(", ");
-            notesBuilder.append(pattern.toString().replace("\\\\", "") + " (" + attackType + "-Req param)");
+            notesBuilder.append(pattern + " (ValuableWord-Req)");
         }
 """
-            bambdas +="\t}\n// End parameter-based indicators\n"
+            if self._cbBambdasSearchinURL.isSelected():
+                bambdas += """
+    // High-value keyword - from URL
+    for (Pattern pattern : patterns)
+        if (pattern.matcher(path).find()){
+            suspiciousHit = true;
+            if (notesBuilder.length() > 0)
+                notesBuilder.append(", ");
+            notesBuilder.append(pattern + " (ValuableWord-URL)");
+        }
+"""
+        if self._cbBambdasSearchinRes.isSelected():
+            if not self._cbBambdasValuable.isSelected():
+                bambdas += "\tList<Pattern> patterns = new ArrayList<>();"
+
+            if self._cbBambdasFilesDownloadable.isSelected():
+                bambdas += """
+    // Potential downloads referenced in the response (by extension match)
+    patterns = new ArrayList<>();
+    for (String ext : fileExtensions)
+        patterns.add(Pattern.compile("[\\\\s/>]?[^\\"'\\\\s<>]+\\\\." + ext + "(?=[\\\\s\\"])", Pattern.CASE_INSENSITIVE));
+    
+    ArrayList<String> matchingFiles = new ArrayList<>();
+    // Scan response for suspected downloadable files
+    for (Pattern pattern : patterns) {
+        Matcher matcher = pattern.matcher(responseBody);
+        while (matcher.find()) {
+            suspiciousHit = true;
+            String matchingFile = matcher.group();
+            matchingFiles.add(matchingFile);
+            if (notesBuilder.length() > 0)
+                notesBuilder.append(", ");
+            notesBuilder.append(matchingFile.strip().replace(">", "").replace("\\"", "")).append(" (Potential-FileDownload)");
+        }
+    }
+"""
+            if self._cbBambdasSearchHTMLComments.isSelected():
+                bambdas += """
+    // HTML comments in response
+    patterns = new ArrayList<>();
+    patterns.add(Pattern.compile(\"<!--.*?-->\", Pattern.DOTALL));
+    ArrayList<String> matchingComments = new ArrayList<>();
+    for (Pattern pattern : patterns) {
+        Matcher matcher = pattern.matcher(responseBody);
+        while (matcher.find()) {
+            suspiciousHit = true;
+            String matchingComment = matcher.group();
+            matchingComments.add(matchingComment);
+            if (notesBuilder.length() > 0)
+                notesBuilder.append(\", \");
+            notesBuilder.append(matchingComment).append(\" (HTML-Comment)\");
+        }
+    }
+"""
+
+            if self._cbBambdasVulnJS.isSelected():
+                bambdas += """
+    // Potentially risky JavaScript functions observed in the response
+    patterns = new ArrayList<>();
+    for (String suspiciousFunction : suspiciousFunctions)
+        patterns.add(Pattern.compile(suspiciousFunction, Pattern.CASE_INSENSITIVE));
+    
+    for (Pattern pattern : patterns) {
+        if (pattern.matcher(responseBody).find()){
+                suspiciousHit = true;
+                if (notesBuilder.length() > 0)
+                    notesBuilder.append(", ");
+                notesBuilder.append(pattern.toString().replace("\\\\", "")  + " - (VulnJSFunc)");
+            }
+        }
+"""
+        if (self._cbBambdasSearchinURL.isSelected() or self._cbBambdasSearchinReq.isSelected()) and (self._cbBambdasSQLi.isSelected() or self._cbBambdasXSS.isSelected() or self._cbBambdasLFI.isSelected() or self._cbBambdasSSRF.isSelected() or self._cbBambdasORed.isSelected() or self._cbBambdasRCE.isSelected()):
+            if not self._cbBambdasValuable.isSelected() and not self._cbBambdasSearchinRes.isSelected():
+                bambdas += "\tList<Pattern> patterns = new ArrayList<>();"
+
+            bambdas += """
+    // Parameter-based indicators across URL/query and request body
+    for (Map.Entry<String, List<String>> entry : attacksKeyWords.entrySet()) {
+        String attackType = entry.getKey();
+        List<String> attackParams = entry.getValue();
+        boolean htmlContent = false;
+        patterns = new ArrayList<>();
+        if (requestBody.startsWith("<"))
+            // xml body
+            for (String attackParam : attackParams)
+                patterns.add(Pattern.compile("<" + attackParams + ">", Pattern.CASE_INSENSITIVE));
+        else if (requestBody.startsWith("{"))
+            // json body
+            for (String attackParam : attackParams)
+                patterns.add(Pattern.compile("\\\"" + attackParam + "\\\"", Pattern.CASE_INSENSITIVE));
+        else {
+            // regular html
+            htmlContent = true;
+            for (String attackParam : attackParams)
+                patterns.add(Pattern.compile(attackParam, Pattern.CASE_INSENSITIVE));
+            }
+
+        if (htmlContent)
+            // regular html
+            for (String attackParam : attackParams){
+"""
+            if self._cbBambdasSearchinURL.isSelected():
+                bambdas += """
+                if (requestResponse.request().hasParameter(attackParam, HttpParameterType.URL)){
+                    suspiciousHit = true;
+                    if (notesBuilder.length() > 0)
+                        notesBuilder.append(", ");
+                    notesBuilder.append(attackParam + " (" + attackType + "-URL param)");
+                }
+"""
+            if self._cbBambdasSearchinReq.isSelected():
+                bambdas += """
+                if (requestResponse.request().hasParameter(attackParam, HttpParameterType.BODY)){
+                    suspiciousHit = true;
+                    if (notesBuilder.length() > 0)
+                        notesBuilder.append(", ");
+                    notesBuilder.append(attackParam + " (" + attackType + "-Req param)");
+                }
+"""
+            bambdas += "\t\t\t}\n"
+                
+            if self._cbBambdasSearchinReq.isSelected():
+                bambdas += """
+        else
+            // xml or json
+            for (Pattern pattern : patterns)
+                if (pattern.matcher(requestBody).find()){
+                    suspiciousHit = true;
+                    if (notesBuilder.length() > 0)
+                        notesBuilder.append(", ");
+                    notesBuilder.append(pattern.toString().replace("\\\\", "") + " (" + attackType + "-Req param)");
+                }
+"""
+            bambdas +="\n\t}\n\t// End parameter-based indicators\n"
 
         if (self._cbBambdasSearchinURL.isSelected() or self._cbBambdasSearchinReq.isSelected() or self._cbBambdasSearchinRes.isSelected()) and (self._cbBambdasSQLi.isSelected() or self._cbBambdasXSS.isSelected() or self._cbBambdasLFI.isSelected() or self._cbBambdasSSRF.isSelected() or self._cbBambdasORed.isSelected() or self._cbBambdasRCE.isSelected() or self._cbBambdasSearchHTMLComments.isSelected() or self._cbBambdasFilesDownloadable.isSelected() or self._cbBambdasVulnJS.isSelected() or self._cbBambdasValuable.isSelected()):
-            bambdas +="\n// Apply highlight and add a consolidated \"Suspicious:\" note if any hit was found\n"
-            bambdas += "if (suspiciousHit) {\n"
+            bambdas +="\n\t// Apply highlight and add a consolidated \"Suspicious:\" note if any hit was found\n"
+            bambdas += "\tif (suspiciousHit) {\n"
             #if self._cbBambdasColorKeyWords.getSelectedIndex() != 0:
-            bambdas += "\trequestResponse.annotations().setHighlightColor(HighlightColor."+ self._cbBambdasColorKeyWords.getSelectedItem() + ");\n"
+            bambdas += "\t\trequestResponse.annotations().setHighlightColor(HighlightColor."+ self._cbBambdasColorKeyWords.getSelectedItem() + ");\n"
             bambdas += """
-    if (notesBuilder.length() > 0)
-        requestResponse.annotations().setNotes("Suspicious: " + notesBuilder.toString());
-    }
+        if (notesBuilder.length() > 0)
+            requestResponse.annotations().setNotes("Suspicious: " + notesBuilder.toString());
+        }
 """
         # if self._cbBambdasColorScope.getSelectedIndex() != 0:
         bambdas += """
-// Highlight items that match testing scope
-for (String targetPath : targetPaths)
-\tif (Pattern.compile(targetPath, Pattern.CASE_INSENSITIVE).matcher(path).find() && targetPath != null && !targetPath.trim().isEmpty()){
-"""
-        bambdas += "\t\trequestResponse.annotations().setHighlightColor(HighlightColor."+ self._cbBambdasColorScope.getSelectedItem() + ");\n\t\tbreak;\n\t}\n"
+    // Highlight items that match testing scope
+    for (String targetPath : targetPaths)
+        if (Pattern.compile(targetPath, Pattern.CASE_INSENSITIVE).matcher(path).find() && targetPath != null && !targetPath.trim().isEmpty()"""     
+        if self._cbBambdasColorScope.getSelectedIndex() == 0:
+            bambdas += " && (requestResponse.annotations().highlightColor() == HighlightColor.NONE)"
+        bambdas += "){\n"
+        bambdas += "\t\t\trequestResponse.annotations().setHighlightColor(HighlightColor."+ self._cbBambdasColorScope.getSelectedItem() + ");\n\t\t\t\tbreak;\n\t\t\t}\n"
 
         # if self._cbBambdasColorScopeSecondary.getSelectedIndex() != 0:
         bambdas += """
-// Highlight items already marked as tested
-for (String targetPath : targetPathsDone)
-    if (Pattern.compile(targetPath, Pattern.CASE_INSENSITIVE).matcher(path).find() && targetPath != null && !targetPath.trim().isEmpty()){
-"""
+    // Highlight items already marked as tested
+    for (String targetPath : targetPathsDone)
+        if (Pattern.compile(targetPath, Pattern.CASE_INSENSITIVE).matcher(path).find() && targetPath != null && !targetPath.trim().isEmpty()"""
+        if self._cbBambdasColorScopeSecondary.getSelectedIndex() == 0:
+            bambdas += " && (requestResponse.annotations().highlightColor() == HighlightColor.NONE)"
+        bambdas += "){\n"
         bambdas += "\t\t\trequestResponse.annotations().setHighlightColor(HighlightColor."+ self._cbBambdasColorScopeSecondary.getSelectedItem() + ");"
         bambdas += "\n\t\t\tbreak;\n\t\t}\n}\n// End processing window\n"
 
