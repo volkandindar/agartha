@@ -26,7 +26,7 @@ except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
     sys.exit(1)
 
-VERSION = "2.69"
+VERSION = "2.70"
 #url_regex = r'(log|sign)([-_+%0-9]{0,5})(off|out|in|on)|(expire|kill|terminat|delete|remove)'
 url_regex = r'(log|sign|time)([-_+%0-9]{0,5})(off|out)|(expire|kill|terminat|delete|remove)'
 ext_regex = r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff2|ttf|otf)$'
@@ -2028,8 +2028,10 @@ for (String httpMethod : httpMethods)
         bambdas += "\n\t\t\tbreak;\n\t\t}\n}\n// End processing window\n"
 
         if self._tbBambdasBlackListedURLs.getText() == '/':
-            bambdas += """
-// Root black-list (/) selected: ignore everything outside explicit scope/tested unless flagged as suspicious
+            bambdas += "\n// Root black-list (/) selected: ignore everything outside explicit scope/tested unless flagged as suspicious"
+        else:
+            bambdas += "\n// Clear previously processed items"
+        bambdas += """
 if (!suspiciousHit) {
     boolean matchedScope = false;
     boolean matchedDone = false;
@@ -2048,10 +2050,13 @@ if (!suspiciousHit) {
         }
     }
     if (!matchedScope && !matchedDone) {
-        return false;
+        requestResponse.annotations().setHighlightColor(HighlightColor.NONE);
+        requestResponse.annotations().setNotes("");"""
+        if self._tbBambdasBlackListedURLs.getText() == '/':
+            bambdas += "\n\t\treturn false;"
+        bambdas += """
     }
 }
-// Root black-list (/) selection ended
 """
         bambdas += "\nreturn true;"
 
