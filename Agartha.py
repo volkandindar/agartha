@@ -1669,8 +1669,8 @@ given request then
         bambdas += "// Reset mode: clear all highlights and notes, then exit.\n\n"
         
         bambdas += "// Display window (days): ignore items older than the selected number of days\n"
-        bambdas += " if (!requestResponse.time().isAfter(ZonedDateTime.now().minusDays(" + self._cbBambdasDisplayDays.getSelectedItem().split()[0] + ")))\n"
-        bambdas += "    return false;\n\n"
+        bambdas += "if (!requestResponse.time().isAfter(ZonedDateTime.now().minusDays(" + self._cbBambdasDisplayDays.getSelectedItem().split()[0] + ")))\n"
+        bambdas += "        return false;\n\n"
 
         if self._cbBambdasScope.isSelected():
             bambdas += "// Display only items that are in scope and have a response.\n"
