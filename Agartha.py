@@ -26,7 +26,7 @@ except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
     sys.exit(1)
 
-VERSION = "2.70"
+VERSION = "2.71"
 #url_regex = r'(log|sign)([-_+%0-9]{0,5})(off|out|in|on)|(expire|kill|terminat|delete|remove)'
 url_regex = r'(log|sign|time)([-_+%0-9]{0,5})(off|out)|(expire|kill|terminat|delete|remove)'
 ext_regex = r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff2|ttf|otf)$'
@@ -1699,6 +1699,8 @@ for (String httpMethod : httpMethods)
 
         bambdas += "// General vars\n"
         bambdas += "boolean suspiciousHit = false;\n"
+        bambdas += "boolean matchedScope = false;\n"
+        bambdas += "boolean matchedDone = false;\n"
         bambdas += "StringBuilder notesBuilder = new StringBuilder();\n"
         if self._cbBambdasSearchinRes.isSelected() and (self._cbBambdasSearchHTMLComments.isSelected() or self._cbBambdasFilesDownloadable.isSelected() or self._cbBambdasValuable.isSelected() or self._cbBambdasVulnJS.isSelected()):
             bambdas += "String responseBody = requestResponse.response().bodyToString();\n"
@@ -2014,7 +2016,7 @@ for (String httpMethod : httpMethods)
         if self._cbBambdasColorScope.getSelectedIndex() == 0:
             bambdas += " && (requestResponse.annotations().highlightColor() == HighlightColor.NONE)"
         bambdas += "){\n"
-        bambdas += "\t\t\trequestResponse.annotations().setHighlightColor(HighlightColor."+ self._cbBambdasColorScope.getSelectedItem() + ");\n\t\t\t\tbreak;\n\t\t\t}\n"
+        bambdas += "\t\t\trequestResponse.annotations().setHighlightColor(HighlightColor."+ self._cbBambdasColorScope.getSelectedItem() + ");\n\t\t\tmatchedScope = true;\n\t\t\tbreak;\n\t\t\t}\n"
 
         # if self._cbBambdasColorScopeSecondary.getSelectedIndex() != 0:
         bambdas += """
@@ -2024,38 +2026,19 @@ for (String httpMethod : httpMethods)
         if self._cbBambdasColorScopeSecondary.getSelectedIndex() == 0:
             bambdas += " && (requestResponse.annotations().highlightColor() == HighlightColor.NONE)"
         bambdas += "){\n"
-        bambdas += "\t\t\trequestResponse.annotations().setHighlightColor(HighlightColor."+ self._cbBambdasColorScopeSecondary.getSelectedItem() + ");"
-        bambdas += "\n\t\t\tbreak;\n\t\t}\n}\n// End processing window\n"
+        bambdas += "\t\t\trequestResponse.annotations().setHighlightColor(HighlightColor."+ self._cbBambdasColorScopeSecondary.getSelectedItem() + ");\n\t\t\tmatchedDone = true;\n\t\t\tbreak;\n\t\t}\n}\n// End processing window\n"
 
         if self._tbBambdasBlackListedURLs.getText() == '/':
             bambdas += "\n// Root black-list (/) selected: ignore everything outside explicit scope/tested unless flagged as suspicious"
         else:
             bambdas += "\n// Clear previously processed items"
         bambdas += """
-if (!suspiciousHit) {
-    boolean matchedScope = false;
-    boolean matchedDone = false;
-    for (String targetPath : targetPaths) {
-        if (Pattern.compile(targetPath, Pattern.CASE_INSENSITIVE).matcher(path).find() &&
-            targetPath != null && !targetPath.trim().isEmpty()) {
-            matchedScope = true;
-            break;
-        }
-    }
-    for (String targetPath : targetPathsDone) {
-        if (Pattern.compile(targetPath, Pattern.CASE_INSENSITIVE).matcher(path).find() &&
-            targetPath != null && !targetPath.trim().isEmpty()) {
-            matchedDone = true;
-            break;
-        }
-    }
-    if (!matchedScope && !matchedDone) {
-        requestResponse.annotations().setHighlightColor(HighlightColor.NONE);
-        requestResponse.annotations().setNotes("");"""
+if (!suspiciousHit && !matchedScope && !matchedDone) {
+    requestResponse.annotations().setHighlightColor(HighlightColor.NONE);
+    requestResponse.annotations().setNotes("");"""
         if self._tbBambdasBlackListedURLs.getText() == '/':
-            bambdas += "\n\t\treturn false;"
+            bambdas += "\n\treturn false;"
         bambdas += """
-    }
 }
 """
         bambdas += "\nreturn true;"
