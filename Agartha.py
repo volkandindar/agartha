@@ -2026,7 +2026,7 @@ for (String targetPath : targetPathsDone)
 
         if self._tbBambdasBlackListedURLs.getText() == '/':
             bambdas += """
-// Root blacklist ("/") selected: ignore everything outside explicit scope/tested unless flagged as suspicious
+// Root black-list (/) selected: ignore everything outside explicit scope/tested unless flagged as suspicious
 if (!suspiciousHit) {
     boolean matchedScope = false;
     boolean matchedDone = false;
@@ -2048,7 +2048,7 @@ if (!suspiciousHit) {
         return false;
     }
 }
-// Root blacklist ("/") selection ended
+// Root black-list (/) selection ended
 """
         bambdas += "\nreturn true;"
 
