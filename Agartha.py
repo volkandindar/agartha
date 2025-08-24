@@ -27,7 +27,6 @@ except:
     sys.exit(1)
 
 VERSION = "2.74"
-#url_regex = r'(log|sign)([-_+%0-9]{0,5})(off|out|in|on)|(expire|kill|terminat|delete|remove)'
 url_regex = r'(log|sign|time)([-_+%0-9]{0,5})(off|out)|(expire|kill|terminat|delete|remove)'
 ext_regex = r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff2|ttf|otf)$'
 
@@ -2006,14 +2005,12 @@ for (String httpMethod : httpMethods)
         if (self._cbBambdasSearchinURL.isSelected() or self._cbBambdasSearchinReq.isSelected() or self._cbBambdasSearchinRes.isSelected()) and (self._cbBambdasSQLi.isSelected() or self._cbBambdasXSS.isSelected() or self._cbBambdasLFI.isSelected() or self._cbBambdasSSRF.isSelected() or self._cbBambdasORed.isSelected() or self._cbBambdasRCE.isSelected() or self._cbBambdasSearchHTMLComments.isSelected() or self._cbBambdasFilesDownloadable.isSelected() or self._cbBambdasVulnJS.isSelected() or self._cbBambdasValuable.isSelected()):
             bambdas +="\n\t// Apply highlight and add a consolidated \"Suspicious:\" note if any hit was found\n"
             bambdas += "\tif (suspiciousHit) {\n"
-            #if self._cbBambdasColorKeyWords.getSelectedIndex() != 0:
             bambdas += "\t\trequestResponse.annotations().setHighlightColor(HighlightColor."+ self._cbBambdasColorKeyWords.getSelectedItem() + ");\n"
             bambdas += """
         if (notesBuilder.length() > 0)
             requestResponse.annotations().setNotes("Suspicious: " + notesBuilder.toString());
         }
 """
-        # if self._cbBambdasColorScope.getSelectedIndex() != 0:
         bambdas += """
     // Highlight items that match testing scope
     for (String targetPath : targetPaths)
@@ -2023,7 +2020,6 @@ for (String httpMethod : httpMethods)
         bambdas += "){\n"
         bambdas += "\t\t\trequestResponse.annotations().setHighlightColor(HighlightColor."+ self._cbBambdasColorScope.getSelectedItem() + ");\n\t\t\tmatchedScope = true;\n\t\t\tbreak;\n\t\t\t}\n"
 
-        # if self._cbBambdasColorScopeSecondary.getSelectedIndex() != 0:
         bambdas += """
     // Highlight items already marked as tested
     for (String targetPath : targetPathsDone)
@@ -2233,7 +2229,6 @@ if (!suspiciousHit && !matchedScope && !matchedDone) {
         self._txtBambdasSearchHTMLCommnets = JTextField("The search will occur between the '<!--' and '-->' tags.", 100)
         self._txtBambdasSearchHTMLCommnets.setEnabled(False)
         self._cbBambdasSearchHTMLComments = JCheckBox('Search HTML comments', False)
-        # self._cbBambdasSearchHTMLComments.setEnabled(False)
         self._txtBambdasSearchHTMLCommnets.setToolTipText("Search HTML comments")
         self._cbBambdasSearchHTMLComments.setToolTipText("Search HTML comments")
 
@@ -2462,7 +2457,6 @@ if (!suspiciousHit && !matchedScope && !matchedDone) {
                     .addComponent(self._lblBambdasNotification2))
         )
 
-        # 1. Satr - Scope URLs
         self._tbBambdasScopeURLs = JTextPane()
         self._tbBambdasScopeURLs.setToolTipText("Define test scope: one URL per line. Leave blank to include everything.")
         self._txBambdasScopeURLs = "Please provide all URLs in the testing scope. Some examples:\n\t- /\n\t+ Root paths include all URLS"
@@ -2475,7 +2469,6 @@ if (!suspiciousHit && !matchedScope && !matchedDone) {
         self._lbBambdasScopeURLs = JLabel("Definition of testing scope", SwingConstants.LEFT)
         self._lbBambdasScopeURLs.setFont(self._lbBambdasScopeURLs.getFont().deriveFont(Font.BOLD))
 
-        # 2. Satr - Already Tested URLs
         self._tbBambdasScopeDoneURLs = JTextPane()
         self._tbBambdasScopeDoneURLs.setToolTipText("Mark already-tested endpoints: one URL per line. Leave blank if none.")
         self._txBambdasScopeDoneURLs = "Please provide URLs already tested. Some examples:\n\t- /admin/*/users/*/class\n\t+ Asterisk stands for ID, UUID, etc, and rest of path will be included."
@@ -2488,7 +2481,6 @@ if (!suspiciousHit && !matchedScope && !matchedDone) {
         self._lbBambdasScopeDoneURLs = JLabel("Already Tested URLs", SwingConstants.LEFT)
         self._lbBambdasScopeDoneURLs.setFont(self._lbBambdasScopeDoneURLs.getFont().deriveFont(Font.BOLD))
 
-        # 3. Satr - BlackListed URLs
         self._tbBambdasBlackListedURLs = JTextPane()
         self._tbBambdasBlackListedURLs.setToolTipText("Exclude from processing: one URL per line. Leave blank to exclude nothing, and adding '/' will hide everything unless a criteria matches.")
         self._txBambdasBlackListedURLs = "Please provide the URLs to be blacklisted, to exclude from the HTTP call history. Some examples:\n\t-/health-check\n\t+ Excludes specifically this path, and rest:\n\t\t+ /health-check\n\t\t+ /health-check/Monitor\n\t\t+ /health-check/?Level=Info"
@@ -2504,19 +2496,16 @@ if (!suspiciousHit && !matchedScope && !matchedDone) {
         __tabBambdasPanelTop_Right = JPanel()
         __tabBambdasPanelTop_Right.setLayout(BoxLayout(__tabBambdasPanelTop_Right, BoxLayout.Y_AXIS))
 
-        # Scope Label ve ScrollPane
         __tabBambdasPanelTop_Right.add(self._lbBambdasScopeURLs)
         scrollBambdasScopeURLs = JScrollPane(self._tbBambdasScopeURLs)
         scrollBambdasScopeURLs.setPreferredSize(Dimension(400, 100))
         __tabBambdasPanelTop_Right.add(scrollBambdasScopeURLs)
 
-        # Done Label ve ScrollPane (Yeni eklendi)
         __tabBambdasPanelTop_Right.add(self._lbBambdasScopeDoneURLs)
         scrollBambdasScopeDoneURLs = JScrollPane(self._tbBambdasScopeDoneURLs)
         scrollBambdasScopeDoneURLs.setPreferredSize(Dimension(400, 100))
         __tabBambdasPanelTop_Right.add(scrollBambdasScopeDoneURLs)
 
-        # Blacklisted Label ve ScrollPane
         __tabBambdasPanelTop_Right.add(self._lbBambdasBlackListedURLs)
         scrollBambdasBlackListedURLs = JScrollPane(self._tbBambdasBlackListedURLs)
         scrollBambdasBlackListedURLs.setPreferredSize(Dimension(400, 100))
@@ -4228,7 +4217,6 @@ class UserEnabledRenderer(TableCellRenderer):
                     cell.setFont(cell.getFont().deriveFont(Font.BOLD | Font.ITALIC))
                     table.repaint()
             except:
-                #print str(sys.exc_info()[1])
                 pass
 
         else:
@@ -4297,7 +4285,6 @@ class UserEnabledRenderer(TableCellRenderer):
                         cell.setFont(cell.getFont().deriveFont(Font.BOLD | Font.ITALIC))
                         table.repaint()
             except:
-                # print str(sys.exc_info()[1])
                 pass
         return cell
 
@@ -4307,11 +4294,6 @@ class CustomDefaultTableModel(DefaultTableModel):
 
     def isCellEditable(self, row, col):
         return False
-
-
-
-
-
 
 class URLFilter:
     def __init__(self):
