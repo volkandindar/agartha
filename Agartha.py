@@ -4055,6 +4055,7 @@ if (!suspiciousHit && !matchedScope && !matchedDone) {
                         if link not in _userURLs and link and urlparse.urlparse(_url).hostname == urlparse.urlparse(link).hostname and not any(re.findall(url_regex, link, re.IGNORECASE)) and "/." not in link and not any(re.findall(ext_regex, _ext, re.IGNORECASE)):
                             _userURLs.append(link)
                             userLinks = userLinks + link + "\n"
+                            self._lblAuthNotification.text = "The crawler has found '" + str(len(_userURLs)) + "' links so far, and it is still in progress: '" + str(_userURLs.index(_url) + 1) + "/" + str(crawledURLs + 1) + "', current folder depth: '" + str(folderDepth) + "'."
 
                     links = re.findall("<a\\s+[^>]*?href=[\'|\"](.*?)[\'\"].*?>", msgBody, re.IGNORECASE)
                     for link in (links.pop(0) for _ in xrange(len(links))):
