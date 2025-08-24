@@ -24,7 +24,7 @@ except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
     sys.exit(1)
 
-VERSION = "2.81"
+VERSION = "2.82"
 url_regex = r'(log|sign|time)([-_+%0-9]{0,5})(off|out)|(expire|kill|terminat|delete|remove)'
 ext_regex = r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff2|ttf|otf)$'
 
@@ -4086,10 +4086,7 @@ if (!suspiciousHit && !matchedScope && !matchedDone) {
                                 _endswith ="/"
                             link = urlparse.urlparse(_url).scheme + "://" + urlparse.urlparse(_url)[1] + str(posixpath.normpath(path + link)) + _endswith
                         elif not link.startswith('http') and link:
-                            if _url.endswith('/'):
-                                link = _url.rsplit("/", 2)[0] + '/' + link
-                            else:
-                                link = _url.rsplit("/", 1)[0] + '/' + link
+                            link = urlparse.urljoin(_url, link)
                         else: 
                             link = ""
                             continue
