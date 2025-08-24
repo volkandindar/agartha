@@ -227,6 +227,7 @@ Explanations, A little bit more details:
     **Examples of definitions**: 
     - /
  	    - Root path — includes everything.
+			Note: In addition to the testing scope definition, it can also be applied in the Black-Listed URLs section, where it will exclude everything unless a matching criterion is defined.
     - /portal/users
  	    - Includes specifically this path and its subpaths, for example:
  	 	    - /portal/users?id=1
