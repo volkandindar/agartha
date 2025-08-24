@@ -7,26 +7,24 @@ Author: Volkan Dindar
 try:
     import sys, re, urlparse, random, os, urllib, posixpath, json
     from burp import IBurpExtender, ITab, IMessageEditorController, IContextMenuFactory, IBurpExtenderCallbacks, IExtensionHelpers
-    from java.awt import BorderLayout, FlowLayout, Color, Font, Dimension, Toolkit, GridLayout, GridBagLayout, GridBagConstraints, Insets
-    from javax.swing import JCheckBox, JMenuItem, JTextPane, JTable, GroupLayout, JScrollPane, JProgressBar, SwingConstants, JComboBox, JButton, JTextField, JSplitPane, JPanel, JLabel, JRadioButton, ButtonGroup, JTabbedPane, BoxLayout, JEditorPane, JList, DefaultListModel, DefaultListSelectionModel, JTextArea, BorderFactory, SwingUtilities, Timer
+    from java.awt import BorderLayout, FlowLayout, Color, Font, Dimension, Toolkit
+    from javax.swing import JCheckBox, JMenuItem, JTextPane, JTable, GroupLayout, JScrollPane, JProgressBar, SwingConstants, JComboBox, JButton, JTextField, JSplitPane, JPanel, JLabel, JRadioButton, ButtonGroup, JTabbedPane, BoxLayout, JEditorPane, JList, DefaultListModel, DefaultListSelectionModel
     from javax.swing.border import EmptyBorder
     from javax.swing.table import DefaultTableModel, TableCellRenderer
     from java.util import ArrayList, Calendar, Locale
     from java.text import SimpleDateFormat
     from threading import Thread
-    from java.lang import Runnable
     from java.awt.datatransfer import StringSelection
     from time import sleep
-    from java.net import URL, HttpURLConnection
-    from java.io import BufferedReader, InputStreamReader
+    from java.net import URL
     from java.lang import Thread as JavaThread
     from java.awt.event import MouseWheelListener, FocusListener
-    from javax.swing.text import SimpleAttributeSet, StyleConstants, StyleContext
+    from javax.swing.text import StyleConstants, StyleContext
 except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
     sys.exit(1)
 
-VERSION = "2.74"
+VERSION = "2.80"
 url_regex = r'(log|sign|time)([-_+%0-9]{0,5})(off|out)|(expire|kill|terminat|delete|remove)'
 ext_regex = r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff2|ttf|otf)$'
 
@@ -923,7 +921,6 @@ given request then
             urlList.append(payload)
         
         return urlList
-
 
     def getTabCaption(self):
         return "Agartha"
