@@ -24,7 +24,7 @@ except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
     sys.exit(1)
 
-VERSION = "2.80"
+VERSION = "2.81"
 url_regex = r'(log|sign|time)([-_+%0-9]{0,5})(off|out)|(expire|kill|terminat|delete|remove)'
 ext_regex = r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff2|ttf|otf)$'
 
@@ -297,9 +297,9 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                 bcheckCode= """
 metadata:
     language: v2-beta
-    name: "Command Injection (RCE) Fuzzing - Agartha"
+    name: "Command Injection Fuzzing - Agartha"
     description: "Command Injection is a security flaw where attackers execute unauthorized commands on a system by exploiting unvalidated user input."
-    author: "Agartha - Auto-Generated BCheck Code"
+    author: "Agartha"
     tags: "RCE", "RCE Injection"
 
 define:
@@ -319,9 +319,9 @@ run for each:
                 bcheckCode= """
 metadata:
     language: v2-beta
-    name: "LFI Injection Fuzzing - Agartha"
+    name: "File Injection Fuzzing - Agartha"
     description: "Local File Inclusion (LFI) is a security vulnerability where attackers can access and execute files on a server by exploiting improper input validation. This can lead to unauthorized access to sensitive data and system compromise."
-    author: "Agartha - Auto-Generated BCheck Code"
+    author: "Agartha"
     tags: "LFI", "LFI Injection"
 
 define:
@@ -342,7 +342,7 @@ metadata:
     language: v2-beta
     name: "SQL Injection Fuzzing - Agartha"
     description: "SQL injection is a security vulnerability where attackers insert malicious SQL code into a query, allowing them to manipulate or access the database improperly."
-    author: "Agartha - Auto-Generated BCheck Code"
+    author: "Agartha"
     tags: "SQLi", "SQL Injection"
 
 define:
@@ -373,7 +373,7 @@ given any insertion point then
         appending: {payloads}
 
     if {payloadReplacing.response.status_code} is "200" then
-      # For more precise detections
+      # For more precise detections, search in the response
       # if ("condition1" in {payloadReplacing.response.body} and "condition2" in {payloadReplacing.response.body}) or ("condition3" in {payloadReplacing.response.body} and "condition4" in {payloadReplacing.response.body}) then
         report issue and continue:
             severity: medium
@@ -384,7 +384,7 @@ given any insertion point then
     end if
 
     if {payloadAppending.response.status_code} is "200" then
-      # For more precise detections
+      # For more precise detections, search in the response
       # if ("condition1" in {payloadAppending.response.body} and "condition2" in {payloadAppending.response.body}) or ("condition3" in {payloadAppending.response.body} and "condition4" in {payloadAppending.response.body}) then
         report issue and continue:
             severity: medium
@@ -397,11 +397,10 @@ given any insertion point then
             elif self._rbDictLFI:
                 bcheckCode += """
 given request then
-    # replacing url partially
     send request called payloadReplacingPartially:
         replacing path: `{regex_replace({regex_replace({base.request.url}, "^.*?\\/.*?\\/.*?\\/", "/")}, "([^/]+)$", "")}{payloads}`
     if {payloadReplacingPartially.response.status_code} is "200" then
-        # For more precise detections
+        # For more precise detections, search in the response
         # if ("localhost" in {payloadReplacingPartially.response.body} and "127.0.0.1" in {payloadReplacingPartially.response.body}) or ("localhost" in {payloadReplacingPartially.response.body} and "127.0.0.1" in {payloadReplacingPartially.response.body}) then
             report issue and continue:
             severity: medium
@@ -411,12 +410,11 @@ given request then
         # end if
     end if
 
-    # replacing query string in URL, if it exists.
     if ({base.request.url.file} matches ".*[?].*[=].*") then
         send request called payloadReplacingQueryString:
             replacing queries: `{regex_replace({base.request.url.query}, "([^&=]+)=([^&]*)", "$1=")}{payloads}`
         if {payloadReplacingQueryString.response.status_code} is "200" then
-            # For more precise detections
+            # For more precise detections, search in the response
             # if ("localhost" in {payloadReplacingQueryString.response.body} and "127.0.0.1" in {payloadReplacingQueryString.response.body}) or ("localhost" in {payloadReplacingQueryString.response.body} and "127.0.0.1" in {payloadReplacingQueryString.response.body}) then
                 report issue and continue:
                 severity: medium
@@ -426,20 +424,6 @@ given request then
             # end if
         end if
     end if
-
-    # replacing the whole url
-    #send request called payloadReplacingFull:
-    #    replacing path: `{regex_replace({base.request.url}, "^.*", "")}/{payloads}`
-    #if {payloadReplacingFull.response.status_code} is "200" then
-    #    # For more precise detections
-    #    # if ("localhost" in {payloadReplacingFull.response.body} and "127.0.0.1" in {payloadReplacingFull.response.body}) or ("localhost" in {payloadReplacingFull.response.body} and "127.0.0.1" in {payloadReplacingFull.response.body}) then
-    #        report issue and continue:
-    #        severity: medium
-    #        confidence: tentative
-    #        detail: `Injected parameter: {payloads}, at {payloadReplacingFull.request.url.path}`
-    #        remediation: {issueRemediation}
-    #    # end if
-    #end if
 """
             self._tabDictResultDisplay.setText(bcheckCode)
             clipboard = Toolkit.getDefaultToolkit().getSystemClipboard()
@@ -641,7 +625,7 @@ given request then
         self._tabDictResultDisplay.setText(''.join(map(str, listLFI)))
         clipboard = Toolkit.getDefaultToolkit().getSystemClipboard()
         clipboard.setContents(StringSelection(self._tabDictResultDisplay.getText()), None)
-        self._lblStatusLabel.setText('Payload list for "' + self._txtTargetPath.text + '" path returns with '+ str(len(listLFI)) + ' result, and they have been copied to your clipboard. Please make sure payload encoding is disabled, unless you are sure what you are doing.') 
+        self._lblStatusLabel.setText('Payload list for "' + self._txtTargetPath.text + '" path returns with '+ str(len(listLFI)) + ' result, and they have been copied to your clipboard. Please make sure payload encoding is disabled.') 
         return
 
     def funcSQLi(self, ev):
@@ -1027,7 +1011,7 @@ given request then
         self._tbAuthURL.setSelectionEnd(0)
         self._MainTabs.setSelectedComponent(self._tabAuthSplitpane)
         self._MainTabs.getParent().setSelectedComponent(self._MainTabs)
-
+        self._lblAuthNotification.text = "A new payload has been received."
         return
 
     def authentication_menu(self, event):
@@ -3992,10 +3976,10 @@ if (!suspiciousHit && !matchedScope && !matchedDone) {
 
     def siteMapGeneratorThread(self, ev):
         for _url in self._tbAuthURL.getText().split('\n'):
-            _url = _url.strip()
-            if _url:
+            if _url.strip():
                 _urlAdd = _url
                 break
+
         if not _urlAdd:
             self._lblAuthNotification.text = "Please provide minimum one URL!"
             self._lblAuthNotification.setForeground (Color.red)
@@ -4007,12 +3991,13 @@ if (!suspiciousHit && !matchedScope && !matchedDone) {
             self._lblAuthNotification.setForeground (Color.red)
             return
         self._tbAuthURL.setForeground (Color.black)
-        
+
         if not self._tbAuthHeader.getText().strip() or self._tbAuthHeader.getText().strip() == self._txtHeaderDefault:
             self._tbAuthHeader.setForeground (Color.red)
             self._lblAuthNotification.text = "Please provide a valid header!"
             self._lblAuthNotification.setForeground (Color.red)
             return        
+
         self._tbAuthHeader.setForeground (Color.black)        
         self._lblAuthNotification.setForeground (Color.black)
 
@@ -4021,7 +4006,6 @@ if (!suspiciousHit && !matchedScope && !matchedDone) {
         self._tbAuthNewUser.setEnabled(False)
         self._cbSiteMapDepth.setEnabled(False)
         self._btnSiteMapGeneratorRun.setEnabled(False)
-
 
         _userURLs = []
         _userURLs.append(_urlAdd)
@@ -4034,7 +4018,6 @@ if (!suspiciousHit && !matchedScope && !matchedDone) {
             try:
                 # changing new url path in the request header
                 header =  header.replace(str(header.splitlines()[0]), header.splitlines()[0].split(" ", 2)[0] + " /" + _url.split('/',3)[3] + " " + header.splitlines()[0].split(" ", 2)[2])
-
                 # header methods
                 if "GET" in header[:3]:
                     # request was in GET method and will be in POST
@@ -4062,7 +4045,7 @@ if (!suspiciousHit && !matchedScope && !matchedDone) {
                         self._cbSiteMapDepth.setEnabled(True)
                         self._btnSiteMapGeneratorRun.setEnabled(True)
                         return
-                
+
                 msgBody = self._helpers.bytesToString(_httpReqRes.getResponse()[self._helpers.analyzeResponse(self._helpers.bytesToString(_httpReqRes.getResponse())).getBodyOffset():])
 
                 if msgBody:
@@ -4284,7 +4267,6 @@ class UserEnabledRenderer(TableCellRenderer):
             except:
                 pass
         return cell
-
 
 class CustomDefaultTableModel(DefaultTableModel):
     def __init__(self, data, headings):
