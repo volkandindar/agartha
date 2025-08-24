@@ -26,7 +26,7 @@ except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
     sys.exit(1)
 
-VERSION = "2.73"
+VERSION = "2.74"
 #url_regex = r'(log|sign)([-_+%0-9]{0,5})(off|out|in|on)|(expire|kill|terminat|delete|remove)'
 url_regex = r'(log|sign|time)([-_+%0-9]{0,5})(off|out)|(expire|kill|terminat|delete|remove)'
 ext_regex = r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff2|ttf|otf)$'
@@ -1520,23 +1520,50 @@ given request then
             return
         
         for line in self._tbBambdasScopeURLs.getText().splitlines():
-            if line.strip().startswith("/*") or line.strip() == "/":
-                self._tbBambdasScopeURLs.setText("/")
-        
-        for line in self._tbBambdasScopeDoneURLs.getText().splitlines():
-            if line.strip().startswith("/*") or line.strip() == "/":
-                self._lblBambdasNotification2.text = "You can not set root directory '/' in the tested URLs."
-                self._lblBambdasNotification2.setForeground(Color.red)
-                return
-
-        for line in self._tbBambdasBlackListedURLs.getText().splitlines():
-            if line.strip().startswith("/*") or line.strip() == "/":
-                self._tbBambdasBlackListedURLs.setText("/")
-                if self._tbBambdasScopeURLs.text == self._txBambdasScopeURLs or self._tbBambdasScopeURLs.text.strip() == "" or self._tbBambdasScopeURLs.text.strip().startswith("/*"):
-                    self._lblBambdasNotification2.text = "Root directory '/' can't be blacklisted, unless you provide scope URLs."
+            if self._tbBambdasScopeURLs.text != self._txBambdasScopeURLs and self._tbBambdasScopeURLs.text.strip() and line.strip():
+                if line.strip().startswith("/*") or line.strip() == "/":
+                    self._tbBambdasScopeURLs.setText("/")
+                if " " in line.strip():
+                    self._lblBambdasNotification2.text = "One or more of the test scope URLs contain spaces."
+                    self._lblBambdasNotification2.setForeground(Color.red)
+                    return
+                if not line.strip().startswith("/"):
+                    self._lblBambdasNotification2.text = "Make sure all URLs in Testing Scope begin with a '/'"
                     self._lblBambdasNotification2.setForeground(Color.red)
                     return
         
+        for line in self._tbBambdasScopeDoneURLs.getText().splitlines():
+            if self._tbBambdasScopeDoneURLs.text != self._txBambdasScopeDoneURLs and self._tbBambdasScopeDoneURLs.text and line.strip():
+                if line.strip().startswith("/*") or line.strip() == "/":
+                    self._lblBambdasNotification2.text = "You can not set root directory '/' in the tested URLs."
+                    self._lblBambdasNotification2.setForeground(Color.red)
+                    return
+                if " " in line.strip():
+                    self._lblBambdasNotification2.text = "One or more of the tested URLs contain spaces."
+                    self._lblBambdasNotification2.setForeground(Color.red)
+                    return
+                if not line.strip().startswith("/"):
+                    self._lblBambdasNotification2.text = "Make sure all URLs in Tested section begin with a '/'"
+                    self._lblBambdasNotification2.setForeground(Color.red)
+                    return
+
+        for line in self._tbBambdasBlackListedURLs.getText().splitlines():
+            if self._tbBambdasBlackListedURLs.text != self._txBambdasBlackListedURLs and self._tbBambdasBlackListedURLs.text.strip() and line.strip():
+                if line.strip().startswith("/*") or line.strip() == "/":
+                    self._tbBambdasBlackListedURLs.setText("/")
+                    if self._tbBambdasScopeURLs.text == self._txBambdasScopeURLs or self._tbBambdasScopeURLs.text.strip() or self._tbBambdasScopeURLs.text.strip().startswith("/*"):
+                        self._lblBambdasNotification2.text = "Root directory '/' can't be blacklisted, unless you provide scope URLs."
+                        self._lblBambdasNotification2.setForeground(Color.red)
+                        return
+                if " " in line.strip():
+                    self._lblBambdasNotification2.text = "One or more of the Black-Listed URLs contain spaces."
+                    self._lblBambdasNotification2.setForeground(Color.red)
+                    return
+                if not line.strip().startswith("/"):
+                    self._lblBambdasNotification2.text = "Make sure all URL in Black-Listed section begin with a '/'"
+                    self._lblBambdasNotification2.setForeground(Color.red)
+                    return
+
         if self._cbBambdasHTTPMethods.isSelected() and self._txtBambdasHTTPMethods.text.strip().replace(",","") == "" :
             self._lblBambdasNotification2.text = "The HTTP methods option is selected, but no input has been provided"
             self._lblBambdasNotification2.setForeground(Color.red)
@@ -1586,25 +1613,17 @@ given request then
         bambdas += " * Bambdas Script - auto-generated by Agartha\n"
         bambdas += " **/\n\n"
 
-        # bambdas += "//logging.logToOutput(\"smt\");\t\t\t// for troubleshooting\n\n"
         bambdas += "// If true: clear highlights and notes, then stop. If false: run detection logic.\n"
         bambdas += "boolean resetScreen = false;\n"
         bambdas += "// Toggle above when you want to wipe colors/notes without running checks.\n\n"
 
         bambdas += "// Testing scope URLs. \n"
         if sum(1 for line in self._tbBambdasScopeURLs.text.splitlines() if line.strip() == '/') == 1:
-            # There is a '/' in the list, which suppresses the rest of the URLs.
             bambdas += "String[] targetPaths = {\"/.*\"};\n"
-        elif self._tbBambdasScopeURLs.text != self._txBambdasScopeURLs and self._tbBambdasScopeURLs.text.strip() != "":
+        elif self._tbBambdasScopeURLs.text != self._txBambdasScopeURLs and self._tbBambdasScopeURLs.text.strip():
             targetPaths = "{"
             for line in self._tbBambdasScopeURLs.text.splitlines():
-                if  line.strip() == "":
-                    pass
-                elif not line.strip().startswith("/"):
-                    self._lblBambdasNotification2.text = "All URLs in White-list should start with '/'"
-                    self._lblBambdasNotification2.setForeground(Color.red)
-                    return
-                else:
+                if line.strip():
                     targetPaths += "\"" + (line.strip().replace("*",".*") + ".*").replace(".*.*", ".*") + "\", "
             if targetPaths != "{":
                 targetPaths = targetPaths[:-2]
@@ -1620,13 +1639,7 @@ given request then
             if self._tbBambdasBlackListedURLs.text != self._txBambdasBlackListedURLs:
                 targetBlackListUrls = "{"
                 for line in self._tbBambdasBlackListedURLs.text.splitlines():
-                    if  line.strip() == "":
-                        pass
-                    elif not line.strip().startswith("/"):
-                        self._lblBambdasNotification2.text = "All URLs in Black-list should start with '/'"
-                        self._lblBambdasNotification2.setForeground(Color.red)
-                        return
-                    else:
+                    if line.strip():
                         targetBlackListUrls += "\"" + (line.strip().replace("*",".*") + ".*").replace(".*.*", ".*") + "\", "
                 if targetBlackListUrls != "{":
                     targetBlackListUrls = targetBlackListUrls[:-2]
@@ -1638,25 +1651,17 @@ given request then
                 bambdas += "// Add patterns here to ignore noise (health checks, static banners, monitor, etc.).\n"
             bambdas += "\n"
 
-        # if self._tbBambdasBlackListedURLs.getText() == '/' or self._cbBambdasColorScopeSecondary.getSelectedIndex() != 0:
         bambdas += "// Already-tested URLs (mark as completed).\n"
-        if self._tbBambdasScopeDoneURLs.text != self._txBambdasScopeDoneURLs and self._tbBambdasScopeDoneURLs.text.strip() != "":
+        if self._tbBambdasScopeDoneURLs.text != self._txBambdasScopeDoneURLs and self._tbBambdasScopeDoneURLs.text:
             targetPaths = "{"
             for line in self._tbBambdasScopeDoneURLs.text.splitlines():
-                if  line.strip() == "":
-                    pass
-                elif not line.strip().startswith("/"):
-                    self._lblBambdasNotification2.text = "All URLs in Already Tested URLs should start with '/'"
-                    self._lblBambdasNotification2.setForeground(Color.red)
-                    return
-                else:
+                if line.strip():
                     targetPaths += "\"" + (line.strip().replace("*",".*") + ".*").replace(".*.*", ".*") + "\", "
             if targetPaths != "{":
                 targetPaths = targetPaths[:-2]
             targetPaths += "}"
             bambdas += "String[] targetPathsDone = " + targetPaths + ";\n"
         else:
-            # by default includes nothing - /
             bambdas += "String[] targetPathsDone = {\"/YouCanPutTestedURLsHere.*\"};\n"
         bambdas += "// Move stable/assessed endpoints here to avoid re-triage.\n\n"
 
