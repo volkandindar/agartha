@@ -24,7 +24,7 @@ except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
     sys.exit(1)
 
-VERSION = "2.82"
+VERSION = "2.83"
 url_regex = r'(log|sign|time)([-_+%0-9]{0,5})(off|out)|(expire|kill|terminat|delete|remove)'
 ext_regex = r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff2|ttf|otf)$'
 
@@ -1012,6 +1012,7 @@ given request then
         self._MainTabs.setSelectedComponent(self._tabAuthSplitpane)
         self._MainTabs.getParent().setSelectedComponent(self._MainTabs)
         self._lblAuthNotification.text = "A new payload has been received."
+        self._lblAuthNotification.setForeground (Color.black)
         return
 
     def authentication_menu(self, event):
@@ -3975,6 +3976,7 @@ if (!suspiciousHit && !matchedScope && !matchedDone) {
         return
 
     def siteMapGeneratorThread(self, ev):
+        _urlAdd = ""
         for _url in self._tbAuthURL.getText().split('\n'):
             if _url.strip():
                 _urlAdd = _url
@@ -4006,6 +4008,13 @@ if (!suspiciousHit && !matchedScope && !matchedDone) {
         self._tbAuthNewUser.setEnabled(False)
         self._cbSiteMapDepth.setEnabled(False)
         self._btnSiteMapGeneratorRun.setEnabled(False)
+        self._tbAuthHeader.setEnabled(False)
+        self._tbAuthURL.setEnabled(False)
+
+        for line in self._tbAuthURL.getText().split('\n'):
+            if line.strip():
+                self._tbAuthURL.setText(line)
+                break
 
         _userURLs = []
         _userURLs.append(_urlAdd)
@@ -4044,6 +4053,8 @@ if (!suspiciousHit && !matchedScope && !matchedDone) {
                         self._tbAuthNewUser.setEnabled(True)
                         self._cbSiteMapDepth.setEnabled(True)
                         self._btnSiteMapGeneratorRun.setEnabled(True)
+                        self._tbAuthHeader.setEnabled(True)
+                        self._tbAuthURL.setEnabled(True)
                         return
 
                 msgBody = self._helpers.bytesToString(_httpReqRes.getResponse()[self._helpers.analyzeResponse(self._helpers.bytesToString(_httpReqRes.getResponse())).getBodyOffset():])
@@ -4116,6 +4127,8 @@ if (!suspiciousHit && !matchedScope && !matchedDone) {
         self._tbAuthNewUser.setEnabled(True)
         self._cbSiteMapDepth.setEnabled(True)
         self._btnSiteMapGeneratorRun.setEnabled(True)
+        self._tbAuthHeader.setEnabled(True)
+        self._tbAuthURL.setEnabled(True)
         return
 
 class UserEnabledRenderer(TableCellRenderer):
