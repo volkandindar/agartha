@@ -4285,6 +4285,7 @@ class UserEnabledRenderer(TableCellRenderer):
                 pass
         return cell
 
+
 class CustomDefaultTableModel(DefaultTableModel):
     def __init__(self, data, headings):
         DefaultTableModel.__init__(self, data, headings)
@@ -4341,7 +4342,6 @@ class URLFilter:
         else:
             self.patterns_seen.add(norm)
             return True
-
 
 class MyFocusListener(FocusListener):
     def __init__(self, textPane, placeholder):
