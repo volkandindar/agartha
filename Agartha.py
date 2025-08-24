@@ -24,7 +24,7 @@ except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
     sys.exit(1)
 
-VERSION = "2.83"
+VERSION = "2.84"
 url_regex = r'(log|sign|time)([-_+%0-9]{0,5})(off|out)|(expire|kill|terminat|delete|remove)'
 ext_regex = r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff2|ttf|otf)$'
 
@@ -74,6 +74,11 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._cbAuthColoring.setEnabled(False)
         self._btnAuthReset.setEnabled(False)
         self._cbAuthGETPOST.setEnabled(False)
+        self._tbAuthNewUser.setEnabled(False)
+        self._cbSiteMapDepth.setEnabled(False)
+        self._btnSiteMapGeneratorRun.setEnabled(False)
+        self._tbAuthHeader.setEnabled(False)
+        self._tbAuthURL.setEnabled(False)
         self.progressBar.setValue(0)
         self.httpReqRes = [[],[],[],[],[]]
         self.httpReqRes.append([])
@@ -101,6 +106,11 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._cbAuthColoring.setEnabled(True)
         self._btnAuthReset.setEnabled(True)
         self._cbAuthGETPOST.setEnabled(True)
+        self._tbAuthNewUser.setEnabled(True)
+        self._cbSiteMapDepth.setEnabled(True)
+        self._btnSiteMapGeneratorRun.setEnabled(True)
+        self._tbAuthHeader.setEnabled(True)
+        self._tbAuthURL.setEnabled(True)
         self.progressBar.setValue(1000000)
         self._lblAuthNotification.text = "Blue, Green, Purple and Beige colors are representation of users. Yellow, Orange and Red cell colors show warning levels."        
         return
@@ -185,11 +195,14 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
             self._lblAuthNotification.text = "Please provide minimum one URL!"
             self._lblAuthNotification.setForeground (Color.red)
             return
+        if self._tbAuthURL.getText().strip() == self._txtURLDefault:
+            self._lblAuthNotification.text = "You can not proceed with default URL, you can right click on any HTTP calls and send it to here."
+            self._lblAuthNotification.setForeground (Color.red)
+            return
 
         _validItem = False
         for _url in self._tbAuthURL.getText().split('\n'):
-            _url = _url.strip()
-            if not self.isURLValid(str(_url)) or _url == self._txtURLDefault:
+            if not self.isURLValid(str(_url.strip())):
                 self._tbAuthURL.setForeground (Color.red)
                 self._lblAuthNotification.text = "URLs should start with 'http/s' and not have any spaces. Please check: '" + _url + "'"
                 self._lblAuthNotification.setForeground (Color.red)
@@ -212,7 +225,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
 
         if not self._tbAuthHeader.getText().strip() or self._tbAuthHeader.getText().strip() == self._txtHeaderDefault:
             self._tbAuthHeader.setForeground (Color.red)
-            self._lblAuthNotification.text = "Please provide a valid header!"
+            self._lblAuthNotification.text = "Please provide a valid header, you can right click on any HTTP calls and send it to here."
             self._lblAuthNotification.setForeground (Color.red)
             return
         self._tbAuthHeader.setForeground (Color.black)
@@ -3979,7 +3992,7 @@ if (!suspiciousHit && !matchedScope && !matchedDone) {
         _urlAdd = ""
         for _url in self._tbAuthURL.getText().split('\n'):
             if _url.strip():
-                _urlAdd = _url
+                _urlAdd = _url.strip()
                 break
 
         if not _urlAdd:
@@ -3987,16 +4000,23 @@ if (!suspiciousHit && !matchedScope && !matchedDone) {
             self._lblAuthNotification.setForeground (Color.red)
             return
 
-        if not self.isURLValid(str(_urlAdd)) or _urlAdd == self._txtURLDefault:
+        if _urlAdd == self._txtURLDefault:
+            self._tbAuthURL.setForeground (Color.red)
+            self._lblAuthNotification.text = "You can not proceed with default URL, you can right click on any HTTP calls and send it to here."
+            self._lblAuthNotification.setForeground (Color.red)
+            return
+
+        if not self.isURLValid(str(_urlAdd)):
             self._tbAuthURL.setForeground (Color.red)
             self._lblAuthNotification.text = "URLs should start with 'http/s' and not have any spaces. Please check: '" + _urlAdd + "'"
             self._lblAuthNotification.setForeground (Color.red)
             return
+
         self._tbAuthURL.setForeground (Color.black)
 
         if not self._tbAuthHeader.getText().strip() or self._tbAuthHeader.getText().strip() == self._txtHeaderDefault:
             self._tbAuthHeader.setForeground (Color.red)
-            self._lblAuthNotification.text = "Please provide a valid header!"
+            self._lblAuthNotification.text = "Please provide a valid header, you can right click on any HTTP calls and send it to here."
             self._lblAuthNotification.setForeground (Color.red)
             return        
 
@@ -4010,6 +4030,8 @@ if (!suspiciousHit && !matchedScope && !matchedDone) {
         self._btnSiteMapGeneratorRun.setEnabled(False)
         self._tbAuthHeader.setEnabled(False)
         self._tbAuthURL.setEnabled(False)
+        self._btnAuthReset.setEnabled(False)
+        self._btnAuthRun.setEnabled(False)
 
         for line in self._tbAuthURL.getText().split('\n'):
             if line.strip():
@@ -4055,6 +4077,8 @@ if (!suspiciousHit && !matchedScope && !matchedDone) {
                         self._btnSiteMapGeneratorRun.setEnabled(True)
                         self._tbAuthHeader.setEnabled(True)
                         self._tbAuthURL.setEnabled(True)
+                        self._btnAuthReset.setEnabled(True)
+                        self._btnAuthRun.setEnabled(True)
                         return
 
                 msgBody = self._helpers.bytesToString(_httpReqRes.getResponse()[self._helpers.analyzeResponse(self._helpers.bytesToString(_httpReqRes.getResponse())).getBodyOffset():])
@@ -4129,6 +4153,8 @@ if (!suspiciousHit && !matchedScope && !matchedDone) {
         self._btnSiteMapGeneratorRun.setEnabled(True)
         self._tbAuthHeader.setEnabled(True)
         self._tbAuthURL.setEnabled(True)
+        self._btnAuthReset.setEnabled(True)
+        self._btnAuthRun.setEnabled(True)
         return
 
 class UserEnabledRenderer(TableCellRenderer):
