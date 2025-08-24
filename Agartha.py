@@ -2485,7 +2485,7 @@ if (!suspiciousHit && !matchedScope && !matchedDone) {
 
         # 3. Satr - BlackListed URLs
         self._tbBambdasBlackListedURLs = JTextPane()
-        self._tbBambdasBlackListedURLs.setToolTipText("Exclude from processing: one URL per line. Leave blank to exclude nothing.")
+        self._tbBambdasBlackListedURLs.setToolTipText("Exclude from processing: one URL per line. Leave blank to exclude nothing, and adding '/' will hide everything unless a criteria matches.")
         self._txBambdasBlackListedURLs = "Please provide the URLs to be blacklisted, to exclude from the HTTP call history. Some examples:\n\t-/health-check\n\t+ Excludes specifically this path, and rest:\n\t\t+ /health-check\n\t\t+ /health-check/Monitor\n\t\t+ /health-check/?Level=Info"
         placeholderText3 = self._txBambdasBlackListedURLs
         self._tbBambdasBlackListedURLs.setText(placeholderText3)
