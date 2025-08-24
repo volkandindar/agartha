@@ -24,7 +24,7 @@ except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
     sys.exit(1)
 
-VERSION = "2.84"
+VERSION = "2.85"
 url_regex = r'(log|sign|time)([-_+%0-9]{0,5})(off|out)|(expire|kill|terminat|delete|remove)'
 ext_regex = r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff2|ttf|otf)$'
 
@@ -79,6 +79,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._btnSiteMapGeneratorRun.setEnabled(False)
         self._tbAuthHeader.setEnabled(False)
         self._tbAuthURL.setEnabled(False)
+        self._cbAuthColoring.setEnabled(False)
         self.progressBar.setValue(0)
         self.httpReqRes = [[],[],[],[],[]]
         self.httpReqRes.append([])
@@ -186,10 +187,6 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
             return str(sys.exc_info()[1])
 
     def authAdduser(self, ev):
-        if self.userCount == 4:
-            self._lblAuthNotification.text = "You can add up to 4 users"
-            self._lblAuthNotification.setForeground (Color.red)
-            return
         
         if not self._tbAuthURL.getText().strip():
             self._lblAuthNotification.text = "Please provide minimum one URL!"
@@ -283,6 +280,10 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self._customTableColumnModel = self.tableMatrix.getColumnModel()
         for y in range(0,self.tableMatrix.getColumnCount()):
             self._customTableColumnModel.getColumn (y).setCellRenderer (self._customRenderer)
+        
+        if self.userCount == 4:
+            self._btnAuthNewUserAdd.setEnabled(False)
+            self._tbAuthNewUser.setEnabled(False)
         
         return
 
@@ -3967,6 +3968,7 @@ if (!suspiciousHit && !matchedScope && !matchedDone) {
         self._tbAuthURL.setText(self._txtURLDefault)
         self._txtUserDefault = "User1"
         self._tbAuthNewUser.text = self._txtUserDefault.strip()
+        self._tbAuthNewUser.setEnabled(True)
         self._btnAuthRun.setEnabled(False)
         self._btnAuthReset.setEnabled(False)
         self._cbAuthColoring.setEnabled(False)
@@ -4032,6 +4034,8 @@ if (!suspiciousHit && !matchedScope && !matchedDone) {
         self._tbAuthURL.setEnabled(False)
         self._btnAuthReset.setEnabled(False)
         self._btnAuthRun.setEnabled(False)
+        self._cbAuthColoring.setEnabled(False)
+        self._cbAuthGETPOST.setEnabled(False)
 
         for line in self._tbAuthURL.getText().split('\n'):
             if line.strip():
@@ -4079,6 +4083,8 @@ if (!suspiciousHit && !matchedScope && !matchedDone) {
                         self._tbAuthURL.setEnabled(True)
                         self._btnAuthReset.setEnabled(True)
                         self._btnAuthRun.setEnabled(True)
+                        self._cbAuthColoring.setEnabled(True)
+                        self._cbAuthGETPOST.setEnabled(True)
                         return
 
                 msgBody = self._helpers.bytesToString(_httpReqRes.getResponse()[self._helpers.analyzeResponse(self._helpers.bytesToString(_httpReqRes.getResponse())).getBodyOffset():])
@@ -4155,6 +4161,8 @@ if (!suspiciousHit && !matchedScope && !matchedDone) {
         self._tbAuthURL.setEnabled(True)
         self._btnAuthReset.setEnabled(True)
         self._btnAuthRun.setEnabled(True)
+        self._cbAuthColoring.setEnabled(True)
+        self._cbAuthGETPOST.setEnabled(True)
         return
 
 class UserEnabledRenderer(TableCellRenderer):
