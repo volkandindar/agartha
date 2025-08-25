@@ -24,7 +24,7 @@ except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
     sys.exit(1)
 
-VERSION = "2.86"
+VERSION = "2.87"
 url_regex = r'(log|sign|time)([-_+%0-9]{0,5})(off|out)|(expire|kill|terminat|delete|remove)'
 ext_regex = r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff2|ttf|otf)$'
 
@@ -206,9 +206,16 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
 
             match = re.search(r"^Host:\s*(.+)$", self._tbAuthHeader.getText(), re.MULTILINE)
             url_hostname = urlparse.urlparse(_url.strip()).hostname
-            if match and match.group(1) and _url.strip() and match.group(1).strip() != url_hostname:
+            if match and match.group(1):
+                header_hostname = match.group(1).strip()
+                if header_hostname != url_hostname and url_hostname:
+                    self._tbAuthURL.setForeground (Color.red)
+                    self._lblAuthNotification.text = "HTTP header and the path hostname do not match, please check: Host: " + header_hostname + " vs " + _url
+                    self._lblAuthNotification.setForeground (Color.red)
+                    return
+            else:
                 self._tbAuthURL.setForeground (Color.red)
-                self._lblAuthNotification.text = "HTTP header and the path hostname do not match, please check: '" + _url + "'"
+                self._lblAuthNotification.text = "HTTP header does not have 'Host' element."
                 self._lblAuthNotification.setForeground (Color.red)
                 return
 
@@ -1036,6 +1043,8 @@ given request then
         self._MainTabs.getParent().setSelectedComponent(self._MainTabs)
         self._lblAuthNotification.text = "A new payload has been received."
         self._lblAuthNotification.setForeground (Color.black)
+        self._tbAuthURL.setForeground (Color.black)
+        self._tbAuthHeader.setForeground (Color.black)
         return
 
     def authentication_menu(self, event):
