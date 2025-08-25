@@ -24,7 +24,7 @@ except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
     sys.exit(1)
 
-VERSION = "2.85"
+VERSION = "2.86"
 url_regex = r'(log|sign|time)([-_+%0-9]{0,5})(off|out)|(expire|kill|terminat|delete|remove)'
 ext_regex = r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff2|ttf|otf)$'
 
@@ -197,7 +197,6 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
             self._lblAuthNotification.setForeground (Color.red)
             return
 
-        _validItem = False
         for _url in self._tbAuthURL.getText().split('\n'):
             if not self.isURLValid(str(_url.strip())):
                 self._tbAuthURL.setForeground (Color.red)
@@ -205,6 +204,16 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                 self._lblAuthNotification.setForeground (Color.red)
                 return
 
+            match = re.search(r"^Host:\s*(.+)$", self._tbAuthHeader.getText(), re.MULTILINE)
+            url_hostname = urlparse.urlparse(_url.strip()).hostname
+            if match and match.group(1) and _url.strip() and match.group(1).strip() != url_hostname:
+                self._tbAuthURL.setForeground (Color.red)
+                self._lblAuthNotification.text = "HTTP header and the path hostname do not match, please check: '" + _url + "'"
+                self._lblAuthNotification.setForeground (Color.red)
+                return
+
+        _validItem = False
+        for _url in self._tbAuthURL.getText().split('\n'):
             if _url.count("/") == 2:
                 _url += "/"
             _ext = os.path.splitext(urlparse.urlparse(_url).path)[1]
