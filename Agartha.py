@@ -24,7 +24,7 @@ except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
     sys.exit(1)
 
-VERSION = "2.88"
+VERSION = "2.89"
 url_regex = r'(log|sign|time)([-_+%0-9]{0,5})(off|out)|(expire|kill|terminat|delete|remove)'
 ext_regex = r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff2|ttf|otf)$'
 
@@ -2025,6 +2025,10 @@ for (String httpMethod : httpMethods)
         if (notesBuilder.length() > 0)
             requestResponse.annotations().setNotes("Suspicious: " + notesBuilder.toString());
         }
+    else{
+        requestResponse.annotations().setHighlightColor(HighlightColor.NONE);
+        requestResponse.annotations().setNotes("");
+    }
 """
         bambdas += """
     // Highlight items that match testing scope
