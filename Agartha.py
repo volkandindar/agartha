@@ -24,7 +24,7 @@ except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
     sys.exit(1)
 
-VERSION = "2.96"
+VERSION = "2.97"
 url_regex = r'(log|sign|time)([-_+%0-9]{0,5})(off|out)|(expire|kill|terminat|delete|remove)'
 ext_regex = r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff2|ttf|otf)$'
 
@@ -2045,8 +2045,8 @@ for (String httpMethod : httpMethods)
         bambdas += "\t\t\trequestResponse.annotations().setHighlightColor(HighlightColor."+ self._cbBambdasColorScopeSecondary.getSelectedItem() + ");\n\t\t\tmatchedDone = true;\n\t\t\tbreak;\n\t\t}\n}\n// End processing window\n"
 
         if self._tbBambdasBlackListedURLs.getText() == '/':
-            bambdas += "\n// Root black-list (/) selected: ignore everything outside explicit scope/tested unless flagged as suspicious"
             bambdas += """
+// Root blacklist (/) selected: ignore everything unless a matching criterion is found (scope, tested, or suspicious flags)."
 if (!suspiciousHit && !matchedScope && !matchedDone)
     return false;
 """
