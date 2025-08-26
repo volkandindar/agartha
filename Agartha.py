@@ -24,7 +24,7 @@ except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
     sys.exit(1)
 
-VERSION = "2.89"
+VERSION = "2.91"
 url_regex = r'(log|sign|time)([-_+%0-9]{0,5})(off|out)|(expire|kill|terminat|delete|remove)'
 ext_regex = r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff2|ttf|otf)$'
 
@@ -1749,6 +1749,10 @@ for (String httpMethod : httpMethods)
         bambdas += "// Processing window (days): only analyze items newer than this threshold\n"
         bambdas += "if (requestResponse.time().isAfter(ZonedDateTime.now().minusDays(" + self._cbBambdasProcessDays.getSelectedItem().split()[0] + "))){\n"
 
+        bambdas += "\n\t// Clear the item first"
+        bambdas += "\n\trequestResponse.annotations().setHighlightColor(HighlightColor.NONE);\n"
+        bambdas += "\trequestResponse.annotations().setNotes(\"\");\n"
+
         if (self._cbBambdasSearchinReq.isSelected() or self._cbBambdasSearchinURL.isSelected()) and (self._cbBambdasSQLi.isSelected() or self._cbBambdasXSS.isSelected() or self._cbBambdasLFI.isSelected() or self._cbBambdasSSRF.isSelected() or self._cbBambdasORed.isSelected() or self._cbBambdasRCE.isSelected()):
             bambdas += "\t// Suspicious parameter registry per attack type\n"
             bambdas += "\n\tMap<String, List<String>> attacksKeyWords = new HashMap<>();\n"
@@ -2025,10 +2029,6 @@ for (String httpMethod : httpMethods)
         if (notesBuilder.length() > 0)
             requestResponse.annotations().setNotes("Suspicious: " + notesBuilder.toString());
         }
-    else{
-        requestResponse.annotations().setHighlightColor(HighlightColor.NONE);
-        requestResponse.annotations().setNotes("");
-    }
 """
         bambdas += """
     // Highlight items that match testing scope
