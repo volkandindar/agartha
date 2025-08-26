@@ -24,7 +24,7 @@ except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
     sys.exit(1)
 
-VERSION = "2.87"
+VERSION = "2.88"
 url_regex = r'(log|sign|time)([-_+%0-9]{0,5})(off|out)|(expire|kill|terminat|delete|remove)'
 ext_regex = r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff2|ttf|otf)$'
 
@@ -102,12 +102,13 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
             self._customTableColumnModel.getColumn(y).setCellRenderer(self._customRenderer)
         self.tableMatrix.repaint()
         self.tableMatrix.setSelectionForeground(Color.red)
-        self._btnAuthNewUserAdd.setEnabled(True)
+        if self.userCount < 4:
+            self._btnAuthNewUserAdd.setEnabled(True)
+            self._tbAuthNewUser.setEnabled(True)
         self._btnAuthRun.setEnabled(True)
         self._cbAuthColoring.setEnabled(True)
         self._btnAuthReset.setEnabled(True)
         self._cbAuthGETPOST.setEnabled(True)
-        self._tbAuthNewUser.setEnabled(True)
         self._cbSiteMapDepth.setEnabled(True)
         self._btnSiteMapGeneratorRun.setEnabled(True)
         self._tbAuthHeader.setEnabled(True)
@@ -1111,7 +1112,7 @@ given request then
         self._btnAuthNewUserAdd.setToolTipText("Please add user/s to populate role matrix!")
         self._btnAuthRun = JButton("RUN", actionPerformed=self.authMatrix)
         self._btnAuthRun.setPreferredSize(Dimension(150, 27))
-        self._btnAuthRun.setToolTipText("Execute the task!")
+        self._btnAuthRun.setToolTipText("Generate user access table!")
         self._btnSiteMapGeneratorRun = JButton("Spider", actionPerformed=self.siteMapGenerator)
         self._btnSiteMapGeneratorRun.setPreferredSize(Dimension(90, 27))
         self._btnSiteMapGeneratorRun.setToolTipText("It crawls all the links the user can visit and populate URL list automatically.")
