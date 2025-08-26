@@ -1528,7 +1528,7 @@ given request then
 
     def funcBambdasRun(self, ev):
 
-        if self._cbBambdasDisplayDays.getSelectedItem() < self._cbBambdasProcessDays.getSelectedItem():
+        if self._cbBambdasDisplayDays.getSelectedIndex() < self._cbBambdasProcessDays.getSelectedIndex():
             self._lblBambdasNotification2.text = "The display period must not be shorter than the processing period."
             self._lblBambdasNotification2.setForeground(Color.red)
             return
