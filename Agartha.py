@@ -1565,7 +1565,7 @@ given request then
             if self._tbBambdasBlackListedURLs.text != self._txBambdasBlackListedURLs and self._tbBambdasBlackListedURLs.text.strip() and line.strip():
                 if line.strip().startswith("/*") or line.strip() == "/":
                     self._tbBambdasBlackListedURLs.setText("/")
-                    if self._tbBambdasScopeURLs.text == self._txBambdasScopeURLs or self._tbBambdasScopeURLs.text.strip() or self._tbBambdasScopeURLs.text.strip().startswith("/*"):
+                    if not self._tbBambdasScopeURLs.text == self._txBambdasScopeURLs and not self._tbBambdasScopeURLs.text.strip():
                         self._lblBambdasNotification2.text = "Root directory '/' can't be blacklisted, unless you provide scope URLs."
                         self._lblBambdasNotification2.setForeground(Color.red)
                         return
