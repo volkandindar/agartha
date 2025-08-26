@@ -24,7 +24,7 @@ except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
     sys.exit(1)
 
-VERSION = "2.93"
+VERSION = "2.94"
 url_regex = r'(log|sign|time)([-_+%0-9]{0,5})(off|out)|(expire|kill|terminat|delete|remove)'
 ext_regex = r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff2|ttf|otf)$'
 
@@ -1636,7 +1636,7 @@ given request then
             bambdas += "String[] targetPaths = {\"/.*\"};\n"
         elif self._tbBambdasScopeURLs.text != self._txBambdasScopeURLs and self._tbBambdasScopeURLs.text.strip():
             targetPaths = "{"
-            for line in self._tbBambdasScopeURLs.text.splitlines():
+            for line in list(dict.fromkeys(self._tbBambdasScopeURLs.text.splitlines())):
                 if line.strip():
                     targetPaths += "\"" + (line.strip().replace("*",".*") + ".*").replace(".*.*", ".*") + "\", "
             if targetPaths != "{":
@@ -1652,7 +1652,7 @@ given request then
             bambdas += "// Black-Listed / Unwanted URLs\n"
             if self._tbBambdasBlackListedURLs.text != self._txBambdasBlackListedURLs:
                 targetBlackListUrls = "{"
-                for line in self._tbBambdasBlackListedURLs.text.splitlines():
+                for line in list(dict.fromkeys(self._tbBambdasBlackListedURLs.text.splitlines())):
                     if line.strip():
                         targetBlackListUrls += "\"" + (line.strip().replace("*",".*") + ".*").replace(".*.*", ".*") + "\", "
                 if targetBlackListUrls != "{":
@@ -1668,7 +1668,7 @@ given request then
         bambdas += "// Already-tested URLs (mark as completed).\n"
         if self._tbBambdasScopeDoneURLs.text != self._txBambdasScopeDoneURLs and self._tbBambdasScopeDoneURLs.text:
             targetPaths = "{"
-            for line in self._tbBambdasScopeDoneURLs.text.splitlines():
+            for line in list(dict.fromkeys(self._tbBambdasScopeDoneURLs.text.splitlines())):
                 if line.strip():
                     targetPaths += "\"" + (line.strip().replace("*",".*") + ".*").replace(".*.*", ".*") + "\", "
             if targetPaths != "{":
