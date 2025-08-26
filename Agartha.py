@@ -24,7 +24,7 @@ except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
     sys.exit(1)
 
-VERSION = "2.91"
+VERSION = "2.92"
 url_regex = r'(log|sign|time)([-_+%0-9]{0,5})(off|out)|(expire|kill|terminat|delete|remove)'
 ext_regex = r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff2|ttf|otf)$'
 
@@ -1746,12 +1746,12 @@ for (String httpMethod : httpMethods)
                 bambdas += "    return false;\n"
                 bambdas += "// Ignore static asset extensions to reduce noise.\n\n"
 
+        bambdas += "// Clear the item first before processing"
+        bambdas += "\nrequestResponse.annotations().setHighlightColor(HighlightColor.NONE);"
+        bambdas += "\nrequestResponse.annotations().setNotes(\"\");\n\n"
+
         bambdas += "// Processing window (days): only analyze items newer than this threshold\n"
         bambdas += "if (requestResponse.time().isAfter(ZonedDateTime.now().minusDays(" + self._cbBambdasProcessDays.getSelectedItem().split()[0] + "))){\n"
-
-        bambdas += "\n\t// Clear the item first"
-        bambdas += "\n\trequestResponse.annotations().setHighlightColor(HighlightColor.NONE);\n"
-        bambdas += "\trequestResponse.annotations().setNotes(\"\");\n"
 
         if (self._cbBambdasSearchinReq.isSelected() or self._cbBambdasSearchinURL.isSelected()) and (self._cbBambdasSQLi.isSelected() or self._cbBambdasXSS.isSelected() or self._cbBambdasLFI.isSelected() or self._cbBambdasSSRF.isSelected() or self._cbBambdasORed.isSelected() or self._cbBambdasRCE.isSelected()):
             bambdas += "\t// Suspicious parameter registry per attack type\n"
@@ -2050,16 +2050,9 @@ for (String httpMethod : httpMethods)
 
         if self._tbBambdasBlackListedURLs.getText() == '/':
             bambdas += "\n// Root black-list (/) selected: ignore everything outside explicit scope/tested unless flagged as suspicious"
-        else:
-            bambdas += "\n// Clear previously processed items"
-        bambdas += """
-if (!suspiciousHit && !matchedScope && !matchedDone) {
-    requestResponse.annotations().setHighlightColor(HighlightColor.NONE);
-    requestResponse.annotations().setNotes("");"""
-        if self._tbBambdasBlackListedURLs.getText() == '/':
-            bambdas += "\n\treturn false;"
-        bambdas += """
-}
+            bambdas += """
+if (!suspiciousHit && !matchedScope && !matchedDone)
+    return false;
 """
         bambdas += "\nreturn true;"
 
