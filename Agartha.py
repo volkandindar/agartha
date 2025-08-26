@@ -24,7 +24,7 @@ except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
     sys.exit(1)
 
-VERSION = "2.92"
+VERSION = "2.93"
 url_regex = r'(log|sign|time)([-_+%0-9]{0,5})(off|out)|(expire|kill|terminat|delete|remove)'
 ext_regex = r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff2|ttf|otf)$'
 
@@ -1565,7 +1565,7 @@ given request then
             if self._tbBambdasBlackListedURLs.text != self._txBambdasBlackListedURLs and self._tbBambdasBlackListedURLs.text.strip() and line.strip():
                 if line.strip().startswith("/*") or line.strip() == "/":
                     self._tbBambdasBlackListedURLs.setText("/")
-                    if not self._tbBambdasScopeURLs.text == self._txBambdasScopeURLs and not self._tbBambdasScopeURLs.text.strip():
+                    if self._tbBambdasScopeURLs.text == self._txBambdasScopeURLs or not self._tbBambdasScopeURLs.text.strip():
                         self._lblBambdasNotification2.text = "Root directory '/' can't be blacklisted, unless you provide scope URLs."
                         self._lblBambdasNotification2.setForeground(Color.red)
                         return
@@ -1745,10 +1745,6 @@ for (String httpMethod : httpMethods)
                 bambdas += "if (Pattern.compile(\"\\\\.(" + filterDenyList[1:] + ")$\", Pattern.CASE_INSENSITIVE).matcher(pathExt).find())\n"
                 bambdas += "    return false;\n"
                 bambdas += "// Ignore static asset extensions to reduce noise.\n\n"
-
-        bambdas += "// Clear the item first before processing"
-        bambdas += "\nrequestResponse.annotations().setHighlightColor(HighlightColor.NONE);"
-        bambdas += "\nrequestResponse.annotations().setNotes(\"\");\n\n"
 
         bambdas += "// Processing window (days): only analyze items newer than this threshold\n"
         bambdas += "if (requestResponse.time().isAfter(ZonedDateTime.now().minusDays(" + self._cbBambdasProcessDays.getSelectedItem().split()[0] + "))){\n"
@@ -2048,6 +2044,13 @@ for (String httpMethod : httpMethods)
         bambdas += "){\n"
         bambdas += "\t\t\trequestResponse.annotations().setHighlightColor(HighlightColor."+ self._cbBambdasColorScopeSecondary.getSelectedItem() + ");\n\t\t\tmatchedDone = true;\n\t\t\tbreak;\n\t\t}\n}\n// End processing window\n"
 
+        bambdas += """
+//Clear the notes if matches nothing
+if (!suspiciousHit){
+    requestResponse.annotations().setNotes("");
+    requestResponse.annotations().setHighlightColor(HighlightColor.NONE);
+}
+"""
         if self._tbBambdasBlackListedURLs.getText() == '/':
             bambdas += "\n// Root black-list (/) selected: ignore everything outside explicit scope/tested unless flagged as suspicious"
             bambdas += """
