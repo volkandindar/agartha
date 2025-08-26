@@ -2057,7 +2057,6 @@ else {
     requestResponse.annotations().setNotes("");
 }
 """
-
         if self._tbBambdasBlackListedURLs.getText() == '/':
             bambdas += """
 // Root blacklist (/) selected: ignore everything unless a matching criterion is found (scope, tested, or suspicious flags)."
