@@ -64,7 +64,7 @@ Now you can generate the code automatically:
 <img width="1000" alt="BCheck Code Generator" src="https://github.com/user-attachments/assets/2da25e94-b8d6-441a-baef-1b829f877051">
 
 - You can click the “**Generate the Payloads**” button in the blue box above to create a classic wordlist, which can be used manually in Burp's Intruder or Repeater.
-- Now, you also have the option to click the “**Generate payloads for BCheck**” button in the red box to generate the same payloads formatted in BCheck syntax, ready to be used in automated scans.
+- Now, you also have the option to click the “**Generate payloads for BCheck**” button in the red box to generate the same payloads formatted in BCheck syntax, ready to be used in scans.
 
 <img width="1000" alt="BCheck Code Generator" src="https://github.com/user-attachments/assets/c38b5816-2a24-4f13-b3f3-a7c62b3ca236">
 
