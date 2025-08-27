@@ -261,7 +261,7 @@ If you later update or modify a script that has already been created, there are 
 
 		Bambda Script mode > Load
 
-  <img width="800" alt="Bambdas Code Generator" src="https://github.com/user-attachments/assets/0209b389-423c-4918-bae1-226ed35a36df">
+  <img width="800" alt="Bambdas Code Generator" src="https://github.com/user-attachments/assets/331c3f86-34de-43a0-8d10-0760a12c5f81">
 
 - If you use your script as Temporary (project-based), you generally have two options:
  	1. If you want the modified script to be active from that point onward, no additional steps are required—simply click Apply.
@@ -272,7 +272,7 @@ If you later update or modify a script that has already been created, there are 
 		boolean resetScreen = false; // or true
 		
 		```
-		<img width="800" alt="Bambdas Code Generator" src="https://github.com/user-attachments/assets/77b9327d-d409-4467-b689-982979aafec0">
+		<img width="800" alt="Bambdas Code Generator" src="https://github.com/user-attachments/assets/e30fec8d-a78d-4328-84b4-6fd1ee29f8f3">
 
 <br/><br/>
 [Another tutorial link](https://www.linkedin.com/pulse/agartha-lfi-rce-auth-sqli-http-js-volkan-dindar)
