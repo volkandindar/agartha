@@ -330,7 +330,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
     name: "Command Injection Fuzzing - Agartha"
     description: "Command Injection is a security flaw where attackers execute unauthorized commands on a system by exploiting unvalidated user input."
     author: "Agartha"
-    tags: "RCE", "RCE Injection"
+    tags: "RCE", "Command Injection"
 
 define:
     issueDetail = `Command Injection on Path {latest.request.url}`
@@ -351,7 +351,7 @@ run for each:
     name: "File Injection Fuzzing - Agartha"
     description: "Local File Inclusion (LFI) is a security vulnerability where attackers can access and execute files on a server by exploiting improper input validation. This can lead to unauthorized access to sensitive data and system compromise."
     author: "Agartha"
-    tags: "LFI", "LFI Injection"
+    tags: "LFI", "Directory Traversal"
 
 define:
     issueDetail = `Local File Inclusion on Path {latest.request.url}`
