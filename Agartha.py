@@ -24,7 +24,7 @@ except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
     sys.exit(1)
 
-VERSION = "2.991"
+VERSION = "2.992"
 url_regex = r'(log|sign|time)([-_+%0-9]{0,5})(off|out)|(expire|kill|terminat|delete|remove)'
 ext_regex = r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff2|ttf|otf)$'
 
@@ -1637,7 +1637,7 @@ given request then
             targetPaths = "{"
             for line in list(dict.fromkeys(self._tbBambdasScopeURLs.text.splitlines())):
                 if line.strip():
-                    targetPaths += "\"" + (line.strip().replace("*",".*") + ".*").replace(".*.*", ".*") + "\", "
+                    targetPaths += "\"" + (line.strip().replace("*",".*") + "(?:\\?(.*))?/?$")+ "\", "
             if targetPaths != "{":
                 targetPaths = targetPaths[:-2]
             targetPaths += "}"
@@ -1653,7 +1653,7 @@ given request then
                 targetBlackListUrls = "{"
                 for line in list(dict.fromkeys(self._tbBambdasBlackListedURLs.text.splitlines())):
                     if line.strip():
-                        targetBlackListUrls += "\"" + (line.strip().replace("*",".*") + ".*").replace(".*.*", ".*") + "\", "
+                        targetBlackListUrls += "\"" + (line.strip().replace("*",".*") + "(?:\\?(.*))?/?$") + "\", "
                 if targetBlackListUrls != "{":
                     targetBlackListUrls = targetBlackListUrls[:-2]
                 targetBlackListUrls += "}"
@@ -1669,7 +1669,7 @@ given request then
             targetPaths = "{"
             for line in list(dict.fromkeys(self._tbBambdasScopeDoneURLs.text.splitlines())):
                 if line.strip():
-                    targetPaths += "\"" + (line.strip().replace("*",".*") + ".*").replace(".*.*", ".*") + "\", "
+                    targetPaths += "\"" + (line.strip().replace("*",".*") + "(?:\\?(.*))?/?$") + "\", "
             if targetPaths != "{":
                 targetPaths = targetPaths[:-2]
             targetPaths += "}"
