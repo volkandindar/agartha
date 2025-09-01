@@ -235,6 +235,10 @@ Explanations, A little bit more details:
  	 	    - /portal/users/dashboard
     - /admin/\*/users/\*/class
      	- The asterisk (*) acts as a placeholder for IDs, UUIDs, etc., and the rest of the path will be included.
+    - /api/v\*/user
+     	- The asterisk (*) acts as a wildcard that matches any sequence of characters following **v**, up to the next '/'.
+ 	 	    - /api/v1/user
+ 	 	    - /api/v2/user
     - /health-check
  	    - Includes specifically this path and its subpaths, for example:
  	 	    - /health-check
