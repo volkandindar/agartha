@@ -236,7 +236,7 @@ Explanations, A little bit more details:
     - /admin/\*/users/\*/class
      	- The asterisk (*) acts as a placeholder for IDs, UUIDs, etc., and the rest of the path will be included.
     - /api/v\*/user
-     	- The asterisk (*) acts as a wildcard that matches any sequence of characters following **v**, up to the next '/'.
+     	- The asterisk (*) acts as a wildcard that matches any sequence of characters following **v**, up to the next '/', for example:
  	 	    - /api/v1/user
  	 	    - /api/v2/user
     - /health-check
