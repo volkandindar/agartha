@@ -24,7 +24,7 @@ except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
     sys.exit(1)
 
-VERSION = "2.99"
+VERSION = "2.991"
 url_regex = r'(log|sign|time)([-_+%0-9]{0,5})(off|out)|(expire|kill|terminat|delete|remove)'
 ext_regex = r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff2|ttf|otf)$'
 
@@ -325,8 +325,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         if self.funcGeneratePayload(self):
             line_count = len([line for line in self._tabDictResultDisplay.getText().split('\n') if line.strip()])
             if self._rbDictCommandInj.isSelected():
-                bcheckCode= """
-metadata:
+                bcheckCode= """metadata:
     language: v2-beta
     name: "Command Injection Fuzzing - Agartha"
     description: "Command Injection is a security flaw where attackers execute unauthorized commands on a system by exploiting unvalidated user input."
@@ -347,8 +346,7 @@ run for each:
     payloads=
 """
             elif self._rbDictLFI.isSelected():
-                bcheckCode= """
-metadata:
+                bcheckCode= """metadata:
     language: v2-beta
     name: "File Injection Fuzzing - Agartha"
     description: "Local File Inclusion (LFI) is a security vulnerability where attackers can access and execute files on a server by exploiting improper input validation. This can lead to unauthorized access to sensitive data and system compromise."
@@ -368,8 +366,7 @@ run for each:
     payloads=
 """
             elif self._rbDictSQLi.isSelected():
-                bcheckCode= """
-metadata:
+                bcheckCode= """metadata:
     language: v2-beta
     name: "SQL Injection Fuzzing - Agartha"
     description: "SQL injection is a security vulnerability where attackers insert malicious SQL code into a query, allowing them to manipulate or access the database improperly."
@@ -456,10 +453,12 @@ given request then
         end if
     end if
 """
-            self._tabDictResultDisplay.setText(bcheckCode)
+            self.updateBambdasScriptText(bcheckCode)
             clipboard = Toolkit.getDefaultToolkit().getSystemClipboard()
             clipboard.setContents(StringSelection(self._tabDictResultDisplay.getText()), None)
             self._lblStatusLabel.setText('BCheck Code has generated with ' + str(line_count) + ' payloads, and has been copied to your clipboard!')
+            if line_count > 3000:
+                self._lblStatusLabel.setText(self._lblStatusLabel.getText() + " Large Bambdas scripts may cause performance issues.")
         
         return
 
@@ -2089,8 +2088,24 @@ if (!suspiciousHit && !matchedScope && !matchedDone)
         return
 
     def updateBambdasScriptText(self, javaCode):
-        
+
         doc = self._tbBambdasScript.getStyledDocument()
+        processWhat = ""
+        if javaCode.startswith("/*"):
+            doc = self._tbBambdasScript.getStyledDocument()
+            processWhat = "Bambdas"
+        elif javaCode.startswith("metadata"):
+            if javaCode.count("\n") > 3000:
+                # do not color if more then 3000 lines
+                self._tabDictResultDisplay.setText(javaCode)
+                return
+            doc = self._tabDictResultDisplay.getStyledDocument()
+            processWhat = "Dict"
+        else:
+            # no match no coloring
+            self._tabDictResultDisplay.setText(javaCode)
+            return
+
         doc.remove(0, doc.getLength())
 
         # Define styles
@@ -2115,9 +2130,10 @@ if (!suspiciousHit && !matchedScope && !matchedDone)
         patterns = [
             (r'/\*[\s\S]*?\*/', style_comment),  # Multi-line comments
             (r'//.*', style_comment),            # Single-line comments
+            (r'#.*', style_comment),            # Single-line comments
             (r'"(?:\\.|[^"\\])*"', style_string),# Strings
             (r'@\w+', style_annotation),         # Annotations
-            (r'\b(?:if|else|for|String|return|true|false)\b', style_keyword), # Selected keywords
+            (r'\b(?:if|else|for|String|return|true|false|then|end if|break|boolean|given|send)\b', style_keyword), # Selected keywords
         ]
 
         while javaCode:
@@ -2151,7 +2167,10 @@ if (!suspiciousHit && !matchedScope && !matchedDone)
                 break
 
         # Scroll to top after inserting text
-        self._tbBambdasScript.setCaretPosition(0)
+        if processWhat == "Bambdas":
+            self._tbBambdasScript.setCaretPosition(0)
+        elif processWhat == "Dict":
+            self._tabDictResultDisplay.setCaretPosition(0)
 
 
     def funcBambdasUIReset(self, ev):
