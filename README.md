@@ -66,7 +66,7 @@ Now you can generate the code automatically:
 - You can click the “**Generate the Payloads**” button in the blue box above to create a classic wordlist, which can be used manually in Burp's Intruder or Repeater.
 - Now, you also have the option to click the “**Generate payloads for BCheck**” button in the red box to generate the same payloads formatted in BCheck syntax, ready to be used in scans.
 
-Please be aware that as the Bambdas script grows in size, it may lead to performance issues.
+Please be aware that as the Bambdas script increases in size, it may cause performance issues, particularly during scanning. Larger scripts can slow down responsiveness, increase memory usage, and lead to delays in executing tasks.
 
 <img width="1000" alt="BCheck Code Generator" src="https://github.com/user-attachments/assets/c38b5816-2a24-4f13-b3f3-a7c62b3ca236">
 
