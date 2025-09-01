@@ -2542,7 +2542,6 @@ if (!suspiciousHit && !matchedScope && !matchedDone)
         self._tbBambdasScript.setContentType("text")
         self._tbBambdasScript.setToolTipText("The generated Bambdas script will appear here after you click Run.")
         self._tbBambdasScript.setEditable(True)
-        self._txBambdasScript = "/* Bambdas Script will be in here automatically */"
         self.updateBambdasScriptText("/* Bambdas Script will be in here automatically */")
         scroll_pane = JScrollPane(self._tbBambdasScript)
 
