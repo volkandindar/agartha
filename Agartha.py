@@ -3888,9 +3888,9 @@ if (!suspiciousHit && !matchedScope && !matchedDone)
         <li>You can use the web <strong>&#39;Spider&#39;</strong> feature to generate a sitemap/URL list, and it will crawl visible links from the user&#39;s session automatically.</li>
         </ul>
         </li>
-        <li><strong>403 Bypass</strong>: It aims to tackle common access restrictions, such as HTTP 403 Forbidden responses. It utilizes techniques like URL manipulation and request header modification to bypass implemented limitations.</li>
-        <li><strong>Copy as JavaScript</strong>: It converts Http requests to JavaScript code for further XSS exploitation and more.</li>
-        <li><strong>Bambdas Script Generator</strong>: The feature supports automatic generation of Bambdas-compatible scripts based on user input. It eliminates the need for manual coding, enabling faster creation of custom scripts and streamlining integration with the Bambdas engine.</li>
+        <p><li><strong>403 Bypass</strong>: It aims to tackle common access restrictions, such as HTTP 403 Forbidden responses. It utilizes techniques like URL manipulation and request header modification to bypass implemented limitations.</li></p>
+        <p><li><strong>Copy as JavaScript</strong>: It converts Http requests to JavaScript code for further XSS exploitation and more.</li></p>
+        <p><li><strong>Bambdas Script Generator</strong>: The feature supports automatic generation of Bambdas-compatible scripts based on user input. It eliminates the need for manual coding, enabling faster creation of custom scripts and streamlining integration with the Bambdas engine.</li></p>
         </ul>"""
         htmlString += "</td></tr></table></body></html>"
         
