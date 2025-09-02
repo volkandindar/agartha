@@ -168,35 +168,16 @@ To use this feature, simply right-click on any HTTP request and select 'Extensio
 
 It will automatically save to your clipboard, including some additional remarks for your reference. For example:
 ```
-Http request with minimum header paramaters in JavaScript:
-	<script>
-		var xhr=new XMLHttpRequest();
-		xhr.open('GET','http://dvwa.local/vulnerabilities/xss_r/?name=XSS');
-		xhr.withCredentials=true;
-		xhr.send();
-	</script>
+Http request with minimal parameters in JavaScript:
+<script>
+	fetch('http://dvwa.local/vulnerabilities/xss_r/?name=XSS',{method:'GET',credentials:'include'});
+</script>
 
-Http request with all header paramaters (except cookies, tokens, etc) in JavaScript, you may need to remove unnecessary fields:
-	<script>
-		var xhr=new XMLHttpRequest();
-		xhr.open('GET','http://dvwa.local/vulnerabilities/xss_r/?name=XSS');
-		xhr.withCredentials=true;
-		xhr.setRequestHeader('Host','dvwa.local');
-		xhr.setRequestHeader('User-Agent','Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:127.0) Gecko/20100101 Firefox/127.0');
-		xhr.setRequestHeader('Accept','text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8');
-		xhr.setRequestHeader('Accept-Language','en-US,en;q=0.5');
-		xhr.setRequestHeader('Accept-Encoding','gzip, deflate, br');
-		xhr.setRequestHeader('DNT','1');
-		xhr.setRequestHeader('Sec-GPC','1');
-		xhr.setRequestHeader('Connection','keep-alive');
-		xhr.setRequestHeader('Referer','http://dvwa.local/vulnerabilities/xss_r/');
-		xhr.setRequestHeader('Upgrade-Insecure-Requests','1');
-		xhr.setRequestHeader('Priority','u=1');
-		xhr.send();
-	</script>
 
-For redirection, please also add this code before '</script>' tag:
-	xhr.onreadystatechange=function(){if (this.status===302){var location=this.getResponseHeader('Location');return ajax.call(this,location);}};
+Http request with allowed headers included:
+<script>
+	fetch('http://dvwa.local/vulnerabilities/xss_r/?name=XSS',{method:'GET',credentials:'include',headers:{'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8','Sec-GPC':'1','Accept-Language':'en-US,en;q=0.5'}});
+</script>
 ```
 Please note that the JavaScript code will execute within the original user session, with many header fields automatically populated by the browser. However, in some cases, the server may require specific mandatory header fields. For example, certain requests might fail if the 'Content-Type' is incorrect. Therefore, you may need to adjust the code to ensure compatibility with the server's requirements.
 <br/><br/>
