@@ -24,7 +24,7 @@ except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
     sys.exit(1)
 
-VERSION = "2.9952"
+VERSION = "2.9953"
 url_regex = r'(log|sign|time)([-_+%0-9]{0,5})(off|out)|(expire|kill|terminat|delete|remove)'
 ext_regex = r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff2|ttf|otf)$'
 
@@ -1052,9 +1052,9 @@ given request then
 
             # Minimal fetch
             minimal = []
-            minimal.append("\t<script>")
+            minimal.append("<script>")
             minimal.append(
-                "\tfetch('%s', { method: '%s', credentials: 'include'%s%s })"
+                "fetch('%s', { method: '%s', credentials: 'include'%s%s })"
                 % (
                     js_escape(_url),
                     js_escape(method.upper()),
@@ -1062,19 +1062,19 @@ given request then
                     (", body: " + body_stmt_min) if has_body else ""
                 )
             )
-            minimal.append("\t.then(r => r.text().then(t => ({r,t}))).then(({r,t}) => {")
-            minimal.append("\t\tconsole.log('Status:', r.status);")
-            minimal.append("\t\tconsole.log('Final URL:', r.url);")
-            minimal.append("\t\tconsole.log('Body:', t);")
-            minimal.append("\t}).catch(console.error);")
-            minimal.append("\t</script>")
+            minimal.append(".then(r => r.text().then(t => ({r,t}))).then(({r,t}) => {")
+            minimal.append("  console.log('Status:', r.status);")
+            minimal.append("  console.log('Final URL:', r.url);")
+            minimal.append("  console.log('Body:', t);")
+            minimal.append("}).catch(console.error);")
+            minimal.append("</script>")
             minimal_js = "\n".join(minimal)
 
             # Allowed headers ile fetch
             with_headers = []
-            with_headers.append("\t<script>")
+            with_headers.append("<script>")
             with_headers.append(
-                "\tfetch('%s', { method: '%s', credentials: 'include', headers: %s%s })"
+                "fetch('%s', { method: '%s', credentials: 'include', headers: %s%s })"
                 % (
                     js_escape(_url),
                     js_escape(method.upper()),
@@ -1082,12 +1082,12 @@ given request then
                     (", body: " + body_stmt_hdr) if has_body else ""
                 )
             )
-            with_headers.append("\t.then(r => r.text().then(t => ({r,t}))).then(({r,t}) => {")
-            with_headers.append("\t\tconsole.log('Status:', r.status);")
-            with_headers.append("\t\tconsole.log('Final URL:', r.url);")
-            with_headers.append("\t\tconsole.log('Body:', t);")
-            with_headers.append("\t}).catch(console.error);")
-            with_headers.append("\t</script>")
+            with_headers.append(".then(r => r.text().then(t => ({r,t}))).then(({r,t}) => {")
+            with_headers.append("  console.log('Status:', r.status);")
+            with_headers.append("  console.log('Final URL:', r.url);")
+            with_headers.append("  console.log('Body:', t);")
+            with_headers.append("}).catch(console.error);")
+            with_headers.append("</script>")
             headers_js = "\n".join(with_headers)
 
             jscript = (
