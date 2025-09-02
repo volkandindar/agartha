@@ -24,7 +24,7 @@ except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
     sys.exit(1)
 
-VERSION = "2.9958"
+VERSION = "2.9959"
 url_regex = r'(log|sign|time)([-_+%0-9]{0,5})(off|out)|(expire|kill|terminat|delete|remove)'
 ext_regex = r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff2|ttf|otf)$'
 
@@ -992,6 +992,16 @@ given request then
             def js_escape(s):
                 return s.replace('\\', '\\\\').replace("'", "\\'").replace("\r", "").replace("\n", "\\n")
 
+            # (JSON/XML one line)
+            def _json_single_line(s):
+                try:
+                    return json.dumps(json.loads(s))
+                except Exception:
+                    return s.replace("\r","").replace("\n","")
+            def _xml_single_line(s):
+                s = s.replace("\r","").replace("\n"," ")
+                return re.sub(r"\s+"," ", s).strip()
+
             FORBIDDEN = {
                 'accept-encoding','content-length','cookie','host','origin','referer','user-agent',
                 'connection','upgrade-insecure-requests','priority','sec-fetch-mode','sec-fetch-site',
@@ -1011,7 +1021,7 @@ given request then
             headers = {}
             content_type = None
             for line in header_lines:
-                if not line or ":" not in line: 
+                if not line or ":" not in line:
                     continue
                 k, v = line.split(":", 1)
                 k, v = k.strip(), v.strip()
@@ -1032,28 +1042,30 @@ given request then
                 if k.lower() == "content-type":
                     continue
                 js_headers_obj.append("'" + js_escape(k) + "':'" + js_escape(v) + "'")
-            headers_block = "{" + ",".join(js_headers_obj) + "}" if js_headers_obj else ""
+            headers_block = "{" + ",".join(js_headers_obj) + "}"
 
-            # Body decision (form: raw; json: template literal; xml/other: escaped string)
+            # Body (form raw; json/xml)
             if has_body:
                 if "application/x-www-form-urlencoded" in ct_lower:
-                    body_stmt_min = "'" + js_escape(body) + "'"   # RAW
+                    body_stmt_min = "'" + js_escape(body) + "'"
                     body_stmt_hdr = body_stmt_min
                 elif ct_lower.startswith("application/json") or body.strip().startswith("{"):
-                    body_stmt_min = "`" + body.replace("`", "\\`") + "`"
+                    single = _json_single_line(body)
+                    body_stmt_min = "'" + js_escape(single) + "'"
                     body_stmt_hdr = body_stmt_min
                 elif body.strip().startswith("<"):  # XML/HTML
-                    body_stmt_min = "'" + js_escape(body) + "'"
+                    single = _xml_single_line(body)
+                    body_stmt_min = "'" + js_escape(single) + "'"
                     body_stmt_hdr = body_stmt_min
                 else:
-                    body_stmt_min = "'" + js_escape(body) + "'"
+                    single = body.replace("\r","").replace("\n"," ")
+                    body_stmt_min = "'" + js_escape(single) + "'"
                     body_stmt_hdr = body_stmt_min
             else:
                 body_stmt_min = ""
                 body_stmt_hdr = ""
 
-
-            # Minimal fetch (only Content-Type if present)
+            # Minimal fetch
             minimal_opts = ["method:'" + js_escape(method.upper()) + "'", "credentials:'include'"]
             if content_type:
                 minimal_opts.append("headers:{'Content-Type':'" + js_escape(content_type) + "'}")
@@ -1061,10 +1073,8 @@ given request then
                 minimal_opts.append("body:" + body_stmt_min)
             minimal_line = "<script>\nfetch('" + js_escape(_url) + "',{" + ",".join(minimal_opts) + "});\n</script>"
 
-            # With allowed headers (only add headers key if non-empty)
-            hdr_opts = ["method:'" + js_escape(method.upper()) + "'", "credentials:'include'"]
-            if headers_block:
-                hdr_opts.append("headers:" + headers_block)
+            # With allowed headers
+            hdr_opts = ["method:'" + js_escape(method.upper()) + "'", "credentials:'include'", "headers:" + headers_block]
             if has_body:
                 hdr_opts.append("body:" + body_stmt_hdr)
             headers_line = "<script>\nfetch('" + js_escape(_url) + "',{" + ",".join(hdr_opts) + "});\n</script>"
@@ -1078,8 +1088,6 @@ given request then
             jscript = "An error has occurred during the conversion from HTTP to JavaScript: " + str(sys.exc_info()[1])
 
         clipboard.setContents(StringSelection(jscript), None)
-
-
 
     def agartha_menu(self, event):
         # right click menu
