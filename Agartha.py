@@ -24,7 +24,7 @@ except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
     sys.exit(1)
 
-VERSION = "2.9957"
+VERSION = "2.9958"
 url_regex = r'(log|sign|time)([-_+%0-9]{0,5})(off|out)|(expire|kill|terminat|delete|remove)'
 ext_regex = r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff2|ttf|otf)$'
 
@@ -1070,9 +1070,8 @@ given request then
             headers_line = "<script>\nfetch('" + js_escape(_url) + "',{" + ",".join(hdr_opts) + "});\n</script>"
 
             jscript = (
-                "Http request with minimal parameters in JavaScript (fetch):\n" + minimal_line +
-                "\n\nHttp request with allowed headers included (fetch):\n" + headers_line +
-                "\n\nNote: Browsers automatically follow redirects; final URL is available via response.url"
+                "Http request with minimal parameters:\n" + minimal_line +
+                "\n\nHttp request with header fields:\n" + headers_line
             )
 
         except:
