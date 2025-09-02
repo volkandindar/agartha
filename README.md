@@ -168,15 +168,14 @@ To use this feature, simply right-click on any HTTP request and select 'Extensio
 
 It will automatically save to your clipboard, including some additional remarks for your reference. For example:
 ```
-Http request with minimal parameters in JavaScript:
+Http request with minimal parameters:
 <script>
-	fetch('http://dvwa.local/vulnerabilities/xss_r/?name=XSS',{method:'GET',credentials:'include'});
+fetch('http://dvwa.local/vulnerabilities/xss_r/?name=XSS',{method:'GET',credentials:'include'});
 </script>
 
-
-Http request with allowed headers included:
+Http request with header fields:
 <script>
-	fetch('http://dvwa.local/vulnerabilities/xss_r/?name=XSS',{method:'GET',credentials:'include',headers:{'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8','Sec-GPC':'1','Accept-Language':'en-US,en;q=0.5'}});
+fetch('http://dvwa.local/vulnerabilities/xss_r/?name=XSS',{method:'GET',credentials:'include',headers:{'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8','Sec-GPC':'1','Accept-Language':'en-US,en;q=0.5'}});
 </script>
 ```
 Please note that the JavaScript code will execute within the original user session, with many header fields automatically populated by the browser. However, in some cases, the server may require specific mandatory header fields. For example, certain requests might fail if the 'Content-Type' is incorrect. Therefore, you may need to adjust the code to ensure compatibility with the server's requirements.
