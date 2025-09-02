@@ -151,7 +151,7 @@ The figure below illustrates that a URL may have an access issue, with the ‘Re
  	- **Enable Filters**: Since processing all URLs in the HTTP history is a bulk task, this section provides options to apply matching criteria.
  	 	- The Enable URL grouping feature (experimental) aims to eliminate similar endpoints that differ only by unique IDs, counting them as a single entry.
  	 	- You can choose to load only URLs from the past n days.
- 	 	- You can also specify certain keywords to control which URLs are loaded.
+ 	 	- You can also specify certain keywords to control which URLs are loaded, for example: /admin/, user
 2. URL and Header details
 3. Request attempts and results
 4. HTTP requests and responses
