@@ -24,7 +24,7 @@ except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
     sys.exit(1)
 
-VERSION = "2.996"
+VERSION = "2.9959"
 url_regex = r'(log|sign|time)([-_+%0-9]{0,5})(off|out)|(expire|kill|terminat|delete|remove)'
 ext_regex = r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff2|ttf|otf)$'
 
@@ -3878,31 +3878,22 @@ if (!suspiciousHit && !matchedScope && !matchedDone)
         <p></p>
         <p>In summary:</p>
         <ul>
-        <li><strong>Payload Generator</strong>: 
-        <p>It dynamically constructs comprehensive wordlists for injection attacks, incorporating various encoding and escaping characters to enhance the effectiveness of security testing. These wordlists cover critical vulnerability classes like SQL Injection (SQLi), Local File Inclusion (LFI), Remote Code Execution (RCE), and now also support BCheck syntax for seamless integration with Burp&#39;s BCheck framework.</p>
-        <ul>
+        <li><strong>Payload Generator</strong>: It dynamically constructs comprehensive wordlists for injection attacks, incorporating various encoding and escaping characters to enhance the effectiveness of security testing. These wordlists cover critical vulnerability classes like SQL Injection (SQLi), Local File Inclusion (LFI), Remote Code Execution (RCE), and now also support BCheck syntax for seamless integration with Burp&#39;s BCheck framework.<ul>
         <li><strong>Local File Inclusion, Path Traversal:</strong> It helps identifying vulnerabilities that allow attackers to access files on the server&#39;s filesystem.</li>
         <li><strong>Remote Code Execution, Command Injection:</strong> It aims to detects potential command injection points, enabling robust testing for code execution vulnerabilities.</li>
         <li><strong>SQL Injection:</strong> It assists to uncover SQL Injection vulnerabilities, including Stacked Queries, Boolean-Based, Union-Based, and Time-Based.</li>
         </ul>
         </li>
-        <li><strong>Auth Matrix</strong>: 
-        <p>By constructing a comprehensive access matrix, the tool reveals potential access violations and privilege escalation paths. This feature enhances security posture by addressing authentication and authorization issues.</p>
-        <ul>
+        <li><strong>Auth Matrix</strong>: By constructing a comprehensive access matrix, the tool reveals potential access violations and privilege escalation paths. This feature enhances security posture by addressing authentication and authorization issues. <ul>
         <li>You can use the web <strong>&#39;Spider&#39;</strong> feature to generate a sitemap/URL list, and it will crawl visible links from the user&#39;s session automatically.</li>
         </ul>
         </li>
-        <li><strong>403 Bypass</strong>: 
-        <p>It aims to tackle common access restrictions, such as HTTP 403 Forbidden responses. It utilizes techniques like URL manipulation and request header modification to bypass implemented limitations.</p>
-        </li>
-        <li><strong>Copy as JavaScript</strong>: 
-        <p>It converts Http requests to JavaScript code for further XSS exploitation and more.</p>
-        </li>
-        <li><strong>Bambdas Script Generator</strong>: 
-        <p>The feature supports automatic generation of Bambdas-compatible scripts based on user input. It eliminates the need for manual coding, enabling faster creation of custom scripts and streamlining integration with the Bambdas engine.</p>
-        </li>
+        <li><strong>403 Bypass</strong>: It aims to tackle common access restrictions, such as HTTP 403 Forbidden responses. It utilizes techniques like URL manipulation and request header modification to bypass implemented limitations.</li>
+        <li><strong>Copy as JavaScript</strong>: It converts Http requests to JavaScript code for further XSS exploitation and more.</li>
+        <li><strong>Bambdas Script Generator</strong>: The feature supports automatic generation of Bambdas-compatible scripts based on user input. It eliminates the need for manual coding, enabling faster creation of custom scripts and streamlining integration with the Bambdas engine.</li>
         </ul>"""
         htmlString += "</td></tr></table></body></html>"
+        
         self.editorPaneInfo.setText(htmlString)
         self.editorScrollPaneInfo = JScrollPane(self.editorPaneInfo)
         self.editorScrollPaneInfo.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS)
