@@ -339,7 +339,7 @@ define:
     https://portswigger.net/web-security/os-command-injection
     https://owasp.org/www-community/attacks/Command_Injection
     https://cheatsheetseries.owasp.org/cheatsheets/OS_Command_Injection_Defense_Cheat_Sheet.html`
-    issueRemediation = `Command Injection / Remote Code Execution (RCE): To mitigate Command Injection and RCE vulnerabilities, all user inputs should be strictly validated and sanitized to block malicious characters or patterns. Employing parameterized queries ensures that inputs are handled as data, not executable code. Running applications with the least privileges limits the impact of successful exploits, while proper error handling and avoiding detailed error messages prevent information disclosure. Regular code reviews and security testing are essential to detect and address issues early, significantly reducing the risk of RCE attacks.
+    issueRemediation = `Command Injection / Remote Code Execution (RCE): To mitigate these vulnerabilities, all user inputs should be strictly validated and sanitized to block malicious characters or patterns. Employing parameterized queries ensures that inputs are handled as data, not executable code. Running applications with the least privileges limits the impact of successful exploits, while proper error handling and avoiding detailed error messages prevent information disclosure. Regular code reviews and security testing are essential to detect and address issues early, significantly reducing the risk of RCE attacks.
      {references}`
 
 run for each:
