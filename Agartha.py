@@ -1316,7 +1316,7 @@ given request then
         self._lblAuthenticationEnableURLGroup.setPreferredSize(Dimension(120, 27))
         self._lblAuthenticationEnableURLGroup.setVisible(False)
 
-        self._cbAuthenticationEnableURLGroup = JCheckBox('Enable URL Grouping', True)
+        self._cbAuthenticationEnableURLGroup = JCheckBox('URL Grouping', True)
         self._cbAuthenticationEnableURLGroup.setPreferredSize(Dimension(250, 27))
         self._cbAuthenticationEnableURLGroup.setVisible(False)
         self._cbAuthenticationEnableURLGroup.setToolTipText("Similar URLs will count as one. (Experimental)")
