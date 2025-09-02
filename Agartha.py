@@ -24,7 +24,7 @@ except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
     sys.exit(1)
 
-VERSION = "2.9956"
+VERSION = "2.9957"
 url_regex = r'(log|sign|time)([-_+%0-9]{0,5})(off|out)|(expire|kill|terminat|delete|remove)'
 ext_regex = r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff2|ttf|otf)$'
 
@@ -1059,7 +1059,7 @@ given request then
                 minimal_opts.append("headers:{'Content-Type':'" + js_escape(content_type) + "'}")
             if has_body:
                 minimal_opts.append("body:" + body_stmt_min)
-            minimal_line = "<script>fetch('" + js_escape(_url) + "',{" + ",".join(minimal_opts) + "});</script>"
+            minimal_line = "<script>\nfetch('" + js_escape(_url) + "',{" + ",".join(minimal_opts) + "});\n</script>"
 
             # With allowed headers (only add headers key if non-empty)
             hdr_opts = ["method:'" + js_escape(method.upper()) + "'", "credentials:'include'"]
@@ -1067,11 +1067,11 @@ given request then
                 hdr_opts.append("headers:" + headers_block)
             if has_body:
                 hdr_opts.append("body:" + body_stmt_hdr)
-            headers_line = "<script>fetch('" + js_escape(_url) + "',{" + ",".join(hdr_opts) + "});</script>"
+            headers_line = "<script>\nfetch('" + js_escape(_url) + "',{" + ",".join(hdr_opts) + "});\n</script>"
 
             jscript = (
-                "Http request with minimal parameters in JavaScript (fetch):\n\t" + minimal_line +
-                "\n\nHttp request with allowed headers included (fetch):\n\t" + headers_line +
+                "Http request with minimal parameters in JavaScript (fetch):\n" + minimal_line +
+                "\n\nHttp request with allowed headers included (fetch):\n" + headers_line +
                 "\n\nNote: Browsers automatically follow redirects; final URL is available via response.url"
             )
 
