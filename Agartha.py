@@ -24,7 +24,7 @@ except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
     sys.exit(1)
 
-VERSION = "2.9953"
+VERSION = "2.9956"
 url_regex = r'(log|sign|time)([-_+%0-9]{0,5})(off|out)|(expire|kill|terminat|delete|remove)'
 ext_regex = r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff2|ttf|otf)$'
 
@@ -1011,7 +1011,8 @@ given request then
             headers = {}
             content_type = None
             for line in header_lines:
-                if not line or ":" not in line: continue
+                if not line or ":" not in line: 
+                    continue
                 k, v = line.split(":", 1)
                 k, v = k.strip(), v.strip()
                 if k.lower() == "content-type":
@@ -1023,19 +1024,20 @@ given request then
             has_body = (method.upper() != "GET" and len(body.strip()) > 0)
             ct_lower = (content_type or "").lower()
 
-            # Header obj
+            # Build headers object literal
             js_headers_obj = []
             if content_type and is_allowed_header("Content-Type"):
-                js_headers_obj.append("'Content-Type': '" + js_escape(content_type) + "'")
+                js_headers_obj.append("'Content-Type':'" + js_escape(content_type) + "'")
             for k, v in headers.items():
-                if k.lower() == "content-type": continue
-                js_headers_obj.append("'" + js_escape(k) + "': '" + js_escape(v) + "'")
-            headers_block = "{ " + ", ".join(js_headers_obj) + " }" if js_headers_obj else "{}"
+                if k.lower() == "content-type":
+                    continue
+                js_headers_obj.append("'" + js_escape(k) + "':'" + js_escape(v) + "'")
+            headers_block = "{" + ",".join(js_headers_obj) + "}" if js_headers_obj else ""
 
-            form_prefix = ""
+            # Body decision (form: raw; json: template literal; xml/other: escaped string)
             if has_body:
                 if "application/x-www-form-urlencoded" in ct_lower:
-                    body_stmt_min = "'" + js_escape(body) + "'"   # RAW gönder
+                    body_stmt_min = "'" + js_escape(body) + "'"   # RAW
                     body_stmt_hdr = body_stmt_min
                 elif ct_lower.startswith("application/json") or body.strip().startswith("{"):
                     body_stmt_min = "`" + body.replace("`", "\\`") + "`"
@@ -1047,52 +1049,29 @@ given request then
                     body_stmt_min = "'" + js_escape(body) + "'"
                     body_stmt_hdr = body_stmt_min
             else:
-                body_stmt_min = "undefined"
-                body_stmt_hdr = "undefined"
+                body_stmt_min = ""
+                body_stmt_hdr = ""
 
-            # Minimal fetch
-            minimal = []
-            minimal.append("<script>")
-            minimal.append(
-                "fetch('%s', { method: '%s', credentials: 'include'%s%s })"
-                % (
-                    js_escape(_url),
-                    js_escape(method.upper()),
-                    (", headers: { 'Content-Type': '" + js_escape(content_type) + "' }") if content_type else "",
-                    (", body: " + body_stmt_min) if has_body else ""
-                )
-            )
-            minimal.append(".then(r => r.text().then(t => ({r,t}))).then(({r,t}) => {")
-            minimal.append("  console.log('Status:', r.status);")
-            minimal.append("  console.log('Final URL:', r.url);")
-            minimal.append("  console.log('Body:', t);")
-            minimal.append("}).catch(console.error);")
-            minimal.append("</script>")
-            minimal_js = "\n".join(minimal)
 
-            # Allowed headers ile fetch
-            with_headers = []
-            with_headers.append("<script>")
-            with_headers.append(
-                "fetch('%s', { method: '%s', credentials: 'include', headers: %s%s })"
-                % (
-                    js_escape(_url),
-                    js_escape(method.upper()),
-                    headers_block,
-                    (", body: " + body_stmt_hdr) if has_body else ""
-                )
-            )
-            with_headers.append(".then(r => r.text().then(t => ({r,t}))).then(({r,t}) => {")
-            with_headers.append("  console.log('Status:', r.status);")
-            with_headers.append("  console.log('Final URL:', r.url);")
-            with_headers.append("  console.log('Body:', t);")
-            with_headers.append("}).catch(console.error);")
-            with_headers.append("</script>")
-            headers_js = "\n".join(with_headers)
+            # Minimal fetch (only Content-Type if present)
+            minimal_opts = ["method:'" + js_escape(method.upper()) + "'", "credentials:'include'"]
+            if content_type:
+                minimal_opts.append("headers:{'Content-Type':'" + js_escape(content_type) + "'}")
+            if has_body:
+                minimal_opts.append("body:" + body_stmt_min)
+            minimal_line = "<script>fetch('" + js_escape(_url) + "',{" + ",".join(minimal_opts) + "});</script>"
+
+            # With allowed headers (only add headers key if non-empty)
+            hdr_opts = ["method:'" + js_escape(method.upper()) + "'", "credentials:'include'"]
+            if headers_block:
+                hdr_opts.append("headers:" + headers_block)
+            if has_body:
+                hdr_opts.append("body:" + body_stmt_hdr)
+            headers_line = "<script>fetch('" + js_escape(_url) + "',{" + ",".join(hdr_opts) + "});</script>"
 
             jscript = (
-                "Http request with minimal parameters in JavaScript (fetch):\n" + minimal_js +
-                "\n\nHttp request with allowed headers included (fetch):\n" + headers_js +
+                "Http request with minimal parameters in JavaScript (fetch):\n\t" + minimal_line +
+                "\n\nHttp request with allowed headers included (fetch):\n\t" + headers_line +
                 "\n\nNote: Browsers automatically follow redirects; final URL is available via response.url"
             )
 
@@ -1100,6 +1079,7 @@ given request then
             jscript = "An error has occurred during the conversion from HTTP to JavaScript: " + str(sys.exc_info()[1])
 
         clipboard.setContents(StringSelection(jscript), None)
+
 
 
     def agartha_menu(self, event):
