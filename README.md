@@ -1,5 +1,5 @@
 # Agartha
-###### Payload Injection (LFI, RCE, SQLi, with optional BCheck), Auth Issues (Access Matrix, HTTP 403), HTTP-to-JavaScript, and Bambdas
+###### Payload Injection (LFI, RCE, SQLi, with optional BCheck), Auth Issues (Access Matrix, HTTP 403), Copy as JavaScript, and Bambdas Script Generator
 <hr/>
 
 Agartha, specializes in advance payload generation and access control assessment. It adeptly identifies vulnerabilities related to injection attacks, and authentication/authorization issues. The dynamic payload generator crafts extensive wordlists for various injection vectors, including SQL Injection, Local File Inclusion (LFI), and Remote Code Execution(RCE). Furthermore, the extension constructs a comprehensive user access matrix, revealing potential access violations and privilege escalation paths. It also assists in performing HTTP 403 bypass checks, shedding light on auth misconfigurations. Additionally, it can convert HTTP requests to JavaScript code to help digging up XSS issues more.
