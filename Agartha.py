@@ -1334,11 +1334,11 @@ given request then
         self._lblAuthenticationEnableFilter2 = JLabel("Keyword in the URL", SwingConstants.LEFT)
         self._lblAuthenticationEnableFilter2.setPreferredSize(Dimension(120, 27))
         self._lblAuthenticationEnableFilter2.setVisible(False)
-        self._lblAuthenticationEnableFilter2.setToolTipText("Search keywords in URL, separated by commas. Example: /admin/, user")
+        self._lblAuthenticationEnableFilter2.setToolTipText("Search keywords in URL, separated by commas, for example: /admin/, user")
         self.txAuthenticationEnableKeyWordURL = JTextField("")
         self.txAuthenticationEnableKeyWordURL.setPreferredSize(Dimension(250, 27))
         self.txAuthenticationEnableKeyWordURL.setVisible(False)
-        self.txAuthenticationEnableKeyWordURL.setToolTipText("Search keywords in URL, separated by commas. Example: /admin/, user")
+        self.txAuthenticationEnableKeyWordURL.setToolTipText("Search keywords in URL, separated by commas, for example: /admin/, user")
 
         # panel top
         _tabAuthenticationPanel1 = JPanel(BorderLayout())
