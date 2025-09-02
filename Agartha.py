@@ -328,7 +328,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
                 bcheckCode= """metadata:
     language: v2-beta
     name: "Command Injection Fuzzing - Agartha"
-    description: "Command Injection is a security flaw where attackers execute unauthorized commands on a system by exploiting unvalidated user input."
+    description: "Command Injection is a critical vulnerability that allows attackers to execute arbitrary system commands by exploiting insufficiently validated user input. This can result in full system compromise, data theft, or service disruption."
     author: "Agartha"
     tags: "RCE", "Command Injection"
 
@@ -339,7 +339,7 @@ define:
     https://portswigger.net/web-security/os-command-injection
     https://owasp.org/www-community/attacks/Command_Injection
     https://cheatsheetseries.owasp.org/cheatsheets/OS_Command_Injection_Defense_Cheat_Sheet.html`
-    issueRemediation = `Command Injection / Remote Code Execution (RCE): To remediate these issues, developers should adopt best practices such as using parameterized queries, which ensure user inputs are treated as data rather than executable code. Validating and sanitizing all user inputs to filter out malicious characters and patterns is essential. Running web applications with the least privileges necessary can limit the impact of potential exploits. Implementing robust error handling and avoiding the display of detailed error messages can prevent attackers from gaining insights into the system. Regular security audits and code reviews are crucial to identify and address potential vulnerabilities early on. By integrating these practices into the development lifecycle, organizations can significantly mitigate the risk of Command Injection attacks and enhance their overall security posture.
+    issueRemediation = `Command Injection / Remote Code Execution (RCE): To mitigate Command Injection and RCE vulnerabilities, all user inputs should be strictly validated and sanitized to block malicious characters or patterns. Employing parameterized queries ensures that inputs are handled as data, not executable code. Running applications with the least privileges limits the impact of successful exploits, while proper error handling and avoiding detailed error messages prevent information disclosure. Regular code reviews and security testing are essential to detect and address issues early, significantly reducing the risk of RCE attacks.
      {references}`
 
 run for each:
@@ -349,7 +349,7 @@ run for each:
                 bcheckCode= """metadata:
     language: v2-beta
     name: "File Injection Fuzzing - Agartha"
-    description: "Local File Inclusion (LFI) is a security vulnerability where attackers can access and execute files on a server by exploiting improper input validation. This can lead to unauthorized access to sensitive data and system compromise."
+    description: "Local File Inclusion (LFI) occurs when an application improperly validates user input, enabling attackers to include and execute local files on the server. This often exposes sensitive information and can lead to remote code execution under certain conditions."
     author: "Agartha"
     tags: "LFI", "Directory Traversal"
 
@@ -359,7 +359,7 @@ define:
     References:
     https://portswigger.net/web-security/file-path-traversal
     https://owasp.org/www-project-web-security-testing-guide/v42/4-Web_Application_Security_Testing/07-Input_Validation_Testing/11.1-Testing_for_Local_File_Inclusion`
-    issueRemediation = `Local File Inclusion (LFI) / Directory Traversal: To remediate these issues, developers should validate all user inputs and use parameterized queries or prepared statements, ensuring only expected characters are allowed and rejecting suspicious patterns. Implementing a whitelist of allowed files and directories can prevent unauthorized access. Running web applications with the least privileges necessary can limit the impact of potential exploits. Robust error handling and avoiding the display of detailed error messages can prevent attackers from gaining insights into the system. Regular security audits and code reviews are crucial to identify and address potential vulnerabilities early on. By integrating these practices into the development lifecycle, organizations can significantly mitigate the risk of LFI attacks and enhance their overall security posture.
+    issueRemediation = `Local File Inclusion (LFI) / Directory Traversal: Preventing LFI and Directory Traversal requires rigorous input validation and restricting inputs to expected, whitelisted paths. Implementing an allowlist of authorized files and directories ensures only safe resources are accessible. Applications should be executed with minimal privileges to reduce the potential impact of exploitation. Secure error handling, coupled with avoiding verbose error messages, makes it harder for attackers to gather intelligence. Ongoing code reviews and penetration testing help identify and remediate such vulnerabilities before they can be abused.
      {references}`
 
 run for each:
@@ -369,7 +369,7 @@ run for each:
                 bcheckCode= """metadata:
     language: v2-beta
     name: "SQL Injection Fuzzing - Agartha"
-    description: "SQL injection is a security vulnerability where attackers insert malicious SQL code into a query, allowing them to manipulate or access the database improperly."
+    description: "SQL Injection (SQLi) is a serious flaw where malicious SQL code is inserted into a query, allowing attackers to manipulate database operations, bypass authentication, or exfiltrate sensitive data."
     author: "Agartha"
     tags: "SQLi", "SQL Injection"
 
@@ -380,7 +380,7 @@ define:
     https://portswigger.net/web-security/sql-injection
     https://owasp.org/www-community/attacks/SQL_Injection
     https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html`
-    issueRemediation = `SQL injection is a critical security vulnerability that allows attackers to manipulate and execute unauthorized SQL queries, potentially compromising the integrity and confidentiality of a database. To remediate SQL injection, developers should adopt best practices such as using parameterized queries or prepared statements, which ensure that user inputs are treated as data rather than executable code. Additionally, employing stored procedures can help encapsulate SQL logic and reduce direct interaction with the database. Input validation and sanitization are essential to filter out malicious characters and patterns. Implementing robust error handling and avoiding the display of detailed error messages can prevent attackers from gaining insights into the database structure. Regular security audits and code reviews are also crucial to identify and address potential vulnerabilities early on. By integrating these practices into the development lifecycle, organizations can significantly mitigate the risk of SQL injection attacks and enhance their overall security posture.
+    issueRemediation = `SQL Injection (SQLi) vulnerabilities can be mitigated by consistently using parameterized queries or prepared statements, ensuring that user inputs cannot alter SQL commands. Where appropriate, stored procedures can further encapsulate SQL logic and minimize direct interaction with the database. Input validation and sanitization add an additional layer of defense, while secure error handling reduces the risk of leaking database structure details. Regular security audits and code reviews are vital to uncover weak points early. By embedding these practices into the development lifecycle, organizations can greatly reduce the risk of SQL injection attacks.
      {references}`
 
 run for each:
