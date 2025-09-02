@@ -24,7 +24,7 @@ except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
     sys.exit(1)
 
-VERSION = "2.996"
+VERSION = "2.9961"
 url_regex = r'(log|sign|time)([-_+%0-9]{0,5})(off|out)|(expire|kill|terminat|delete|remove)'
 ext_regex = r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff2|ttf|otf)$'
 
@@ -401,7 +401,7 @@ given any insertion point then
         appending: {payloads}
 
     if {payloadReplacing.response.status_code} is "200" then
-      # For more precise detections, search in the response
+      # To improve detection accuracy, consider creating specific conditions.
       # if ("condition1" in {payloadReplacing.response.body} and "condition2" in {payloadReplacing.response.body}) or ("condition3" in {payloadReplacing.response.body} and "condition4" in {payloadReplacing.response.body}) then
         report issue and continue:
             severity: medium
@@ -412,7 +412,7 @@ given any insertion point then
     end if
 
     if {payloadAppending.response.status_code} is "200" then
-      # For more precise detections, search in the response
+      # To improve detection accuracy, consider creating specific conditions.
       # if ("condition1" in {payloadAppending.response.body} and "condition2" in {payloadAppending.response.body}) or ("condition3" in {payloadAppending.response.body} and "condition4" in {payloadAppending.response.body}) then
         report issue and continue:
             severity: medium
@@ -428,7 +428,7 @@ given request then
     send request called payloadReplacingPartially:
         replacing path: `{regex_replace({regex_replace({base.request.url}, "^.*?\\/.*?\\/.*?\\/", "/")}, "([^/]+)$", "")}{payloads}`
     if {payloadReplacingPartially.response.status_code} is "200" then
-        # For more precise detections, search in the response
+        # To improve detection accuracy, consider creating specific conditions.
         # if ("localhost" in {payloadReplacingPartially.response.body} and "127.0.0.1" in {payloadReplacingPartially.response.body}) or ("localhost" in {payloadReplacingPartially.response.body} and "127.0.0.1" in {payloadReplacingPartially.response.body}) then
             report issue and continue:
             severity: medium
@@ -442,7 +442,7 @@ given request then
         send request called payloadReplacingQueryString:
             replacing queries: `{regex_replace({base.request.url.query}, "([^&=]+)=([^&]*)", "$1=")}{payloads}`
         if {payloadReplacingQueryString.response.status_code} is "200" then
-            # For more precise detections, search in the response
+            # To improve detection accuracy, consider creating specific conditions.
             # if ("localhost" in {payloadReplacingQueryString.response.body} and "127.0.0.1" in {payloadReplacingQueryString.response.body}) or ("localhost" in {payloadReplacingQueryString.response.body} and "127.0.0.1" in {payloadReplacingQueryString.response.body}) then
                 report issue and continue:
                 severity: medium
