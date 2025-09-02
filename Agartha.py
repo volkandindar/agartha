@@ -24,7 +24,7 @@ except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
     sys.exit(1)
 
-VERSION = "2.995"
+VERSION = "2.9951"
 url_regex = r'(log|sign|time)([-_+%0-9]{0,5})(off|out)|(expire|kill|terminat|delete|remove)'
 ext_regex = r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff2|ttf|otf)$'
 
@@ -979,9 +979,8 @@ given request then
             clipboard = Toolkit.getDefaultToolkit().getSystemClipboard()
             http_contexts = self.context.getSelectedMessages()
             _req = self._helpers.bytesToString(http_contexts[0].getRequest())
-            _an = self._helpers.analyzeRequest(http_contexts[0])
+            _an  = self._helpers.analyzeRequest(http_contexts[0])
 
-            # URL normalize (remove default :80/:443 in Burp URL rendering)
             _url = str(_an.getUrl())
             if _url.startswith("https"):
                 _url = _url.replace(":443/", "/")
@@ -990,9 +989,7 @@ given request then
 
             method = _req.splitlines()[0].split(" ", 1)[0].strip()
 
-            # --- helpers ---
             def js_escape(s):
-                # Safe embedding into single-quoted JS strings
                 return s.replace('\\', '\\\\').replace("'", "\\'").replace("\r", "").replace("\n", "\\n")
 
             FORBIDDEN = {
@@ -1000,12 +997,9 @@ given request then
                 'connection','upgrade-insecure-requests','priority','sec-fetch-mode','sec-fetch-site',
                 'sec-fetch-dest','sec-ch-ua','sec-ch-ua-mobile','sec-ch-ua-platform'
             }
+            def is_allowed_header(name): return name.lower() not in FORBIDDEN
 
-            def is_allowed_header(name):
-                return name.lower() not in FORBIDDEN
-
-            # Split raw request into headers/body reliably
-            # Prefer CRLF split; fallback to '\n\n' if needed.
+            # Head/Body
             if "\r\n\r\n" in _req:
                 head_raw, body_raw = _req.split("\r\n\r\n", 1)
             elif "\n\n" in _req:
@@ -1016,94 +1010,55 @@ given request then
             header_lines = head_raw.splitlines()[1:]  # skip request line
             headers = {}
             content_type = None
-
             for line in header_lines:
-                if not line or ":" not in line:
-                    continue
+                if not line or ":" not in line: continue
                 k, v = line.split(":", 1)
-                k = k.strip()
-                v = v.strip()
+                k, v = k.strip(), v.strip()
                 if k.lower() == "content-type":
                     content_type = v
-                if is_allowed_header(k):
-                    # skip auth-like secrets by name pattern
-                    if re.search(r'(cookie|token|auth)', k, re.IGNORECASE):
-                        continue
+                if is_allowed_header(k) and not re.search(r'(cookie|token|auth)', k, re.IGNORECASE):
                     headers[k] = v
 
-            # Decide body handling
             body = body_raw
             has_body = (method.upper() != "GET" and len(body.strip()) > 0)
             ct_lower = (content_type or "").lower()
 
-            # Build JS body snippet & headers init
+            # Header obj
             js_headers_obj = []
-            # Ensure Content-Type is set only when meaningful and allowed
             if content_type and is_allowed_header("Content-Type"):
                 js_headers_obj.append("'Content-Type': '" + js_escape(content_type) + "'")
-            # Add remaining allowed custom headers
             for k, v in headers.items():
-                if k.lower() == "content-type":
-                    continue
+                if k.lower() == "content-type": continue
                 js_headers_obj.append("'" + js_escape(k) + "': '" + js_escape(v) + "'")
-
             headers_block = "{ " + ", ".join(js_headers_obj) + " }" if js_headers_obj else "{}"
 
-            # Body strategy
-            # 1) form-urlencoded -> URLSearchParams (safer)
-            # 2) JSON -> raw text (assume valid JSON)
-            # 3) XML / others -> raw text
-            body_stmt_min = "undefined"
-            body_stmt_hdr = "undefined"
-
+            form_prefix = ""
             if has_body:
                 if "application/x-www-form-urlencoded" in ct_lower:
-                    # Use URLSearchParams for safety
-                    # We don't need to parse; just drop raw and let URLSearchParams handle encoding via set?
-                    # Safer: pass raw string (already encoded by the request) to fetch.
-                    # However, showing URLSearchParams is nicer for editing; try to parse key=value pairs quickly.
-                    params_pairs = []
-                    for kv in body.split("&"):
-                        if "=" in kv:
-                            key, val = kv.split("=", 1)
-                            params_pairs.append("params.append('%s','%s');" % (js_escape(key), js_escape(val)))
-                        else:
-                            # fallback single key
-                            params_pairs.append("params.append('%s','');" % js_escape(kv))
-                    params_code = "var params=new URLSearchParams();\n" + "\n".join(params_pairs) + "\n"
-
-                    body_stmt_min = "params"
-                    body_stmt_hdr = "params"
-                    form_prefix = params_code
+                    body_stmt_min = "'" + js_escape(body) + "'"   # RAW gönder
+                    body_stmt_hdr = body_stmt_min
                 elif ct_lower.startswith("application/json") or body.strip().startswith("{"):
-                    # Assume JSON is valid; embed as-is (escaped)
-                    form_prefix = ""
                     body_stmt_min = "`" + body.replace("`", "\\`") + "`"
                     body_stmt_hdr = body_stmt_min
-                elif body.strip().startswith("<"):
-                    # XML or HTML
-                    form_prefix = ""
+                elif body.strip().startswith("<"):  # XML/HTML
                     body_stmt_min = "'" + js_escape(body) + "'"
                     body_stmt_hdr = body_stmt_min
                 else:
-                    # generic text / binary-like—embed as raw string (escaped)
-                    form_prefix = ""
                     body_stmt_min = "'" + js_escape(body) + "'"
                     body_stmt_hdr = body_stmt_min
             else:
-                form_prefix = ""
+                body_stmt_min = "undefined"
+                body_stmt_hdr = "undefined"
 
-            # Build minimal fetch (only essentials)
+            # Minimal fetch
             minimal = []
             minimal.append("<script>")
-            if form_prefix:
-                minimal.append(form_prefix)
             minimal.append(
                 "fetch('%s', { method: '%s', credentials: 'include'%s%s })"
                 % (
                     js_escape(_url),
                     js_escape(method.upper()),
-                    (", headers: { 'Content-Type': '" + js_escape(content_type) + "' }") if (content_type and "application/x-www-form-urlencoded" not in ct_lower and "application/json" not in ct_lower and body_stmt_min != "undefined") else (", headers: { 'Content-Type': '" + js_escape(content_type) + "' }" if content_type and ( "application/x-www-form-urlencoded" in ct_lower or "application/json" in ct_lower ) else ""),
+                    (", headers: { 'Content-Type': '" + js_escape(content_type) + "' }") if content_type else "",
                     (", body: " + body_stmt_min) if has_body else ""
                 )
             )
@@ -1115,11 +1070,9 @@ given request then
             minimal.append("</script>")
             minimal_js = "\n".join(minimal)
 
-            # Build “with allowed headers” variant
+            # Allowed headers ile fetch
             with_headers = []
             with_headers.append("<script>")
-            if form_prefix:
-                with_headers.append(form_prefix)
             with_headers.append(
                 "fetch('%s', { method: '%s', credentials: 'include', headers: %s%s })"
                 % (
@@ -1137,7 +1090,6 @@ given request then
             with_headers.append("</script>")
             headers_js = "\n".join(with_headers)
 
-            # Final message to clipboard
             jscript = (
                 "Http request with minimal parameters in JavaScript (fetch):\n\t" + minimal_js +
                 "\n\nHttp request with allowed headers included (fetch):\n\t" + headers_js +
