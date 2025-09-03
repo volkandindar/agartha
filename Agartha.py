@@ -4259,7 +4259,6 @@ if (!suspiciousHit && !matchedScope && !matchedDone)
             except:
                 print("[ERROR] Spider: " + str(sys.exc_info()[1]))
 
-        
         self._tbAuthURL.setText(userLinks)
         if len(_userURLs) > 1:
             self._lblAuthNotification.text = "The crawler has just finished, and '" + str(len(_userURLs)) + "' links have been found with folder depth '"+ str(self._cbSiteMapDepth.getSelectedIndex()) +"'. Other hosts than user's session are ignored." 
