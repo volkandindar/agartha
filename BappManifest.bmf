@@ -7,7 +7,7 @@ SerialVersion: 3
 MinPlatformVersion: 0
 ProOnly: False
 Author: Volkan Dindar
-ShortDescription: Helps1 identifying injection flaws (SQLi, LFI, RCE), audits auth/authz via an access matrix, performs 403 bypass checks, converts requests to JavaScript (Copy-as-JS), and generates BCheck/Bambda scripts.
+ShortDescription: Helps identifying injection flaws (SQLi, LFI, RCE), audits auth/authz via an access matrix, performs 403 bypass checks, converts requests to JavaScript (Copy-as-JS), and generates BCheck/Bambda scripts.
 EntryPoint: Agartha.py
 BuildCommand: 
 SupportedProducts: Pro, Community
