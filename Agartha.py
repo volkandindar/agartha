@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 """
 Author: Volkan Dindar
         volkan.dindar@owasp.org
