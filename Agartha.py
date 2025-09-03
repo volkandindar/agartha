@@ -4,6 +4,7 @@ Author: Volkan Dindar
         volkan.dindar@owasp.org
         https://github.com/volkandindar/agartha
 """
+
 try:
     import sys, re, urlparse, random, os, urllib, posixpath, json
     from burp import IBurpExtender, ITab, IMessageEditorController, IContextMenuFactory, IBurpExtenderCallbacks, IExtensionHelpers
