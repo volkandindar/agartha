@@ -4160,7 +4160,10 @@ if (!suspiciousHit && !matchedScope && !matchedDone)
         for _url in _userURLs:
             try:
                 # changing new url path in the request header
-                header =  header.replace(str(header.splitlines()[0]), header.splitlines()[0].split(" ", 2)[0] + " /" + _url.split('/',3)[3] + " " + header.splitlines()[0].split(" ", 2)[2])
+                parts = _url.split('/', 3)
+                path = " /" if len(parts) < 4 or not parts[3] else " /" + parts[3]
+                header =  header.replace(str(header.splitlines()[0]), header.splitlines()[0].split(" ", 2)[0] + path + " " + header.splitlines()[0].split(" ", 2)[2])
+                
                 # header methods
                 if "GET" in header[:3]:
                     # request was in GET method and will be in POST
