@@ -4252,6 +4252,7 @@ if (!suspiciousHit && !matchedScope && !matchedDone)
                         break
                     crawledURLs = len(_userURLs) - 1
                     folderDepth = folderDepth + 1
+                    
             except:
                 print("[ERROR] Spider: " + str(sys.exc_info()[1]))
 
