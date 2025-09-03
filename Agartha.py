@@ -24,7 +24,7 @@ except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
     sys.exit(1)
 
-VERSION = "2.9961"
+VERSION = "3.0"
 url_regex = r'(log|sign|time)([-_+%0-9]{0,5})(off|out)|(expire|kill|terminat|delete|remove)'
 ext_regex = r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff2|ttf|otf)$'
 
@@ -960,18 +960,13 @@ given request then
         elif self._MainTabs.getSelectedIndex() == 2:
             return self._httpReqResAuthentication[self.tableMatrixAuthentication.getSelectedRow()][self.tableMatrixAuthentication.getSelectedColumn()].getResponse()
 
-
     def createMenuItems(self, invocation):
-        try:
-            self.context = invocation
-            menu_list = ArrayList()
-            menu_list.add(JMenuItem("Auth Matrix", actionPerformed=self.agartha_menu))
-            menu_list.add(JMenuItem("403 Bypass", actionPerformed=self.authentication_menu))
-            menu_list.add(JMenuItem("Copy as JavaScript", actionPerformed=self.js_menu))
-            return menu_list
-        except:
-            print("[ERROR] Context Menu Exception: " + str(sys.exc_info()[1]))
-            return ArrayList()
+        self.context = invocation
+        menu_list = ArrayList()
+        menu_list.add(JMenuItem("Auth Matrix", actionPerformed=self.agartha_menu))
+        menu_list.add(JMenuItem("403 Bypass", actionPerformed=self.authentication_menu))
+        menu_list.add(JMenuItem("Copy as JavaScript", actionPerformed=self.js_menu))
+        return menu_list
 
     def js_menu(self, event):
         # Right-click Copy as JS
@@ -1017,7 +1012,7 @@ given request then
             else:
                 head_raw, body_raw = _req, ""
 
-            header_lines = head_raw.splitlines()[1:]  # skip request line
+            header_lines = head_raw.splitlines()[1:]
             headers = {}
             content_type = None
             for line in header_lines:
@@ -2199,7 +2194,7 @@ if (!suspiciousHit && !matchedScope && !matchedDone)
         patterns = [
             (r'/\*[\s\S]*?\*/', style_comment),  # Multi-line comments
             (r'//.*', style_comment),            # Single-line comments
-            (r'#.*', style_comment),            # Single-line comments
+            (r'#.*', style_comment),             # Single-line comments
             (r'"(?:\\.|[^"\\])*"', style_string),# Strings
             (r'@\w+', style_annotation),         # Annotations
             (r'\b(?:if|else|for|String|return|true|false|then|end if|break|boolean|given|send)\b', style_keyword), # Selected keywords
@@ -2637,7 +2632,7 @@ if (!suspiciousHit && !matchedScope && !matchedDone)
         class SlowScrollMouseWheelListener(MouseWheelListener):
             def mouseWheelMoved(inner_self, e):
                 scrollBar = scroll_pane.getVerticalScrollBar()
-                amount = e.getUnitsToScroll() * 5  # Adjust the multiplier for scroll speed
+                amount = e.getUnitsToScroll() * 5  # Adjust for scroll speed
                 scrollBar.setValue(scrollBar.getValue() + amount)
                 e.consume()  # Prevent default fast scroll
 
@@ -3902,7 +3897,7 @@ if (!suspiciousHit && !matchedScope && !matchedDone)
         class SlowScrollMouseWheelListener(MouseWheelListener):
             def mouseWheelMoved(inner_self, e):
                 scrollBar = self.editorScrollPaneInfo.getVerticalScrollBar()
-                amount = e.getUnitsToScroll() * 5  # scale this value (3 is slower than default 15+)
+                amount = e.getUnitsToScroll() * 5  # scale value
                 scrollBar.setValue(scrollBar.getValue() + amount)
                 e.consume()  # prevent default fast scroll
 
@@ -4252,14 +4247,15 @@ if (!suspiciousHit && !matchedScope && !matchedDone)
                             userLinks = userLinks + link + "\n"
                             self._lblAuthNotification.text = "The crawler has found '" + str(len(_userURLs)) + "' links so far, and it is still in progress: '" + str(_userURLs.index(_url) + 1) + "/" + str(crawledURLs + 1) + "', current folder depth: '" + str(folderDepth) + "'."
 
+
                 if _userURLs.index(_url) == crawledURLs:
                     if folderDepth == self._cbSiteMapDepth.getSelectedIndex():
                         break
                     crawledURLs = len(_userURLs) - 1
                     folderDepth = folderDepth + 1
-                
             except:
-                self._lblAuthNotification.text = str(sys.exc_info()[1])
+                print("[ERROR] Spider: " + str(sys.exc_info()[1]))
+
         
         self._tbAuthURL.setText(userLinks)
         if len(_userURLs) > 1:
