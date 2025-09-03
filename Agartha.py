@@ -4247,7 +4247,6 @@ if (!suspiciousHit && !matchedScope && !matchedDone)
                             userLinks = userLinks + link + "\n"
                             self._lblAuthNotification.text = "The crawler has found '" + str(len(_userURLs)) + "' links so far, and it is still in progress: '" + str(_userURLs.index(_url) + 1) + "/" + str(crawledURLs + 1) + "', current folder depth: '" + str(folderDepth) + "'."
 
-
                 if _userURLs.index(_url) == crawledURLs:
                     if folderDepth == self._cbSiteMapDepth.getSelectedIndex():
                         break
