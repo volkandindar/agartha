@@ -3885,7 +3885,7 @@ if (!suspiciousHit && !matchedScope && !matchedDone)
         </ul>
         </li>
         <li><strong>Auth Matrix</strong>: By constructing a comprehensive access matrix, the tool reveals potential access violations and privilege escalation paths. This feature enhances security posture by addressing authentication and authorization issues. <ul>
-        <li>You can use the web <strong>&#39;Spider&#39;</strong> feature to generate a sitemap/URL list, and it will crawl visible links from the user&#39;s session automatically.</li>
+        <li>You can use the web <strong>Spider</strong> feature to generate a sitemap/URL list, and it will crawl visible links from the user&#39;s session automatically.</li>
         </ul>
         </li>
         <p><li><strong>403 Bypass</strong>: It aims to tackle common access restrictions, such as HTTP 403 Forbidden responses. It utilizes techniques like URL manipulation and request header modification to bypass implemented limitations.</li></p>
