@@ -3,16 +3,18 @@
 <p>In summary:</p>
 
 <ul>
-	<li><b>'Payload Generator'</b>: It dynamically constructs comprehensive wordlists for injection attacks, incorporating various encoding and escaping characters to enhance the effectiveness of security testing. These wordlists cover critical vulnerabilities such as SQL Injection, Local File Inclusion (LFI), and Remote Code Execution, making them indispensable for robust security testing.
+	<p><li><b>Payload Generator:</b> It dynamically constructs comprehensive wordlists for injection attacks, incorporating various encoding and escaping characters to enhance the effectiveness of security testing. These wordlists cover critical vulnerabilities such as SQL Injection (SQLi), Local File Inclusion (LFI), Remote Code Execution (RCE), and now also support BCheck syntax for seamless integration with Burp's BCheck framework.
 		<ul>
-			<li><b>Local File Inclusion, Path Traversal</b> helps identifying vulnerabilities that allow attackers to access files on the server's filesystem.</li>
-			<li><b>Remote Code Execution, Command Injection</b> aims to detects potential command injection points, enabling robust testing for code execution vulnerabilities.</li>
-			<li><b>SQL Injection</b> assists to uncover SQL Injection vulnerabilities, including Stacked Queries, Boolean-Based, Union-Based, and Time-Based.</li>
+			<li><b>Local File Inclusion, Path Traversal:</b> It helps identifying vulnerabilities that allow attackers to access files on the server's filesystem.</li>
+			<li><b>Remote Code Execution, Command Injection:</b> It aims to detects potential command injection points, enabling robust testing for code execution vulnerabilities.</li>
+			<li><b>SQL Injection:</b> It assists to uncover SQL Injection vulnerabilities, including Stacked Queries, Boolean-Based, Union-Based, and Time-Based.</li>
 		</ul>
-	</li>
-	<li><b>'Auth Matrix'</b>: By constructing a comprehensive access matrix, the tool reveals potential access violations and privilege escalation paths. This feature enhances security posture by addressing authentication and authorization issues. You can use the web <b>'Spider'</b> feature to generate a sitemap/URL list, and it will crawl visible links from the user's session automatically.</li>
-	<li><b>'403 Bypass'</b>: It aims to tackle common access restrictions, such as HTTP 403 Forbidden responses. It utilizes techniques like URL manipulation and request header modification to bypass implemented limitations.</li>
-	<li><b>'Copy as JavaScript'</b>: It converts Http requests to JavaScript code for further XSS exploitation and more.</li>
+	</li></p>
+	<p><li><b>Auth Matrix:</b> By constructing a comprehensive access matrix, the tool reveals potential access violations and privilege escalation paths. This feature enhances security posture by addressing authentication and authorization issues.
+			<ul><li>You can use the web <b>Spider</b> feature to generate a sitemap/URL list, and it will crawl visible links from the user's session automatically.</li></ul></p>
+	<p><li><b>403 Bypass:</b> It aims to tackle common access restrictions, such as HTTP 403 Forbidden responses. It utilizes techniques like URL manipulation and request header modification to bypass implemented limitations.</li></p>
+	<p><li><b>Copy as JavaScript:</b> It converts Http requests to JavaScript code for further XSS exploitation and more.</li></p>
+	<p><li><b>Bambdas Script Generator: </b> The feature supports automatic generation of Bambdas-compatible scripts based on user input. It eliminates the need for manual coding, enabling faster creation of custom scripts and streamlining integration with the Bambdas engine.</li></p>
 </ul>
 
 <p>For additional information or to report any issues, please visit the <a href="https://github.com/volkandindar/agartha">project's homepage</a>.</p>
