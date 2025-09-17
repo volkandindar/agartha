@@ -29,10 +29,10 @@ Or for manual installation:
 - Burp Menu > Extender > Extensions > Add > Extension Type: Python > Extension file(.py): Select 'Agartha.py' file
 
 After all, you will see 'Agartha' tab in the main window and it will be also registered the right click, under: 
-- 'Extensions > Agartha - LFI, RCE, SQLi, Auth, HTTP to JS', with three sub-menus:
+- 'Extensions > Agartha', with three sub-menus:
 	- **'Auth Matrix'**
  	- **'403 Bypass'**
-	- **'Copy as JavaScript'**<br/><br/>
+	- **'Copy as JavaScript'** <br/><br/>
 
 
 ## Local File Inclusion / Path Traversal
