@@ -32,7 +32,11 @@ After all, you will see 'Agartha' tab in the main window and it will be also reg
 - 'Extensions > Agartha', with three sub-menus:
 	- **'Auth Matrix'**
  	- **'403 Bypass'**
-	- **'Copy as JavaScript'** <br/><br/>
+	- **'Copy as JavaScript'** 
+
+		<img width="600" alt="Agartha Menu" src="https://github.com/user-attachments/assets/95be70fe-184c-4195-9455-8c3930926fcc">
+
+<br/><br/>
 
 
 ## Local File Inclusion / Path Traversal
