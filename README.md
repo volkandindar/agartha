@@ -82,7 +82,7 @@ Your payloads are now integrated into a BCheck. You can either manually send or 
 - **Manual scanning**: Right-click an HTTP request and select "Send to BChecks Editor". Then click the generated BCheck item and select "Run test".
 - **Automatic scanning**: Right-click an HTTP request, choose 'Open Scan Launcher', then go to 'Scan configuration > Select from library > Audit checks – BChecks only'. Close the dialog, and your scan will now run exclusively with the BChecks you have defined.
 
-<img width="1000" alt="BCheck Code Generator" src="https://github.com/user-attachments/assets/ffc9b578-d646-4eab-bf9e-ee9f66e51600" />
+<img width="1000" alt="BCheck Code Generator" src="https://github.com/user-attachments/assets/0ff1ecf5-1a84-444b-bc6e-7e2d7153dc5d">
 
 **Fine-tuning advises**: The generated code serves as a template and may require some adjustments, as behavior can vary between different applications and servers.
 
@@ -188,7 +188,7 @@ Please note that the JavaScript code will execute within the original user sessi
 ## Bambdas Code Generator
 Bambdas are lightweight scripts that run directly within Burp Suite, allowing users to quickly customize and automate various tasks. They can be used to define custom match-and-replace rules, add dynamic table columns, apply filters, and tailor the interface to better suit specific testing workflows. 
 
-<img width="1000" alt="Bambdas Code Generator" src="https://github.com/user-attachments/assets/9e3f62fb-6d35-4fc0-aad3-6d03a0a3365d"">
+<img width="1000" alt="Bambdas Code Generator" src="https://github.com/user-attachments/assets/a2681d9b-4c05-4876-98bb-5a4252bb4aff">
 
 Explanations, A little bit more details:
 1. Regarding script creation GUI, you can select general settings here. For example:
