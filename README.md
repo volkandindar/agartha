@@ -82,9 +82,7 @@ Your payloads are now integrated into a BCheck. You can either manually send or 
 - **Manual scanning**: Right-click an HTTP request and select "Send to BChecks Editor". Then click the generated BCheck item and select "Run test".
 - **Automatic scanning**: Right-click an HTTP request, choose 'Open Scan Launcher', then go to 'Scan configuration > Select from library > Audit checks – BChecks only'. Close the dialog, and your scan will now run exclusively with the BChecks you have defined.
 
-
-<img width="1000" alt="BCheck Code Generator" src="https://github.com/user-attachments/assets/a614dc20-dfce-4449-ba47-7762158da6db">
-
+<img width="1000" alt="BCheck Code Generator" src="https://github.com/user-attachments/assets/ffc9b578-d646-4eab-bf9e-ee9f66e51600" />
 
 **Fine-tuning advises**: The generated code serves as a template and may require some adjustments, as behavior can vary between different applications and servers.
 
