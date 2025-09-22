@@ -1785,7 +1785,17 @@ for (String httpMethod : httpMethods)
         bambdas += "boolean matchedDone = false;\n"
         bambdas += "StringBuilder notesBuilder = new StringBuilder();\n"
         if self._cbBambdasSearchinRes.isSelected() and (self._cbBambdasSearchHTMLComments.isSelected() or self._cbBambdasFilesDownloadable.isSelected() or self._cbBambdasValuable.isSelected() or self._cbBambdasVulnJS.isSelected()):
-            bambdas += "String responseBody = requestResponse.response().bodyToString();\n"
+            bambdas += """String responseBody = requestResponse.response().bodyToString();
+StringBuilder headersString = new StringBuilder();
+boolean isDownloadHeaderPresent = false;
+List<HttpHeader> responseHeaders = requestResponse.response().headers();
+for (HttpHeader header : responseHeaders) {
+    if (header.name().equalsIgnoreCase("Content-Disposition"))
+        isDownloadHeaderPresent = true;
+    headersString.append(header.name()).append(": ").append(header.value()).append("\\n");
+}
+String responseHeader = isDownloadHeaderPresent ? headersString.toString() : "";
+"""
         if (self._cbBambdasSearchinReq.isSelected() or self._cbBambdasSearchinURL.isSelected()) and (self._cbBambdasSQLi.isSelected() or self._cbBambdasXSS.isSelected() or self._cbBambdasLFI.isSelected() or self._cbBambdasSSRF.isSelected() or self._cbBambdasORed.isSelected() or self._cbBambdasRCE.isSelected() or self._cbBambdasValuable.isSelected()):
             bambdas += "String requestBody  = requestResponse.request().bodyToString();\n"
         bambdas += "var path = requestResponse.request().path().toLowerCase();\n"
@@ -1969,15 +1979,20 @@ for (String httpMethod : httpMethods)
     
     ArrayList<String> matchingFiles = new ArrayList<>();
     // Scan response for suspected downloadable files
-    for (Pattern pattern : patterns) {
-        Matcher matcher = pattern.matcher(responseBody);
-        while (matcher.find()) {
-            suspiciousHit = true;
-            String matchingFile = matcher.group();
-            matchingFiles.add(matchingFile);
-            if (notesBuilder.length() > 0)
-                notesBuilder.append(", ");
-            notesBuilder.append(matchingFile.strip().replace(">", "").replace("\\"", "")).append(" (Potential-FileDownload)");
+    List<String> sourcesToCheck = Arrays.asList(responseBody, responseHeader);
+    for (String source : sourcesToCheck) {
+        if (!source.isEmpty()) { 
+            for (Pattern pattern : patterns) {
+                Matcher matcher = pattern.matcher(source);
+                while (matcher.find()) {
+                    suspiciousHit = true;
+                    String matchingFile = matcher.group();
+                    matchingFiles.add(matchingFile);
+                    if (notesBuilder.length() > 0)
+                        notesBuilder.append(", ");
+                    notesBuilder.append(matchingFile.strip().replace(">", "").replace("\\"", "")).append(" (Potential-FileDownload)");
+                }
+            }
         }
     }
 """
@@ -2263,7 +2278,7 @@ if (!suspiciousHit && !matchedScope && !matchedDone)
         
         self._cbBambdasSearchHTMLComments.setSelected(False)
         
-        self._txtBambdasExtIgnoreKeywords.text = "js, gif, jpg, png, svg, css, ico, woff2"
+        self._txtBambdasExtIgnoreKeywords.text = "js, gif, jpg, png, svg, css, ico, woff, woff2"
         self._txtBambdasExtIgnoreKeywords.setEnabled(True)
         self._cbBambdasExtIgnore.setSelected(True)
 
