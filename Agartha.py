@@ -1785,8 +1785,9 @@ for (String httpMethod : httpMethods)
         bambdas += "boolean matchedDone = false;\n"
         bambdas += "StringBuilder notesBuilder = new StringBuilder();\n"
         if self._cbBambdasSearchinRes.isSelected() and (self._cbBambdasSearchHTMLComments.isSelected() or self._cbBambdasFilesDownloadable.isSelected() or self._cbBambdasValuable.isSelected() or self._cbBambdasVulnJS.isSelected()):
-            bambdas += """String responseBody = requestResponse.response().bodyToString();
-StringBuilder headersString = new StringBuilder();
+            bambdas += "String responseBody = requestResponse.response().bodyToString();\n"
+            if self._cbBambdasFilesDownloadable.isSelected():
+                bambdas += """StringBuilder headersString = new StringBuilder();
 boolean isDownloadHeaderPresent = false;
 List<HttpHeader> responseHeaders = requestResponse.response().headers();
 for (HttpHeader header : responseHeaders) {
