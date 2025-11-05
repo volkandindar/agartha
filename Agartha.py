@@ -24,7 +24,7 @@ except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
     sys.exit(1)
 
-VERSION = "3.0"
+VERSION = "3.01"
 url_regex = r'(log|sign|time)([-_+%0-9]{0,5})(off|out)|(expire|kill|terminat|delete|remove)'
 ext_regex = r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff2|ttf|otf)$'
 
@@ -963,7 +963,8 @@ given request then
     def createMenuItems(self, invocation):
         self.context = invocation
         menu_list = ArrayList()
-        menu_list.add(JMenuItem("Auth Matrix", actionPerformed=self.agartha_menu))
+        menu_list.add(JMenuItem("Auth Matrix (manual)", actionPerformed=self.authorization_menu))
+        menu_list.add(JMenuItem("Auth Matrix (semi-auto)", actionPerformed=self.authorization_menu_semiauto))
         menu_list.add(JMenuItem("403 Bypass", actionPerformed=self.authentication_menu))
         menu_list.add(JMenuItem("Copy as JavaScript", actionPerformed=self.js_menu))
         return menu_list
@@ -1084,7 +1085,22 @@ given request then
 
         clipboard.setContents(StringSelection(jscript), None)
 
-    def agartha_menu(self, event):
+
+    def authorization_menu_semiauto(self, ev):
+        t = Thread(target=self.authorization_menu_semiautoThread, args=[self])
+        t.start()
+        return
+
+    def authorization_menu_semiautoThread(self, ev):
+        if self.authorization_menu(self):
+            self.siteMapGenerator("semiautoFunc")
+            return
+
+    def authorization_menu(self, event):
+        # the feature is already in action
+        if not self._tbAuthHeader.isEnabled():
+            return False
+
         # right click menu
         http_contexts = self.context.getSelectedMessages()
         _req = self._helpers.bytesToString(http_contexts[0].getRequest())
@@ -1109,9 +1125,13 @@ given request then
         self._lblAuthNotification.setForeground (Color.black)
         self._tbAuthURL.setForeground (Color.black)
         self._tbAuthHeader.setForeground (Color.black)
-        return
+        return True
 
     def authentication_menu(self, event):
+        # the feature is already in action
+        if not self._cbAuthenticationHost.isEnabled():
+            return
+        
         # right click menu
         http_contexts = self.context.getSelectedMessages()
         try:
@@ -1176,7 +1196,7 @@ given request then
         self._btnAuthRun = JButton("RUN", actionPerformed=self.authMatrix)
         self._btnAuthRun.setPreferredSize(Dimension(150, 27))
         self._btnAuthRun.setToolTipText("Generate user access table!")
-        self._btnSiteMapGeneratorRun = JButton("Spider", actionPerformed=self.siteMapGenerator)
+        self._btnSiteMapGeneratorRun = JButton("Spider", actionPerformed=self.siteMapGeneratorFunc)
         self._btnSiteMapGeneratorRun.setPreferredSize(Dimension(90, 27))
         self._btnSiteMapGeneratorRun.setToolTipText("It crawls all the links the user can visit and populate URL list automatically.")
         self._btnAuthReset = JButton("Reset", actionPerformed=self.tableMatrixReset)
@@ -1360,11 +1380,11 @@ given request then
         self.tabAuthenticationJlist = JList(self._urlAddresses)
         self.tabAuthenticationJlist.addListSelectionListener(self.listChange)
         self.tabAuthenticationJlist.setSelectionMode(DefaultListSelectionModel.SINGLE_SELECTION)
-        self.tabAuthenticationJlist.setToolTipText("Queued requests.")
+        self.tabAuthenticationJlist.setToolTipText("Request queue.")
 
         self._tbAuthenticationHeader = JTextPane()
         self._tbAuthenticationHeader.setContentType("text")
-        self._tbAuthenticationHeader.setToolTipText("Header details.")
+        self._tbAuthenticationHeader.setToolTipText("Request headers.")
         self._tbAuthenticationHeader.setEditable(False)
         self._tbAuthenticationHeader.setText("")
 
@@ -1600,11 +1620,11 @@ given request then
             if self._tbBambdasScopeURLs.text != self._txBambdasScopeURLs and self._tbBambdasScopeURLs.text.strip() and line.strip():
                 if line.strip().startswith("/*") or line.strip() == "/":
                     self._tbBambdasScopeURLs.setText("/")
-                if " " in line.strip():
+                if " " in line.strip() and not line.strip().startswith("#"):
                     self._lblBambdasNotification2.text = "One or more of the test scope URLs contain spaces."
                     self._lblBambdasNotification2.setForeground(Color.red)
                     return
-                if not line.strip().startswith("/"):
+                if not line.strip().startswith("/") and not line.strip().startswith("#"):
                     self._lblBambdasNotification2.text = "Make sure all URLs in Testing Scope begin with a '/'"
                     self._lblBambdasNotification2.setForeground(Color.red)
                     return
@@ -1615,11 +1635,11 @@ given request then
                     self._lblBambdasNotification2.text = "You can not set root directory '/' in the tested URLs."
                     self._lblBambdasNotification2.setForeground(Color.red)
                     return
-                if " " in line.strip():
+                if " " in line.strip() and not line.strip().startswith("#"):
                     self._lblBambdasNotification2.text = "One or more of the tested URLs contain spaces."
                     self._lblBambdasNotification2.setForeground(Color.red)
                     return
-                if not line.strip().startswith("/"):
+                if not line.strip().startswith("/") and not line.strip().startswith("#"):
                     self._lblBambdasNotification2.text = "Make sure all URLs in Tested section begin with a '/'"
                     self._lblBambdasNotification2.setForeground(Color.red)
                     return
@@ -1632,11 +1652,11 @@ given request then
                         self._lblBambdasNotification2.text = "Root directory '/' can't be blacklisted, unless you provide scope URLs."
                         self._lblBambdasNotification2.setForeground(Color.red)
                         return
-                if " " in line.strip():
+                if " " in line.strip() and not line.strip().startswith("#"):
                     self._lblBambdasNotification2.text = "One or more of the Black-Listed URLs contain spaces."
                     self._lblBambdasNotification2.setForeground(Color.red)
                     return
-                if not line.strip().startswith("/"):
+                if not line.strip().startswith("/") and not line.strip().startswith("#"):
                     self._lblBambdasNotification2.text = "Make sure all URL in Black-Listed section begin with a '/'"
                     self._lblBambdasNotification2.setForeground(Color.red)
                     return
@@ -1686,8 +1706,16 @@ given request then
             self._lblBambdasNotification2.setForeground(Color.red)
             return
 
+        # Filter out scope lines that have already been tested
+        urls_lines = self._tbBambdasScopeURLs.getText().split("\n")
+        done_urls_lines = set(self._tbBambdasScopeDoneURLs.getText().split("\n"))
+        # yeni_urls_lines = ["" if line in done_urls_lines else line for line in urls_lines]
+        # yeni_urls_lines = [line if line.startswith("#") or line not in done_urls_lines else "" for line in urls_lines]
+        yeni_urls_lines = [line if line.startswith("#") or re.sub(r"\{[^}]+\}|\*", ".*", line) not in {re.sub(r"\{[^}]+\}|\*", ".*", l) for l in done_urls_lines} else "" for line in urls_lines]
+        self._tbBambdasScopeURLs.setText("\n".join(yeni_urls_lines))
+
         bambdas = "/**\n"
-        bambdas += " * Bambdas Script - auto-generated by Agartha\n"
+        bambdas += " * Bambdas Script - generated by Agartha\n"
         bambdas += " **/\n\n"
 
         bambdas += "// If true: clear highlights and notes, then stop. If false: execute the script.\n"
@@ -1700,8 +1728,8 @@ given request then
         elif self._tbBambdasScopeURLs.text != self._txBambdasScopeURLs and self._tbBambdasScopeURLs.text.strip():
             targetPaths = "{"
             for line in list(dict.fromkeys(self._tbBambdasScopeURLs.text.splitlines())):
-                if line.strip():
-                    targetPaths += "\"" + (line.strip().replace("*",".*") + "/?(?:\\\\?.*)?$")+ "\", "
+                if line.strip() and not line.strip().startswith("#"):
+                    targetPaths += "\"" + (re.sub(r"\{[^}]+\}|\*", ".*", line.strip()) + "/?(?:\\\\?.*)?$") + "\", "
             if targetPaths != "{":
                 targetPaths = targetPaths[:-2]
             targetPaths += "}"
@@ -1716,8 +1744,8 @@ given request then
             if self._tbBambdasBlackListedURLs.text != self._txBambdasBlackListedURLs:
                 targetBlackListUrls = "{"
                 for line in list(dict.fromkeys(self._tbBambdasBlackListedURLs.text.splitlines())):
-                    if line.strip():
-                        targetBlackListUrls += "\"" + (line.strip().replace("*",".*") + "/?(?:\\\\?.*)?$") + "\", "
+                    if line.strip() and not line.strip().startswith("#"):
+                        targetBlackListUrls += "\"" + (re.sub(r"\{[^}]+\}|\*", ".*", line.strip()) + "/?(?:\\\\?.*)?$") + "\", "
                 if targetBlackListUrls != "{":
                     targetBlackListUrls = targetBlackListUrls[:-2]
                 targetBlackListUrls += "}"
@@ -1732,8 +1760,8 @@ given request then
         if self._tbBambdasScopeDoneURLs.text != self._txBambdasScopeDoneURLs and self._tbBambdasScopeDoneURLs.text:
             targetPaths = "{"
             for line in list(dict.fromkeys(self._tbBambdasScopeDoneURLs.text.splitlines())):
-                if line.strip():
-                    targetPaths += "\"" + (line.strip().replace("*",".*") + "/?(?:\\\\?.*)?$") + "\", "
+                if line.strip() and not line.strip().startswith("#"):
+                    targetPaths += "\"" + (re.sub(r"\{[^}]+\}|\*", ".*", line.strip()) + "/?(?:\\\\?.*)?$") + "\", "
             if targetPaths != "{":
                 targetPaths = targetPaths[:-2]
             targetPaths += "}"
@@ -2331,7 +2359,7 @@ if (!suspiciousHit && !matchedScope && !matchedDone)
 
     def _tabBambdasUI(self):
         self._btnBambdasRun = JButton("               Run              ", actionPerformed=self.funcBambdasRun)
-        self._btnBambdasRun.setToolTipText("Generate a Bambdas script based on the options below.")
+        self._btnBambdasRun.setToolTipText("Generate the Bambdas script based on the options below.")
         self._btnBambdasReset = JButton("               Reset              ", actionPerformed=self.funcBambdasUIReset)
         self._btnBambdasReset.setToolTipText("Clear all fields and restore default settings.")
 
@@ -2639,8 +2667,8 @@ if (!suspiciousHit && !matchedScope && !matchedDone)
         _tabBambdasPanelBottom = JPanel(BorderLayout())
         self._tbBambdasScript = JTextPane()
         self._tbBambdasScript.setContentType("text")
+        self._tbBambdasScript.setEditable(False)
         self._tbBambdasScript.setToolTipText("The generated Bambdas script will appear here after you click Run.")
-        self._tbBambdasScript.setEditable(True)
         self.updateBambdasScriptText("/* Bambdas Script will be in here automatically */")
         scroll_pane = JScrollPane(self._tbBambdasScript)
 
@@ -2887,20 +2915,26 @@ if (!suspiciousHit && !matchedScope && !matchedDone)
             _msgBody = self._helpers.bytesToString(_response.getResponse()[self._helpers.analyzeResponse(self._helpers.bytesToString(_response.getResponse())).getBodyOffset():])
             _status = str(self._helpers.analyzeResponse(self._helpers.bytesToString(_response.getResponse())).getStatusCode())
             
-            if (_column == 32 or _column == 33 or _column == 34) and _status == '200':
-                header = list(_header)
-                del header[3]
-                del header[3]
-                url = _url.split('/',3)[0] + "//" + _url.split('/',3)[2] + "/"
-                request = self._helpers.buildHttpMessage(header, _body)
-                httpService = self._helpers.buildHttpService(urlparse.urlparse(url).hostname, _portNum, urlparse.urlparse(url).scheme)
-                response = self._callbacks.makeHttpRequest(httpService, request)
-                status = str(self._helpers.analyzeResponse(self._helpers.bytesToString(response.getResponse())).getStatusCode())
-                if status == '200':
-                    _msgBody = self._helpers.bytesToString(_response.getResponse()[self._helpers.analyzeResponse(self._helpers.bytesToString(_response.getResponse())).getBodyOffset():])
-                    msgBody = self._helpers.bytesToString(response.getResponse()[self._helpers.analyzeResponse(self._helpers.bytesToString(response.getResponse())).getBodyOffset():])
-                    if msgBody == _msgBody:
-                        _status = _status + "-"
+            if _status == '200':
+                # the response code is http 200
+                if _msgBody.find("<body>The requested URL was rejected.</body>") != -1:
+                    # check the response if it is rejected
+                    _status = _status + "-"
+                else:
+                    # check if the default request also returns the same response
+                    header = list(_header)
+                    del header[3]
+                    del header[3]
+                    url = _url.split('/',3)[0] + "//" + _url.split('/',3)[2] + "/"
+                    request = self._helpers.buildHttpMessage(header, _body)
+                    httpService = self._helpers.buildHttpService(urlparse.urlparse(url).hostname, _portNum, urlparse.urlparse(url).scheme)
+                    response = self._callbacks.makeHttpRequest(httpService, request)
+                    status = str(self._helpers.analyzeResponse(self._helpers.bytesToString(response.getResponse())).getStatusCode())
+                    if status == '200':
+                        _msgBody = self._helpers.bytesToString(_response.getResponse()[self._helpers.analyzeResponse(self._helpers.bytesToString(_response.getResponse())).getBodyOffset():])
+                        msgBody = self._helpers.bytesToString(response.getResponse()[self._helpers.analyzeResponse(self._helpers.bytesToString(response.getResponse())).getBodyOffset():])
+                        if msgBody == _msgBody:
+                            _status = _status + "-"
 
             if not _msgBody:
                 _status = _status + "(EmptyBody)"
@@ -3376,10 +3410,10 @@ if (!suspiciousHit && !matchedScope && !matchedDone)
                     for _url in _urls:
                         _header = list(_headerOrg[1:])
                         _header.insert(1, _headerParam + urlparse.urlparse(_url).path)
-                        _header.insert(0, str(_headerOrg[0]).split(" ", 2)[0] + " " + _url[_url.rfind(urlparse.urlparse(_url).path):] + " " + str(_headerOrg[0]).split(" ", 2)[2])
+                        _header.insert(0, str(_headerOrg[0]).split(" ", 2)[0] + " / " + str(_headerOrg[0]).split(" ", 2)[2])
                         self._httpCalls =[]
                         _columnNum = _columnNum + 1
-                        _reqRes.append(self.authenticationMatrixCalls(_url, _header, _body, _portNum, x, _columnNum, _progressBar))
+                        _reqRes.append(self.authenticationMatrixCalls("/".join(_url.split("/")[:3]) + "/", _header, _body, _portNum, x, _columnNum, _progressBar))
                         _cellHint.append("'" + _headerParam + "' parameter has been added to the request header, '" + _url + "'")
                 # column4
 
@@ -4109,12 +4143,16 @@ if (!suspiciousHit && !matchedScope && !matchedDone)
 
         return
 
-    def siteMapGenerator(self, ev):
-        t = Thread(target=self.siteMapGeneratorThread, args=[self])
+    def siteMapGeneratorFunc(self, ev):
+        self.siteMapGenerator()
+        return
+
+    def siteMapGenerator(self, my_arg=None):
+        t = Thread(target=self.siteMapGeneratorThread, args=(my_arg,))
         t.start()
         return
 
-    def siteMapGeneratorThread(self, ev):
+    def siteMapGeneratorThread(self, my_arg=None):
         _urlAdd = ""
         for _url in self._tbAuthURL.getText().split('\n'):
             if _url.strip():
@@ -4203,6 +4241,7 @@ if (!suspiciousHit && !matchedScope && !matchedDone)
                     if not responseStatus.startswith("2"):
                         self._lblAuthNotification.text = "The user's header is returning 'HTTP " + responseStatus + "'. Please provide a valid header and URL."
                         self._btnAuthNewUserAdd.setEnabled(True)
+                        self._lblAuthNotification.setForeground (Color.red)
                         self._tbAuthNewUser.setEnabled(True)
                         self._cbSiteMapDepth.setEnabled(True)
                         self._btnSiteMapGeneratorRun.setEnabled(True)
@@ -4290,6 +4329,15 @@ if (!suspiciousHit && !matchedScope && !matchedDone)
         self._btnAuthRun.setEnabled(True)
         self._cbAuthColoring.setEnabled(True)
         self._cbAuthGETPOST.setEnabled(True)
+
+        if my_arg == "semiautoFunc":
+            if self._tbAuthNewUser.text in self.userNames:
+                for i in range(1, 5):
+                    user_id = 'User' + str(i)
+                    if user_id not in self.userNames:
+                        self._tbAuthNewUser.text = user_id
+                        break
+            self.authAdduser(self)
         return
 
 class UserEnabledRenderer(TableCellRenderer):
@@ -4402,18 +4450,21 @@ class UserEnabledRenderer(TableCellRenderer):
                             UserEnabledRenderer._colorsRed = True
                             toolTipMessage = "The response returns HTTP 2XX, even though all session identifiers have been removed!\n" + self.tipMessages[row][column]
                     else:
-                        if column == 32:
-                          toolTipMessage = "'X-Original-URL' parameter has been added to the header."
-                          if str(table.getValueAt(row, column)).endswith("-"):
-                              toolTipMessage = self.tipMessages[row][column] + ". '-' shows it returns same response with '/' root path."
-                        elif column == 33:
-                          toolTipMessage = "'X-Rewrite-URL' parameter has been added to the header."
-                          if str(table.getValueAt(row, column)).endswith("-"):
-                              toolTipMessage = self.tipMessages[row][column] + ". '-' shows it returns same response with '/' root path."
-                        elif column == 34:
-                          toolTipMessage = "'X-Override-URL' parameter has been added to the header."
-                          if str(table.getValueAt(row, column)).endswith("-"):
-                              toolTipMessage = self.tipMessages[row][column] + ". '-' shows it returns same response with '/' root path."
+                        # 76 - 85
+                        if str(table.getValueAt(row, column)).endswith("-"):
+                            toolTipMessage = toolTipMessage + ". '-' indicates the server returned HTTP 200, but no access violation was detected."
+                        # if column == 32:
+                        #   toolTipMessage = "'X-Original-URL' parameter has been added to the header."
+                        #   if str(table.getValueAt(row, column)).endswith("-"):
+                        #       toolTipMessage = self.tipMessages[row][column] + ". '-' shows it returns same response with '/' root path."
+                        # elif column == 33:
+                        #   toolTipMessage = "'X-Rewrite-URL' parameter has been added to the header."
+                        #   if str(table.getValueAt(row, column)).endswith("-"):
+                        #       toolTipMessage = self.tipMessages[row][column] + ". '-' shows it returns same response with '/' root path."
+                        # elif column == 34:
+                        #   toolTipMessage = "'X-Override-URL' parameter has been added to the header."
+                        #   if str(table.getValueAt(row, column)).endswith("-"):
+                        #       toolTipMessage = self.tipMessages[row][column] + ". '-' shows it returns same response with '/' root path."
 
                         if not str(table.getValueAt(row, 1)).startswith("2"):
                             if str(table.getValueAt(row, column)).startswith("2") and not str(table.getValueAt(row, column)).endswith("-"):
