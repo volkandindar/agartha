@@ -1,20 +1,81 @@
-<p><b>Agartha</b>, specializes in advance payload generation and access control assessment. It adeptly identifies vulnerabilities related to injection attacks, and authentication/authorization issues. The dynamic payload generator crafts extensive wordlists for various injection vectors, including SQL Injection, Local File Inclusion (LFI), and Remote Code Execution(RCE). Furthermore, the extension constructs a comprehensive user access matrix, revealing potential access violations and privilege escalation paths. It also assists in performing HTTP 403 bypass checks, shedding light on auth misconfigurations. Additionally, it can convert HTTP requests to JavaScript code to help digging up XSS issues more.</p>
+<p>Agartha is a comprehensive security testing tool that specializes in payload generation for injection vulnerabilities
+	and assessment of authentication and authorization issues. It generates extensive wordlists for SQL Injection, Local
+	File Inclusion (LFI), and Remote Code Execution (RCE) attacks, with support for BCheck integration. The extension
+	also constructs user access matrices to identify privilege escalation paths, performs HTTP 403 bypass testing,
+	converts requests to JavaScript for XSS exploitation, and automates Bambdas script generation.</p>
 
-<p>In summary:</p>
+<h2>Features</h2>
 
 <ul>
-	<p><li><b>Payload Generator:</b> It dynamically constructs comprehensive wordlists for injection attacks, incorporating various encoding and escaping characters to enhance the effectiveness of security testing. These wordlists cover critical vulnerabilities such as SQL Injection (SQLi), Local File Inclusion (LFI), Remote Code Execution (RCE), and now also support BCheck syntax for seamless integration with Burp's BCheck framework.
-		<ul>
-			<li><b>Local File Inclusion, Path Traversal:</b> It helps identifying vulnerabilities that allow attackers to access files on the server's filesystem.</li>
-			<li><b>Remote Code Execution, Command Injection:</b> It aims to detects potential command injection points, enabling robust testing for code execution vulnerabilities.</li>
-			<li><b>SQL Injection:</b> It assists to uncover SQL Injection vulnerabilities, including Stacked Queries, Boolean-Based, Union-Based, and Time-Based.</li>
-		</ul>
-	</li></p>
-	<p><li><b>Auth Matrix:</b> By constructing a comprehensive access matrix, the tool reveals potential access violations and privilege escalation paths. This feature enhances security posture by addressing authentication and authorization issues.
-			<ul><li>You can use the web <b>Spider</b> feature to generate a sitemap/URL list, and it will crawl visible links from the user's session automatically.</li></ul></p>
-	<p><li><b>403 Bypass:</b> It aims to tackle common access restrictions, such as HTTP 403 Forbidden responses. It utilizes techniques like URL manipulation and request header modification to bypass implemented limitations.</li></p>
-	<p><li><b>Copy as JavaScript:</b> It converts Http requests to JavaScript code for further XSS exploitation and more.</li></p>
-	<p><li><b>Bambdas Script Generator: </b> The feature supports automatic generation of Bambdas-compatible scripts based on user input. It eliminates the need for manual coding, enabling faster creation of custom scripts and streamlining integration with the Bambdas engine.</li></p>
+	<li>Generate comprehensive injection payloads instantly for SQLi, LFI, and RCE testing with built-in WAF bypass
+		techniques</li>
+	<li>Visualize user access permissions in a color-coded matrix to quickly spot privilege escalation and authorization
+		flaws</li>
+	<li>Automatically test HTTP 403 bypass techniques to reveal hidden endpoints and misconfigured access controls</li>
+	<li>Convert injection payloads to BCheck code for automated scanner integration and vulnerability detection at scale
+	</li>
+	<li>Auto-generate Bambdas scripts to filter and color-code proxy history by scope and vulnerability patterns</li>
+	<li>Transform HTTP requests to JavaScript fetch code for advanced XSS testing and header restriction bypasses</li>
 </ul>
 
-<p>For additional information or to report any issues, please visit the <a href="https://github.com/volkandindar/agartha">project's homepage</a>.</p>
+<h2>Usage</h2>
+
+<h3>Payload Generator</h3>
+<ol>
+	<li>Navigate to the Payload Generator tab and select attack type (LFI, RCE, or SQLi)</li>
+	<li>Configure options such as depth (for LFI/Union-Based SQLi), WAF bypass, URL encoding, and target
+		databases/vectors</li>
+	<li>Click "Generate the Payloads" for a classic wordlist to use with Intruder or Repeater</li>
+</ol>
+
+<h3>Authorization Matrix</h3>
+<ol>
+	<li>Right-click any request and select Extensions &rarr; Agartha &rarr; Auth Matrix to define user sessions</li>
+	<li>Add up to four users with their session headers using the "Add User" button</li>
+	<li>Provide URL lists manually or use the Spider button to automatically crawl URLs from user sessions</li>
+	<li>Select request method (GET, POST, or Dynamic based on proxy history) and click "Run"</li>
+	<li>Review the color-coded matrix where red indicates critical access violations (HTTP 200 with matching content),
+		orange shows potential issues (HTTP 200 with different content), and yellow indicates redirections (HTTP 302)
+	</li>
+</ol>
+
+<h3>403 Bypass</h3>
+<ol>
+	<li>For authentication testing: click "Load Requests" to import proxy history with session identifiers automatically
+		removed</li>
+	<li>For privilege escalation testing: right-click individual requests to send them with session identifiers intact
+	</li>
+	<li>Configure optional filters (URL grouping, time range, keywords) to focus testing scope</li>
+	<li>Click "Run" to test various bypass techniques including URL manipulation and header modification</li>
+	<li>Review results where red cells indicate successful bypasses</li>
+</ol>
+
+<h3>BCheck Code Generator</h3>
+<ol>
+	<li>In the Payload Generator tab, configure your desired attack type and options (LFI, RCE, or SQLi)</li>
+	<li>Click "Generate payloads for BCheck" to automatically generate BCheck-compatible code (code is copied to
+		clipboard)</li>
+	<li>Go to "Extensions &rarr; BChecks &rarr; New &rarr; Blank" and paste the generated code</li>
+	<li>For manual testing: right-click an HTTP request, select "Send to BChecks Editor", select your BCheck, and click
+		"Run test"</li>
+	<li>For automated scanning: right-click an HTTP request, choose "Open Scan Launcher", then "Scan configuration &rarr;
+		Select from library &rarr; Audit checks - BChecks only"</li>
+	<li>Fine-tune the generated code by refining filters (HTTP response codes, keywords) to reduce false positives</li>
+</ol>
+
+<h3>Bambdas Generator</h3>
+<ol>
+	<li>Navigate to the Bambdas Generator tab and configure general settings (scope, file extensions, colors, time
+		range)</li>
+	<li>Define search criteria for URLs, requests, or responses (HTML comments, vulnerable JS functions, valuable
+		keywords, parameter-based vulnerability identifiers)</li>
+	<li>Specify testing scope, already tested URLs, and blacklisted URLs using path patterns (supports wildcards and
+		placeholders)</li>
+	<li>Click "Run" to generate the Bambdas script</li>
+	<li>Apply the script either temporarily ("Proxy &rarr; HTTP History &rarr; Bambda Mode") or permanently ("Extensions
+		&rarr; Bambda Library &rarr; New &rarr; Blank")</li>
+</ol>
+
+<h3>Copy as JavaScript</h3>
+<p>Right-click any HTTP request and select "Extensions &rarr; Agartha &rarr; Copy as JavaScript". The generated JavaScript
+	code will be automatically copied to your clipboard.</p>
