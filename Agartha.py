@@ -2607,7 +2607,7 @@ if (!suspiciousHit && !matchedScope && !matchedDone)
 
         self._tbBambdasScopeURLs = JTextPane()
         self._tbBambdasScopeURLs.setToolTipText("Define test scope: one URL per line. Leave blank to include everything, and * acts like a regex wildcard.")
-        self._txBambdasScopeURLs = "Please provide all URLs in the testing scope. * works like a placeholder for anything. Examples:\n\t- /\n\t+ The root path includes everything\n\t- /TargetPath\n\t+ It includes only the exact path you provide:\n\t\t+ /TargetPath?id=1\n\t- /TargetPath/*\n\t+ It includes all paths starting with the one you provide:\n\t\t+ /TargetPath/a/b/c/?id=1"
+        self._txBambdasScopeURLs = "Please provide all URLs in the testing scope. * works like a placeholder for anything. Examples:\n\t- /\n\t+ The root path includes everything\n\t- /TargetPath\n\t+ It includes only the exact path you provide:\n\t\t+ /TargetPath?id=1\n\t- /TargetPath/*\n\t+ It includes all paths starting with the one you provide:\n\t\t+ /TargetPath/a/b/c/?id=1*\n\t# Lines begin with # are treated as comments."
         placeholderText1 = self._txBambdasScopeURLs
         self._tbBambdasScopeURLs.setText(placeholderText1)
         self._tbBambdasScopeURLs.setForeground(Color.GRAY)
@@ -2619,7 +2619,7 @@ if (!suspiciousHit && !matchedScope && !matchedDone)
 
         self._tbBambdasScopeDoneURLs = JTextPane()
         self._tbBambdasScopeDoneURLs.setToolTipText("Mark already-tested endpoints: one URL per line. Leave blank if none, and * acts like a regex wildcard.")
-        self._txBambdasScopeDoneURLs = "Please provide URLs already tested. * works like a placeholder for anything. Examples:\n\t- /admin/*/users/*/class\n\t+ Asterisk stands for anything (ID, UUID, etc):\n\t\t+ /admin/12345/users/67890/class?view=page\n\t- /admin/*/users/*/class*\n\t+ Asterisk stands for anything (ID, UUID, or to match everything after the path):\n\t\t+ /admin/12345/users/67890/class/cat/view/?page=home"
+        self._txBambdasScopeDoneURLs = "Please provide URLs already tested. * works like a placeholder for anything. Examples:\n\t- /admin/*/users/*/class\n\t+ Asterisk stands for anything (ID, UUID, etc):\n\t\t+ /admin/12345/users/67890/class?view=page\n\t- /admin/*/users/*/class*\n\t+ Asterisk stands for anything (ID, UUID, or to match everything after the path):\n\t\t+ /admin/12345/users/67890/class/cat/view/?page=home*\n\t# Lines begin with # are treated as comments."
         placeholderText2 = self._txBambdasScopeDoneURLs
         self._tbBambdasScopeDoneURLs.setText(placeholderText2)
         self._tbBambdasScopeDoneURLs.setForeground(Color.GRAY)
@@ -2631,7 +2631,7 @@ if (!suspiciousHit && !matchedScope && !matchedDone)
 
         self._tbBambdasBlackListedURLs = JTextPane()
         self._tbBambdasBlackListedURLs.setToolTipText("Hide from the history: one URL per line. Leave blank to exclude nothing. Adding '/' will hide everything unless a criteria matches, and * acts like a regex wildcard.")
-        self._txBambdasBlackListedURLs = "Please provide the URLs to be blacklisted, to hide from the HTTP call history. * works like a placeholder for anything. Examples:\n\t-/health-check/\n\t+ Excludes specifically this path:\n\t\t+ /health-check/?Level=Info\n\t-/health-check*\n\t+ Excludes specifically this path, and rest:\n\t\t+ /health-check/monitor/log/?Level=Info"
+        self._txBambdasBlackListedURLs = "Please provide the URLs to be blacklisted, to hide from the HTTP call history. * works like a placeholder for anything. Examples:\n\t-/health-check/\n\t+ Excludes specifically this path:\n\t\t+ /health-check/?Level=Info\n\t-/health-check*\n\t+ Excludes specifically this path, and rest:\n\t\t+ /health-check/monitor/log/?Level=Info*\n\t# Lines begin with # are treated as comments."
         placeholderText3 = self._txBambdasBlackListedURLs
         self._tbBambdasBlackListedURLs.setText(placeholderText3)
         self._tbBambdasBlackListedURLs.setForeground(Color.GRAY)
