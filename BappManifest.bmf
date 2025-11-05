@@ -2,12 +2,12 @@ Uuid: b4915681326648b1a12e4059d71bc909
 ExtensionType: 2
 Name: Agartha
 RepoName: agartha
-ScreenVersion: 3.0
-SerialVersion: 3
-MinPlatformVersion: 0
+ScreenVersion: 3.0.0
+SerialVersion: 8
+MinPlatformVersion: 2
 ProOnly: False
 Author: Volkan Dindar
-ShortDescription: Helps identify injection flaws (SQLi, LFI, RCE), audits auth/authz via an access matrix, performs 403 bypass checks, converts requests to JavaScript (Copy-as-JS), and generates BCheck/Bambdas scripts.
+ShortDescription: Helps identify injection flaws (SQLi, LFI, RCE), audits auth/authz via an access matrix, performs 403 bypass checks, converts requests to JavaScript, and generates BCheck/Bambdas scripts.
 EntryPoint: Agartha.py
 BuildCommand: 
 SupportedProducts: Pro, Community
