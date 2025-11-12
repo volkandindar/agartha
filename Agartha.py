@@ -24,7 +24,7 @@ except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
     sys.exit(1)
 
-VERSION = "3.01"
+VERSION = "3.02"
 url_regex = r'(log|sign|time)([-_+%0-9]{0,5})(off|out)|(expire|kill|terminat|delete|remove)'
 ext_regex = r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff2|ttf|otf)$'
 
@@ -53,17 +53,17 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         return
 
     def reset(self, ev):
-        t = Thread(target=self.resetThread, args=[self])
+        t = Thread(target=self.resetThread)
         t.start()
         return
 
-    def resetThread(self, ev):
+    def resetThread(self):
         sleep(1)
         self.tableMatrixReset(self)
         self.resetAuthentication(self)
         return
 
-    def authMatrixThread(self, ev):
+    def authMatrixThread(self):
         self._cbAuthColoringFunc(self)
         self._requestViewer.setMessage("", False)
         self._responseViewer.setMessage("", False)
@@ -1087,11 +1087,11 @@ given request then
 
 
     def authorization_menu_semiauto(self, ev):
-        t = Thread(target=self.authorization_menu_semiautoThread, args=[self])
+        t = Thread(target=self.authorization_menu_semiautoThread)
         t.start()
         return
 
-    def authorization_menu_semiautoThread(self, ev):
+    def authorization_menu_semiautoThread(self):
         if self.authorization_menu(self):
             self.siteMapGenerator("semiautoFunc")
             return
@@ -1162,7 +1162,7 @@ given request then
         return
 
     def authMatrix(self, ev):
-        t = Thread(target=self.authMatrixThread, args=[self])
+        t = Thread(target=self.authMatrixThread)
         t.start()
         return
 
@@ -2703,10 +2703,10 @@ if (!suspiciousHit && !matchedScope && !matchedDone)
 
     def historyFetchHostname(self, ev):
         #load hostname from history
-        t = Thread(target=self.historyFetchHostnameThread, args=[self])
+        t = Thread(target=self.historyFetchHostnameThread)
         t.start()
         return
-    def historyFetchHostnameThread(self, ev):
+    def historyFetchHostnameThread(self):
         self._cbAuthenticationHost.removeAllItems()
         _hostnames = []
         histories = self._callbacks.getProxyHistory()
@@ -2719,11 +2719,11 @@ if (!suspiciousHit && !matchedScope && !matchedDone)
 
     def historyFetcher(self, ev):
         #read from history
-        t = Thread(target=self.historyFetcherThread, args=[self])
+        t = Thread(target=self.historyFetcherThread)
         t.start()
         return
     
-    def historyFetcherThread(self, ev):
+    def historyFetcherThread(self):
         if self._cbAuthenticationHost.getSelectedIndex() < 0:
             self._lblAuthenticationNotification.text = "Please select a hostname from the history, or 'Reset' the screen to update the list."
             return
@@ -2882,9 +2882,9 @@ if (!suspiciousHit && !matchedScope && !matchedDone)
         self._lblAuthenticationNotification.text = self.currentText
         return
     
-    def authenticationMatrixFunc(self, ev):
+    def authenticationMatrixFunc(self):
         # run authentication bypass
-        t = Thread(target=self.authenticationMatrixThread, args=[self, self.authenticationMatrix])
+        t = Thread(target=self.authenticationMatrixThread, args=(self.authenticationMatrix,))
         t.start()
         return
     
@@ -3307,7 +3307,7 @@ if (!suspiciousHit && !matchedScope && !matchedDone)
             urls.append((urlparse.urlparse(url).path + "/").join(url.rsplit(urlparse.urlparse(url).path, 1)))        
         return urls
 
-    def authenticationMatrixThread(self, ev, _matrixList):
+    def authenticationMatrixThread(self, _matrixList):
         self._requestViewerAuthentication.setMessage("", False)
         self._responseViewerAuthentication.setMessage("", False)
         self._btnAuthenticationFetchHistory.setEnabled(False)
