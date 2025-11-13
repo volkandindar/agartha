@@ -24,7 +24,7 @@ except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
     sys.exit(1)
 
-VERSION = "3.02"
+VERSION = "3.03"
 url_regex = r'(log|sign|time)([-_+%0-9]{0,5})(off|out)|(expire|kill|terminat|delete|remove)'
 ext_regex = r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff2|ttf|otf)$'
 
@@ -49,22 +49,22 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         callbacks.registerContextMenuFactory(self)
         callbacks.issueAlert("The extension has been loaded.")
         print "Agartha(v" + VERSION + ") is a security tool, which specializes in:\n\t\t* Path Traversal and Local File Inclusion (LFI) payload generation\n\t\t* Command Injection and Remote Code Execution (RCE) payload generation\n\t\t* SQL Injection (SQLi) payload generation\n\t\t* BCheck code auto-generated for payload injections, ready to use with the scanning engine\n\t\t* Auth Matrix based on user sessions, to identify authentication and authorization violations\n\t\t* HTTP 403 Bypass to detect both vertical and horizontal privilege escalations\n\t\t* Copy as JavaScript to support deeper XSS exploitation\n\t\t* Bambdas Script Generation to simplify testing scope management and aid in vulnerability discovery\n\nFor more information and tutorial, please visit:\n\t\thttps://github.com/volkandindar/agartha\n\nAuthor:\n\t\tVolkan Dindar\n\t\tvolkan.dindar@owasp.org"
-        self.reset(self)
+        self.reset()
         return
 
-    def reset(self, ev):
+    def reset(self):
         t = Thread(target=self.resetThread)
         t.start()
         return
 
     def resetThread(self):
         sleep(1)
-        self.tableMatrixReset(self)
-        self.resetAuthentication(self)
+        self.tableMatrixReset()
+        self.resetAuthentication()
         return
 
     def authMatrixThread(self):
-        self._cbAuthColoringFunc(self)
+        self._cbAuthColoringFunc()
         self._requestViewer.setMessage("", False)
         self._responseViewer.setMessage("", False)
         self._lblAuthNotification.text = " "
@@ -187,7 +187,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         except:
             return str(sys.exc_info()[1])
 
-    def authAdduser(self, ev):
+    def authAdduser(self, ev=None):
         
         if not self._tbAuthURL.getText().strip():
             self._lblAuthNotification.text = "Please provide minimum one URL!"
@@ -304,7 +304,7 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         
         return
 
-    def _cbAuthColoringFunc(self, ev):
+    def _cbAuthColoringFunc(self, ev=None):
         global _colorful
         if self._cbAuthColoring.isSelected():
             _colorful = True
@@ -314,15 +314,15 @@ class BurpExtender(IBurpExtender, ITab, IMessageEditorController, IContextMenuFa
         self.tableMatrix.repaint()
         return
 
-    def _cbUnionBasedFunc(self, ev):
+    def _cbUnionBasedFunc(self, ev=None):
         if self._cbUnionBased.isSelected(): 
             self._cbUnionDepth.setEnabled(True)
         else:
             self._cbUnionDepth.setEnabled(False)
         return
 
-    def funcGeneratePayloadForBCheck(self, ev):
-        if self.funcGeneratePayload(self):
+    def funcGeneratePayloadForBCheck(self, ev=None):
+        if self.funcGeneratePayload():
             line_count = len([line for line in self._tabDictResultDisplay.getText().split('\n') if line.strip()])
             if self._rbDictCommandInj.isSelected():
                 bcheckCode= """metadata:
@@ -462,7 +462,7 @@ given request then
         
         return
 
-    def funcGeneratePayload(self, ev):
+    def funcGeneratePayload(self, ev=None):
         self._lblStatusLabel.setForeground (Color.red)
         self._tabDictResultDisplay.setText("")
         if self._rbDictSQLi.isSelected():            
@@ -480,11 +480,11 @@ given request then
         self._txtTargetPath.text = self._txtTargetPath.text.strip()
         self._lblStatusLabel.setText("")
         if self._rbDictCommandInj.isSelected():
-            self.funcCommandInj(self)
+            self.funcCommandInj()
         if self._rbDictLFI.isSelected():
-            self.funcLFI(self)
+            self.funcLFI()
         if self._rbDictSQLi.isSelected():
-            self.funcSQLi(self)
+            self.funcSQLi()
         return True
        
     def isValid(self):
@@ -494,7 +494,7 @@ given request then
         else:
             return False
 
-    def funcRBSelection(self, ev):
+    def funcRBSelection(self, ev=None):
         self._lblStatusLabel.setForeground (Color.black)
         self._lblStatusLabel.setText("")
         self._tabDictPanel_LFI.setVisible(False)
@@ -518,10 +518,10 @@ given request then
             self._tabDictPanel_SQLType.setVisible(True)
             self._tabDictPanel_SQLi.setVisible(True)
             self._tabDictPanel_SQLOptions.setVisible(True)
-            self.funcSQLi(self)
+            self.funcSQLi()
         return
 
-    def funcCommandInj(self, ev):
+    def funcCommandInj(self):
         listCommandInj = []        
         prefixes = ["", "\\n", "\\\\n", "\\r\\n", "\\\\r\\\\n", "%0a", "%0d%0a"]
         escapeChars = ["",  "'", "\\'", "\\\\'", "\"", "\\\"", "\\\\\""]
@@ -555,7 +555,7 @@ given request then
         self._lblStatusLabel.setText('Payload list for "' + self._txtTargetPath.text + '" command returns with '+ str(len(listCommandInj)) + ' result, and they have been copied to your clipboard!')
         return
 
-    def funcLFI(self, ev):
+    def funcLFI(self):
         listLFI = []
         dept = int(self._cbDictDepth.getSelectedItem())
         
@@ -658,7 +658,7 @@ given request then
         self._lblStatusLabel.setText('Payload list for "' + self._txtTargetPath.text + '" path returns with '+ str(len(listLFI)) + ' result, and they have been copied to your clipboard. Please make sure payload encoding is disabled.') 
         return
 
-    def funcSQLi(self, ev):
+    def funcSQLi(self):
         self._lblStatusLabel.setForeground (Color.black)
         if self._cbTimeBased.isSelected() or self._cbStackedSQL.isSelected() or self._cbUnionBased.isSelected():
             if not self._cbMysqlBased.isSelected() and not self._cbMssqlBased.isSelected() and not self._cbPostgreBased.isSelected() and not self._cbOracleBased.isSelected():
@@ -1086,7 +1086,7 @@ given request then
         clipboard.setContents(StringSelection(jscript), None)
 
 
-    def authorization_menu_semiauto(self, ev):
+    def authorization_menu_semiauto(self, ev=None):
         t = Thread(target=self.authorization_menu_semiautoThread)
         t.start()
         return
@@ -1161,12 +1161,12 @@ given request then
             self._lblAuthenticationNotification.text = "An error has occurred: " + str(sys.exc_info()[1])
         return
 
-    def authMatrix(self, ev):
+    def authMatrix(self, ev=None):
         t = Thread(target=self.authMatrixThread)
         t.start()
         return
 
-    def _updateReqResView(self, ev):
+    def _updateReqResView(self, ev=None):
         try:
             row = self.tableMatrix.getSelectedRow()
             userID = self.tableMatrix.getSelectedColumn()
@@ -1288,7 +1288,7 @@ given request then
         self._tabAuthSplitpane.setTopComponent(self._tabAuthPanel)
         self._tabAuthSplitpane.setBottomComponent(_tabsReqRes)
 
-    def _cbAuthenticationEnableFilterFunc(self, ev):
+    def _cbAuthenticationEnableFilterFunc(self, ev=None):
 
         if self._cbAuthenticationEnableFilter.isSelected():
             self.txAuthenticationEnableKeyWordURL.setVisible(True)
@@ -1439,55 +1439,55 @@ given request then
         self._tabAuthenticationSplitpane.setTopComponent(self._tabAuthenticationPanel)
         self._tabAuthenticationSplitpane.setBottomComponent(_tabsAuthenticationReqRes)
 
-    def _cbBambdasValuableFunc(self, ev):
+    def _cbBambdasValuableFunc(self, ev=None):
         if self._cbBambdasValuable.isSelected():
             self._txtBambdasValuable.setEnabled(True)
         else:
             self._txtBambdasValuable.setEnabled(False)
 
-    def _cbBambdasFilesDownFunc(self, ev):
+    def _cbBambdasFilesDownFunc(self, ev=None):
         if self._cbBambdasFilesDownloadable.isSelected():
             self._txtBambdasFilesDownloadable.setEnabled(True)
         else:
             self._txtBambdasFilesDownloadable.setEnabled(False)
 
-    def _cbBambdasSQLiFunc(self, ev):
+    def _cbBambdasSQLiFunc(self, ev=None):
         if self._cbBambdasSQLi.isSelected():
             self._txtBambdasSQLiKeywords.setEnabled(True)
         else:
             self._txtBambdasSQLiKeywords.setEnabled(False)
 
-    def _cbBambdasXSSFunc(self, ev):
+    def _cbBambdasXSSFunc(self, ev=None):
         if self._cbBambdasXSS.isSelected():
             self._txtBambdasXSSKeywords.setEnabled(True)
         else:
             self._txtBambdasXSSKeywords.setEnabled(False)
 
-    def _cbBambdasLFIFunc(self, ev):
+    def _cbBambdasLFIFunc(self, ev=None):
         if self._cbBambdasLFI.isSelected():
             self._txtBambdasLFIKeywords.setEnabled(True)
         else:
             self._txtBambdasLFIKeywords.setEnabled(False)
 
-    def _cbBambdasSSRFFunc(self, ev):
+    def _cbBambdasSSRFFunc(self, ev=None):
         if self._cbBambdasSSRF.isSelected():
             self._txtBambdasSSRFKeywords.setEnabled(True)
         else:
             self._txtBambdasSSRFKeywords.setEnabled(False)
 
-    def _cbBambdasORedFunc(self, ev):
+    def _cbBambdasORedFunc(self, ev=None):
         if self._cbBambdasORed.isSelected():
             self._txtBambdasORedKeywords.setEnabled(True)
         else:
             self._txtBambdasORedKeywords.setEnabled(False)
     
-    def _cbBambdasRCEFunc(self, ev):
+    def _cbBambdasRCEFunc(self, ev=None):
         if self._cbBambdasRCE.isSelected():
             self._txtBambdasRCEKeywords.setEnabled(True)
         else:
             self._txtBambdasRCEKeywords.setEnabled(False)
 
-    def _cbBambdasSearchinURLFunc(self, ev):
+    def _cbBambdasSearchinURLFunc(self, ev=None):
         if self._cbBambdasSearchinURL.isSelected():
             self._cbBambdasSQLi.setEnabled(True)
             if self._cbBambdasSQLi.isSelected():
@@ -1528,7 +1528,7 @@ given request then
                     self._cbBambdasValuable.setEnabled(False)
                     self._txtBambdasValuable.setEnabled(False)
 
-    def _cbBambdasSearchinReqFunc(self, ev):
+    def _cbBambdasSearchinReqFunc(self, ev=None):
         if self._cbBambdasSearchinReq.isSelected():
             self._cbBambdasSQLi.setEnabled(True)
             if self._cbBambdasSQLi.isSelected():
@@ -1569,7 +1569,7 @@ given request then
                     self._cbBambdasValuable.setEnabled(False)
                     self._txtBambdasValuable.setEnabled(False)
 
-    def _cbBambdasSearchinResFunc(self, ev):
+    def _cbBambdasSearchinResFunc(self, ev=None):
         if self._cbBambdasSearchinRes.isSelected():
             self._cbBambdasSearchHTMLComments.setEnabled(True)
             self._cbBambdasFilesDownloadable.setEnabled(True)
@@ -1591,25 +1591,25 @@ given request then
                 self._cbBambdasValuable.setEnabled(False)
                 self._txtBambdasValuable.setEnabled(False)
 
-    def _cbBambdasHTTPMethodsFunc(self, ev):
+    def _cbBambdasHTTPMethodsFunc(self, ev=None):
         if self._cbBambdasHTTPMethods.isSelected():
             self._txtBambdasHTTPMethods.setEnabled(True)
         else:
             self._txtBambdasHTTPMethods.setEnabled(False)
     
-    def _cbBambdasVulnJSFunc(self, ev):
+    def _cbBambdasVulnJSFunc(self, ev=None):
         if self._cbBambdasVulnJS.isSelected():
             self._txtBambdasVulnJSKeywords.setEnabled(True)
         else:
             self._txtBambdasVulnJSKeywords.setEnabled(False)
 
-    def _cbBambdasExtIgnoreFunc(self, ev):
+    def _cbBambdasExtIgnoreFunc(self, ev=None):
         if self._cbBambdasExtIgnore.isSelected():
             self._txtBambdasExtIgnoreKeywords.setEnabled(True)
         else:
             self._txtBambdasExtIgnoreKeywords.setEnabled(False)
 
-    def funcBambdasRun(self, ev):
+    def funcBambdasRun(self, ev=None):
 
         if self._cbBambdasDisplayDays.getSelectedIndex() < self._cbBambdasProcessDays.getSelectedIndex():
             self._lblBambdasNotification2.text = "The display period must not be shorter than the processing period."
@@ -2281,7 +2281,7 @@ if (!suspiciousHit && !matchedScope && !matchedDone)
             self._tabDictResultDisplay.setCaretPosition(0)
 
 
-    def funcBambdasUIReset(self, ev):
+    def funcBambdasUIReset(self, ev=None):
         self._lblBambdasNotification2.setForeground (Color.black)
         self._lblBambdasNotification2.text = "Click 'Run' to generate Bambdas Script!"
         self._cbBambdasColorScope.setSelectedIndex(7)
@@ -2351,9 +2351,9 @@ if (!suspiciousHit && !matchedScope && !matchedDone)
         self._txtBambdasVulnJSKeywords.setEnabled(False)
         self._cbBambdasVulnJS.setSelected(False)
 
-        self._cbBambdasSearchinReqFunc(self)
-        self._cbBambdasSearchinResFunc(self)
-        self._cbBambdasSearchinURLFunc(self)
+        self._cbBambdasSearchinReqFunc()
+        self._cbBambdasSearchinResFunc()
+        self._cbBambdasSearchinURLFunc()
         return
 
 
@@ -2619,7 +2619,7 @@ if (!suspiciousHit && !matchedScope && !matchedDone)
 
         self._tbBambdasScopeDoneURLs = JTextPane()
         self._tbBambdasScopeDoneURLs.setToolTipText("Mark already-tested endpoints: one URL per line. Leave blank if none, and * acts like a regex wildcard.")
-        self._txBambdasScopeDoneURLs = "Please provide URLs already tested. * works like a placeholder for anything. Examples:\n\t- /admin/*/users/*/class\n\t+ Asterisk stands for anything (ID, UUID, etc):\n\t\t+ /admin/12345/users/67890/class?view=page\n\t- /admin/*/users/*/class*\n\t+ Asterisk stands for anything (ID, UUID, or to match everything after the path):\n\t\t+ /admin/12345/users/67890/class/cat/view/?page=home*\n\t# Lines begin with # are treated as comments."
+        self._txBambdasScopeDoneURLs = "Please provide URLs already tested. * works like a placeholder for anything. Examples:\n\t- /admin/*/users/*/class\n\t+ Asterisk stands for anything (ID, UUID, etc):\n\t\t+ /admin/12345/users/67890/class?view=page\n\t- /admin/*/users/*/class*\n\t+ Asterisk stands for anything (ID, UUID, or to match everything after the path):\n\t\t+ /admin/12345/users/67890/class/cat/view/?page=home*\n\t# The same comment rule also applies here."
         placeholderText2 = self._txBambdasScopeDoneURLs
         self._tbBambdasScopeDoneURLs.setText(placeholderText2)
         self._tbBambdasScopeDoneURLs.setForeground(Color.GRAY)
@@ -2631,7 +2631,7 @@ if (!suspiciousHit && !matchedScope && !matchedDone)
 
         self._tbBambdasBlackListedURLs = JTextPane()
         self._tbBambdasBlackListedURLs.setToolTipText("Hide from the history: one URL per line. Leave blank to exclude nothing. Adding '/' will hide everything unless a criteria matches, and * acts like a regex wildcard.")
-        self._txBambdasBlackListedURLs = "Please provide the URLs to be blacklisted, to hide from the HTTP call history. * works like a placeholder for anything. Examples:\n\t-/health-check/\n\t+ Excludes specifically this path:\n\t\t+ /health-check/?Level=Info\n\t-/health-check*\n\t+ Excludes specifically this path, and rest:\n\t\t+ /health-check/monitor/log/?Level=Info*\n\t# Lines begin with # are treated as comments."
+        self._txBambdasBlackListedURLs = "Please provide the URLs to be blacklisted, to hide from the HTTP call history. * works like a placeholder for anything. Examples:\n\t-/health-check/\n\t+ Excludes specifically this path:\n\t\t+ /health-check/?Level=Info\n\t-/health-check*\n\t+ Excludes specifically this path, and rest:\n\t\t+ /health-check/monitor/log/?Level=Info*\n\t# The same comment rule also applies here."
         placeholderText3 = self._txBambdasBlackListedURLs
         self._tbBambdasBlackListedURLs.setText(placeholderText3)
         self._tbBambdasBlackListedURLs.setForeground(Color.GRAY)
@@ -2689,10 +2689,10 @@ if (!suspiciousHit && !matchedScope && !matchedDone)
         self._tabBambdasPanel.setTopComponent(_tabBambdasPanelTop)
         self._tabBambdasPanel.setBottomComponent(_tabBambdasPanelBottom)
 
-        self.funcBambdasUIReset(self)
+        self.funcBambdasUIReset()
         return
 
-    def listChange(self, ev):
+    def listChange(self, ev=None):
         try:
             self._tbAuthenticationHeader.setText(self._helpers.bytesToString(self._helpers.buildHttpMessage(self.authenticationMatrix[self.tabAuthenticationJlist.getSelectedIndex()][1], self.authenticationMatrix[self.tabAuthenticationJlist.getSelectedIndex()][2])))
             self._tbAuthenticationHeader.setSelectionStart(0)
@@ -2701,7 +2701,7 @@ if (!suspiciousHit && !matchedScope && !matchedDone)
             pass
         return
 
-    def historyFetchHostname(self, ev):
+    def historyFetchHostname(self):
         #load hostname from history
         t = Thread(target=self.historyFetchHostnameThread)
         t.start()
@@ -2717,7 +2717,7 @@ if (!suspiciousHit && !matchedScope && !matchedDone)
                 self._cbAuthenticationHost.addItem(_hostname)
         return
 
-    def historyFetcher(self, ev):
+    def historyFetcher(self, ev=None):
         #read from history
         t = Thread(target=self.historyFetcherThread)
         t.start()
@@ -2846,7 +2846,7 @@ if (!suspiciousHit && !matchedScope && !matchedDone)
         return
 
 
-    def resetAuthentication(self, ev):
+    def resetAuthentication(self, ev=None):
         self.authenticationMatrix = []
         self._httpReqResAuthentication =[]
         self._httpReqResAuthenticationTipMessage =[]
@@ -2867,7 +2867,7 @@ if (!suspiciousHit && !matchedScope && !matchedDone)
         self._tabAuthenticationSplitpane.setDividerLocation(0.7)
         self._tabAuthenticationSplitpaneHttp.setDividerLocation(0.5)
         self.currentText = "You can load http requests over right click or fetch from proxy history."
-        self.historyFetchHostname(self)
+        self.historyFetchHostname()
         self.tableMatrixAuthentication.getColumnModel().getColumn(0).setPreferredWidth(400)
         self.txAuthenticationEnableKeyWordURL.setVisible(False)
         self.txAuthenticationEnableKeyWordURL.setText("")
@@ -2888,7 +2888,7 @@ if (!suspiciousHit && !matchedScope && !matchedDone)
         t.start()
         return
     
-    def _updateAuthenticationReqResView(self, ev):
+    def _updateAuthenticationReqResView(self, ev=None):
         try:
             _row = self.tableMatrixAuthentication.getSelectedRow()
             _column = self.tableMatrixAuthentication.getSelectedColumn()
@@ -4102,7 +4102,7 @@ if (!suspiciousHit && !matchedScope && !matchedDone)
         self._tabDictPanel.add(_tabDictPanel_2)
         self._tabDictPanel.add(_tabDictPanel_3)
 
-    def tableMatrixReset(self, ev):
+    def tableMatrixReset(self, ev=None):
         self.tableMatrix = []        
         self.tableMatrix_DM = CustomDefaultTableModel(self.tableMatrix, ('URLs','No Authentication'))
         self.tableMatrix = JTable(self.tableMatrix_DM)
@@ -4143,7 +4143,7 @@ if (!suspiciousHit && !matchedScope && !matchedDone)
 
         return
 
-    def siteMapGeneratorFunc(self, ev):
+    def siteMapGeneratorFunc(self, ev=None):
         self.siteMapGenerator()
         return
 
@@ -4337,7 +4337,7 @@ if (!suspiciousHit && !matchedScope && !matchedDone)
                     if user_id not in self.userNames:
                         self._tbAuthNewUser.text = user_id
                         break
-            self.authAdduser(self)
+            self.authAdduser()
         return
 
 class UserEnabledRenderer(TableCellRenderer):
