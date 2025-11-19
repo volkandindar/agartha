@@ -24,7 +24,7 @@ except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
     sys.exit(1)
 
-VERSION = "3.10"
+VERSION = "3.1001"
 url_regex = r'(log|sign|time)([-_+%0-9]{0,5})(off|out)|(expire|kill|terminat|delete|remove)'
 ext_regex = r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff2|ttf|otf)$'
 
@@ -1767,7 +1767,7 @@ given request then
             targetPaths += "}"
             bambdas += "String[] targetPathsDone = " + targetPaths + ";\n"
         else:
-            bambdas += "String[] targetPathsDone = {\"/YouCanPutTestedURLsHere.*\"};\n"
+            bambdas += "String[] targetPathsDone = {\"/YouCanPutTestedURLsHere/?(?:\\\\?.*)?$\"};\n"
         bambdas += "// Move stable/assessed endpoints here to avoid re-triage.\n\n"
 
         bambdas += "// Reset mode: clear all highlights and notes, then exit.\n"
