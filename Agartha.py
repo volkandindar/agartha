@@ -24,7 +24,7 @@ except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
     sys.exit(1)
 
-VERSION = "3.1001"
+VERSION = "3.1002"
 url_regex = r'(log|sign|time)([-_+%0-9]{0,5})(off|out)|(expire|kill|terminat|delete|remove)'
 ext_regex = r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff2|ttf|otf)$'
 
@@ -2607,7 +2607,7 @@ if (!suspiciousHit && !matchedScope && !matchedDone)
 
         self._tbBambdasScopeURLs = JTextPane()
         self._tbBambdasScopeURLs.setToolTipText("Define test scope: one URL per line. Leave blank to include everything, and * acts like a regex wildcard.")
-        self._txBambdasScopeURLs = "Please provide all URLs in the testing scope. * works like a placeholder for anything. Examples:\n\t- /\n\t+ The root path includes everything\n\t- /TargetPath\n\t+ It includes only the exact path you provide:\n\t\t+ /TargetPath?id=1\n\t- /TargetPath/*\n\t+ It includes all paths starting with the one you provide:\n\t\t+ /TargetPath/a/b/c/?id=1*\n\t# Lines begin with # are treated as comments."
+        self._txBambdasScopeURLs = "Please provide all URLs in the testing scope. * works like a placeholder for anything. Examples:\n\t- /\n\t+ The root path includes everything\n\t- /TargetPath\n\t+ It includes only the exact path you provide:\n\t\t+ /TargetPath?id=1\n\t- /TargetPath/*\n\t+ It includes all paths starting with the one you provide:\n\t\t+ /TargetPath/a/b/c/?id=1*\n\t- /TargetPath/\n\t+ It includes only the specific target directory:\n\t\t+ /TargetPath?id=1*\n\t# Lines begin with # are treated as comments."
         placeholderText1 = self._txBambdasScopeURLs
         self._tbBambdasScopeURLs.setText(placeholderText1)
         self._tbBambdasScopeURLs.setForeground(Color.GRAY)
