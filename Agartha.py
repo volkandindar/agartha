@@ -24,7 +24,7 @@ except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
     sys.exit(1)
 
-VERSION = "3.1002"
+VERSION = "3.1003"
 url_regex = r'(log|sign|time)([-_+%0-9]{0,5})(off|out)|(expire|kill|terminat|delete|remove)'
 ext_regex = r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff2|ttf|otf)$'
 
@@ -2917,7 +2917,7 @@ if (!suspiciousHit && !matchedScope && !matchedDone)
             
             if _status == '200':
                 # the response code is http 200
-                if _msgBody.find("<body>The requested URL was rejected.</body>") != -1:
+                if ( "<body>the requested url was rejected.</body>" in _msgBody.lower() or ("sorry, something went wrong" in _msgBody.lower() and "an unexpected error has occurred" in _msgBody.lower())):
                     # check the response if it is rejected
                     _status = _status + "-"
                 else:
