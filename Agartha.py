@@ -24,7 +24,7 @@ except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
     sys.exit(1)
 
-VERSION = "3.1004"
+VERSION = "3.1005"
 url_regex = r'(log|sign|time)([-_+%0-9]{0,5})(off|out)|(expire|kill|terminat|delete|remove)'
 ext_regex = r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff2|ttf|otf)$'
 
@@ -1706,22 +1706,19 @@ given request then
             self._lblBambdasNotification2.setForeground(Color.red)
             return
 
-        # remove duplicated lines (raw whitespace‑sensitive, order preserved)
-        seen = set()
-        _cleaned = []
-        for _l in self._tbBambdasScopeURLs.getText().split("\n"):
-            if _l in seen:
-                _cleaned.append("")      # replace duplicate with empty
-            else:
-                seen.add(_l)
-                _cleaned.append(_l)
-        self._tbBambdasScopeURLs.setText("\n".join(_cleaned))
-        # remove duplicated lines (raw whitespace‑sensitive, order preserved)
+        # remove white-spaces
+        if self._tbBambdasScopeURLs.text != self._txBambdasScopeURLs:
+            self._tbBambdasScopeURLs.setText("\n".join(l.strip() for l in self._tbBambdasScopeURLs.getText().splitlines()))
+        if self._tbBambdasScopeDoneURLs.text != self._txBambdasScopeDoneURLs:
+            self._tbBambdasScopeDoneURLs.setText("\n".join(l.strip() for l in self._tbBambdasScopeDoneURLs.getText().splitlines()))
+        if self._tbBambdasBlackListedURLs.text != self._txBambdasBlackListedURLs:
+            self._tbBambdasBlackListedURLs.setText("\n".join(l.strip() for l in self._tbBambdasBlackListedURLs.getText().splitlines()))
+        # remove white-spaces
         # Filter out scope lines that have already been tested
         urls_lines = self._tbBambdasScopeURLs.getText().split("\n")
         done_urls_lines = set(self._tbBambdasScopeDoneURLs.getText().split("\n"))
-        yeni_urls_lines = [line if line.startswith("#") or re.sub(r"\{[^}]+\}|\*", ".*", line) not in {re.sub(r"\{[^}]+\}|\*", ".*", l) for l in done_urls_lines} else "" for line in urls_lines]
-        self._tbBambdasScopeURLs.setText("\n".join(yeni_urls_lines))
+        new_urls_lines = [line if line.startswith("#") or re.sub(r"\{[^}]+\}|\*", ".*", line) not in {re.sub(r"\{[^}]+\}|\*", ".*", l) for l in done_urls_lines} else "" for line in urls_lines]
+        self._tbBambdasScopeURLs.setText("\n".join(new_urls_lines))
         # Filter out scope lines that have already been tested
 
         bambdas = "/**\n"
