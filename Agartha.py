@@ -24,7 +24,7 @@ except:
     print "==== ERROR ====" + "\n\nFailed to load dependencies.\n" +str(sys.exc_info()[1]) +"\n\n==== ERROR ====\n\n"
     sys.exit(1)
 
-VERSION = "3.1005"
+VERSION = "3.1006"
 url_regex = r'(log|sign|time)([-_+%0-9]{0,5})(off|out)|(expire|kill|terminat|delete|remove)'
 ext_regex = r'^\.(gif|jpg|jpeg|png|css|js|ico|svg|eot|woff2|ttf|otf)$'
 
@@ -3994,7 +3994,7 @@ if (!suspiciousHit && !matchedScope && !matchedDone)
         self._lblStatusLabel = JLabel()
         self._lblStatusLabel.setText("Please provide a path for payload generation!")
         self._txtTargetPath = JTextField(self._txtDefaultLFI, 30)
-        self._rbDictLFI = JRadioButton('LFI / PT', True, itemStateChanged=self.funcRBSelection)
+        self._rbDictLFI = JRadioButton('LFI / DT', True, itemStateChanged=self.funcRBSelection)
         self._rbDictLFI.setToolTipText("Payload generation for Local File Inclusion, Path Traversal.")
         self._rbDictCommandInj = JRadioButton('Command Inj / RCE', itemStateChanged=self.funcRBSelection)
         self._rbDictCommandInj.setToolTipText("Payload generation for Command Injection, Remote Code Execution.")
