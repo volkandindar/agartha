@@ -926,8 +926,7 @@ given request then
         urlList = []
         replacements = {
             " ": "%20", "\"": "%22", "\\": "%5c", "=": "%3d", "<": "%3c", ";": "%3b",
-            "|": "%7c", "&": "%26", ":": "%3a", "`": "%60",
-            "$": "%24", ",": "%2c"
+            "|": "%7c", "&": "%26", ":": "%3a", "`": "%60",",": "%2c"
         }
         for payload in payloads:
             for char, encoded_char in replacements.items():
